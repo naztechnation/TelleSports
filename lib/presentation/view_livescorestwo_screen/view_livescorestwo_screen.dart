@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/community_tab_container_page/community_tab_container_page.dart';
-import 'package:tellesports/presentation/convert_betcodesone_tab_container_page/convert_betcodesone_tab_container_page.dart';
-import 'package:tellesports/presentation/predictions_page/predictions_page.dart';
-import 'package:tellesports/presentation/predictions_two_page/predictions_two_page.dart';
+
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_six.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_three.dart';
@@ -17,7 +14,7 @@ class ViewLivescorestwoScreen extends StatelessWidget {
           key: key,
         );
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  // GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -374,7 +371,7 @@ class ViewLivescorestwoScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: _buildBottomBar(context),
+       // bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
@@ -692,8 +689,8 @@ class ViewLivescorestwoScreen extends StatelessWidget {
   Widget _buildBottomBar(BuildContext context) {
     return CustomBottomBar(
       onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-            navigatorKey.currentContext!, getCurrentRoute(type));
+        // Navigator.pushNamed(
+        //     navigatorKey.currentContext!, getCurrentRoute(type));
       },
     );
   }
@@ -831,7 +828,6 @@ class ViewLivescorestwoScreen extends StatelessWidget {
     );
   }
 
-  /// Common widget
   Widget _buildTimeline1(
     BuildContext context, {
     required String titleText,
@@ -859,7 +855,6 @@ class ViewLivescorestwoScreen extends StatelessWidget {
     );
   }
 
-  /// Common widget
   Widget _buildTimeline2(
     BuildContext context, {
     required String description,
@@ -923,35 +918,5 @@ class ViewLivescorestwoScreen extends StatelessWidget {
     );
   }
 
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Convert:
-        return AppRoutes.convertBetcodesoneTabContainerPage;
-      case BottomBarEnum.Community:
-        return AppRoutes.communityTabContainerPage;
-      case BottomBarEnum.Predictions:
-        return AppRoutes.predictionsTwoPage;
-      case BottomBarEnum.Profile:
-        return AppRoutes.predictionsPage;
-      default:
-        return "/";
-    }
-  }
-
-  ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
-    switch (currentRoute) {
-      case AppRoutes.convertBetcodesoneTabContainerPage:
-        return ConvertBetcodesoneTabContainerPage();
-      case AppRoutes.communityTabContainerPage:
-        return CommunityTabContainerPage();
-      case AppRoutes.predictionsTwoPage:
-        return PredictionsTwoPage();
-      case AppRoutes.predictionsPage:
-        return PredictionsPage();
-      default:
-        return DefaultWidget();
-    }
-  }
+  
 }

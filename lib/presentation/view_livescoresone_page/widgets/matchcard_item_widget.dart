@@ -69,7 +69,8 @@ class MatchcardItemWidget extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                onTapCardMatch!.call();
+                    Navigator.pushNamed(context, AppRoutes.communityInfoOneScreen);
+
               },
               child: Container(
                 decoration: AppDecoration.fillRed.copyWith(
@@ -395,5 +396,9 @@ class MatchcardItemWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+
+   ViewMatchDetailsPage(BuildContext context) {
   }
 }

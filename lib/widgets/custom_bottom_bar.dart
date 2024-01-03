@@ -101,7 +101,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
         }),
         onTap: (index) {
           selectedIndex = index;
-          widget.onChanged?.call(bottomMenuList[index].type);
+            widget.onChanged?.call(bottomMenuList[index].type);
           setState(() {});
         },
       ),
@@ -133,7 +133,7 @@ class BottomMenuModel {
   BottomBarEnum type;
 }
 
-class DefaultWidget extends StatelessWidget {
+class DefaultWidge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

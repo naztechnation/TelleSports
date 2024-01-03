@@ -128,8 +128,8 @@ class AppRoutes {
     forgotPasswordScreen: (context) => ForgotPasswordScreen(),
     verifyAccountScreen: (context) => VerifyAccountScreen(),
     createNewPasswordScreen: (context) => CreateNewPasswordScreen(),
-    convertBetcodesoneContainerScreen: (context) =>
-        ConvertBetcodesoneContainerScreen(),
+    // convertBetcodesoneContainerScreen: (context) =>
+    //     ConvertBetcodesoneContainerScreen(),
     viewLivescorestwoScreen: (context) => ViewLivescorestwoScreen(),
     buyTellacoinsScreen: (context) => BuyTellacoinsScreen(),
     communityChatScreen: (context) => CommunityChatScreen(),
