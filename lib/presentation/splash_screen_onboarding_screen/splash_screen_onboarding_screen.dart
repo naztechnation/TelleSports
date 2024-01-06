@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_icon_button.dart';
+
+import '../onboarding_screen/onboarding_main.dart';
 
 class SplashScreenOnboardingScreen extends StatelessWidget {
   const SplashScreenOnboardingScreen({Key? key}) : super(key: key);
@@ -36,9 +39,9 @@ class SplashScreenOnboardingScreen extends StatelessWidget {
                           margin: EdgeInsets.symmetric(horizontal: 3.h),
                           child: Text(
                               "An all-in-one platform to convert bet codes, view livescores and interact with a vibrant community of sports and betting enthusiasts. ",
-                              maxLines: 2,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.justify,
                               style: CustomTextStyles.labelMediumBlack900)),
                       SizedBox(height: 9.v),
                       CustomElevatedButton(
@@ -49,8 +52,7 @@ class SplashScreenOnboardingScreen extends StatelessWidget {
                     ]))));
   }
 
-  /// Navigates to the onboardingOneScreen when the action is triggered.
   onTapContinue(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.onboardingOneScreen);
+    AppNavigator.pushAndReplacePage(context, page: OnboardingMain());
   }
 }

@@ -4,6 +4,10 @@ import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 
+import '../../utils/navigator/page_navigator.dart';
+import '../sign_up_one_screen/sign_up_one_screen.dart';
+import '../signin_one_screen/signin_one_screen.dart';
+
 class OnboardingOneScreen extends StatelessWidget {
   const OnboardingOneScreen({Key? key})
       : super(
@@ -33,28 +37,18 @@ class OnboardingOneScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 294.h,
-                          margin: EdgeInsets.only(
-                            left: 16.h,
-                            right: 51.h,
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
                             "Quick and easy bet code conversions...",
-                            maxLines: 2,
+                            maxLines: 4,
                             overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
                             style:
                                 CustomTextStyles.headlineLargePrimary.copyWith(
                               height: 1.10,
+                              fontSize: 22.0,
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 4.v),
-                        Padding(
-                          padding: EdgeInsets.only(left: 16.h),
-                          child: Text(
-                            "Quick and easy bet code conversions...",
-                            style: CustomTextStyles.titleMediumTeal400,
                           ),
                         ),
                         Spacer(),
@@ -79,7 +73,7 @@ class OnboardingOneScreen extends StatelessWidget {
                     activeDotColor: appTheme.teal400,
                     dotColor: appTheme.teal100,
                     dotHeight: 8.v,
-                    dotWidth: 8.h,
+                    dotWidth: 16.h,
                   ),
                 ),
               ),
@@ -87,17 +81,29 @@ class OnboardingOneScreen extends StatelessWidget {
               CustomElevatedButton(
                 text: "Create an account",
                 margin: EdgeInsets.symmetric(horizontal: 12.h),
-                onPressed: (() =>  Navigator.pushNamed(context, AppRoutes.onboardingTwoScreen)),
+                                onPressed: (() =>  onTapCreateAnAccount(context)),
+
               ),
               SizedBox(height: 16.v),
               CustomOutlinedButton(
                 text: "Log in to your account",
                 margin: EdgeInsets.symmetric(horizontal: 12.h),
+                onPressed: (() =>  onTapLogInToYourAccount(context)),
+
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+   onTapCreateAnAccount(BuildContext context) {
+    AppNavigator.pushAndReplacePage(context, page: SignUpOneScreen());
+  }
+ 
+  onTapLogInToYourAccount(BuildContext context) {
+    AppNavigator.pushAndReplacePage(context, page: SigninOneScreen());
+
   }
 }

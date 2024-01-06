@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tellesports/res/app_colors.dart';
 import '../core/app_export.dart';
 
 /// A collection of pre-defined text styles for customizing text appearance,
@@ -41,7 +42,7 @@ class CustomTextStyles {
       );
   // Headline text style
   static get headlineLargeBlue400 => theme.textTheme.headlineLarge!.copyWith(
-        color: appTheme.blue400,
+        color: Color(0xFF183A5C),
       );
   static get headlineLargeInterTeal900 =>
       theme.textTheme.headlineLarge!.inter.copyWith(
@@ -54,10 +55,10 @@ class CustomTextStyles {
         fontWeight: FontWeight.w700,
       );
   static get headlineLargePrimary => theme.textTheme.headlineLarge!.copyWith(
-        color: theme.colorScheme.primary,
+        color: AppColors.darkPrimary,
       );
   static get headlineLargeRed400 => theme.textTheme.headlineLarge!.copyWith(
-        color: appTheme.red400,
+        color: Color(0xFF672929),
       );
   static get headlineLargeWhiteA700 => theme.textTheme.headlineLarge!.copyWith(
         color: appTheme.whiteA700,

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/sign_up_one_screen/sign_up_one_screen.dart';
+import 'package:tellesports/presentation/signin_one_screen/signin_one_screen.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 
@@ -23,21 +26,21 @@ class OnboardingThreeScreen extends StatelessWidget {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                  width: 294.h,
-                                  margin: EdgeInsets.only(left: 2.h, right: 49.h),
-                                  child: Text(
-                                      "Quick and easy bet code conversions...",
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: CustomTextStyles.headlineLargeRed400
-                                          .copyWith(height: 1.10))),
-                              SizedBox(height: 5.v),
                               Padding(
-                                  padding: EdgeInsets.only(left: 2.h),
-                                  child: Text(
-                                      "Quick and easy bet code conversions...",
-                                      style: CustomTextStyles.titleMediumRed300)),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            "Be in the know! Livescores and match predictions at your finger tips...",
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style:
+                                CustomTextStyles.headlineLargeRed400.copyWith(
+                              height: 1.10,
+                              fontSize: 22.0,
+                            ),
+                          ),
+                        ),
+                            
                               SizedBox(height: 88.v),
                               CustomImageView(
                                   imagePath: ImageConstant.imgSportBaseball,
@@ -49,14 +52,14 @@ class OnboardingThreeScreen extends StatelessWidget {
                     SizedBox(
                         height: 8.v,
                         child: AnimatedSmoothIndicator(
-                            activeIndex: 0,
+                            activeIndex: 2,
                             count: 3,
                             effect: ScrollingDotsEffect(
                                 spacing: 8,
                                 activeDotColor: appTheme.red400,
                                 dotColor: appTheme.deepOrange50,
                                 dotHeight: 8.v,
-                                dotWidth: 8.h))),
+                                dotWidth: 16.h))),
                     SizedBox(height: 12.v),
                     CustomElevatedButton(
                         text: "Create an account",
@@ -75,10 +78,11 @@ class OnboardingThreeScreen extends StatelessWidget {
   }
 
   onTapCreateAnAccount(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.signUpScreen);
+    AppNavigator.pushAndReplacePage(context, page: SignUpOneScreen());
   }
  
   onTapLogInToYourAccount(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.signinOneScreen);
+    AppNavigator.pushAndReplacePage(context, page: SigninOneScreen());
+
   }
 }

@@ -4,6 +4,10 @@ import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 
+import '../../utils/navigator/page_navigator.dart';
+import '../sign_up_one_screen/sign_up_one_screen.dart';
+import '../signin_one_screen/signin_one_screen.dart';
+
 class OnboardingTwoScreen extends StatelessWidget {
   const OnboardingTwoScreen({Key? key})
       : super(
@@ -29,29 +33,23 @@ class OnboardingTwoScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 294.h,
-                      margin: EdgeInsets.only(
-                        left: 13.h,
-                        right: 60.h,
-                      ),
-                      child: Text(
-                        "Quick and easy bet code conversions...",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: CustomTextStyles.headlineLargeBlue400.copyWith(
-                          height: 1.10,
+
+                     Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            "Connect with a vibrant community of sports enthusiasts...",
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style:
+                                CustomTextStyles.headlineLargeBlue400.copyWith(
+                              height: 1.10,
+                              fontSize: 22.0,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 5.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 13.h),
-                      child: Text(
-                        "Quick and easy bet code conversions...",
-                        style: CustomTextStyles.titleMediumBlue300,
-                      ),
-                    ),
+                    
+                    
                     Spacer(),
                     CustomImageView(
                       imagePath: ImageConstant.imgSportBasketball,
@@ -65,14 +63,14 @@ class OnboardingTwoScreen extends StatelessWidget {
               SizedBox(
                 height: 8.v,
                 child: AnimatedSmoothIndicator(
-                  activeIndex: 0,
+                  activeIndex: 1,
                   count: 3,
                   effect: ScrollingDotsEffect(
                     spacing: 8,
                     activeDotColor: appTheme.blue800,
                     dotColor: appTheme.blue50,
                     dotHeight: 8.v,
-                    dotWidth: 8.h,
+                    dotWidth: 16.h,
                   ),
                 ),
               ),
@@ -81,18 +79,28 @@ class OnboardingTwoScreen extends StatelessWidget {
                 text: "Create an account",
                 margin: EdgeInsets.symmetric(horizontal: 9.h),
                 buttonStyle: CustomButtonStyles.fillBlue,
-                onPressed: (() =>  Navigator.pushNamed(context, AppRoutes.onboardingThreeScreen)),
+                onPressed: (() =>  onTapCreateAnAccount(context)),
 
               ),
               SizedBox(height: 16.v),
               CustomOutlinedButton(
                 text: "Log in to your account",
                 margin: EdgeInsets.symmetric(horizontal: 9.h),
+                onPressed: (() =>  onTapLogInToYourAccount(context)),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+   onTapCreateAnAccount(BuildContext context) {
+    AppNavigator.pushAndReplacePage(context, page: SignUpOneScreen());
+  }
+ 
+  onTapLogInToYourAccount(BuildContext context) {
+    AppNavigator.pushAndReplacePage(context, page: SigninOneScreen());
+
   }
 }

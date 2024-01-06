@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/presentation/splash_screen_onboarding_screen/splash_screen_onboarding_screen.dart';
-import 'package:tellesports/presentation/onboarding_one_screen/onboarding_one_screen.dart';
-import 'package:tellesports/presentation/onboarding_two_screen/onboarding_two_screen.dart';
-import 'package:tellesports/presentation/onboarding_three_screen/onboarding_three_screen.dart';
+import 'package:tellesports/presentation/onboarding_screen/onboarding_one_screen.dart';
+import 'package:tellesports/presentation/onboarding_screen/onboarding_two_screen.dart';
+import 'package:tellesports/presentation/onboarding_screen/onboarding_three_screen.dart';
 import 'package:tellesports/presentation/sign_up_screen/sign_up_screen.dart';
 import 'package:tellesports/presentation/sign_up_two_screen/sign_up_two_screen.dart';
 import 'package:tellesports/presentation/sign_up_one_screen/sign_up_one_screen.dart';
