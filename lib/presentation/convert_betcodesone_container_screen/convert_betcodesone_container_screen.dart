@@ -6,7 +6,6 @@ import 'package:tellesports/presentation/predictions_page/predictions_page.dart'
 import 'package:tellesports/presentation/predictions_two_page/predictions_two_page.dart';
 import 'package:tellesports/widgets/custom_bottom_bar.dart';
 
-import '../view_livescorestwo_screen/view_livescorestwo_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class ConvertBetcodesoneContainerScreen extends StatelessWidget {
@@ -26,19 +25,17 @@ class ConvertBetcodesoneContainerScreen extends StatelessWidget {
                     pageBuilder: (ctx, ani, ani1) =>
                         getCurrentPage(routeSetting.name!),
                     transitionDuration: Duration(seconds: 0))),
-           // bottomNavigationBar: _buildBottomBar(context)
+            bottomNavigationBar: _buildBottomBar(context)
            )
             );
   }
 
-  /// Section Widget
   Widget _buildBottomBar(BuildContext context) {
     return CustomBottomBar(onChanged: (BottomBarEnum type) {
       Navigator.pushNamed(navigatorKey.currentContext!, getCurrentRoute(type));
     });
   }
 
-  ///Handling route based on bottom click actions
   String getCurrentRoute(BottomBarEnum type) {
     switch (type) {
       case BottomBarEnum.Convert:
@@ -66,7 +63,7 @@ class ConvertBetcodesoneContainerScreen extends StatelessWidget {
       case AppRoutes.predictionsPage:
         return PredictionsPage();
       default:
-        return ViewLivescorestwoScreen();
+        return Container();
     }
   }
 }

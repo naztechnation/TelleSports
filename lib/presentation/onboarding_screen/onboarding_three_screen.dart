@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/sign_up_one_screen/sign_up_one_screen.dart';
-import 'package:tellesports/presentation/signin_one_screen/signin_one_screen.dart';
+import 'package:tellesports/core/app_export.dart'; 
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
+
+import '../auth/sign_up_screen/sign_up_screen.dart';
+import '../auth/signin_screen/signin_screen.dart';
 
 class OnboardingThreeScreen extends StatelessWidget {
   const OnboardingThreeScreen({Key? key}) : super(key: key);
@@ -78,11 +79,11 @@ class OnboardingThreeScreen extends StatelessWidget {
   }
 
   onTapCreateAnAccount(BuildContext context) {
-    AppNavigator.pushAndReplacePage(context, page: SignUpOneScreen());
+    AppNavigator.pushAndReplacePage(context, page: SignUpScreen());
   }
  
   onTapLogInToYourAccount(BuildContext context) {
-    AppNavigator.pushAndReplacePage(context, page: SigninOneScreen());
+    AppNavigator.pushAndReplacePage(context, page: SigninScreen());
 
   }
 }

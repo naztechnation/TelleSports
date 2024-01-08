@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/auth/sign_up_screen/sign_up_screen.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
+import '../../../utils/navigator/page_navigator.dart';
+import '../../app_navigation_screen/app_navigation_screen.dart';
+import '../../convert_betcodesone_container_screen/convert_betcodesone_container_screen.dart';
+import '../../convert_betcodesone_tab_container_page/convert_betcodesone_tab_container_page.dart';
+
 // ignore_for_file: must_be_immutable
-class SigninOneScreen extends StatelessWidget {
-  SigninOneScreen({Key? key}) : super(key: key);
+class SigninScreen extends StatelessWidget {
+  SigninScreen({Key? key}) : super(key: key);
 
   TextEditingController phoneNumberController = TextEditingController();
 
@@ -37,29 +43,44 @@ class SigninOneScreen extends StatelessWidget {
                           Text("Welcome  back!",
                               style: theme.textTheme.headlineLarge),
                           SizedBox(height: 30.v),
-                          _buildLoginForm(context),
+                          _buildEmailOrPhoneSection(context),
                           SizedBox(height: 11.v),
-                          _buildPasswordForm(context),
+                          _buildIncorrectPasswordSection(context),
                           SizedBox(height: 13.v),
-                          Align(
-                              alignment: Alignment.centerRight,
-                              child: GestureDetector(
-                                  onTap: () {
-                                    onTapTxtForgotPassword(context);
-                                  },
-                                  child: Text("Forgot Password?",
-                                      style: CustomTextStyles
-                                          .titleSmallBlue400_1
-                                          .copyWith(
-                                              decoration:
-                                                  TextDecoration.underline)))),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        onTapTxtForgotPassword(context);
+                                      },
+                                      child: Text("Sign Up Instead",
+                                          style: CustomTextStyles
+                                              .titleSmallBlue400_1
+                                              .copyWith(
+                                                  decoration:
+                                                      TextDecoration.underline)))),
+                              Align(
+                                  alignment: Alignment.centerRight,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        onTapTxtForgotPassword(context);
+                                      },
+                                      child: Text("Forgot Password?",
+                                          style: CustomTextStyles
+                                              .titleSmallBlue400_1
+                                              .copyWith(
+                                                  decoration:
+                                                      TextDecoration.underline)))),
+                            ],
+                          ),
                           SizedBox(height: 29.v),
                           CustomElevatedButton(
+                            onPressed: (() => onTapSignIn(context)),
                               text: "Login",
-                              margin: EdgeInsets.symmetric(horizontal: 4.h),
-                              onPressed: () {
-                                onTapLogin(context);
-                              }),
+                              margin: EdgeInsets.symmetric(horizontal: 4.h)),
                           Spacer(),
                           Text("or login with",
                               style: CustomTextStyles.labelLargeGray600),
@@ -86,65 +107,69 @@ class SigninOneScreen extends StatelessWidget {
                                       height: 24.adaptSize,
                                       width: 24.adaptSize)),
                               onPressed: () {
-                                onTapSignInWithApple(context);
+                                 
                               }),
                           SizedBox(height: 10.v)
                         ])))));
   }
 
   /// Section Widget
-  Widget _buildLoginForm(BuildContext context) {
+  Widget _buildEmailOrPhoneSection(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("E-mail or phone number", style: theme.textTheme.titleSmall),
+          Text("E-mail", style: theme.textTheme.titleSmall),
           SizedBox(height: 2.v),
           CustomTextFormField(
               controller: phoneNumberController,
-              hintText: "Enter your email or phone number",
+              hintText: "Enter your email",
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputType: TextInputType.emailAddress)
         ]));
   }
 
   /// Section Widget
-  Widget _buildPasswordForm(BuildContext context) {
+  Widget _buildPasswordSection(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text("Password", style: theme.textTheme.titleSmall),
+      SizedBox(height: 3.v),
+      CustomTextFormField(
+          controller: passwordController,
+          hintText: "************",
+          hintStyle: CustomTextStyles.titleSmallRed600,
+          textInputAction: TextInputAction.done,
+          textInputType: TextInputType.visiblePassword,
+          suffix: Container(
+              margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
+              child: CustomImageView(
+                  imagePath: ImageConstant.imgEyeoutlineBlueGray900,
+                  height: 24.adaptSize,
+                  width: 24.adaptSize)),
+          suffixConstraints: BoxConstraints(maxHeight: 48.v),
+          obscureText: true,
+          contentPadding: EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+    ]);
+  }
+
+  Widget _buildIncorrectPasswordSection(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Password", style: theme.textTheme.titleSmall),
-          SizedBox(height: 3.v),
-          CustomTextFormField(
-              controller: passwordController,
-              hintText: "*************",
-              hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputAction: TextInputAction.done,
-              textInputType: TextInputType.visiblePassword,
-              suffix: Container(
-                  margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
-                  child: CustomImageView(
-                      imagePath: ImageConstant.imgEyeoutlineBlueGray900,
-                      height: 24.adaptSize,
-                      width: 24.adaptSize)),
-              suffixConstraints: BoxConstraints(maxHeight: 48.v),
-              obscureText: true,
-              contentPadding:
-                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+          _buildPasswordSection(context),
+          SizedBox(height: 4.v),
+          
         ]));
   }
 
-  /// Navigates to the forgotPasswordScreen when the action is triggered.
   onTapTxtForgotPassword(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.forgotPasswordScreen);
   }
 
-  /// Navigates to the convertBetcodesoneContainerScreen when the action is triggered.
-  onTapLogin(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.convertBetcodesoneContainerScreen);
+  onTapSignUp(BuildContext context) {
+    AppNavigator.pushAndStackPage(context, page: SignUpScreen());
   }
 
-  /// Navigates to the convertBetcodesoneContainerScreen when the action is triggered.
-  onTapSignInWithApple(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.convertBetcodesoneContainerScreen);
+  onTapSignIn(BuildContext context) {
+    AppNavigator.pushAndStackPage(context, page: ConvertBetcodesoneContainerScreen());
   }
 }

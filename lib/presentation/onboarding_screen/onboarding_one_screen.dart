@@ -5,8 +5,8 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 
 import '../../utils/navigator/page_navigator.dart';
-import '../sign_up_one_screen/sign_up_one_screen.dart';
-import '../signin_one_screen/signin_one_screen.dart';
+import '../auth/signin_screen/signin_screen.dart';
+import '../auth/sign_up_screen/sign_up_screen.dart';
 
 class OnboardingOneScreen extends StatelessWidget {
   const OnboardingOneScreen({Key? key})
@@ -99,11 +99,11 @@ class OnboardingOneScreen extends StatelessWidget {
   }
 
    onTapCreateAnAccount(BuildContext context) {
-    AppNavigator.pushAndReplacePage(context, page: SignUpOneScreen());
+    AppNavigator.pushAndReplacePage(context, page: SignUpScreen());
   }
  
   onTapLogInToYourAccount(BuildContext context) {
-    AppNavigator.pushAndReplacePage(context, page: SigninOneScreen());
+    AppNavigator.pushAndReplacePage(context, page: SigninScreen());
 
   }
 }

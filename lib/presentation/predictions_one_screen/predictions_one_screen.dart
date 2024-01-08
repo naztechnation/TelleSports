@@ -158,7 +158,6 @@ class PredictionsOneScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildTextField3(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

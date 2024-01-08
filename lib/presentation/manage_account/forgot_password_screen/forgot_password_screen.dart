@@ -51,25 +51,26 @@ class ForgotPasswordScreen extends StatelessWidget {
                     ])))));
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
         leadingWidth: 389.h,
         leading: AppbarLeadingImage(
+          onTap: (){
+            Navigator.pop(context);
+          },
             imagePath: ImageConstant.imgVector,
             margin: EdgeInsets.fromLTRB(24.h, 20.v, 350.h, 20.v)));
   }
 
-  /// Section Widget
   Widget _buildTextField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("E-mail or phone number", style: theme.textTheme.titleSmall),
+          Text("E-mail", style: theme.textTheme.titleSmall),
           SizedBox(height: 2.v),
           CustomTextFormField(
               controller: phoneNumberController,
-              hintText: "Enter your email or phone number",
+              hintText: "Enter your email",
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.emailAddress)

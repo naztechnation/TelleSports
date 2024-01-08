@@ -3,15 +3,11 @@ import 'package:tellesports/presentation/splash_screen_onboarding_screen/splash_
 import 'package:tellesports/presentation/onboarding_screen/onboarding_one_screen.dart';
 import 'package:tellesports/presentation/onboarding_screen/onboarding_two_screen.dart';
 import 'package:tellesports/presentation/onboarding_screen/onboarding_three_screen.dart';
-import 'package:tellesports/presentation/sign_up_screen/sign_up_screen.dart';
-import 'package:tellesports/presentation/sign_up_two_screen/sign_up_two_screen.dart';
-import 'package:tellesports/presentation/sign_up_one_screen/sign_up_one_screen.dart';
-import 'package:tellesports/presentation/signin_one_screen/signin_one_screen.dart';
-import 'package:tellesports/presentation/signin_screen/signin_screen.dart';
-import 'package:tellesports/presentation/forgot_password_screen/forgot_password_screen.dart';
-import 'package:tellesports/presentation/verify_account_screen/verify_account_screen.dart';
-import 'package:tellesports/presentation/create_new_password_screen/create_new_password_screen.dart';
-import 'package:tellesports/presentation/convert_betcodesone_container_screen/convert_betcodesone_container_screen.dart';
+import 'package:tellesports/presentation/auth/sign_up_screen/sign_up_screen.dart';
+import 'package:tellesports/presentation/auth/signin_screen/signin_screen.dart';
+import 'package:tellesports/presentation/manage_account/forgot_password_screen/forgot_password_screen.dart';
+import 'package:tellesports/presentation/manage_account/verify_account_screen/verify_account_screen.dart';
+import 'package:tellesports/presentation/manage_account/create_new_password_screen/create_new_password_screen.dart';
 import 'package:tellesports/presentation/view_livescorestwo_screen/view_livescorestwo_screen.dart';
 import 'package:tellesports/presentation/buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import 'package:tellesports/presentation/community_chat_screen/community_chat_screen.dart';
@@ -37,11 +33,7 @@ class AppRoutes {
 
   static const String signUpScreen = '/sign_up_screen';
 
-  static const String signUpTwoScreen = '/sign_up_two_screen';
-
-  static const String signUpOneScreen = '/sign_up_one_screen';
-
-  static const String signinOneScreen = '/signin_one_screen';
+ 
 
   static const String signinScreen = '/signin_screen';
 
@@ -121,15 +113,12 @@ class AppRoutes {
     onboardingThreeScreen: (context) => OnboardingThreeScreen(),
     onboardingTwoScreen: (context) => OnboardingTwoScreen(),
     signUpScreen: (context) => SignUpScreen(),
-    signUpTwoScreen: (context) => SignUpTwoScreen(),
-    signUpOneScreen: (context) => SignUpOneScreen(),
-    signinOneScreen: (context) => SigninOneScreen(),
+     
     signinScreen: (context) => SigninScreen(),
     forgotPasswordScreen: (context) => ForgotPasswordScreen(),
     verifyAccountScreen: (context) => VerifyAccountScreen(),
     createNewPasswordScreen: (context) => CreateNewPasswordScreen(),
-    // convertBetcodesoneContainerScreen: (context) =>
-    //     ConvertBetcodesoneContainerScreen(),
+    
     viewLivescorestwoScreen: (context) => ViewLivescorestwoScreen(),
     buyTellacoinsScreen: (context) => BuyTellacoinsScreen(),
     communityChatScreen: (context) => CommunityChatScreen(),

@@ -1,8 +1,13 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/manage_account/verify_account_screen/verify_account_screen.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
+
+import '../../../utils/navigator/page_navigator.dart';
+import '../signin_screen/signin_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class SignUpScreen extends StatelessWidget {
@@ -29,8 +34,8 @@ class SignUpScreen extends StatelessWidget {
                   key: _formKey,
                   child: Container(
                       width: double.maxFinite,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16.h, vertical: 45.v),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.h, vertical: 45.v),
                       child: Column(children: [
                         SizedBox(height: 23.v),
                         CustomImageView(
@@ -56,16 +61,24 @@ class SignUpScreen extends StatelessWidget {
                             }),
                         SizedBox(height: 9.v),
                         RichText(
-                            text: TextSpan(children: [
+                          text: TextSpan(
+                            children: [
                               TextSpan(
-                                  text: "Already have an account? ",
-                                  style:
-                                      CustomTextStyles.titleSmallBluegray900_1),
+                                text: "Already have an account? ",
+                                style: CustomTextStyles.titleSmallBluegray900_1,
+                              ),
                               TextSpan(
-                                  text: "Sign in",
-                                  style: CustomTextStyles.titleSmallPrimary)
-                            ]),
-                            textAlign: TextAlign.left),
+                                text: "Sign in",
+                                style: CustomTextStyles.titleSmallPrimary,
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    onTapLogin(context);
+                                  },
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
                         SizedBox(height: 42.v),
                         CustomOutlinedButton(
                             text: "Sign in with Google",
@@ -73,7 +86,8 @@ class SignUpScreen extends StatelessWidget {
                             leftIcon: Container(
                                 margin: EdgeInsets.only(right: 10.h),
                                 child: CustomImageView(
-                                    imagePath: ImageConstant.imgSocialMediaIcons,
+                                    imagePath:
+                                        ImageConstant.imgSocialMediaIcons,
                                     height: 24.adaptSize,
                                     width: 24.adaptSize))),
                         SizedBox(height: 13.v),
@@ -88,7 +102,7 @@ class SignUpScreen extends StatelessWidget {
                                     height: 24.adaptSize,
                                     width: 24.adaptSize)),
                             onPressed: () {
-                              onTapSignInWithApple(context);
+                            //  onTapSignInWithApple(context);
                             }),
                         SizedBox(height: 13.v),
                         Container(
@@ -115,14 +129,16 @@ class SignUpScreen extends StatelessWidget {
                                   TextSpan(text: " "),
                                   TextSpan(
                                       text: "Terms of Service",
-                                      style: CustomTextStyles.titleSmallBlue400),
+                                      style:
+                                          CustomTextStyles.titleSmallBlue400),
                                   TextSpan(
                                       text: " and ",
                                       style: CustomTextStyles
                                           .titleSmallBluegray900_1),
                                   TextSpan(
                                       text: "Privacy Policy",
-                                      style: CustomTextStyles.titleSmallBlue400),
+                                      style:
+                                          CustomTextStyles.titleSmallBlue400),
                                   TextSpan(
                                       text: ".",
                                       style: CustomTextStyles
@@ -133,7 +149,6 @@ class SignUpScreen extends StatelessWidget {
             )));
   }
 
-  /// Section Widget
   Widget _buildUsernameTextField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
@@ -147,7 +162,6 @@ class SignUpScreen extends StatelessWidget {
         ]));
   }
 
-  /// Section Widget
   Widget _buildEmailTextField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
@@ -162,7 +176,6 @@ class SignUpScreen extends StatelessWidget {
         ]));
   }
 
-  /// Section Widget
   Widget _buildPhoneNumberTextField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
@@ -177,7 +190,6 @@ class SignUpScreen extends StatelessWidget {
         ]));
   }
 
-  /// Section Widget
   Widget _buildPasswordTextField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
@@ -203,13 +215,14 @@ class SignUpScreen extends StatelessWidget {
         ]));
   }
 
-  /// Navigates to the signUpTwoScreen when the action is triggered.
   onTapRegister(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.signUpTwoScreen);
+    AppNavigator.pushAndStackPage(context, page: VerifyAccountScreen());
+
   }
 
-  /// Navigates to the signUpOneScreen when the action is triggered.
-  onTapSignInWithApple(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.signUpOneScreen);
+  onTapLogin(BuildContext context) {
+     AppNavigator.pushAndStackPage(context, page: SigninScreen());
   }
+
+  
 }

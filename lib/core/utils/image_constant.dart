@@ -248,7 +248,7 @@ class ImageConstant {
   static String imgArrowRightOnprimary =
       '$imagePath/img_arrow_right_onprimary.svg';
 
-  static String imgNavConvertGray50001 =
+  static String imgNavConvertGray5000 =
       '$imagePath/img_nav_convert_gray_500_01.svg';
 
   static String imgNavProfilePrimary = '$imagePath/img_nav_profile_primary.svg';

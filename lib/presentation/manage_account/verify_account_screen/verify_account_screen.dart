@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/auth/signin_screen/signin_screen.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
+
+import '../../../utils/navigator/page_navigator.dart';
+import '../create_new_password_screen/create_new_password_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class VerifyAccountScreen extends StatelessWidget {
@@ -30,7 +34,7 @@ class VerifyAccountScreen extends StatelessWidget {
                             text: "Code has been send to ",
                             style: CustomTextStyles.titleSmallBluegray900_1),
                         TextSpan(
-                            text: "+23498982993992",
+                            text: "john@gmail.com",
                             style: CustomTextStyles.titleSmallBlue800)
                       ]),
                       textAlign: TextAlign.left),
@@ -40,7 +44,7 @@ class VerifyAccountScreen extends StatelessWidget {
                   _buildTextField(context),
                   SizedBox(height: 12.v),
                   Padding(
-                      padding: EdgeInsets.only(left: 56.h, right: 48.h),
+                      padding: EdgeInsets.only(left: 12, right: 12),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -48,14 +52,16 @@ class VerifyAccountScreen extends StatelessWidget {
                                 padding: EdgeInsets.only(bottom: 1.v),
                                 child: Text("Didn’t Receive Code?",
                                     style: theme.textTheme.bodyMedium)),
-                            Padding(
-                                padding: EdgeInsets.only(left: 8.h),
-                                child: Text("Resend Code",
-                                    style: CustomTextStyles
-                                        .titleSmallPoppinsBlue400
-                                        .copyWith(
-                                            decoration:
-                                                TextDecoration.underline)))
+                            Expanded(
+                              child: Padding(
+                                  padding: EdgeInsets.only(left: 8.h),
+                                  child: Text("Resend Code",
+                                      style: CustomTextStyles
+                                          .titleSmallPoppinsBlue400
+                                          .copyWith(
+                                              decoration:
+                                                  TextDecoration.underline))),
+                            )
                           ])),
                   SizedBox(height: 7.v),
                   Text("Resend code in 00:59",
@@ -71,16 +77,18 @@ class VerifyAccountScreen extends StatelessWidget {
                 ]))));
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
         leadingWidth: 389.h,
         leading: AppbarLeadingImage(
             imagePath: ImageConstant.imgVector,
-            margin: EdgeInsets.fromLTRB(24.h, 20.v, 350.h, 20.v)));
+            margin: EdgeInsets.fromLTRB(24.h, 20.v, 350.h, 20.v),
+            onTap: (){
+              Navigator.pop(context);
+            },
+            ));
   }
 
-  /// Section Widget
   Widget _buildTextField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
@@ -95,8 +103,8 @@ class VerifyAccountScreen extends StatelessWidget {
         ]));
   }
 
-  /// Navigates to the convertBetcodesoneContainerScreen when the action is triggered.
   onTapVerifyAccount(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.convertBetcodesoneContainerScreen);
+
+    AppNavigator.pushAndStackPage(context, page: CreateNewPasswordScreen());
   }
 }

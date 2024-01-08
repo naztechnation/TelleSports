@@ -1,3 +1,5 @@
+import 'package:tellesports/utils/navigator/page_navigator.dart';
+
 import '../view_livescoresone_page/widgets/matchcard_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -94,6 +96,6 @@ class ViewLivescoresonePageState extends State<ViewLivescoresonePage>
   }
 
   onTapCardMatch(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.viewLivescorestwoScreen);
+    AppNavigator.pushAndStackPage(context, page: ViewLivescoresonePage());
   }
 }
