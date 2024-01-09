@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 
-class ViewLivescoresonePage extends StatefulWidget {
-  const ViewLivescoresonePage({Key? key}) : super(key: key);
+import 'view_livescores_details_screen.dart';
+
+class ViewLivescoresPage extends StatefulWidget {
+  const ViewLivescoresPage({Key? key}) : super(key: key);
 
   @override
-  ViewLivescoresonePageState createState() => ViewLivescoresonePageState();
+  ViewLivescoresPageState createState() => ViewLivescoresPageState();
 }
 
-class ViewLivescoresonePageState extends State<ViewLivescoresonePage>
-    with AutomaticKeepAliveClientMixin<ViewLivescoresonePage> {
+class ViewLivescoresPageState extends State<ViewLivescoresPage>
+    with AutomaticKeepAliveClientMixin<ViewLivescoresPage> {
   @override
   bool get wantKeepAlive => true;
 
@@ -37,7 +39,6 @@ class ViewLivescoresonePageState extends State<ViewLivescoresonePage>
                 ])))));
   }
 
-  /// Section Widget
   Widget _buildTopNavLivescores(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Expanded(
@@ -79,7 +80,6 @@ class ViewLivescoresonePageState extends State<ViewLivescoresonePage>
     ]);
   }
 
-  /// Section Widget
   Widget _buildMatchCard(BuildContext context) {
     return ListView.separated(
         physics: BouncingScrollPhysics(),
@@ -87,7 +87,7 @@ class ViewLivescoresonePageState extends State<ViewLivescoresonePage>
         separatorBuilder: (context, index) {
           return SizedBox(height: 38.v);
         },
-        itemCount: 3,
+        itemCount: 4,
         itemBuilder: (context, index) {
           return MatchcardItemWidget(onTapCardMatch: () {
             onTapCardMatch(context);
@@ -96,6 +96,6 @@ class ViewLivescoresonePageState extends State<ViewLivescoresonePage>
   }
 
   onTapCardMatch(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: ViewLivescoresonePage());
+    AppNavigator.pushAndStackPage(context, page: ViewLivescoresDetailsScreen());
   }
 }

@@ -6,9 +6,7 @@ import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 import '../../../utils/navigator/page_navigator.dart';
-import '../../app_navigation_screen/app_navigation_screen.dart';
-import '../../convert_betcodesone_container_screen/convert_betcodesone_container_screen.dart';
-import '../../convert_betcodesone_tab_container_page/convert_betcodesone_tab_container_page.dart';
+import '../../landing_page/landing_page.dart';
 
 // ignore_for_file: must_be_immutable
 class SigninScreen extends StatelessWidget {
@@ -170,6 +168,6 @@ class SigninScreen extends StatelessWidget {
   }
 
   onTapSignIn(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: ConvertBetcodesoneContainerScreen());
+    AppNavigator.pushAndStackPage(context, page: LandingPage());
   }
 }

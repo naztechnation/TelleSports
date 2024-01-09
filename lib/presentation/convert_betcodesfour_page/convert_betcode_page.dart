@@ -1,3 +1,4 @@
+import '../../widgets/custom_outlined_button.dart';
 import '../convert_betcodesfour_page/widgets/singleconversion3_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -6,16 +7,19 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_icon_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
-class ConvertBetcodesfourPage extends StatefulWidget {
-  const ConvertBetcodesfourPage({Key? key}) : super(key: key);
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
+
+
+class ConvertBetcodesPage extends StatefulWidget {
+  const ConvertBetcodesPage({Key? key}) : super(key: key);
 
   @override
-  ConvertBetcodesfourPageState createState() => ConvertBetcodesfourPageState();
+  ConvertBetcodesPageState createState() => ConvertBetcodesPageState();
 }
 
 // ignore_for_file: must_be_immutable
-class ConvertBetcodesfourPageState extends State<ConvertBetcodesfourPage>
-    with AutomaticKeepAliveClientMixin<ConvertBetcodesfourPage> {
+class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
+    with AutomaticKeepAliveClientMixin<ConvertBetcodesPage> {
   List<String> dropdownItemList = ["Item One", "Item Two", "Item Three"];
 
   List<String> dropdownItemList1 = ["Item One", "Item Two", "Item Three"];
@@ -77,7 +81,28 @@ class ConvertBetcodesfourPageState extends State<ConvertBetcodesfourPage>
                                           .titleMediumBlack900Bold))
                             ]))),
                     SizedBox(height: 16.v),
-                    _buildSingleConversion(context)
+                    _buildSingleConversion(context),
+
+                    SizedBox(height: 17.v),
+
+
+                    Text(
+                        "Start converting betcodes from 200 available bookies!",
+                        style: CustomTextStyles.labelLargeBlack900),
+                    SizedBox(height: 10.v),
+                    _buildBuyTellacoins(context),
+                    SizedBox(height: 11.v),
+                    Container(
+                        height: 198.v,
+                        width: 193.h,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 28.h, vertical: 25.v),
+                        
+                        child: CustomImageView(
+                          fit: BoxFit.cover,
+                            imagePath: ImageConstant.imgIllustrationStartup,
+                            width: MediaQuery.sizeOf(context).width,
+                            alignment: Alignment.bottomLeft))
                   ])
                 ])))));
   }
@@ -243,6 +268,11 @@ class ConvertBetcodesfourPageState extends State<ConvertBetcodesfourPage>
             }));
   }
 
+
+  Widget _buildBuyTellacoins(BuildContext context) {
+    return CustomOutlinedButton(
+        text: "Buy Tellacoins", margin: EdgeInsets.symmetric(horizontal: 20.h));
+  }
   /// Navigates to the buyTellacoinsScreen when the action is triggered.
   onTapBtnPlus(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.buyTellacoinsScreen);

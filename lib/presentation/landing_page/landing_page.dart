@@ -2,63 +2,51 @@
 
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LandingPage(),
-    );
-  }
-}
+import '../../widgets/custom_bottom_bar.dart';
+import '../community_tab_container_page/community_tab_container_page.dart';
+import '../convert_betcodesone_tab_container_page/convert_betcodesone_tab_container_page.dart';
+import '../predictions_page/predictions_page.dart';
+import '../predictions_two_page/predictions_two_page.dart';
 
 class LandingPage extends StatefulWidget {
+  const LandingPage({Key? key}) : super(key: key);
+
   @override
-  _LandingPageState createState() => _LandingPageState();
+  State<LandingPage> createState() => _LandingPageState();
 }
 
 class _LandingPageState extends State<LandingPage> {
-  int _currentIndex = 0;
 
+   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Landing Page'),
-      ),
-      body: Center(
-        child: Text('Content for the selected tab goes here'),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
+    return   Scaffold(
+
+
+      body: _buildPage(_currentIndex),
+      bottomNavigationBar: CustomBottomBar(
+
+        onChanged: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Convert',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Community',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            activeIcon: Icon(Icons.favorite), 
-            label: 'Predictions',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+       ),
     );
+  }
+
+    Widget _buildPage(int index) {
+    switch (index) {
+      case 0:
+        return ConvertBetcodesoneTabContainerPage();
+      case 1:
+        return CommunityTabContainerPage();
+      case 2:
+        return PredictionsTwoPage();
+      case 3:
+        return PredictionsPage();
+      default:
+        return DefaultWidge();
+    }
   }
 }

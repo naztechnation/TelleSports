@@ -8,7 +8,7 @@ import 'package:tellesports/presentation/auth/signin_screen/signin_screen.dart';
 import 'package:tellesports/presentation/manage_account/forgot_password_screen/forgot_password_screen.dart';
 import 'package:tellesports/presentation/manage_account/verify_account_screen/verify_account_screen.dart';
 import 'package:tellesports/presentation/manage_account/create_new_password_screen/create_new_password_screen.dart';
-import 'package:tellesports/presentation/view_livescorestwo_screen/view_livescorestwo_screen.dart';
+import 'package:tellesports/presentation/view_livescoresone_page/view_livescores_details_screen.dart';
 import 'package:tellesports/presentation/buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import 'package:tellesports/presentation/community_chat_screen/community_chat_screen.dart';
 import 'package:tellesports/presentation/community_chat_condensed_screen/community_chat_condensed_screen.dart';
@@ -119,7 +119,6 @@ class AppRoutes {
     verifyAccountScreen: (context) => VerifyAccountScreen(),
     createNewPasswordScreen: (context) => CreateNewPasswordScreen(),
     
-    viewLivescorestwoScreen: (context) => ViewLivescorestwoScreen(),
     buyTellacoinsScreen: (context) => BuyTellacoinsScreen(),
     communityChatScreen: (context) => CommunityChatScreen(),
     communityChatCondensedScreen: (context) => CommunityChatCondensedScreen(),

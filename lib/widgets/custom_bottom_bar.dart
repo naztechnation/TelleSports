@@ -4,7 +4,7 @@ import 'package:tellesports/core/app_export.dart';
 class CustomBottomBar extends StatefulWidget {
   CustomBottomBar({this.onChanged});
 
-  Function(BottomBarEnum)? onChanged;
+  Function(int)? onChanged;
 
   @override
   CustomBottomBarState createState() => CustomBottomBarState();
@@ -52,14 +52,14 @@ class CustomBottomBarState extends State<CustomBottomBar> {
         elevation: 0,
         currentIndex: selectedIndex,
         type: BottomNavigationBarType.fixed,
-        items: List.generate(bottomMenuList.length, (index) {
-          return BottomNavigationBarItem(
+        items: [
+          BottomNavigationBarItem(
             icon: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CustomImageView(
-                  imagePath: bottomMenuList[index].icon,
+                  imagePath: bottomMenuList[0].icon,
                   height: 40.adaptSize,
                   width: 40.adaptSize,
                   color: appTheme.gray50001,
@@ -67,7 +67,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                 Padding(
                   padding: EdgeInsets.only(top: 4.v),
                   child: Text(
-                    bottomMenuList[index].title ?? "",
+                    bottomMenuList[0].title ?? "",
                     style: CustomTextStyles.labelLargeGray50001.copyWith(
                       color: appTheme.gray50001,
                     ),
@@ -80,7 +80,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CustomImageView(
-                  imagePath: bottomMenuList[index].activeIcon,
+                  imagePath: bottomMenuList[0].activeIcon,
                   height: 40.adaptSize,
                   width: 40.adaptSize,
                   color: theme.colorScheme.primary,
@@ -88,7 +88,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),
                   child: Text(
-                    bottomMenuList[index].title ?? "",
+                    bottomMenuList[0].title ?? "",
                     style: CustomTextStyles.labelLargePrimary.copyWith(
                       color: theme.colorScheme.primary,
                     ),
@@ -97,11 +97,146 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               ],
             ),
             label: '',
-          );
-        }),
+          ),
+          BottomNavigationBarItem(
+            icon: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomImageView(
+                  imagePath: bottomMenuList[1].icon,
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  color: appTheme.gray50001,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4.v),
+                  child: Text(
+                    bottomMenuList[1].title ?? "",
+                    style: CustomTextStyles.labelLargeGray50001.copyWith(
+                      color: appTheme.gray50001,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            activeIcon: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomImageView(
+                  imagePath: bottomMenuList[1].activeIcon,
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  color: theme.colorScheme.primary,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 3.v),
+                  child: Text(
+                    bottomMenuList[1].title ?? "",
+                    style: CustomTextStyles.labelLargePrimary.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomImageView(
+                  imagePath: bottomMenuList[2].icon,
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  color: appTheme.gray50001,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4.v),
+                  child: Text(
+                    bottomMenuList[2].title ?? "",
+                    style: CustomTextStyles.labelLargeGray50001.copyWith(
+                      color: appTheme.gray50001,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            activeIcon: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomImageView(
+                  imagePath: bottomMenuList[2].activeIcon,
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  color: theme.colorScheme.primary,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 3.v),
+                  child: Text(
+                    bottomMenuList[2].title ?? "",
+                    style: CustomTextStyles.labelLargePrimary.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomImageView(
+                  imagePath: bottomMenuList[3].icon,
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  color: appTheme.gray50001,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4.v),
+                  child: Text(
+                    bottomMenuList[3].title ?? "",
+                    style: CustomTextStyles.labelLargeGray50001.copyWith(
+                      color: appTheme.gray50001,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            activeIcon: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomImageView(
+                  imagePath: bottomMenuList[3].activeIcon,
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  color: theme.colorScheme.primary,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 3.v),
+                  child: Text(
+                    bottomMenuList[3].title ?? "",
+                    style: CustomTextStyles.labelLargePrimary.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            label: '',
+          ),
+        ],
         onTap: (index) {
           selectedIndex = index;
-            widget.onChanged?.call(bottomMenuList[index].type);
+            widget.onChanged?.call(index);
           setState(() {});
         },
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/convert_betcodesfour_page/convert_betcodesfour_page.dart';
-import 'package:tellesports/presentation/view_livescoresone_page/view_livescoresone_page.dart';
+import 'package:tellesports/presentation/convert_betcodesfour_page/convert_betcode_page.dart';
+import 'package:tellesports/presentation/view_livescoresone_page/view_livescores_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_circleimage.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_five.dart';
 import 'package:tellesports/widgets/app_bar/appbar_title.dart';
@@ -50,8 +50,8 @@ class ConvertBetcodesoneTabContainerPageState
                   child: TabBarView(
                     controller: tabviewController,
                     children: [
-                      ConvertBetcodesfourPage(),
-                      ViewLivescoresonePage(),
+                      ConvertBetcodesPage(),
+                      ViewLivescoresPage(),
                     ],
                   ),
                 ),

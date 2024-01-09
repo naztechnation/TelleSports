@@ -78,6 +78,7 @@ class ConvertBetcodesonePageState extends State<ConvertBetcodesonePage>
                     Container(
                         height: 198.v,
                         width: 193.h,
+                        
                         padding: EdgeInsets.symmetric(
                             horizontal: 28.h, vertical: 25.v),
                         decoration: BoxDecoration(
@@ -94,7 +95,6 @@ class ConvertBetcodesonePageState extends State<ConvertBetcodesonePage>
                 ])))));
   }
 
-  /// Section Widget
   Widget _buildTelacoinsBalance(BuildContext context) {
     return Card(
         clipBehavior: Clip.antiAlias,
@@ -163,7 +163,6 @@ class ConvertBetcodesonePageState extends State<ConvertBetcodesonePage>
             ])));
   }
 
-  /// Section Widget
   Widget _buildBetCodeSelector(BuildContext context) {
     return Container(
         width: double.maxFinite,
@@ -205,7 +204,6 @@ class ConvertBetcodesonePageState extends State<ConvertBetcodesonePage>
         ]));
   }
 
-  /// Section Widget
   Widget _buildEnterCode(BuildContext context) {
     return CustomTextFormField(
         width: 173.h,
@@ -218,7 +216,6 @@ class ConvertBetcodesonePageState extends State<ConvertBetcodesonePage>
         fillColor: appTheme.blueGray50);
   }
 
-  /// Section Widget
   Widget _buildConvertedCode(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 4.h),

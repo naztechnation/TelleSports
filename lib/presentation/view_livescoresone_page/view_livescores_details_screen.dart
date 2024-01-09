@@ -6,15 +6,12 @@ import 'package:tellesports/widgets/app_bar/appbar_subtitle_six.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_three.dart';
 import 'package:tellesports/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
-import 'package:tellesports/widgets/custom_bottom_bar.dart';
 
-class ViewLivescorestwoScreen extends StatelessWidget {
-  ViewLivescorestwoScreen({Key? key})
+class ViewLivescoresDetailsScreen extends StatelessWidget {
+  ViewLivescoresDetailsScreen({Key? key})
       : super(
           key: key,
         );
-
-  // GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +23,7 @@ class ViewLivescorestwoScreen extends StatelessWidget {
           width: double.maxFinite,
           child: Column(
             children: [
-              SizedBox(height: 50.v),
+              SizedBox(height: 20.v),
               _buildTopnavMatchDetails(context),
               SizedBox(height: 16.v),
               Expanded(
@@ -371,7 +368,7 @@ class ViewLivescorestwoScreen extends StatelessWidget {
             ],
           ),
         ),
-       // bottomNavigationBar: _buildBottomBar(context),
+        // bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
@@ -380,14 +377,18 @@ class ViewLivescorestwoScreen extends StatelessWidget {
   Widget _buildTopnavMatchDetails(BuildContext context) {
     return Container(
       decoration: AppDecoration.fillWhiteA,
+      margin: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           SizedBox(height: 6.v),
           CustomAppBar(
-            height: 33.v,
+            height: 60.v,
             leadingWidth: 44.h,
             leading: AppbarLeadingImage(
+              onTap: (){
+                Navigator.pop(context);
+              },
               imagePath: ImageConstant.imgArrowBack,
               margin: EdgeInsets.only(
                 left: 20.h,
@@ -506,179 +507,110 @@ class ViewLivescorestwoScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(right: 16.h),
-            child: Row(
-              children: [
-                CustomImageView(
-                  imagePath: ImageConstant.imgLeftIconRed400,
-                  height: 16.adaptSize,
-                  width: 16.adaptSize,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 4.h),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Substitution",
-                          style: theme.textTheme.labelMedium,
-                        ),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgTelevisionRed400,
-                          height: 16.adaptSize,
-                          width: 16.adaptSize,
-                          margin: EdgeInsets.only(left: 24.h),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 4.h),
-                          child: Text(
-                            "Red Card",
-                            style: theme.textTheme.labelMedium,
-                          ),
-                        ),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgTelevision,
-                          height: 16.adaptSize,
-                          width: 16.adaptSize,
-                          margin: EdgeInsets.only(left: 24.h),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 4.h),
-                          child: Text(
-                            "Yellow Card",
-                            style: theme.textTheme.labelMedium,
-                          ),
-                        ),
-                        Container(
-                          width: 53.h,
-                          margin: EdgeInsets.only(left: 24.h),
-                          child: Row(
-                            children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgClose,
-                                height: 16.adaptSize,
-                                width: 16.adaptSize,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 4.h),
-                                child: Text(
-                                  "Corner",
-                                  style: theme.textTheme.labelMedium,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          Wrap(
+            children: [
+              CustomImageView(
+                imagePath: ImageConstant.imgLeftIconRed400,
+                height: 16.adaptSize,
+                width: 16.adaptSize,
+              ),
+                          SizedBox(width: 6),
+
+              Text(
+                "Substitution",
+                style: theme.textTheme.labelMedium,
+              ),
+          SizedBox(width: 12),
+
+              CustomImageView(
+                imagePath: ImageConstant.imgTelevisionRed400,
+                height: 16.adaptSize,
+                width: 16.adaptSize,
+              ),
+                          SizedBox(width: 6),
+
+              Text(
+                "Red Card",
+                style: theme.textTheme.labelMedium,
+              ),
+          SizedBox(width: 12),
+
+              CustomImageView(
+                imagePath: ImageConstant.imgTelevision,
+                height: 16.adaptSize,
+                width: 16.adaptSize,
+              ),
+                          SizedBox(width: 6),
+              
+              Text(
+                "Yellow Card",
+                style: theme.textTheme.labelMedium,
+              ),
+          SizedBox(width: 12),
+
+              CustomImageView(
+                imagePath: ImageConstant.imgClose,
+                height: 16.adaptSize,
+                width: 16.adaptSize,
+              ),
+                          SizedBox(width: 6),
+
+              Text(
+                "Corner",
+                style: theme.textTheme.labelMedium,
+              ),
+            ],
           ),
           SizedBox(height: 10.v),
-          Padding(
-            padding: EdgeInsets.only(right: 31.h),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 42.h,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomImageView(
-                        imagePath: ImageConstant.imgLeftIconWhiteA700,
-                        height: 16.adaptSize,
-                        width: 16.adaptSize,
-                      ),
-                      Text(
-                        "Goal",
-                        style: theme.textTheme.labelMedium,
-                      ),
-                    ],
+          Wrap(
+            children: [
+              CustomImageView(
+                    imagePath: ImageConstant.imgLeftIconWhiteA700,
+                    height: 16.adaptSize,
+                    width: 16.adaptSize,
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 24.h),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 67.h,
-                          child: Row(
-                            children: [
-                              CustomImageView(
-                                imagePath:
-                                    ImageConstant.imgLeftIconWhiteA70016x16,
-                                height: 16.adaptSize,
-                                width: 16.adaptSize,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 4.h,
-                                  top: 2.v,
-                                ),
-                                child: Text(
-                                  "Own-goal",
-                                  style: theme.textTheme.labelMedium,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 170.h,
-                          margin: EdgeInsets.only(left: 24.h),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 55.h,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomImageView(
-                                      imagePath: ImageConstant.imgLeftIcon16x16,
-                                      height: 16.adaptSize,
-                                      width: 16.adaptSize,
-                                    ),
-                                    Text(
-                                      "Penalty",
-                                      style: theme.textTheme.labelMedium,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 91.h,
-                                margin: EdgeInsets.only(left: 24.h),
-                                child: Row(
-                                  children: [
-                                    CustomImageView(
-                                      imagePath: ImageConstant.imgLeftIcon1,
-                                      height: 16.adaptSize,
-                                      width: 16.adaptSize,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 4.h),
-                                      child: Text(
-                                        "Penalty Missed",
-                                        style: theme.textTheme.labelMedium,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  SizedBox(width: 6),
+                  Text(
+                    "Goal",
+                    style: theme.textTheme.labelMedium,
                   ),
-                ),
-              ],
-            ),
+          SizedBox(width: 12),
+
+                   CustomImageView(
+                          imagePath: ImageConstant.imgLeftIconWhiteA70016x16,
+                          height: 16.adaptSize,
+                          width: 16.adaptSize,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          "Own-goal",
+                          style: theme.textTheme.labelMedium,
+                        ),
+          SizedBox(width: 12),
+
+                        CustomImageView(
+                              imagePath: ImageConstant.imgLeftIcon16x16,
+                              height: 16.adaptSize,
+                              width: 16.adaptSize,
+                            ),
+                            SizedBox(width: 6),
+                            Text(
+                              "Penalty",
+                              style: theme.textTheme.labelMedium,
+                            ),
+          SizedBox(width: 12),
+
+              CustomImageView(
+                            imagePath: ImageConstant.imgLeftIcon1,
+                            height: 16.adaptSize,
+                            width: 16.adaptSize,
+                          ),
+                          SizedBox(width: 6),
+                          Text(
+                            "Penalty Missed",
+                            style: theme.textTheme.labelMedium,
+                          ),
+            ],
           ),
         ],
       ),
@@ -686,14 +618,14 @@ class ViewLivescorestwoScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {
-        // Navigator.pushNamed(
-        //     navigatorKey.currentContext!, getCurrentRoute(type));
-      },
-    );
-  }
+  // Widget _buildBottomBar(BuildContext context) {
+  //   return CustomBottomBar(
+  //     onChanged: (BottomBarEnum type) {
+  //       // Navigator.pushNamed(
+  //       //     navigatorKey.currentContext!, getCurrentRoute(type));
+  //     },
+  //   );
+  // }
 
   /// Common widget
   Widget _buildColumn(
@@ -917,6 +849,4 @@ class ViewLivescorestwoScreen extends StatelessWidget {
       ],
     );
   }
-
-  
 }
