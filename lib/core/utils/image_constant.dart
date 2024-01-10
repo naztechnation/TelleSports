@@ -254,4 +254,5 @@ class ImageConstant {
   static String imgNavProfilePrimary = '$imagePath/img_nav_profile_primary.svg';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+  static String cash = 'assets/images/payments.svg';
 }

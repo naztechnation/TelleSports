@@ -85,7 +85,7 @@ class CommunityInfoTwoPageState extends State<CommunityInfoTwoPage>
     );
   }
 
-  /// Section Widget
+   
   Widget _buildUserProfileSection(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(

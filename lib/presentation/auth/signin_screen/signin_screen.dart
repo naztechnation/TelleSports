@@ -111,7 +111,7 @@ class SigninScreen extends StatelessWidget {
                         ])))));
   }
 
-  /// Section Widget
+   
   Widget _buildEmailOrPhoneSection(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
@@ -126,7 +126,7 @@ class SigninScreen extends StatelessWidget {
         ]));
   }
 
-  /// Section Widget
+   
   Widget _buildPasswordSection(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text("Password", style: theme.textTheme.titleSmall),

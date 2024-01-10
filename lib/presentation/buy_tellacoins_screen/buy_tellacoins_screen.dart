@@ -1,3 +1,6 @@
+import 'package:tellesports/utils/navigator/page_navigator.dart';
+
+import '../../widgets/custom_outlined_button.dart';
 import '../buy_tellacoins_screen/widgets/communityleader_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -6,12 +9,50 @@ import 'package:tellesports/widgets/app_bar/appbar_subtitle.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 
+import '../withdraw_tellacoin.dart/withdraw_tellacoins_one_screen.dart';
+
 class BuyTellacoinsScreen extends StatelessWidget {
-  const BuyTellacoinsScreen({Key? key})
+  BuyTellacoinsScreen({Key? key})
       : super(
           key: key,
         );
 
+  final List<Map<String, dynamic>> myList = [
+    {
+      'amount': 'N2000',
+      'title': 'Community leader',
+      'color': Color(0xFF1E654A),
+      'bg': Color(0xFF84CBB0),
+      'body': [
+        '150 Tellacoins',
+        'Create and manage a community.',
+        'Earn rewards and money through your community.'
+      ],
+      'isCommunity': true,
+    },
+    {
+      'amount': 'N1500',
+      'title': 'Regular',
+      'color': Color(0xFF1E654A),
+      'bg': Color(0xFF84CBB0),
+      'body': [
+        '100 Tellacoins',
+        'Join communities and connect with other users.',
+      ],
+      'isFlagTrue': false,
+    },
+    {
+      'amount': 'N700',
+      'title': 'Starter',
+      'color': Color(0xFF1E654A),
+      'bg': Color(0xFF84CBB0),
+      'body': [
+        '50 Tellacoins',
+        'Join communities and connect with other users.',
+      ],
+      'isFlagTrue': false,
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
@@ -26,6 +67,8 @@ class BuyTellacoinsScreen extends StatelessWidget {
             children: [
               _buildTelacoinsBalance(context),
               SizedBox(height: 16.v),
+              _buildCashTellacoins(context),
+              SizedBox(height: 16.v),
               Divider(
                 color: appTheme.gray50001,
               ),
@@ -38,7 +81,6 @@ class BuyTellacoinsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 86.v,
@@ -50,6 +92,9 @@ class BuyTellacoinsScreen extends StatelessWidget {
           top: 50.v,
           bottom: 12.v,
         ),
+        onTap: () {
+          Navigator.pop(context);
+        },
       ),
       centerTitle: true,
       title: AppbarSubtitle(
@@ -63,7 +108,6 @@ class BuyTellacoinsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildStarterPlan(BuildContext context) {
     return CustomElevatedButton(
       height: 23.v,
@@ -76,32 +120,31 @@ class BuyTellacoinsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildTelacoinsBalance(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       margin: EdgeInsets.all(0),
-      color: appTheme.teal800,
+      color: Color(0xFF1E654A),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusStyle.roundedBorder8,
       ),
       child: Container(
-        height: 72.v,
+        height: 85.v,
         width: 350.h,
-        decoration: AppDecoration.fillTeal.copyWith(
-          borderRadius: BorderRadiusStyle.roundedBorder8,
-        ),
+        decoration: BoxDecoration(color: Color(0xFF1E654A)),
         child: Stack(
           alignment: Alignment.topLeft,
           children: [
             CustomImageView(
+              color: Color(0xFF144432),
               imagePath: ImageConstant.imgEllipse74,
               height: 41.v,
               width: 317.h,
               alignment: Alignment.bottomRight,
             ),
             CustomImageView(
+              color: Color(0xFF144432),
               imagePath: ImageConstant.imgEllipse84,
               height: 40.v,
               width: 288.h,
@@ -150,7 +193,16 @@ class BuyTellacoinsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+  Widget _buildCashTellacoins(BuildContext context) {
+    return CustomOutlinedButton(
+        leftIcon: CustomImageView(
+          imagePath: ImageConstant.cash,
+        ),
+        onPressed: () => AppNavigator.pushAndStackPage(context, page: WithdrawTellaCoins()),
+        text: "  Cash Tellacoins",
+        margin: EdgeInsets.symmetric(horizontal: 20.h));
+  }
+
   Widget _buildCommunityLeader(BuildContext context) {
     return Expanded(
       child: Padding(
@@ -166,9 +218,12 @@ class BuyTellacoinsScreen extends StatelessWidget {
               height: 24.v,
             );
           },
-          itemCount: 3,
+          itemCount: myList.length,
           itemBuilder: (context, index) {
-            return CommunityleaderItemWidget();
+            return CommunityleaderItemWidget(
+              data: myList[index],
+              body: myList[index]['body'],
+            );
           },
         ),
       ),

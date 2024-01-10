@@ -81,7 +81,7 @@ class ConvertBetcodestwoPageState extends State<ConvertBetcodestwoPage>
                 ])))));
   }
 
-  /// Section Widget
+   
   Widget _buildTelacoinsBalance(BuildContext context) {
     return Card(
         clipBehavior: Clip.antiAlias,
@@ -150,7 +150,7 @@ class ConvertBetcodestwoPageState extends State<ConvertBetcodestwoPage>
             ])));
   }
 
-  /// Section Widget
+   
   Widget _buildBetCodeSelector(BuildContext context) {
     return Container(
         width: double.maxFinite,
@@ -192,7 +192,7 @@ class ConvertBetcodestwoPageState extends State<ConvertBetcodestwoPage>
         ]));
   }
 
-  /// Section Widget
+   
   Widget _buildFrameNine(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.h),
@@ -222,7 +222,7 @@ class ConvertBetcodestwoPageState extends State<ConvertBetcodestwoPage>
         ]));
   }
 
-  /// Section Widget
+   
   Widget _buildSingleConversion(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.h),

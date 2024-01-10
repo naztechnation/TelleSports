@@ -90,7 +90,7 @@ class CommunityChatCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildProfilePictureStack(BuildContext context) {
     return SizedBox(
       height: 136.v,
@@ -192,7 +192,7 @@ class CommunityChatCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildJohnsonColumn(BuildContext context) {
     return Expanded(
       child: Padding(
@@ -229,7 +229,7 @@ class CommunityChatCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildJohnsonRow(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
@@ -256,7 +256,7 @@ class CommunityChatCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildLeftBubbleMediumColumn(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
@@ -406,7 +406,7 @@ class CommunityChatCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildUiBottomBarRow(BuildContext context) {
     return Container(
       width: double.maxFinite,

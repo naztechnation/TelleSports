@@ -373,7 +373,7 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildTopnavMatchDetails(BuildContext context) {
     return Container(
       decoration: AppDecoration.fillWhiteA,
@@ -459,7 +459,7 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildContent(BuildContext context) {
     return Container(
       width: 374.h,
@@ -477,7 +477,7 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildContent1(BuildContext context) {
     return Container(
       width: 374.h,
@@ -495,7 +495,7 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildLegend(BuildContext context) {
     return Container(
       width: double.maxFinite,
@@ -617,7 +617,7 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   // Widget _buildBottomBar(BuildContext context) {
   //   return CustomBottomBar(
   //     onChanged: (BottomBarEnum type) {

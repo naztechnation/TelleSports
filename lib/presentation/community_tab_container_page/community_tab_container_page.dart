@@ -58,7 +58,7 @@ class CommunityTabContainerPageState extends State<CommunityTabContainerPage>
     );
   }
 
-  /// Section Widget
+   
   Widget _buildTopSection(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.h),

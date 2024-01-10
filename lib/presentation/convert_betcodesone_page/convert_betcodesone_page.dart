@@ -231,7 +231,7 @@ class ConvertBetcodesonePageState extends State<ConvertBetcodesonePage>
             fillColor: appTheme.blueGray50));
   }
 
-  /// Section Widget
+   
   Widget _buildFrameNine(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.h),
@@ -241,7 +241,7 @@ class ConvertBetcodesonePageState extends State<ConvertBetcodesonePage>
         ]));
   }
 
-  /// Section Widget
+   
   Widget _buildConvertCode(BuildContext context) {
     return CustomElevatedButton(
         text: "Convert code",
@@ -250,7 +250,7 @@ class ConvertBetcodesonePageState extends State<ConvertBetcodesonePage>
         buttonTextStyle: CustomTextStyles.titleSmallGray600);
   }
 
-  /// Section Widget
+   
   Widget _buildBuyTellacoins(BuildContext context) {
     return CustomOutlinedButton(
         text: "Buy Tellacoins", margin: EdgeInsets.symmetric(horizontal: 20.h));

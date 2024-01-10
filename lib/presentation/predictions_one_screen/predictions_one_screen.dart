@@ -94,7 +94,7 @@ class PredictionsOneScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 93.v,
@@ -119,7 +119,7 @@ class PredictionsOneScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildTextField1(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +138,7 @@ class PredictionsOneScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildTextField2(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,7 +178,7 @@ class PredictionsOneScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   // Widget _buildBottomBar(BuildContext context) {
   //   return CustomBottomBar(
   //     onChanged: (BottomBarEnum type) {

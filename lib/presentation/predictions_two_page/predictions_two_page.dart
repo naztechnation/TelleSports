@@ -26,7 +26,7 @@ class PredictionsTwoPage extends StatelessWidget {
                 ))));
   }
 
-  /// Section Widget
+   
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
         height: 93.v,

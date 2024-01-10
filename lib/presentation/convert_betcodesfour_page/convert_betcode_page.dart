@@ -1,4 +1,6 @@
+import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/custom_outlined_button.dart';
+import '../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import '../convert_betcodesfour_page/widgets/singleconversion3_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -7,7 +9,6 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_icon_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 
 
 class ConvertBetcodesPage extends StatefulWidget {
@@ -107,7 +108,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                 ])))));
   }
 
-  /// Section Widget
+  
   Widget _buildTelacoinsBalance(BuildContext context) {
     return Card(
         clipBehavior: Clip.antiAlias,
@@ -158,7 +159,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                                             top: 8.v, bottom: 7.v)),
                                     Padding(
                                         padding: EdgeInsets.only(left: 6.h),
-                                        child: Text("2004",
+                                        child: Text("2000",
                                             style: CustomTextStyles
                                                 .headlineLargeWhiteA700))
                                   ])
@@ -179,7 +180,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             ])));
   }
 
-  /// Section Widget
+   
   Widget _buildBetCodeSelector(BuildContext context) {
     return Container(
         width: double.maxFinite,
@@ -221,7 +222,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         ]));
   }
 
-  /// Section Widget
+   
   Widget _buildFrameNine(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.h),
@@ -252,7 +253,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         ]));
   }
 
-  /// Section Widget
+   
   Widget _buildSingleConversion(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.h),
@@ -273,8 +274,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
     return CustomOutlinedButton(
         text: "Buy Tellacoins", margin: EdgeInsets.symmetric(horizontal: 20.h));
   }
-  /// Navigates to the buyTellacoinsScreen when the action is triggered.
   onTapBtnPlus(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.buyTellacoinsScreen);
+    AppNavigator.pushAndStackPage(context, page: BuyTellacoinsScreen());
   }
 }

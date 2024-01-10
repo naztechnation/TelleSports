@@ -53,7 +53,7 @@ class CommunityChatEmptyStateScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 84.v,
@@ -106,7 +106,7 @@ class CommunityChatEmptyStateScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildUiBottomBar(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(

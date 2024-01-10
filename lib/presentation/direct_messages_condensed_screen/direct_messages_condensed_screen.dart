@@ -114,7 +114,7 @@ class DirectMessagesCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 84.v,
@@ -159,7 +159,7 @@ class DirectMessagesCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildBubbleColumn1(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 20.h),
@@ -212,7 +212,7 @@ class DirectMessagesCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildBubbleColumn2(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
@@ -278,7 +278,7 @@ class DirectMessagesCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildProfilePictureRow(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
@@ -409,7 +409,7 @@ class DirectMessagesCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildUiBottomBarRow(BuildContext context) {
     return Container(
       width: double.maxFinite,

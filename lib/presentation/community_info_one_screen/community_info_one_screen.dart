@@ -45,7 +45,7 @@ class CommunityInfoOneScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 44.h,

@@ -166,7 +166,7 @@ class AppNavigationScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+   
   Widget _buildAppNavigation(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
