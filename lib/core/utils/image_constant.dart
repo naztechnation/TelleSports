@@ -261,4 +261,7 @@ class ImageConstant {
 
   static String imgArrowdropdown = '$imagePath/img_arrowdropdown.svg';
 
+  static String imgLock = '$imagePath/img_lock.svg';
+
+
 }

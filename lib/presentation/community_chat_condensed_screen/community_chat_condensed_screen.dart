@@ -460,7 +460,6 @@ class CommunityChatCondensedScreen extends StatelessWidget {
     );
   }
 
-  /// Common widget
   Widget _buildRightFrameColumn(
     BuildContext context, {
     required String image,

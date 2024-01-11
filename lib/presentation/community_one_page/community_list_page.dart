@@ -1,7 +1,8 @@
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 
 import '../community_chat_screen/community_chat_screen.dart';
-import '../community_one_page/widgets/communitypagecomponent2_item_widget.dart';
+import '../community_info_screen/community_info_screen.dart';
+import 'widgets/community_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
@@ -85,6 +86,7 @@ class CommunityOnePageState extends State<CommunityListPage>
  
 
   onTapCommunityPageComponent(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: CommunityChatScreen());
+    AppNavigator.pushAndStackPage(context, page: CommunityInfoScreen());
+    
   }
 }

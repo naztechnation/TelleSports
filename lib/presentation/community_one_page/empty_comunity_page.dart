@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
+
+import 'create_community_pages/create_a_community_one_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class EmptyCommunityPage extends StatefulWidget {
@@ -99,6 +102,10 @@ class CommunityTwoPageState extends State<EmptyCommunityPage>
     return CustomElevatedButton(
       buttonStyle: ElevatedButton.styleFrom(backgroundColor: Color(0xFF3C91E5),),
       buttonTextStyle: TextStyle(color: Colors.white),
-        text: "Create a community", );
+        text: "Create a community", 
+        onPressed: () {
+          AppNavigator.pushAndStackPage(context, page: CreateACommunityOneScreen());
+        },
+        );
   }
 }

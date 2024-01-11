@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
+import 'package:tellesports/widgets/modals.dart';
+
+import '../../individual_user_info.dart/individual_user_info.dart';
 
 // ignore: must_be_immutable
 class Userprofile1ItemWidget extends StatelessWidget {

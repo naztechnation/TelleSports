@@ -306,7 +306,7 @@ class CommunityChatScreen extends StatelessWidget {
             leading: AppbarLeadingImage(
               imagePath: ImageConstant.imgArrowBackBlue800,
                onTap: (){
-                                      onTapGroup(context);
+                                      Navigator.pop(context);
 
                     },
               margin: EdgeInsets.only(
@@ -315,38 +315,40 @@ class CommunityChatScreen extends StatelessWidget {
                 bottom: 10.v,
               ),
             ),
-            title: GestureDetector(
-              onTap: (){
+            title: Padding(
+              padding: EdgeInsets.only(
+                left: 12.h,
+                top: 43.v,
+                bottom: 4.v,
+              ),
+              child: Row(
+                children: [
+                  AppbarTitleCircleimage(
+                    imagePath: ImageConstant.imgAvatar,
+                    onTap: (){
                 onTapGroup(context);
-              },
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 12.h,
-                  top: 43.v,
-                  bottom: 4.v,
-                ),
-                child: Row(
-                  children: [
-                    AppbarTitleCircleimage(
-                      imagePath: ImageConstant.imgAvatar,
-                     
+
+                          },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.h),
+                    child: Column(
+                      children: [
+                        AppbarSubtitleTwo(
+                          text: "Pixsellz Team ",
+                          onTap: (){
+                onTapGroup(context);
+
+                          },
+                        ),
+                        AppbarSubtitleFour(
+                          text: "120 members",
+                          margin: EdgeInsets.only(right: 28.h),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.h),
-                      child: Column(
-                        children: [
-                          AppbarSubtitleTwo(
-                            text: "Pixsellz Team ",
-                          ),
-                          AppbarSubtitleFour(
-                            text: "120 members",
-                            margin: EdgeInsets.only(right: 28.h),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             actions: [
@@ -716,7 +718,7 @@ class CommunityChatScreen extends StatelessWidget {
   }
 
   onTapGroup(BuildContext context) {
-
+      
     AppNavigator.pushAndStackPage(context, page: CommunityInfoScreen());
   }
 }

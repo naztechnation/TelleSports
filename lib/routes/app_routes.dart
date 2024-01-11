@@ -15,7 +15,7 @@ import 'package:tellesports/presentation/community_chat_condensed_screen/communi
 import 'package:tellesports/presentation/community_chat_empty_state_screen/community_chat_empty_state_screen.dart';
 import 'package:tellesports/presentation/community_one_page/all_users_page.dart';
 import 'package:tellesports/presentation/direct_messages_condensed_screen/direct_messages_condensed_screen.dart';
-import 'package:tellesports/presentation/user_info_tab_container_screen/user_info_tab_container_screen.dart';
+import 'package:tellesports/presentation/individual_user_info.dart/individual_user_info.dart';
 import 'package:tellesports/presentation/gift_tellacoins_screen/gift_tellacoins_screen.dart';
 import 'package:tellesports/presentation/community_info_screen/community_info_screen.dart';
 import 'package:tellesports/presentation/predictions_one_screen/predictions_one_screen.dart';
@@ -124,7 +124,7 @@ class AppRoutes {
     communityChatCondensedScreen: (context) => CommunityChatCondensedScreen(),
     communityChatEmptyStateScreen: (context) => CommunityChatEmptyStateScreen(),
     directMessagesCondensedScreen: (context) => DirectMessagesCondensedScreen(),
-    userInfoTabContainerScreen: (context) => UserInfoTabContainerScreen(),
+    
     giftTellacoinsScreen: (context) => GiftTellacoinsScreen(),
     communityInfoScreen: (context) => CommunityInfoScreen(),
     predictionsOneScreen: (context) => PredictionsOneScreen(),

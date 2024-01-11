@@ -1,9 +1,12 @@
+import '../../utils/navigator/page_navigator.dart';
 import '../community_info_one_screen/widgets/userprofile1_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
+
+import '../individual_user_info.dart/individual_user_info.dart';
 
 class AllUsersPage extends StatelessWidget {
   const AllUsersPage({Key? key})
@@ -37,7 +40,11 @@ class AllUsersPage extends StatelessWidget {
             },
             itemCount: 23,
             itemBuilder: (context, index) {
-              return Userprofile1ItemWidget();
+              return GestureDetector(
+                 onTap: (){
+        AppNavigator.pushAndStackPage(context, page: IndividualUserInfo());
+      },
+                child: Userprofile1ItemWidget());
             },
           ),
         ),
@@ -50,6 +57,9 @@ class AllUsersPage extends StatelessWidget {
     return CustomAppBar(
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
+        onTap: (){
+          Navigator.pop(context);
+        },
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
@@ -59,7 +69,7 @@ class AllUsersPage extends StatelessWidget {
       ),
       centerTitle: true,
       title: AppbarSubtitleOne(
-        text: "120 members",
+        text: "120 member",
       ),
     );
   }
