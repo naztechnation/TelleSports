@@ -43,7 +43,7 @@ class CustomButtonStyles {
         ),
       );
   static ButtonStyle get fillRed => ElevatedButton.styleFrom(
-        backgroundColor: appTheme.red400,
+        backgroundColor: Colors.red[900],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.h),
         ),

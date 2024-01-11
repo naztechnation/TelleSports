@@ -1,4 +1,4 @@
-import '../community_info_two_page/widgets/userprofile_item_widget.dart';
+import '../community_one_page/userprofile_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
@@ -117,7 +117,7 @@ class CommunityInfoTwoPageState extends State<CommunityInfoTwoPage>
             },
             itemCount: 8,
             itemBuilder: (context, index) {
-              return UserprofileItemWidget();
+              return Container();
             },
           ),
         ],

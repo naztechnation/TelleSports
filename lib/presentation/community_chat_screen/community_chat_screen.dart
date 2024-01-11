@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_four.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_two.dart';
@@ -8,6 +9,8 @@ import 'package:tellesports/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
+
+import '../community_one_page/community_info_page.dart';
 
 class CommunityChatScreen extends StatelessWidget {
   CommunityChatScreen({Key? key})
@@ -303,7 +306,8 @@ class CommunityChatScreen extends StatelessWidget {
             leading: AppbarLeadingImage(
               imagePath: ImageConstant.imgArrowBackBlue800,
                onTap: (){
-                      Navigator.pop(context);
+                                      onTapGroup(context);
+
                     },
               margin: EdgeInsets.only(
                 left: 20.h,
@@ -311,33 +315,38 @@ class CommunityChatScreen extends StatelessWidget {
                 bottom: 10.v,
               ),
             ),
-            title: Padding(
-              padding: EdgeInsets.only(
-                left: 12.h,
-                top: 43.v,
-                bottom: 4.v,
-              ),
-              child: Row(
-                children: [
-                  AppbarTitleCircleimage(
-                    imagePath: ImageConstant.imgAvatar,
-                   
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.h),
-                    child: Column(
-                      children: [
-                        AppbarSubtitleTwo(
-                          text: "Pixsellz Team ",
-                        ),
-                        AppbarSubtitleFour(
-                          text: "120 members",
-                          margin: EdgeInsets.only(right: 28.h),
-                        ),
-                      ],
+            title: GestureDetector(
+              onTap: (){
+                onTapGroup(context);
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 12.h,
+                  top: 43.v,
+                  bottom: 4.v,
+                ),
+                child: Row(
+                  children: [
+                    AppbarTitleCircleimage(
+                      imagePath: ImageConstant.imgAvatar,
+                     
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.h),
+                      child: Column(
+                        children: [
+                          AppbarSubtitleTwo(
+                            text: "Pixsellz Team ",
+                          ),
+                          AppbarSubtitleFour(
+                            text: "120 members",
+                            margin: EdgeInsets.only(right: 28.h),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             actions: [
@@ -662,7 +671,7 @@ class CommunityChatScreen extends StatelessWidget {
     );
   }
 
-  /// Common widget
+  
   Widget _buildRightFrame(
     BuildContext context, {
     required String image,
@@ -704,5 +713,10 @@ class CommunityChatScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  onTapGroup(BuildContext context) {
+
+    AppNavigator.pushAndStackPage(context, page: CommunityInfoScreen());
   }
 }

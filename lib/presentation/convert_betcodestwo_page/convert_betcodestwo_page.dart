@@ -237,8 +237,7 @@ class ConvertBetcodestwoPageState extends State<ConvertBetcodestwoPage>
               return Singleconversion2ItemWidget();
             }));
   }
-
-  /// Navigates to the buyTellacoinsScreen when the action is triggered.
+ 
   onTapBtnPlus(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.buyTellacoinsScreen);
   }

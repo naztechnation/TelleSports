@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 
 // ignore: must_be_immutable
-class AllUserPage extends StatelessWidget {
-  const AllUserPage({Key? key})
+class UserprofileItemWidget extends StatelessWidget {
+  const UserprofileItemWidget({Key? key})
       : super(
           key: key,
         );
@@ -14,7 +14,7 @@ class AllUserPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CustomImageView(
-          imagePath: ImageConstant.imgDisplayPicture36x36,
+          imagePath: ImageConstant.imgDisplayPicture,
           height: 36.adaptSize,
           width: 36.adaptSize,
           radius: BorderRadius.circular(
@@ -39,12 +39,22 @@ class AllUserPage extends StatelessWidget {
                   children: [
                     Text(
                       "Joshua11",
-                      style: theme.textTheme.titleSmall,
+                      style: TextStyle(
+                        color: appTheme.gray900,
+                        fontSize: 14.fSize,
+                        fontFamily: 'DM Sans',
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     SizedBox(height: 2.v),
                     Text(
                       "This is my bio",
-                      style: CustomTextStyles.labelLargeGray600,
+                      style: TextStyle(
+                        color: appTheme.gray600,
+                        fontSize: 12.fSize,
+                        fontFamily: 'DM Sans',
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
@@ -52,7 +62,12 @@ class AllUserPage extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: 22.v),
                   child: Text(
                     "Community manager",
-                    style: theme.textTheme.labelMedium,
+                    style: TextStyle(
+                      color: appTheme.gray900,
+                      fontSize: 10.fSize,
+                      fontFamily: 'DM Sans',
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],

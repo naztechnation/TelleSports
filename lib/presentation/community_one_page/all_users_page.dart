@@ -5,8 +5,8 @@ import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
-class CommunityInfoOneScreen extends StatelessWidget {
-  const CommunityInfoOneScreen({Key? key})
+class AllUsersPage extends StatelessWidget {
+  const AllUsersPage({Key? key})
       : super(
           key: key,
         );
