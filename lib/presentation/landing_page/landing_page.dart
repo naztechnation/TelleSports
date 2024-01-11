@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import '../community_one_page/community_tab_page.dart';
 import '../convert_betcodesone_tab_container_page/convert_betcodesone_tab_container_page.dart';
-import '../predictions_page/predictions_page.dart';
+import '../predictions_page/profile_page.dart';
 import '../predictions_two_page/predictions_two_page.dart';
 
 class LandingPage extends StatefulWidget {
@@ -44,7 +44,7 @@ class _LandingPageState extends State<LandingPage> {
       case 2:
         return PredictionsTwoPage();
       case 3:
-        return PredictionsPage();
+        return ProfilePage();
       default:
         return DefaultWidge();
     }

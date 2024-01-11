@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/community_one_page/community_tab_page.dart';
-import 'package:tellesports/presentation/convert_betcodesone_tab_container_page/convert_betcodesone_tab_container_page.dart';
-import 'package:tellesports/presentation/predictions_page/predictions_page.dart';
-import 'package:tellesports/presentation/predictions_two_page/predictions_two_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
-import 'package:tellesports/widgets/custom_bottom_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
-class PredictionsOneScreen extends StatelessWidget {
-  PredictionsOneScreen({Key? key})
+class EditProfileScreen extends StatelessWidget {
+  EditProfileScreen({Key? key})
       : super(
           key: key,
         );
@@ -106,6 +101,9 @@ class PredictionsOneScreen extends StatelessWidget {
           top: 59.v,
           bottom: 10.v,
         ),
+        onTap: (){
+          Navigator.pop(context);
+        },
       ),
       centerTitle: true,
       title: AppbarSubtitleOne(
@@ -179,44 +177,4 @@ class PredictionsOneScreen extends StatelessWidget {
   }
 
    
-  // Widget _buildBottomBar(BuildContext context) {
-  //   return CustomBottomBar(
-  //     onChanged: (BottomBarEnum type) {
-  //       // Navigator.pushNamed(
-  //       //     navigatorKey.currentContext!, getCurrentRoute(type));
-  //     },
-  //   );
-  // }
-
-  ///Handling route based on bottom click actions
-  // String getCurrentRoute(BottomBarEnum type) {
-  //   switch (type) {
-  //     case BottomBarEnum.Convert:
-  //       return AppRoutes.convertBetcodesoneTabContainerPage;
-  //     case BottomBarEnum.Community:
-  //       return AppRoutes.communityTabContainerPage;
-  //     case BottomBarEnum.Predictions:
-  //       return AppRoutes.predictionsTwoPage;
-  //     case BottomBarEnum.Profile:
-  //       return AppRoutes.predictionsPage;
-  //     default:
-  //       return "/";
-  //   }
-  // }
-
-  ///Handling page based on route
-  // Widget getCurrentPage(String currentRoute) {
-  //   switch (currentRoute) {
-  //     case AppRoutes.convertBetcodesoneTabContainerPage:
-  //       return ConvertBetcodesoneTabContainerPage();
-  //     case AppRoutes.communityTabContainerPage:
-  //       return CommunityTabContainerPage();
-  //     case AppRoutes.predictionsTwoPage:
-  //       return PredictionsTwoPage();
-  //     case AppRoutes.predictionsPage:
-  //       return PredictionsPage();
-  //     default:
-  //       return Container();
-  //   }
-  // }
-}
+  }
