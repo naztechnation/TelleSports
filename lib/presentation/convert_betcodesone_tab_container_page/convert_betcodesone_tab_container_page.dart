@@ -103,41 +103,41 @@ class ConvertBetcodesoneTabContainerPageState
   }
 
   Widget _buildTabview(BuildContext context) {
-    return Container(
-      height: 32.v,
-      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      decoration: BoxDecoration(
-        color: appTheme.whiteA700,
-        borderRadius: BorderRadius.circular(
-          16.h,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: appTheme.black900.withOpacity(0.06),   
-            spreadRadius: 2.h,
-            blurRadius: 2.h,
-            offset: Offset(
-              0,
-              0,
+    return   Container(
+            height: 32.v,
+            width: 350.h,
+            decoration: BoxDecoration(
+              color: appTheme.whiteA700,
+              borderRadius: BorderRadius.circular(
+                16.h,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: appTheme.black900.withOpacity(0.06),
+                  spreadRadius: 2.h,
+                  blurRadius: 2.h,
+                  offset: Offset(
+                    0,
+                    0,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       child: TabBar(
-        controller: tabviewController,
-        labelPadding: EdgeInsets.zero,
-        labelColor: Colors.white,
-        labelStyle: TextStyle(
-          fontSize: 14.fSize,
-          fontFamily: 'DM Sans',
-          fontWeight: FontWeight.w500,
-        ),
-        unselectedLabelColor: theme.colorScheme.onSecondary,
-        unselectedLabelStyle: TextStyle(
-          fontSize: 14.fSize,
-          fontFamily: 'DM Sans',
-          fontWeight: FontWeight.w500,
-        ),
+              controller: tabviewController,
+              labelPadding: EdgeInsets.zero,
+              labelColor: Colors.white,
+              labelStyle: TextStyle(
+                fontSize: 14,
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w500,
+              ),
+              unselectedLabelColor: Colors.black,
+              unselectedLabelStyle: TextStyle(
+                fontSize: 14,
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w500,
+              ),
   indicatorSize: TabBarIndicatorSize.tab,  
 
         indicator: BoxDecoration(

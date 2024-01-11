@@ -200,7 +200,7 @@ class ConvertBetcodestwoPageState extends State<ConvertBetcodestwoPage>
           CustomTextFormField(
               width: 173.h,
               controller: mNHController,
-              hintText: "MN627821H",
+              hintText: "MN627821Hj",
               hintStyle: CustomTextStyles.titleMediumGray700,
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 12.h, vertical: 14.v),

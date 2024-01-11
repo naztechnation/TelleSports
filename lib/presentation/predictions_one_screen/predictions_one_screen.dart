@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/community_tab_container_page/community_tab_container_page.dart';
+import 'package:tellesports/presentation/community_tab_container_page/community_tab_page.dart';
 import 'package:tellesports/presentation/convert_betcodesone_tab_container_page/convert_betcodesone_tab_container_page.dart';
 import 'package:tellesports/presentation/predictions_page/predictions_page.dart';
 import 'package:tellesports/presentation/predictions_two_page/predictions_two_page.dart';

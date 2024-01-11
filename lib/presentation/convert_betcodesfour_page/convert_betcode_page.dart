@@ -186,39 +186,57 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         width: double.maxFinite,
         padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 9.v),
         decoration: AppDecoration.fillWhiteA,
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.v),
-              child: CustomDropDown(
-                  width: 126.h,
-                  icon: Container(
-                      margin: EdgeInsets.only(left: 4.h),
-                      child: CustomImageView(
-                          imagePath: ImageConstant.imgIconparksoliddownone,
-                          height: 16.adaptSize,
-                          width: 16.adaptSize)),
-                  hintText: "Convert from",
-                  items: dropdownItemList,
-                  onChanged: (value) {})),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Expanded(
+            flex: 8,
+            child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.v),
+                child: CustomDropDown(
+                    suffix: Container(
+                            margin: EdgeInsets.only(right: 8.h, ),
+
+              child: CustomImageView(
+                 imagePath: ImageConstant.imgArrowdropdown,
+                 color: Colors.green,
+                height: 24.adaptSize,
+                width: 24.adaptSize,
+              ),
+            
+            ),
+             icon: SizedBox.shrink(),
+                    hintText: "Convert from",
+                    items: dropdownItemList,
+                    onChanged: (value) {})),
+          ),
           Spacer(),
           CustomImageView(
               imagePath: ImageConstant.imgSwapHoriz,
               height: 30.adaptSize,
               width: 30.adaptSize),
           Spacer(),
-          Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.v),
-              child: CustomDropDown(
-                  width: 105.h,
-                  icon: Container(
-                      margin: EdgeInsets.only(left: 4.h),
-                      child: CustomImageView(
-                          imagePath: ImageConstant.imgIconparksoliddownone,
-                          height: 16.adaptSize,
-                          width: 16.adaptSize)),
-                  hintText: "Convert to",
-                  items: dropdownItemList1,
-                  onChanged: (value) {}))
+          Expanded(
+            flex: 8,
+
+            child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.v),
+                child: CustomDropDown(
+                    
+                    suffix: Container(
+                            margin: EdgeInsets.only(right: 8.h, ),
+
+              child: CustomImageView(
+                 imagePath: ImageConstant.imgArrowdropdown,
+                 color: Colors.green,
+                height: 24.adaptSize,
+                width: 24.adaptSize,
+              ),
+            
+            ),
+             icon: SizedBox.shrink(),
+                    hintText: "Convert to",
+                    items: dropdownItemList1,
+                    onChanged: (value) {})),
+          )
         ]));
   }
 
@@ -230,7 +248,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
           CustomTextFormField(
               width: 173.h,
               controller: mNHController,
-              hintText: "MN627821H",
+              hintText: "MN627821Hg",
               hintStyle: CustomTextStyles.titleMediumGray700,
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 12.h, vertical: 14.v),

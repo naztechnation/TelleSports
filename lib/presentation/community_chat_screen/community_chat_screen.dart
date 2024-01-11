@@ -25,225 +25,234 @@ class CommunityChatScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: appTheme.lime50,
         resizeToAvoidBottomInset: false,
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              _buildNovCounterStack(context),
-              SizedBox(height: 2.v),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 20.h),
-                        child: Row(
-                          children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgProfilePicture,
-                              height: 24.adaptSize,
-                              width: 24.adaptSize,
-                              radius: BorderRadius.circular(
-                                12.h,
-                              ),
-                              margin: EdgeInsets.only(top: 13.v),
+        body: Stack(
+          children: [
+            SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                children: [
+                  _buildNovCounterStack(context),
+                  SizedBox(height: 2.v),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 20.h),
+                            child: Row(
+                              children: [
+                                CustomImageView(
+                                  imagePath: ImageConstant.imgProfilePicture,
+                                  height: 24.adaptSize,
+                                  width: 24.adaptSize,
+                                  radius: BorderRadius.circular(
+                                    12.h,
+                                  ),
+                                  margin: EdgeInsets.only(top: 13.v),
+                                ),
+                                CustomElevatedButton(
+                                  height: 37.v,
+                                  width: 114.h,
+                                  text: "Short indeed",
+                                  margin: EdgeInsets.only(left: 2.h),
+                                  buttonStyle: CustomButtonStyles.fillGray,
+                                  buttonTextStyle:
+                                      CustomTextStyles.titleMediumOnPrimary_1,
+                                ),
+                              ],
                             ),
-                            CustomElevatedButton(
-                              height: 37.v,
-                              width: 114.h,
-                              text: "Short indeed",
-                              margin: EdgeInsets.only(left: 2.h),
-                              buttonStyle: CustomButtonStyles.fillGray,
-                              buttonTextStyle:
-                                  CustomTextStyles.titleMediumOnPrimary_1,
+                          ),
+                          SizedBox(height: 3.v),
+                          Padding(
+                            padding: EdgeInsets.only(left: 119.h),
+                            child: Text(
+                              "9. 41 AM".toUpperCase(),
+                              style: CustomTextStyles.bodySmallGray600,
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 3.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 119.h),
-                        child: Text(
-                          "9. 41 AM".toUpperCase(),
-                          style: CustomTextStyles.bodySmallGray600,
-                        ),
-                      ),
-                      SizedBox(height: 19.v),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    _buildBubble(context),
-                                    SizedBox(height: 9.v),
-                                    Container(
-                                      width: 65.h,
-                                      margin: EdgeInsets.only(right: 116.h),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 18.h,
-                                        vertical: 1.v,
-                                      ),
-                                      decoration: AppDecoration.fillBluegray800
-                                          .copyWith(
-                                        borderRadius:
-                                            BorderRadiusStyle.roundedBorder4,
-                                      ),
-                                      child: Text(
-                                        "Today",
-                                        style: CustomTextStyles
-                                            .labelMediumWhiteA700,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.v),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 34.h),
-                                      child: _buildRightFrame(
-                                        context,
-                                        image: ImageConstant.imgRectangle230,
-                                        text:
-                                            "This is an image chat for bigger image with maximum height 214px",
-                                      ),
-                                    ),
-                                    SizedBox(height: 3.v),
-                                    Text(
-                                      "9. 41 AM".toUpperCase(),
-                                      style: theme.textTheme.bodySmall,
-                                    ),
-                                    SizedBox(height: 19.v),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 26.h),
-                                        child: Text(
-                                          "Johnson",
-                                          style: CustomTextStyles
-                                              .labelLargeGray700,
+                          ),
+                          SizedBox(height: 19.v),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.h),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        _buildBubble(context),
+                                        SizedBox(height: 9.v),
+                                        Container(
+                                          width: 65.h,
+                                          margin: EdgeInsets.only(right: 116.h),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 18.h,
+                                            vertical: 1.v,
+                                          ),
+                                          decoration: AppDecoration.fillBluegray800
+                                              .copyWith(
+                                            borderRadius:
+                                                BorderRadiusStyle.roundedBorder4,
+                                          ),
+                                          child: Text(
+                                            "Today",
+                                            style: CustomTextStyles
+                                                .labelMediumWhiteA700,
+                                          ),
                                         ),
-                                      ),
+                                        SizedBox(height: 10.v),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 34.h),
+                                          child: _buildRightFrame(
+                                            context,
+                                            image: ImageConstant.imgRectangle230,
+                                            text:
+                                                "This is an image chat for bigger image with maximum height 214px",
+                                          ),
+                                        ),
+                                        SizedBox(height: 3.v),
+                                        Text(
+                                          "9. 41 AM".toUpperCase(),
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 19.v),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 26.h),
+                                            child: Text(
+                                              "Johnson",
+                                              style: CustomTextStyles
+                                                  .labelLargeGray700,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 2.v),
+                                        _buildProfilePicture(context),
+                                      ],
                                     ),
-                                    SizedBox(height: 2.v),
-                                    _buildProfilePicture(context),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 2.h,
-                                  top: 396.v,
-                                  bottom: 322.v,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomImageView(
-                                      imagePath:
-                                          ImageConstant.imgProfilePicture,
-                                      height: 24.adaptSize,
-                                      width: 24.adaptSize,
-                                      radius: BorderRadius.circular(
-                                        12.h,
-                                      ),
-                                      alignment: Alignment.center,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 2.h,
+                                      top: 396.v,
+                                      bottom: 322.v,
                                     ),
-                                    SizedBox(height: 4.v),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        "Sent",
-                                        style:
-                                            CustomTextStyles.labelMediumGray700,
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        CustomImageView(
+                                          imagePath:
+                                              ImageConstant.imgProfilePicture,
+                                          height: 24.adaptSize,
+                                          width: 24.adaptSize,
+                                          radius: BorderRadius.circular(
+                                            12.h,
+                                          ),
+                                          alignment: Alignment.center,
+                                        ),
+                                        SizedBox(height: 4.v),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            "Sent",
+                                            style:
+                                                CustomTextStyles.labelMediumGray700,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 19.v),
-                      _buildFrame(context),
-                      SizedBox(height: 3.v),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 54.h),
-                          child: Text(
-                            "9. 41 AM".toUpperCase(),
-                            style: CustomTextStyles.bodySmallGray600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20.v),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 20.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              CustomElevatedButton(
-                                height: 37.v,
-                                width: 114.h,
-                                text: "Short indeed",
-                                buttonStyle: CustomButtonStyles.fillBlueTL6,
-                                buttonTextStyle:
-                                    CustomTextStyles.titleMediumOnPrimary_1,
-                              ),
-                              CustomImageView(
-                                imagePath: ImageConstant.imgProfilePicture,
-                                height: 24.adaptSize,
-                                width: 24.adaptSize,
-                                radius: BorderRadius.circular(
-                                  12.h,
-                                ),
-                                margin: EdgeInsets.only(
-                                  left: 2.h,
-                                  top: 13.v,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 3.v),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 20.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
+                          SizedBox(height: 19.v),
+                          _buildFrame(context),
+                          SizedBox(height: 3.v),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 54.h),
+                              child: Text(
                                 "9. 41 AM".toUpperCase(),
                                 style: CustomTextStyles.bodySmallGray600,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 4.h),
-                                child: Text(
-                                  "Sent",
-                                  style: CustomTextStyles.labelMediumGray600,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          SizedBox(height: 20.v),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 20.h),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  CustomElevatedButton(
+                                    height: 37.v,
+                                    width: 114.h,
+                                    text: "Short indeed",
+                                    buttonStyle: CustomButtonStyles.fillBlueTL6,
+                                    buttonTextStyle:
+                                        CustomTextStyles.titleMediumOnPrimary_1,
+                                  ),
+                                  CustomImageView(
+                                    imagePath: ImageConstant.imgProfilePicture,
+                                    height: 24.adaptSize,
+                                    width: 24.adaptSize,
+                                    radius: BorderRadius.circular(
+                                      12.h,
+                                    ),
+                                    margin: EdgeInsets.only(
+                                      left: 2.h,
+                                      top: 13.v,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 3.v),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 20.h),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "9. 41 AM".toUpperCase(),
+                                    style: CustomTextStyles.bodySmallGray600,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 4.h),
+                                    child: Text(
+                                      "Sent",
+                                      style: CustomTextStyles.labelMediumGray600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 9.v),
+                         
+                        ],
                       ),
-                      SizedBox(height: 9.v),
-                      _buildUiBottomBar(context),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+             Positioned(
+              bottom: 0,
+              right: 0,
+              left: 0,
+              child: _buildUiBottomBar(context)),
+          ],
         ),
       ),
     );
@@ -293,6 +302,9 @@ class CommunityChatScreen extends StatelessWidget {
             leadingWidth: 44.h,
             leading: AppbarLeadingImage(
               imagePath: ImageConstant.imgArrowBackBlue800,
+               onTap: (){
+                      Navigator.pop(context);
+                    },
               margin: EdgeInsets.only(
                 left: 20.h,
                 top: 50.v,
@@ -309,6 +321,7 @@ class CommunityChatScreen extends StatelessWidget {
                 children: [
                   AppbarTitleCircleimage(
                     imagePath: ImageConstant.imgAvatar,
+                   
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 8.h),

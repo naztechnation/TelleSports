@@ -78,17 +78,21 @@ class Communitypagecomponent2ItemWidget extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: Container(
-                              width: 24.adaptSize,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 2.h,
-                                vertical: 5.v,
-                              ),
-                              decoration: AppDecoration.fillBlue.copyWith(
-                                borderRadius: BorderRadiusStyle.circleBorder12,
-                              ),
-                              child: Text(
-                                "99+",
-                                style: CustomTextStyles.labelMediumWhiteA700,
+                              width: 32.adaptSize,
+                              height: 32.adaptSize,
+                              // padding: EdgeInsets.symmetric(
+                              //   horizontal: 2.h,
+                              //   vertical: 5.v,
+                              // ),
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF3C91E5)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Center(
+                                  child: Text(
+                                    "99+",
+                                    style: TextStyle(fontSize: 9, color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ),
                           ),

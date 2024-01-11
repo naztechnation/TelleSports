@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 // ignore_for_file: must_be_immutable
-class CommunityTwoPage extends StatefulWidget {
-  const CommunityTwoPage({Key? key})
+class EmptyCommunityPage extends StatefulWidget {
+  const EmptyCommunityPage({Key? key})
       : super(
           key: key,
         );
@@ -14,8 +15,8 @@ class CommunityTwoPage extends StatefulWidget {
   CommunityTwoPageState createState() => CommunityTwoPageState();
 }
 
-class CommunityTwoPageState extends State<CommunityTwoPage>
-    with AutomaticKeepAliveClientMixin<CommunityTwoPage> {
+class CommunityTwoPageState extends State<EmptyCommunityPage>
+    with AutomaticKeepAliveClientMixin<EmptyCommunityPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -62,6 +63,9 @@ class CommunityTwoPageState extends State<CommunityTwoPage>
                         filled: true,
                         fillColor: appTheme.gray100,
                       ),
+                      SizedBox(height: 20.v),
+
+                      Divider(),
                       SizedBox(height: 106.v),
                       CustomImageView(
                         imagePath: ImageConstant.imgCommunicationBusiness,
@@ -73,6 +77,9 @@ class CommunityTwoPageState extends State<CommunityTwoPage>
                         "Join a community and stay up to date on all things sports!",
                         style: CustomTextStyles.labelLargeBlack900,
                       ),
+                      SizedBox(height: 20.v),
+
+                      _buildBuyTellacoins(context),
                       SizedBox(height: 10.v),
                       CustomOutlinedButton(
                         text: "Explore Communities",
@@ -86,5 +93,12 @@ class CommunityTwoPageState extends State<CommunityTwoPage>
         ),
       ),
     );
+  }
+
+  Widget _buildBuyTellacoins(BuildContext context) {
+    return CustomElevatedButton(
+      buttonStyle: ElevatedButton.styleFrom(backgroundColor: Color(0xFF3C91E5),),
+      buttonTextStyle: TextStyle(color: Colors.white),
+        text: "Create a community", );
   }
 }

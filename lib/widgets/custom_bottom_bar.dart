@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/widgets/modals.dart';
 
 class CustomBottomBar extends StatefulWidget {
   CustomBottomBar({this.onChanged});
@@ -204,7 +205,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                   child: Text(
                     bottomMenuList[3].title ?? "",
                     style: CustomTextStyles.labelLargeGray50001.copyWith(
-                      color: appTheme.gray50001,
+                      color:  appTheme.gray50001,
                     ),
                   ),
                 ),
@@ -218,14 +219,14 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                   imagePath: bottomMenuList[3].activeIcon,
                   height: 40.adaptSize,
                   width: 40.adaptSize,
-                  color: theme.colorScheme.primary,
+                  color: (selectedIndex == 1) ? Color(0xFF3C91E5) :theme.colorScheme.primary,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),
                   child: Text(
                     bottomMenuList[3].title ?? "",
                     style: CustomTextStyles.labelLargePrimary.copyWith(
-                      color: theme.colorScheme.primary,
+                      color: (selectedIndex == 1) ? Color(0xFF3C91E5):  theme.colorScheme.primary,
                     ),
                   ),
                 ),
@@ -238,6 +239,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           selectedIndex = index;
             widget.onChanged?.call(index);
           setState(() {});
+
         },
       ),
     );

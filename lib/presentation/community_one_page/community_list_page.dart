@@ -1,18 +1,21 @@
-import '../community_page/widgets/chat_item_widget.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
+
+import '../community_chat_screen/community_chat_screen.dart';
+import '../community_one_page/widgets/communitypagecomponent2_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
-class CommunityPage extends StatefulWidget {
-  const CommunityPage({Key? key}) : super(key: key);
+class CommunityListPage extends StatefulWidget {
+  const CommunityListPage({Key? key}) : super(key: key);
 
   @override
-  CommunityPageState createState() => CommunityPageState();
+  CommunityOnePageState createState() => CommunityOnePageState();
 }
 
 // ignore_for_file: must_be_immutable
-class CommunityPageState extends State<CommunityPage>
-    with AutomaticKeepAliveClientMixin<CommunityPage> {
+class CommunityOnePageState extends State<CommunityListPage>
+    with AutomaticKeepAliveClientMixin<CommunityListPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -51,49 +54,15 @@ class CommunityPageState extends State<CommunityPage>
                             filled: true,
                             fillColor: appTheme.gray100),
                         SizedBox(height: 22.v),
-                        SizedBox(
-                            height: 1200.v,
-                            width: 350.h,
-                            child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  _buildCommunityPageComponent(context),
-                                  _buildChat(context)
-                                ]))
+                                                           _buildCommunityPageComponent(context)
+
                       ]))
                 ])))));
   }
 
-  Widget _buildCommunityPageComponent(BuildContext context) {
-    return Align(
-        alignment: Alignment.bottomCenter,
-        child: Padding(
-            padding: EdgeInsets.only(bottom: 525.v),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              CustomImageView(
-                  imagePath: ImageConstant.imgDisplayPicture60x60,
-                  height: 60.adaptSize,
-                  width: 60.adaptSize,
-                  radius: BorderRadius.circular(30.h),
-                  margin: EdgeInsets.symmetric(vertical: 7.v)),
-              Container(
-                  margin: EdgeInsets.only(left: 10.h),
-                  padding: EdgeInsets.only(top: 9.v, bottom: 8.v),
-                  decoration: AppDecoration.outlineGray600,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Pixsellz Team",
-                            style: CustomTextStyles.titleMediumBlack900_1),
-                        SizedBox(height: 2.v),
-                        Text("1,223 members",
-                            style: CustomTextStyles.titleSmallBluegray400),
-                        SizedBox(height: 12.v)
-                      ]))
-            ])));
-  }
+  
 
-  Widget _buildChat(BuildContext context) {
+  Widget _buildCommunityPageComponent(BuildContext context) {
     return Align(
         alignment: Alignment.center,
         child: ListView.separated(
@@ -102,16 +71,20 @@ class CommunityPageState extends State<CommunityPage>
             separatorBuilder: (context, index) {
               return SizedBox(height: 1.v);
             },
-            itemCount: 15,
+            itemCount: 9,
             itemBuilder: (context, index) {
-              return ChatItemWidget(onTapCommunityPageComponent: () {
+              return Communitypagecomponent2ItemWidget(
+                  onTapCommunityPageComponent: () {
                 onTapCommunityPageComponent(context);
               });
             }));
   }
 
-  /// Navigates to the communityInfoScreen when the action is triggered.
+ 
+
+ 
+
   onTapCommunityPageComponent(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.communityInfoScreen);
+    AppNavigator.pushAndStackPage(context, page: CommunityChatScreen());
   }
 }

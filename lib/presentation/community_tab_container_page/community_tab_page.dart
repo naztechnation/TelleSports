@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/community_one_page/community_one_page.dart';
-import 'package:tellesports/presentation/community_two_page/community_two_page.dart';
+import 'package:tellesports/presentation/community_one_page/community_list_page.dart';
+
+import 'empty_comunity_page.dart';
 
 // ignore_for_file: must_be_immutable
-class CommunityTabContainerPage extends StatefulWidget {
-  const CommunityTabContainerPage({Key? key})
+class CommunityTabPage extends StatefulWidget {
+  const CommunityTabPage({Key? key})
       : super(
           key: key,
         );
@@ -15,7 +16,7 @@ class CommunityTabContainerPage extends StatefulWidget {
       CommunityTabContainerPageState();
 }
 
-class CommunityTabContainerPageState extends State<CommunityTabContainerPage>
+class CommunityTabContainerPageState extends State<CommunityTabPage>
     with TickerProviderStateMixin {
   late TabController tabviewController;
 
@@ -45,8 +46,8 @@ class CommunityTabContainerPageState extends State<CommunityTabContainerPage>
                   child: TabBarView(
                     controller: tabviewController,
                     children: [
-                      CommunityTwoPage(),
-                      CommunityOnePage(),
+                       EmptyCommunityPage(),
+                      CommunityListPage(),
                     ],
                   ),
                 ),
@@ -106,7 +107,7 @@ class CommunityTabContainerPageState extends State<CommunityTabContainerPage>
                 fontWeight: FontWeight.w500,
               ),
               indicator: BoxDecoration(
-                color: Color(0XFF288763),
+                color: Color(0xFF3C91E5),
                 borderRadius: BorderRadius.circular(16),
               ),
               indicatorSize: TabBarIndicatorSize.tab,

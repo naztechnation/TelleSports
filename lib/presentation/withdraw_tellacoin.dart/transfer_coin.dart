@@ -6,6 +6,10 @@ import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_drop_down.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
+import 'package:tellesports/widgets/modals.dart';
+
+import '../../widgets/app_bar/appbar_subtitle.dart';
+import '../../widgets/modal_content.dart';
 
 class TransferCoin extends StatelessWidget {
   TransferCoin({Key? key})
@@ -14,9 +18,9 @@ class TransferCoin extends StatelessWidget {
         );
 
   List<String> dropdownItemList = [
-    "Item One",
-    "Item Two",
-    "Item Three",
+    "Uba",
+    "Access Bank",
+    "Eco",
   ];
 
   TextEditingController mobileNoController = TextEditingController();
@@ -70,9 +74,10 @@ class TransferCoin extends StatelessWidget {
                   _buildTextFieldMobileNo(context),
                   SizedBox(height: 15.v),
                   _buildTextFieldName(context),
-                  SizedBox(height: 16.v),
+                  SizedBox(height: 30.v),
                   CustomElevatedButton(
                     text: "Withdraw Tellacoins",
+                    onPressed: () => Modals.showDialogModal(context, page: ModalContentScreen(title: 'Processing...', body: 'Your withdrawal is being processed. Your account will be credited within 24 hours.', btnText: 'Done', headerColorOne: Color(0xFFFDF9ED), headerColorTwo: Color(0xFFFAF3DA),)),
                   ),
                   SizedBox(height: 5.v),
                 ],
@@ -91,6 +96,9 @@ class TransferCoin extends StatelessWidget {
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         imagePath: ImageConstant.imgArrowBack,
+         onTap: (){
+          Navigator.pop(context);
+        },
         margin: EdgeInsets.only(
           left: 20.h,
           top: 50.v,
@@ -98,7 +106,7 @@ class TransferCoin extends StatelessWidget {
         ),
       ),
       centerTitle: true,
-      title: AppbarTitle(
+      title: AppbarSubtitle(
         text: "Withdraw Tellacoins",
         margin: EdgeInsets.only(
           top: 49.v,
@@ -125,14 +133,17 @@ class TransferCoin extends StatelessWidget {
         ),
         SizedBox(height: 3.v),
         CustomDropDown(
-          icon: Container(
+          suffix: Container(
             margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
             child: CustomImageView(
-              // imagePath: ImageConstant.imgArrowdropdown,
+               imagePath: ImageConstant.imgArrowdropdown,
+               color: Colors.green,
               height: 24.adaptSize,
               width: 24.adaptSize,
             ),
+          
           ),
+           icon: SizedBox.shrink(),
           hintText: "Zenith Bank",
           items: dropdownItemList,
           onChanged: (value) {},

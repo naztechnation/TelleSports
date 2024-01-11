@@ -99,6 +99,19 @@ class CustomDropDown extends StatelessWidget {
         suffixIconConstraints: suffixConstraints,
         isDense: true,
         contentPadding: contentPadding,
-        border: InputBorder.none,
-      );
+        border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.h),
+              borderSide: BorderSide(
+                color: appTheme.blueGray100,
+                width: 1,
+              ),
+            ),
+        enabledBorder: 
+            OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.h),
+              borderSide: BorderSide(
+                color: appTheme.blueGray100,
+                width: 1,
+              ),
+            ));
 }

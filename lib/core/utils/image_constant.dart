@@ -255,4 +255,10 @@ class ImageConstant {
 
   static String imageNotFound = 'assets/images/image_not_found.png';
   static String cash = 'assets/images/payments.svg';
+
+  static String imgVideocameraGreen700 =
+      '$imagePath/img_videocamera_green_700.svg';
+
+  static String imgArrowdropdown = '$imagePath/img_arrowdropdown.svg';
+
 }
