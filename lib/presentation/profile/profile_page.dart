@@ -8,7 +8,7 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import '../../widgets/custom_outlined_button.dart';
 import '../chats_settings_screen/chats_settings_screen.dart';
 import '../notification_settings_screen/notification_settings_screen.dart';
-import '../predictions_one_screen/edit_profile_screen.dart';
+import 'edit_profile_screen.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);

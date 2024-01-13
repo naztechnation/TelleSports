@@ -8,17 +8,10 @@ import 'package:tellesports/presentation/auth/signin_screen/signin_screen.dart';
 import 'package:tellesports/presentation/manage_account/forgot_password_screen/forgot_password_screen.dart';
 import 'package:tellesports/presentation/manage_account/verify_account_screen/verify_account_screen.dart';
 import 'package:tellesports/presentation/manage_account/create_new_password_screen/create_new_password_screen.dart';
-import 'package:tellesports/presentation/view_livescoresone_page/view_livescores_details_screen.dart';
 import 'package:tellesports/presentation/buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import 'package:tellesports/presentation/community_chat_screen/community_chat_screen.dart';
-import 'package:tellesports/presentation/community_chat_condensed_screen/community_chat_condensed_screen.dart';
-import 'package:tellesports/presentation/community_chat_empty_state_screen/community_chat_empty_state_screen.dart';
-import 'package:tellesports/presentation/community_one_page/all_users_page.dart';
-import 'package:tellesports/presentation/direct_messages_condensed_screen/direct_messages_condensed_screen.dart';
-import 'package:tellesports/presentation/individual_user_info.dart/individual_user_info.dart';
 import 'package:tellesports/presentation/gift_tellacoins_screen/gift_tellacoins_screen.dart';
 import 'package:tellesports/presentation/community_info_screen/community_info_screen.dart';
-import 'package:tellesports/presentation/predictions_one_screen/edit_profile_screen.dart';
 import 'package:tellesports/presentation/app_navigation_screen/app_navigation_screen.dart';
 
 class AppRoutes {
@@ -121,9 +114,7 @@ class AppRoutes {
     
     buyTellacoinsScreen: (context) => BuyTellacoinsScreen(),
     communityChatScreen: (context) => CommunityChatScreen(),
-    communityChatCondensedScreen: (context) => CommunityChatCondensedScreen(),
-    communityChatEmptyStateScreen: (context) => CommunityChatEmptyStateScreen(),
-    directMessagesCondensedScreen: (context) => DirectMessagesCondensedScreen(),
+    
     
     giftTellacoinsScreen: (context) => GiftTellacoinsScreen(),
     communityInfoScreen: (context) => CommunityInfoScreen(),
