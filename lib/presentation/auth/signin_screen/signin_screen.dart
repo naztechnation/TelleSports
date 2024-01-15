@@ -52,7 +52,7 @@ class SigninScreen extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   child: GestureDetector(
                                       onTap: () {
-                                        onTapTxtForgotPassword(context);
+                                        onTapSignUp(context);
                                       },
                                       child: Text("Sign Up Instead",
                                           style: CustomTextStyles
@@ -134,7 +134,7 @@ class SigninScreen extends StatelessWidget {
       CustomTextFormField(
           controller: passwordController,
           hintText: "************",
-          hintStyle: CustomTextStyles.titleSmallRed600,
+          hintStyle: CustomTextStyles.titleMediumBlack900,
           textInputAction: TextInputAction.done,
           textInputType: TextInputType.visiblePassword,
           suffix: Container(

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 
 import '../../../widgets/custom_outlined_button.dart';
-import '../../app_navigation_screen/app_navigation_screen.dart';
 
 // ignore: must_be_immutable
 class CommunityleaderItemWidget extends StatelessWidget {
@@ -143,7 +141,6 @@ class CommunityleaderItemWidget extends StatelessWidget {
     return CustomOutlinedButton(
         text: "Buy Now", margin: EdgeInsets.symmetric(horizontal: 20.h),
         onPressed: () {
-          AppNavigator.pushAndStackPage(context, page: AppNavigationScreen());
         },
         );
   }

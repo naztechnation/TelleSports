@@ -1,12 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/presentation/manage_account/verify_account_screen/verify_account_screen.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
+import '../../../blocs/accounts/account.dart';
+import '../../../core/constants/enums.dart';
+import '../../../model/view_models/account_view_model.dart';
+import '../../../requests/repositories/account_repo/account_repository_impl.dart';
 import '../../../utils/navigator/page_navigator.dart';
+import '../../../utils/validator.dart';
+import '../../../widgets/modals.dart';
 import '../signin_screen/signin_screen.dart';
 
 // ignore_for_file: must_be_immutable
@@ -29,124 +37,167 @@ class SignUpScreen extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
-            body: SingleChildScrollView(
-              child: Form(
-                  key: _formKey,
-                  child: Container(
-                      width: double.maxFinite,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 16.h, vertical: 45.v),
-                      child: Column(children: [
-                        SizedBox(height: 23.v),
-                        CustomImageView(
-                            imagePath: ImageConstant.imgTellasportLogo,
-                            height: 32.v,
-                            width: 203.h),
-                        SizedBox(height: 32.v),
-                        Text("Register", style: theme.textTheme.headlineLarge),
-                        SizedBox(height: 13.v),
-                        _buildUsernameTextField(context),
-                        SizedBox(height: 15.v),
-                        _buildEmailTextField(context),
-                        SizedBox(height: 15.v),
-                        _buildPhoneNumberTextField(context),
-                        SizedBox(height: 17.v),
-                        _buildPasswordTextField(context),
-                        SizedBox(height: 24.v),
-                        CustomElevatedButton(
-                            text: "Register",
-                            margin: EdgeInsets.symmetric(horizontal: 4.h),
-                            onPressed: () {
-                              onTapRegister(context);
-                            }),
-                        SizedBox(height: 9.v),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Already have an account? ",
-                                style: CustomTextStyles.titleSmallBluegray900_1,
+            body: BlocProvider<AccountCubit>(
+                lazy: false,
+                create: (_) => AccountCubit(
+                    accountRepository: AccountRepositoryImpl(),
+                    viewModel:
+                        Provider.of<AccountViewModel>(context, listen: false)),
+                child: BlocConsumer<AccountCubit, AccountStates>(
+                  listener: (context, state) {
+                    if (state is AccountLoaded) {
+                      if (state.userData.success!) {
+                        // AppNavigator.pushAndReplacePage(context,
+                        //     page: OtpScreen(
+                        //       email: _emailController.text,
+
+                        //       username: _usernameController.text,
+                        //     ));
+                        Modals.showToast(state.userData.message ?? '',
+                            messageType: MessageType.success);
+                        // serviceProvider1.resetImage();
+                        // StorageHandler.saveUserName(_usernameController.text.trim());
+                      }
+                      //  else if (state.userData.message.username != null) {
+                      //   Modals.showToast(state.userData.message.username[0] ?? '',
+                      //       messageType: MessageType.success);
+                      // }
+                    } else if (state is AccountApiErr) {
+                      if (state.message != null) {
+                        Modals.showToast(state.message!,
+                            messageType: MessageType.error);
+                      }
+                    } else if (state is AccountNetworkErr) {
+                      if (state.message != null) {
+                        Modals.showToast(state.message!,
+                            messageType: MessageType.error);
+                      }
+                    }
+                  },
+                  builder: (context, state) => SingleChildScrollView(
+                    child: Form(
+                        key: _formKey,
+                        child: Container(
+                            width: double.maxFinite,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.h, vertical: 45.v),
+                            child: Column(children: [
+                              SizedBox(height: 23.v),
+                              CustomImageView(
+                                  imagePath: ImageConstant.imgTellasportLogo,
+                                  height: 32.v,
+                                  width: 203.h),
+                              SizedBox(height: 32.v),
+                              Text("Register",
+                                  style: theme.textTheme.headlineLarge),
+                              SizedBox(height: 13.v),
+                              _buildUsernameTextField(context),
+                              SizedBox(height: 10.v),
+                              _buildEmailTextField(context),
+                              SizedBox(height: 10.v),
+                              _buildPhoneNumberTextField(context),
+                              SizedBox(height: 10.v),
+                              _buildPasswordTextField(context),
+                              SizedBox(height: 24.v),
+                              CustomElevatedButton(
+                                  text: "Register",
+                                  processing: state is AccountProcessing,
+                                  margin: EdgeInsets.symmetric(horizontal: 4.h),
+                                  title: 'Creating Account...',
+                                  onPressed: () {
+                                    registerUser(context);
+                                   // onTapRegister(context);
+                                  }),
+                              SizedBox(height: 9.v),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "Already have an account? ",
+                                      style: CustomTextStyles
+                                          .titleSmallBluegray900_1,
+                                    ),
+                                    TextSpan(
+                                      text: "Sign in",
+                                      style: CustomTextStyles.titleSmallPrimary,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          onTapLogin(context);
+                                        },
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.left,
                               ),
-                              TextSpan(
-                                text: "Sign in",
-                                style: CustomTextStyles.titleSmallPrimary,
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    onTapLogin(context);
-                                  },
-                              ),
-                            ],
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(height: 42.v),
-                        CustomOutlinedButton(
-                            text: "Sign in with Google",
-                            margin: EdgeInsets.symmetric(horizontal: 4.h),
-                            leftIcon: Container(
-                                margin: EdgeInsets.only(right: 10.h),
-                                child: CustomImageView(
-                                    imagePath:
-                                        ImageConstant.imgSocialMediaIcons,
-                                    height: 24.adaptSize,
-                                    width: 24.adaptSize))),
-                        SizedBox(height: 13.v),
-                        CustomOutlinedButton(
-                            text: "Sign in with Apple",
-                            margin: EdgeInsets.symmetric(horizontal: 4.h),
-                            leftIcon: Container(
-                                margin: EdgeInsets.only(right: 10.h),
-                                child: CustomImageView(
-                                    imagePath: ImageConstant
-                                        .imgSocialMediaIconsOnprimary,
-                                    height: 24.adaptSize,
-                                    width: 24.adaptSize)),
-                            onPressed: () {
-                            //  onTapSignInWithApple(context);
-                            }),
-                        SizedBox(height: 13.v),
-                        Container(
-                            width: 342.h,
-                            margin: EdgeInsets.symmetric(horizontal: 7.h),
-                            child: RichText(
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                      text: "By ",
-                                      style: CustomTextStyles
-                                          .titleSmallBluegray900_1),
-                                  TextSpan(
-                                      text: "signing up",
-                                      style: CustomTextStyles
-                                          .titleSmallBluegray900_1),
-                                  TextSpan(
-                                      text: ", you agree to ",
-                                      style: CustomTextStyles
-                                          .titleSmallBluegray900_1),
-                                  TextSpan(
-                                      text: "our",
-                                      style: CustomTextStyles
-                                          .titleSmallBluegray900_1),
-                                  TextSpan(text: " "),
-                                  TextSpan(
-                                      text: "Terms of Service",
-                                      style:
-                                          CustomTextStyles.titleSmallBlue400),
-                                  TextSpan(
-                                      text: " and ",
-                                      style: CustomTextStyles
-                                          .titleSmallBluegray900_1),
-                                  TextSpan(
-                                      text: "Privacy Policy",
-                                      style:
-                                          CustomTextStyles.titleSmallBlue400),
-                                  TextSpan(
-                                      text: ".",
-                                      style: CustomTextStyles
-                                          .titleSmallBluegray900_1)
-                                ]),
-                                textAlign: TextAlign.center))
-                      ]))),
-            )));
+                              SizedBox(height: 42.v),
+                              CustomOutlinedButton(
+                                  text: "Sign in with Google",
+                                  margin: EdgeInsets.symmetric(horizontal: 4.h),
+                                  leftIcon: Container(
+                                      margin: EdgeInsets.only(right: 10.h),
+                                      child: CustomImageView(
+                                          imagePath:
+                                              ImageConstant.imgSocialMediaIcons,
+                                          height: 24.adaptSize,
+                                          width: 24.adaptSize))),
+                              SizedBox(height: 13.v),
+                              CustomOutlinedButton(
+                                  text: "Sign in with Apple",
+                                  margin: EdgeInsets.symmetric(horizontal: 4.h),
+                                  leftIcon: Container(
+                                      margin: EdgeInsets.only(right: 10.h),
+                                      child: CustomImageView(
+                                          imagePath: ImageConstant
+                                              .imgSocialMediaIconsOnprimary,
+                                          height: 24.adaptSize,
+                                          width: 24.adaptSize)),
+                                  onPressed: () {
+                                    //  onTapSignInWithApple(context);
+                                  }),
+                              SizedBox(height: 13.v),
+                              Container(
+                                  width: 342.h,
+                                  margin: EdgeInsets.symmetric(horizontal: 7.h),
+                                  child: RichText(
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                            text: "By ",
+                                            style: CustomTextStyles
+                                                .titleSmallBluegray900_1),
+                                        TextSpan(
+                                            text: "signing up",
+                                            style: CustomTextStyles
+                                                .titleSmallBluegray900_1),
+                                        TextSpan(
+                                            text: ", you agree to ",
+                                            style: CustomTextStyles
+                                                .titleSmallBluegray900_1),
+                                        TextSpan(
+                                            text: "our",
+                                            style: CustomTextStyles
+                                                .titleSmallBluegray900_1),
+                                        TextSpan(text: " "),
+                                        TextSpan(
+                                            text: "Terms of Service",
+                                            style: CustomTextStyles
+                                                .titleSmallBlue400),
+                                        TextSpan(
+                                            text: " and ",
+                                            style: CustomTextStyles
+                                                .titleSmallBluegray900_1),
+                                        TextSpan(
+                                            text: "Privacy Policy",
+                                            style: CustomTextStyles
+                                                .titleSmallBlue400),
+                                        TextSpan(
+                                            text: ".",
+                                            style: CustomTextStyles
+                                                .titleSmallBluegray900_1)
+                                      ]),
+                                      textAlign: TextAlign.center))
+                            ]))),
+                  ),
+                ))));
   }
 
   Widget _buildUsernameTextField(BuildContext context) {
@@ -158,7 +209,11 @@ class SignUpScreen extends StatelessWidget {
           CustomTextFormField(
               controller: userNameController,
               hintText: "Create a username",
-              hintStyle: CustomTextStyles.titleSmallGray600)
+              hintStyle: CustomTextStyles.titleSmallGray600,
+              validator: (value) {
+                        return Validator.validate(value, 'Username');
+                      },
+              )
         ]));
   }
 
@@ -172,7 +227,11 @@ class SignUpScreen extends StatelessWidget {
               controller: emailController,
               hintText: "Enter your email",
               hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputType: TextInputType.emailAddress)
+              textInputType: TextInputType.emailAddress,
+               validator: (value) {
+                        return Validator.validateEmail(value, 'Email');
+                      },
+              )
         ]));
   }
 
@@ -186,11 +245,15 @@ class SignUpScreen extends StatelessWidget {
               controller: phoneNumberController,
               hintText: "Enter your phone number",
               hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputType: TextInputType.phone)
+              textInputType: TextInputType.phone,
+               validator: (value) {
+                        return Validator.validate(value, 'Contact');
+                      },
+              )
         ]));
   }
 
-  Widget _buildPasswordTextField(BuildContext context) {
+  Widget _buildPasswordTextField(BuildContext context,) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -211,18 +274,34 @@ class SignUpScreen extends StatelessWidget {
               suffixConstraints: BoxConstraints(maxHeight: 48.v),
               obscureText: true,
               contentPadding:
-                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v),
+                   validator: (value) {
+                        return Validator.validate(value,'Password');
+                      },
+                  )
         ]));
   }
 
   onTapRegister(BuildContext context) {
     AppNavigator.pushAndStackPage(context, page: VerifyAccountScreen());
-
   }
 
   onTapLogin(BuildContext context) {
-     AppNavigator.pushAndStackPage(context, page: SigninScreen());
+    AppNavigator.pushAndStackPage(context, page: SigninScreen());
   }
 
-  
+
+  registerUser(BuildContext context){
+    if (_formKey.currentState!.validate()) {
+
+     context.read<AccountCubit>().registerUser(username: userNameController.text, 
+     confirmPassword: passwordController.text, email: emailController.text, 
+     password: passwordController.text, phoneNumber: phoneNumberController.text
+
+     );
+      
+      }
+
+
+  }
 }

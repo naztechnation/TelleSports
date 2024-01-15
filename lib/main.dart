@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; 
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart'; 
 import 'package:tellesports/theme/theme_helper.dart';
 import 'package:tellesports/routes/app_routes.dart';
+
+import 'model/view_models/account_view_model.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() {
@@ -10,10 +13,19 @@ void main() {
     DeviceOrientation.portraitUp,
   ]);
  
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => AccountViewModel(), lazy: false),
+      // ChangeNotifierProvider(create: (_) => ServiceProviderViewModel(), lazy: false),
+      // ChangeNotifierProvider(create: (_) => UserViewModel(), lazy: false),
+      // ChangeNotifierProvider(create: (_) => FirebaseAuthProvider(), lazy: false),
+      // ChangeNotifierProvider(create: (_) => ServiceProviderInAppViewModel(), lazy: false),
+    ], 
+    child:   TellaSports(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
+class TellaSports extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

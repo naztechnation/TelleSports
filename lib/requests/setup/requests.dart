@@ -8,6 +8,7 @@ import 'package:retry/retry.dart';
 import 'package:path/path.dart';
 
 import '../../handlers/request_handler.dart';
+import '../../res/app_strings.dart';
 import '../../utils/exceptions.dart';
 import 'headers.dart';
 
@@ -77,9 +78,9 @@ class Requests {
      
 
     } on SocketException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on HandshakeException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on FormatException catch (e) {
       throw NetworkException(e.toString());
     }

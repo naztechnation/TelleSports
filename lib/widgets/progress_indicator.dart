@@ -4,13 +4,14 @@ import '../../res/app_colors.dart';
 
 class ProgressIndicators{
 
-  static Widget circularProgressBar(BuildContext context,
-      {double? value, double strokeWidth=2.5}) {
+  static Widget circularProgressBar(
+    
+      {double? value, double strokeWidth=2.5,}) {
     return CircularProgressIndicator(
         value: value,
         strokeWidth: strokeWidth,
         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        backgroundColor: (AppColors.lightSecondary));
+        backgroundColor: (Colors.white24));
   }
 
   static Widget linearProgressBar(BuildContext context,

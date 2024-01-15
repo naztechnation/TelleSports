@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/base_button.dart';
 
+import 'progress_indicator.dart';
+
 class CustomElevatedButton extends BaseButton {
   CustomElevatedButton({
     Key? key,
     this.decoration,
     this.leftIcon,
     this.rightIcon,
+    this.processing = false,
+    this.title = 'Loading...',
     EdgeInsets? margin,
     VoidCallback? onPressed,
     ButtonStyle? buttonStyle,
@@ -35,6 +39,9 @@ class CustomElevatedButton extends BaseButton {
 
   final Widget? rightIcon;
 
+  final bool processing;
+  final String title ;
+
   @override
   Widget build(BuildContext context) {
     return alignment != null
@@ -45,26 +52,52 @@ class CustomElevatedButton extends BaseButton {
         : buildElevatedButtonWidget;
   }
 
-  Widget get buildElevatedButtonWidget => Container(
-        height: this.height ?? 42.v,
-        width: this.width ?? double.maxFinite,
-        margin: margin,
-        decoration: decoration,
-        child: ElevatedButton(
-          style: buttonStyle,
-          onPressed: isDisabled ?? false ? null : onPressed ?? () {},
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              leftIcon ?? const SizedBox.shrink(),
-              Text(
-                text,
-                style: buttonTextStyle ?? CustomTextStyles.titleSmallWhiteA700,
+  Widget get buildElevatedButtonWidget => (processing)
+      ? Container(
+          height: this.height ?? 45.v,
+          width: this.width ?? double.maxFinite,
+          margin: margin,
+          decoration: decoration,
+          child: ElevatedButton(
+            style: buttonStyle,
+            onPressed: () {},
+            child: Align(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: ProgressIndicators.circularProgressBar()),
+                      const SizedBox(width: 13,),
+                  Text(title, style: TextStyle(color: Colors.white),)
+                ],
               ),
-              rightIcon ?? const SizedBox.shrink(),
-            ],
+            ),
           ),
-        ),
-      );
+        )
+      : Container(
+          height: this.height ?? 42.v,
+          width: this.width ?? double.maxFinite,
+          margin: margin,
+          decoration: decoration,
+          child: ElevatedButton(
+            style: buttonStyle,
+            onPressed: isDisabled ?? false ? null : onPressed ?? () {},
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                leftIcon ?? const SizedBox.shrink(),
+                Text(
+                  text,
+                  style:
+                      buttonTextStyle ?? CustomTextStyles.titleSmallWhiteA700,
+                ),
+                rightIcon ?? const SizedBox.shrink(),
+              ],
+            ),
+          ),
+        );
 }

@@ -1,6 +1,9 @@
 class AppStrings {
   static const String appName = 'Lucacify';
 
+  static const String networkErrorMessage = "Network error, try again later";
+
+
   ///flutterwave api
   static const String flutterwaveApiKey =
       "FLWPUBK_TEST-e244b020ccc49bcf667b0e3f26dc056b-X";

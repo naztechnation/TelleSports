@@ -12,7 +12,6 @@ import 'package:tellesports/presentation/buy_tellacoins_screen/buy_tellacoins_sc
 import 'package:tellesports/presentation/community_chat_screen/community_chat_screen.dart';
 import 'package:tellesports/presentation/gift_tellacoins_screen/gift_tellacoins_screen.dart';
 import 'package:tellesports/presentation/community_info_screen/community_info_screen.dart';
-import 'package:tellesports/presentation/app_navigation_screen/app_navigation_screen.dart';
 
 class AppRoutes {
   static const String splashScreenOnboardingScreen =
@@ -118,6 +117,5 @@ class AppRoutes {
     
     giftTellacoinsScreen: (context) => GiftTellacoinsScreen(),
     communityInfoScreen: (context) => CommunityInfoScreen(),
-    appNavigationScreen: (context) => AppNavigationScreen()
   };
 }
