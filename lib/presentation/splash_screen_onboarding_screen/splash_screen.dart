@@ -7,7 +7,6 @@ import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../auth/signin_screen/sign_in_screen.dart';
 import '../landing_page/landing_page.dart';
-import '../onboarding_screen/onboarding_main.dart';
 import '../onboarding_screen/widget/fading_sliding_in.dart';
 import 'welcome_screen.dart';
 
@@ -21,7 +20,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   startTimeout() {
-    return Timer(const Duration(hours: 5), handleTimeout);
+    return Timer(const Duration(seconds: 5), handleTimeout);
   }
 
   late AnimationController _animationController;
@@ -74,31 +73,35 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+
         children: [
           
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FadingSlidingWidget(
-                animationController: _animationController,
-                interval: const Interval(0.5, 0.9),
-                child: CustomIconButton(
-                          height: 32.adaptSize,
-                          width: 32.adaptSize,
-                          padding: EdgeInsets.all(5.h),
-                          decoration: IconButtonStyleHelper.fillPrimary,
-                          child: CustomImageView(
-                              imagePath: ImageConstant.imgLightBulb)),
-              ),
-              const SizedBox(
-                width: 6,
-              ),
-              CustomImageView(
-                          imagePath: ImageConstant.imgTellasportLogo,
-                          height: 44.v,
-                          width: 280.h),
-            ],
+          Align(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FadingSlidingWidget(
+                  animationController: _animationController,
+                  interval: const Interval(0.5, 0.9),
+                  child: CustomIconButton(
+                            height: 98.adaptSize,
+                            width: 98.adaptSize,
+                            padding: EdgeInsets.all(5.h),
+                            decoration: IconButtonStyleHelper.fillPrimary,
+                            child: CustomImageView(
+                                imagePath: ImageConstant.imgLightBulb)),
+                ),
+                // const SizedBox(
+                //   width: 6,
+                // ),
+                // CustomImageView(
+                //             imagePath: ImageConstant.imgTellasportLogo,
+                //             height: 44.v,
+                //             width: 180.h),
+              ],
+            ),
           ),
            
         ],

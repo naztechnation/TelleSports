@@ -17,15 +17,17 @@ import '../../../widgets/modals.dart';
 import '../../auth/signin_screen/sign_in_screen.dart';
 
 // ignore_for_file: must_be_immutable
-class CreateNewPasswordScreen extends StatefulWidget {
-  CreateNewPasswordScreen({Key? key}) : super(key: key);
+class ChangePasswordScreen extends StatefulWidget {
+  final String email;
+  ChangePasswordScreen({Key? key, required this.email}) : super(key: key);
 
   @override
-  State<CreateNewPasswordScreen> createState() => _CreateNewPasswordScreenState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
-  TextEditingController oldPasswordController = TextEditingController();
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
 
   TextEditingController confirmpasswordController = TextEditingController();
@@ -33,10 +35,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isShowPassword1 = false;
-
   bool isShowPassword2 = false;
-
-  bool isShowPassword3 = false;
 
   showPassword1() {
     setState(() {
@@ -50,15 +49,11 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     });
   }
 
-    showPassword3() {
-    setState(() {
-      isShowPassword3 = !isShowPassword3;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+
+    emailController.text = widget.email;
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -99,61 +94,95 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                     }
                   },
                   builder: (context, state) => Form(
-                  key: _formKey,
-                  child: Container(
-                      width: double.maxFinite,
-                      padding: EdgeInsets.symmetric(horizontal: 16.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                        Text("Create New Password",
-                            style: theme.textTheme.headlineLarge),
-                        SizedBox(height: 14.v),
-                        Text("Please enter and confirm your new password.",
-                            style: CustomTextStyles.titleSmallBluegray900),
-                        Text("You will need to login after you reset.",
-                            style: CustomTextStyles.titleSmallBluegray900),
-                        SizedBox(height: 29.v),
-                        _buildOldPasswordTextField(context),
-                        SizedBox(height: 11.v),
-                        _buildPasswordTextField(context),
-                        SizedBox(height: 11.v),
-                        _buildConfirmPasswordTextField(context),
-                        SizedBox(height: 32.v),
-                        CustomElevatedButton(
-                            text: "Create Password",
-                            processing: state is ResetPasswordLoading,
-                            margin: EdgeInsets.symmetric(horizontal: 4.h),
-                            onPressed: () {
-                              onTapCreatePassword(context);
-                            }),
-                        SizedBox(height: 5.v)
-                      ]))),
-            ))));
+                      key: _formKey,
+                      child: Container(
+                          width: double.maxFinite,
+                          padding: EdgeInsets.symmetric(horizontal: 16.h),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Create New Password",
+                                    style: theme.textTheme.headlineLarge),
+                                SizedBox(height: 14.v),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                      "Please enter and confirm your new password.",
+                                      textAlign: TextAlign.left,
+                                      style: CustomTextStyles
+                                          .titleSmallBluegray900),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "You will need to login after you reset.",
+                                    style:
+                                        CustomTextStyles.titleSmallBluegray900,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                                SizedBox(height: 29.v),
+                                _buildEmailTextField(context),
+                                SizedBox(height: 11.v),
+                                _buildPasswordTextField(context),
+                                SizedBox(height: 11.v),
+                                _buildConfirmPasswordTextField(context),
+                                SizedBox(height: 32.v),
+                                CustomElevatedButton(
+                                    text: "Create Password",
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 4.h),
+                                    onPressed: () {
+                                      onTapCreatePassword(context);
+                                    }),
+                                SizedBox(height: 5.v)
+                              ]))),
+                ))));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
         leadingWidth: 389.h,
         leading: AppbarLeadingImage(
-          onTap: (){
-            Navigator.pop(context); 
+          imagePath: ImageConstant.imgVector,
+          margin: EdgeInsets.fromLTRB(24.h, 20.v, 350.h, 20.v),
+          onTap: () {
+            Navigator.pop(context);
           },
-            imagePath: ImageConstant.imgVector,
-            margin: EdgeInsets.fromLTRB(24.h, 20.v, 350.h, 20.v)));
+        ));
   }
 
-  Widget _buildOldPasswordTextField(BuildContext context) {
+  Widget _buildEmailTextField(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(left: 8.h),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("E-mail ", style: theme.textTheme.titleSmall),
+          SizedBox(height: 3.v),
+          CustomTextFormField(
+            controller: emailController,
+            hintText: "Enter your email",
+            readOnly: true,
+            hintStyle: CustomTextStyles.titleSmallGray600,
+            textInputType: TextInputType.emailAddress,
+            validator: (value) {
+              return Validator.validateEmail(value, 'Email');
+            },
+          )
+        ]));
+  }
+
+  Widget _buildPasswordTextField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Password", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
-              controller: oldPasswordController,
-              hintText: "Enter old password",
+              controller: passwordController,
+              hintText: "Enter Password",
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputType: TextInputType.visiblePassword,
+              obscureText: isShowPassword1,
               validator: (value) {
                 return Validator.validate(value, 'Password');
               },
@@ -172,42 +201,6 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 ),
               ),
               suffixConstraints: BoxConstraints(maxHeight: 48.v),
-              obscureText: isShowPassword1,
-              contentPadding:
-                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
-        ]));
-  }
-
-  Widget _buildPasswordTextField(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(left: 8.h),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Password", style: theme.textTheme.titleSmall),
-          SizedBox(height: 3.v),
-          CustomTextFormField(
-              controller: passwordController,
-              hintText: 'Enter new password',
-              hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputType: TextInputType.visiblePassword,
-               validator: (value) {
-                return Validator.validate(value, 'Password');
-              },
-              suffix: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
-                child: GestureDetector(
-                  onTap: () {
-                    showPassword2();
-                  },
-                  child: isShowPassword2
-                      ? Icon(
-                          Icons.visibility_off,
-                          size: 24,
-                        )
-                      : Icon(Icons.visibility, size: 24),
-                ),
-              ),
-              suffixConstraints: BoxConstraints(maxHeight: 48.v),
-              obscureText: isShowPassword2,
               contentPadding:
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
         ]));
@@ -221,46 +214,40 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: confirmpasswordController,
-              hintText: "Confirm new password",
+              hintText: "Re-Enter Password",
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.visiblePassword,
-               validator: (value) {
+              obscureText: isShowPassword2,
+              validator: (value) {
                 return Validator.validate(value, 'Password');
               },
               suffix: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
-                child: GestureDetector(
+                  margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
+                  child: GestureDetector(
                   onTap: () {
-                    showPassword3();
+                    showPassword2();
                   },
-                  child: isShowPassword3
+                  child: isShowPassword2
                       ? Icon(
                           Icons.visibility_off,
                           size: 24,
                         )
                       : Icon(Icons.visibility, size: 24),
-                ),
-              ),
-              suffixConstraints: BoxConstraints(maxHeight: 48.v),
-              obscureText: isShowPassword3,
-              contentPadding:
-                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
-        ]));
+                )),
+        )]));
   }
 
   onTapCreatePassword(BuildContext context) {
-       AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+    //  AppNavigator.pushAndReplacePage(context, page: SigninScreen());
 
-
-      //  if (_formKey.currentState!.validate()) {
-      // context.read<AccountCubit>().changePassword(
-      //     oldPassword: oldPasswordController.text,
-      //     password: passwordController.text.trim(),
-      //     confirmPassword: confirmpasswordController.text.trim());
+    if (_formKey.currentState!.validate()) {
+      context.read<AccountCubit>().resetPassword(
+          email: widget.email,
+          password: passwordController.text.trim(),
+          confirmPassword: confirmpasswordController.text.trim());
       FocusScope.of(context).unfocus();
-  //  }
+    }
     ;
-;
   }
 }

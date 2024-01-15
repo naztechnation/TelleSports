@@ -18,9 +18,14 @@ import '../../../widgets/modals.dart';
 import '../signin_screen/sign_in_screen.dart';
 
 // ignore_for_file: must_be_immutable
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController userNameController = TextEditingController();
 
   TextEditingController emailController = TextEditingController();
@@ -30,6 +35,14 @@ class SignUpScreen extends StatelessWidget {
   TextEditingController passwordController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool isShowPassword1 = false;
+
+  showPassword1() {
+    setState(() {
+      isShowPassword1 = !isShowPassword1;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +60,12 @@ class SignUpScreen extends StatelessWidget {
                   listener: (context, state) {
                     if (state is AccountLoaded) {
                       if (state.userData.success!) {
-                        // AppNavigator.pushAndReplacePage(context,
-                        //     page: OtpScreen(
-                        //       email: _emailController.text,
-
-                        //       username: _usernameController.text,
-                        //     ));
+                        
 
                          onTapRegister(context);
                         Modals.showToast(state.userData.message ?? '',
                             messageType: MessageType.success);
-                        // serviceProvider1.resetImage();
-                        // StorageHandler.saveUserName(_usernameController.text.trim());
+                        
                       }
                       //  else if (state.userData.message.username != null) {
                       //   Modals.showToast(state.userData.message.username[0] ?? '',
@@ -266,15 +273,23 @@ class SignUpScreen extends StatelessWidget {
               hintText: "Enter your password",
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputAction: TextInputAction.done,
+              obscureText: isShowPassword1,
+
               textInputType: TextInputType.visiblePassword,
               suffix: Container(
                   margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
-                  child: CustomImageView(
-                      imagePath: ImageConstant.imgEyeoutline,
-                      height: 24.adaptSize,
-                      width: 24.adaptSize)),
+                  child: GestureDetector(
+                  onTap: () {
+                    showPassword1();
+                  },
+                  child: isShowPassword1
+                      ? Icon(
+                          Icons.visibility_off,
+                          size: 24,
+                        )
+                      : Icon(Icons.visibility, size: 24),
+                ),),
               suffixConstraints: BoxConstraints(maxHeight: 48.v),
-              obscureText: true,
               contentPadding:
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v),
                    validator: (value) {
@@ -291,7 +306,6 @@ class SignUpScreen extends StatelessWidget {
   onTapLogin(BuildContext context) {
     AppNavigator.pushAndStackPage(context, page: SigninScreen());
   }
-
 
   registerUser(BuildContext context){
     if (_formKey.currentState!.validate()) {

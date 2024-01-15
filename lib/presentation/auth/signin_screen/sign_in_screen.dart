@@ -13,19 +13,33 @@ import '../../../handlers/secure_handler.dart';
 import '../../../model/view_models/account_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
 import '../../../utils/navigator/page_navigator.dart';
+import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../landing_page/landing_page.dart';
 import '../../manage_account/verify_account_screen/verify_account_screen.dart';
 
 // ignore_for_file: must_be_immutable
-class SigninScreen extends StatelessWidget {
+class SigninScreen extends StatefulWidget {
   SigninScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SigninScreen> createState() => _SigninScreenState();
+}
+
+class _SigninScreenState extends State<SigninScreen> {
   TextEditingController emailController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool isShowPassword1 = false;
+
+  showPassword1() {
+    setState(() {
+      isShowPassword1 = !isShowPassword1;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +129,9 @@ class SigninScreen extends StatelessWidget {
                                                     .copyWith(
                                                         decoration:
                                                             TextDecoration
-                                                                .underline)))),
+                                                                .underline,
+                                                                decorationColor: Colors.blue
+                                                                )))),
                                     Align(
                                         alignment: Alignment.centerRight,
                                         child: GestureDetector(
@@ -128,12 +144,15 @@ class SigninScreen extends StatelessWidget {
                                                     .copyWith(
                                                         decoration:
                                                             TextDecoration
-                                                                .underline)))),
+                                                                .underline,
+                                                                decorationColor: Colors.blue
+                                                                )))),
                                   ],
                                 ),
                                 SizedBox(height: 29.v),
                                 CustomElevatedButton(
-                                  processing: state is AccountLoading,
+                                    processing: state is AccountLoading,
+                                    title: 'Authennticating...',
                                     onPressed: (() => loginUser(context)),
                                     text: "Login",
                                     margin:
@@ -180,31 +199,48 @@ class SigninScreen extends StatelessWidget {
           CustomTextFormField(
               controller: emailController,
               hintText: "Enter your email",
+              validator: (value) {
+                return Validator.validateEmail(value, 'Email');
+              },
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputType: TextInputType.emailAddress)
         ]));
   }
 
   Widget _buildPasswordSection(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text("Password", style: theme.textTheme.titleSmall),
-      SizedBox(height: 3.v),
-      CustomTextFormField(
-          controller: passwordController,
-          hintText: "************",
-          hintStyle: CustomTextStyles.titleMediumBlack900,
-          textInputAction: TextInputAction.done,
-          textInputType: TextInputType.visiblePassword,
-          suffix: Container(
+    return Padding(
+      padding: EdgeInsets.only(left: 8.h),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text("Password", style: theme.textTheme.titleSmall),
+        SizedBox(height: 3.v),
+        CustomTextFormField(
+            controller: passwordController,
+            hintText: "Enter Password",
+            obscureText: isShowPassword1,
+            hintStyle: CustomTextStyles.titleSmallGray600,
+            textInputAction: TextInputAction.done,
+            textInputType: TextInputType.visiblePassword,
+            suffix: Container(
               margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
-              child: CustomImageView(
-                  imagePath: ImageConstant.imgEyeoutlineBlueGray900,
-                  height: 24.adaptSize,
-                  width: 24.adaptSize)),
-          suffixConstraints: BoxConstraints(maxHeight: 48.v),
-          obscureText: true,
-          contentPadding: EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
-    ]);
+              child: GestureDetector(
+                onTap: () {
+                  showPassword1();
+                },
+                child: isShowPassword1
+                    ? Icon(
+                        Icons.visibility_off,
+                        size: 24,
+                      )
+                    : Icon(Icons.visibility, size: 24),
+              ),
+            ),
+            suffixConstraints: BoxConstraints(maxHeight: 48.v),
+            validator: (value) {
+              return Validator.validate(value, 'Password');
+            },
+            contentPadding: EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+      ]),
+    );
   }
 
   onTapTxtForgotPassword(BuildContext context) {
@@ -216,7 +252,7 @@ class SigninScreen extends StatelessWidget {
   }
 
   onTapSignIn(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: LandingPage());
+    AppNavigator.pushAndReplacePage(context, page: LandingPage());
   }
 
   resendCode(BuildContext ctx) {
@@ -230,9 +266,11 @@ class SigninScreen extends StatelessWidget {
 
   loginUser(BuildContext ctx) {
     if (_formKey.currentState!.validate()) {
-      ctx.read<AccountCubit>().loginUser(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+
+      onTapSignIn(ctx);
+      // ctx.read<AccountCubit>().loginUser(
+      //     email: emailController.text.trim(),
+      //     password: passwordController.text.trim());
       FocusScope.of(ctx).unfocus();
     }
   }

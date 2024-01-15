@@ -18,6 +18,7 @@ abstract class AccountRepository {
   Future<RegisterUser> verifyCode({
     required String code,
     required String email,
+    required String url,
   });
   Future<RegisterUser> resendVerifyCode({
     required String email,
@@ -25,10 +26,7 @@ abstract class AccountRepository {
   Future<RegisterUser> forgetPassword({
     required String email,
   });
-  Future<RegisterUser> verifyResetPassword({
-    required String email,
-    required String code,
-  });
+ 
   Future<RegisterUser> resetPassword({
     required String email,
     required String password,

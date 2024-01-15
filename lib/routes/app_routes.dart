@@ -13,6 +13,8 @@ import 'package:tellesports/presentation/community_chat_screen/community_chat_sc
 import 'package:tellesports/presentation/gift_tellacoins_screen/gift_tellacoins_screen.dart';
 import 'package:tellesports/presentation/community_info_screen/community_info_screen.dart';
 
+import '../presentation/splash_screen_onboarding_screen/splash_screen.dart';
+
 class AppRoutes {
   static const String splashScreenOnboardingScreen =
       '/splash_screen_onboarding_screen';
@@ -100,7 +102,7 @@ class AppRoutes {
   static const String appNavigationScreen = '/app_navigation_screen';
 
   static Map<String, WidgetBuilder> routes = {
-    splashScreenOnboardingScreen: (context) => SplashScreenOnboardingScreen(),
+    splashScreenOnboardingScreen: (context) => SplashScreen(),
     onboardingOneScreen: (context) => OnboardingOneScreen(),
     onboardingThreeScreen: (context) => OnboardingThreeScreen(),
     onboardingTwoScreen: (context) => OnboardingTwoScreen(),

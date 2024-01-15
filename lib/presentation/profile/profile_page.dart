@@ -7,6 +7,7 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 
 import '../../widgets/custom_outlined_button.dart';
 import '../chats_settings_screen/chats_settings_screen.dart';
+import '../manage_account/create_new_password_screen/create_new_password_screen.dart';
 import '../notification_settings_screen/notification_settings_screen.dart';
 import 'edit_profile_screen.dart';
 
@@ -29,11 +30,20 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(height: 24.v),
                   _buildShareFrame(context,
                       text: "Contact support",
-                      image: ImageConstant.imgHelpCenter),
+                      image: ImageConstant.imgHelpCenter,
+                      onTap: () {}),
+                  SizedBox(height: 24.v),
+                  _buildShareFrame(context,
+                      text: "Change Password",
+                      image: ImageConstant.imgHelpCenter, onTap: () {
+                    AppNavigator.pushAndStackPage(context,
+                        page: CreateNewPasswordScreen());
+                  }),
                   SizedBox(height: 24.v),
                   _buildShareFrame(context,
                       text: "Share Tellasport",
-                      image: ImageConstant.imgShareGray700),
+                      image: ImageConstant.imgShareGray700,
+                      onTap: () {}),
                   SizedBox(height: 24.v),
                   CustomElevatedButton(
                       text: "Log out",
@@ -59,9 +69,7 @@ class ProfilePage extends StatelessWidget {
     return CustomAppBar(
         height: 93.v,
         centerTitle: true,
-        
         title: AppbarSubtitleOne(
-
             text: "Settings", margin: EdgeInsets.only(top: 61.v, bottom: 7.v)),
         styleType: Style.bgOutline_4);
   }
@@ -103,17 +111,17 @@ class ProfilePage extends StatelessWidget {
         decoration: AppDecoration.outlineBlack9001
             .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          _buildChatSettingsFrame(context, text: "Notifications settings", onPressed: (){
-            AppNavigator.pushAndStackPage(context, page: NotificationSettingsScreen());
+          _buildChatSettingsFrame(context, text: "Notifications settings",
+              onPressed: () {
+            AppNavigator.pushAndStackPage(context,
+                page: NotificationSettingsScreen());
           }),
           SizedBox(height: 12.v),
           Divider(color: appTheme.gray50001),
           SizedBox(height: 11.v),
-          _buildChatSettingsFrame(context, text: "Chat settings", onPressed: (){
-
+          _buildChatSettingsFrame(context, text: "Chat settings",
+              onPressed: () {
             AppNavigator.pushAndStackPage(context, page: ChatsSettingsScreen());
-
-            
           })
         ]));
   }
@@ -145,25 +153,31 @@ class ProfilePage extends StatelessWidget {
     BuildContext context, {
     required String text,
     required String image,
+    required Function onTap,
   }) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 12.v),
-        decoration: AppDecoration.outlineBlack9001
-            .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Padding(
-              padding: EdgeInsets.only(top: 4.v, bottom: 1.v),
-              child: Text(text,
-                  style: theme.textTheme.titleSmall!
-                      .copyWith(color: theme.colorScheme.onPrimary))),
-          CustomImageView(
-              imagePath: image, height: 24.adaptSize, width: 24.adaptSize)
-        ]));
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 12.v),
+          decoration: AppDecoration.outlineBlack9001
+              .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Padding(
+                padding: EdgeInsets.only(top: 4.v, bottom: 1.v),
+                child: Text(text,
+                    style: theme.textTheme.titleSmall!
+                        .copyWith(color: theme.colorScheme.onPrimary))),
+            CustomImageView(
+                imagePath: image, height: 24.adaptSize, width: 24.adaptSize)
+          ])),
+    );
   }
 
   onTapAvatarFrame(BuildContext context) {
-   AppNavigator.pushAndStackPage(context, page: EditProfileScreen());
+    AppNavigator.pushAndStackPage(context, page: EditProfileScreen());
   }
 
   onTapLogOut(BuildContext context) {

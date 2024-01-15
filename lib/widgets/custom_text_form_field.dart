@@ -9,6 +9,7 @@ class CustomTextFormField extends StatelessWidget {
     this.controller,
     this.focusNode,
     this.autofocus = false,
+    this.readOnly = false,
     this.textStyle,
     this.obscureText = false,
     this.textInputAction = TextInputAction.next,
@@ -68,6 +69,7 @@ class CustomTextFormField extends StatelessWidget {
   final Color? fillColor;
 
   final bool? filled;
+  final bool readOnly;
 
   final FormFieldValidator<String>? validator;
 
@@ -87,6 +89,7 @@ class CustomTextFormField extends StatelessWidget {
           controller: controller,
           focusNode: focusNode ?? FocusNode(),
           autofocus: autofocus!,
+          readOnly: readOnly,
           style: textStyle ?? theme.textTheme.titleSmall,
           obscureText: obscureText!,
           textInputAction: textInputAction,
@@ -94,6 +97,7 @@ class CustomTextFormField extends StatelessWidget {
           maxLines: maxLines ?? 1,
           decoration: decoration,
           validator: validator,
+          
         ),
       );
   InputDecoration get decoration => InputDecoration(

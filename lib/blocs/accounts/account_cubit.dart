@@ -71,12 +71,12 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-  Future<void> verifyCode({required String code, required String email}) async {
+  Future<void> verifyCode({required String code, required String email, required String url}) async {
     try {
       emit(AccountLoading());
 
       final userData =
-          await accountRepository.verifyCode(code: code,  email: email);
+          await accountRepository.verifyCode(code: code,  email: email, url: url);
 
       // await viewModel.setToken(userData.token ?? '');
       emit(AccountLoaded(userData));

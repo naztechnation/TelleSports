@@ -36,8 +36,8 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @override
   Future<RegisterUser> verifyCode(
-      {required String code, required String email}) async {
-    final map = await Requests().post(AppStrings.verifyCodeUrl, body: {
+      {required String code, required String email, required String url}) async {
+    final map = await Requests().post(url, body: {
       "email": email,
       "phone": code,
     });
@@ -60,15 +60,7 @@ class AccountRepositoryImpl implements AccountRepository {
     return RegisterUser.fromJson(map);
   }
 
-  @override
-  Future<RegisterUser> verifyResetPassword(
-      {required String email, required String code}) async {
-    final map = await Requests().post(AppStrings.verifyForgetPasswordUrl, body: {
-      "email": email,
-      "code": code,
-    });
-    return RegisterUser.fromJson(map);
-  }
+  
 
   @override
   Future<RegisterUser> resetPassword(

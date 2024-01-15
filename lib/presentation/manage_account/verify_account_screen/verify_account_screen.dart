@@ -11,6 +11,7 @@ import '../../../blocs/accounts/account.dart';
 import '../../../core/constants/enums.dart';
 import '../../../model/view_models/account_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
+import '../../../res/app_strings.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/modals.dart';
 import '../../../widgets/progress_indicator.dart';
@@ -21,7 +22,9 @@ import '../create_new_password_screen/create_new_password_screen.dart';
 class VerifyAccountScreen extends StatefulWidget {
   final String email;
   final bool isForgetPassword;
-  VerifyAccountScreen({Key? key, required this.email,   this.isForgetPassword = false}) : super(key: key);
+  VerifyAccountScreen(
+      {Key? key, required this.email, this.isForgetPassword = false})
+      : super(key: key);
 
   @override
   State<VerifyAccountScreen> createState() => _VerifyAccountScreenState();
@@ -61,9 +64,15 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                         Modals.showToast(state.userData.message!,
                             messageType: MessageType.success);
 
-                            Future.delayed(Duration(seconds: 2), (){
-                              onTapLogin(context);
-                            });
+                        if(widget.isForgetPassword){
+                          Future.delayed(Duration(seconds: 2), () {
+                          onTapLogin(context);
+                        });
+                        }else{
+                          Future.delayed(Duration(seconds: 2), () {
+                          onTapLogin(context);
+                        });
+                        }
                       } else {
                         Modals.showToast(state.userData.message!,
                             messageType: MessageType.success);
@@ -126,8 +135,10 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                                                     .textTheme.bodyMedium)),
                                         Expanded(
                                           child: GestureDetector(
-                                            onTap: (){
-                                              _resendCode(context,);
+                                            onTap: () {
+                                              _resendCode(
+                                                context,
+                                              );
                                             },
                                             child: Padding(
                                                 padding:
@@ -144,21 +155,30 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                                       ])),
                         SizedBox(height: 7.v),
                         if (!isCountdownComplete)
-                          Text("Resend code in $countdown secs",
-                              style: theme.textTheme.bodyMedium!.copyWith(color: Colors.green), ),
+                          Text(
+                            "Resend code in $countdown secs",
+                            style: theme.textTheme.bodyMedium!
+                                .copyWith(color: Colors.green),
+                          ),
                         SizedBox(height: 32.v),
                         if (state is AccountProcessing) ...[
                           Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      height: 15,
-                      width: 15,
-                      child: ProgressIndicators.circularProgressBar()),
-                      const SizedBox(width: 13,),
-                  Text('Loading...', style: TextStyle(color: Colors.white),)
-                ],
-              ),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                  height: 15,
+                                  width: 15,
+                                  child:
+                                      ProgressIndicators.circularProgressBar()),
+                              const SizedBox(
+                                width: 13,
+                              ),
+                              Text(
+                                'Loading...',
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
+                          ),
                         ] else ...[
                           CustomElevatedButton(
                               processing: state is AccountLoading,
@@ -220,21 +240,34 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
     });
   }
 
-  _verifyCode(BuildContext ctx, ) {
+  _verifyCode(
+    BuildContext ctx,
+  ) {
     if (enterDigitCodeController.text.isNotEmpty) {
-      ctx.read<AccountCubit>().verifyCode(
-            code: enterDigitCodeController.text.trim(),
-            email: widget.email,
-          );
+      if (widget.isForgetPassword) {
+        ctx.read<AccountCubit>().verifyCode(
+              url: AppStrings.verifyForgetPasswordUrl,
+              code: enterDigitCodeController.text.trim(),
+              email: widget.email,
+            );
+      } else {
+        ctx.read<AccountCubit>().verifyCode(
+              url: AppStrings.verifyCodeUrl,
+              code: enterDigitCodeController.text.trim(),
+              email: widget.email,
+            );
+      }
       FocusScope.of(ctx).unfocus();
-    }else{
+    } else {
       Modals.showToast('please enter code sent to your mail');
     }
   }
 
-  _resendCode(BuildContext ctx,) {
+  _resendCode(
+    BuildContext ctx,
+  ) {
     ctx.read<AccountCubit>().resendVerifyCode(
-           email: widget.email,
+          email: widget.email,
         );
     FocusScope.of(ctx).unfocus();
   }
