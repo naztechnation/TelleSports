@@ -1,51 +1,98 @@
-class AuthData {
-  int? status;
-  String? message;
-  String? token;
-  UserData? data;
+class LoginUser {
+  bool? success;
+  Token? token;
+  User? user;
 
-  AuthData({this.status, this.message, this.token, this.data});
+  LoginUser({this.success, this.token, this.user});
 
-  AuthData.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
-    token = json['token'];
-    data = json['data'] != null ? new UserData.fromJson(json['data']) : null;
+  LoginUser.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    token = json['token'] != null ? new Token.fromJson(json['token']) : null;
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    data['token'] = this.token;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
+    data['success'] = this.success;
+    if (this.token != null) {
+      data['token'] = this.token!.toJson();
+    }
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
     }
     return data;
   }
 }
 
-class UserData {
-  String? phone;
-  String? gender;
-  String? isAdmin;
-  String? status;
+class Token {
+  String? token;
 
-  UserData({this.phone, this.gender, this.isAdmin, this.status});
+  Token({this.token});
 
-  UserData.fromJson(Map<String, dynamic> json) {
-    phone = json['phone'];
-    gender = json['gender'];
-    isAdmin = json['is_admin'];
-    status = json['status'];
+  Token.fromJson(Map<String, dynamic> json) {
+    token = json['token'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['token'] = this.token;
+    return data;
+  }
+}
+
+class User {
+  int? id;
+  String? userId;
+  String? username;
+  String? email;
+  String? phone;
+  int? isAdmin;
+  int? isActive;
+  String? activationCode;
+  String? emailVerifiedAt;
+  String? createdAt;
+  String? updatedAt;
+
+  User(
+      {this.id,
+      this.userId,
+      this.username,
+      this.email,
+      this.phone,
+      this.isAdmin,
+      this.isActive,
+      this.activationCode,
+      this.emailVerifiedAt,
+      this.createdAt,
+      this.updatedAt});
+
+  User.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['user_id'];
+    username = json['username'];
+    email = json['email'];
+    phone = json['phone'];
+    isAdmin = json['is_admin'];
+    isActive = json['is_active'];
+    activationCode = json['activation_code'];
+    emailVerifiedAt = json['email_verified_at'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['user_id'] = this.userId;
+    data['username'] = this.username;
+    data['email'] = this.email;
     data['phone'] = this.phone;
-    data['gender'] = this.gender;
     data['is_admin'] = this.isAdmin;
-    data['status'] = this.status;
+    data['is_active'] = this.isActive;
+    data['activation_code'] = this.activationCode;
+    data['email_verified_at'] = this.emailVerifiedAt;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }

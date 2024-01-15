@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:tellesports/model/auth_model/login.dart';
+import 'package:tellesports/model/auth_model/register.dart';
 
 abstract class AccountStates extends Equatable {
   const AccountStates();
@@ -25,30 +27,30 @@ class ResetPasswordLoading extends AccountStates {
   List<Object> get props => [];
 }
 
-// class ResetPasswordLoaded extends AccountStates {
-//   final AuthData userData;
-//   const ResetPasswordLoaded(this.userData);
-//   @override
-//   List<Object> get props => [userData];
-// }
+class ResetPasswordLoaded extends AccountStates {
+  final RegisterUser userData;
+  const ResetPasswordLoaded(this.userData);
+  @override
+  List<Object> get props => [userData];
+}
 
-// class AccountLoaded extends AccountStates {
-//   final AuthData userData;
-//   const AccountLoaded(this.userData);
-//   @override
-//   List<Object> get props => [userData];
-// }
+class AccountLoaded extends AccountStates {
+  final RegisterUser userData;
+  const AccountLoaded(this.userData);
+  @override
+  List<Object> get props => [userData];
+}
 
-// class AccountUpdated extends AccountStates {
-//   final AuthData user;
-//   const AccountUpdated(this.user);
-//   @override
-//   List<Object> get props => [user];
-// }
+class AccountUpdated extends AccountStates {
+  final LoginUser user;
+  const AccountUpdated(this.user);
+  @override
+  List<Object> get props => [user];
+}
 
-class AccountPinChanged extends AccountStates {
+class AccountPasswordChanged extends AccountStates {
   final String message;
-  const AccountPinChanged(this.message);
+  const AccountPasswordChanged(this.message);
   @override
   List<Object> get props => [message];
 }

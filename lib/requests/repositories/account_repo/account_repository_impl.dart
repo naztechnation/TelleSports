@@ -1,68 +1,98 @@
+import 'package:tellesports/model/auth_model/login.dart';
+import 'package:tellesports/model/auth_model/register.dart';
 
-import '../../../model/auth_model/login.dart';
+import '../../../res/app_strings.dart';
 import '../../setup/requests.dart';
 import 'account_repository.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
   @override
-  Future<AuthData> registerUser(
+  Future<RegisterUser> registerUser({
+    required String username,
+    required String email,
+    required String password,
+    required String confirmPassword,
+    required String phone,
+  }) async {
+    final map = await Requests().post(AppStrings.registerUserUrl, body: {
+      "username": username,
+      "email": email,
+      "password": password,
+      "password_confirmation": confirmPassword,
+      "phone": phone,
+    });
+    return RegisterUser.fromJson(map);
+  }
+
+  @override
+  Future<LoginUser> loginUser(
+      {required String email, required String password}) async {
+    final map = await Requests().post(AppStrings.loginUrl, body: {
+      "email": email,
+      "password": password,
+    });
+    return LoginUser.fromJson(map);
+  }
+
+  @override
+  Future<RegisterUser> verifyCode(
+      {required String code, required String email}) async {
+    final map = await Requests().post(AppStrings.verifyCodeUrl, body: {
+      "email": email,
+      "phone": code,
+    });
+    return RegisterUser.fromJson(map);
+  }
+
+  @override
+  Future<RegisterUser> resendVerifyCode({required String email}) async {
+    final map = await Requests().post(AppStrings.resendVerifyCodeUrl, body: {
+      "email": email,
+    });
+    return RegisterUser.fromJson(map);
+  }
+
+  @override
+  Future<RegisterUser> forgetPassword({required String email}) async {
+    final map = await Requests().post(AppStrings.forgetPasswordUrl, body: {
+      "email": email,
+    });
+    return RegisterUser.fromJson(map);
+  }
+
+  @override
+  Future<RegisterUser> verifyResetPassword(
+      {required String email, required String code}) async {
+    final map = await Requests().post(AppStrings.verifyForgetPasswordUrl, body: {
+      "email": email,
+      "code": code,
+    });
+    return RegisterUser.fromJson(map);
+  }
+
+  @override
+  Future<RegisterUser> resetPassword(
       {required String email,
       required String password,
-      required String gender,
-      
-      required String phone}) async {
-    final map = await Requests().post('AppStrings.registerUrl', body: {
+      required String confirmPassword}) async {
+    final map = await Requests().post(AppStrings.resetPasswordUrl, body: {
       "email": email,
-      "password": password,
-      "gender": gender,
-      "phone": phone,
-      "subscribed_users": 'subscribed_users',
-      
+      "password": email,
+      "password_confirmation": email,
     });
-    return AuthData.fromJson(map);
+    return RegisterUser.fromJson(map);
   }
-  
-  @override
-  Future<AuthData> loginUser({required String email, required String password}) async {
-    final map = await Requests().post('AppStrings.loginUrl', body: {
-      "email": email,
-      "password": password,
-      
-    });
-    return AuthData.fromJson(map);
-  }
-
 
   @override
-  Future<AuthData> verifyCode(
-      {required String code, required String token,}) async {
-    final map =
-        await Requests().post('AppStrings.verifyCodeUrl', body: {
-      "code": code,
-      "token": token,
-    });
-
-    return AuthData.fromJson(map);
-  }
-  
-  @override
-  Future<AuthData> forgetPassword({required String email}) async {
-    final map = await Requests().post('AppStrings.forgotPasswordUrl', body: {
-      "email": email,
-      
-    });
-    return AuthData.fromJson(map);
-  }
-
-   @override
-  Future<AuthData> resetPassword(
-      {required String token, required String password,}) async {
-    final map =
-        await Requests().post('AppStrings.resetPasswordUrl', body: {
-      "token": token,
+  Future<RegisterUser> changePassword(
+      {required String oldPassword,
+      required String password,
+      required String confirmPassword}) async {
+    final map = await Requests().post(AppStrings.changePasswordPasswordUrl, body: {
+      "old_password": oldPassword,
       "password": password,
+      "password_confirmation": oldPassword,
     });
-
-    return AuthData.fromJson(map);
+    return RegisterUser.fromJson(map);
   }
 }
