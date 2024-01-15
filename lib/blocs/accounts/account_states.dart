@@ -56,10 +56,11 @@ class AccountPasswordChanged extends AccountStates {
 }
 
 class OTPResent extends AccountStates {
-  final String message;
-  const OTPResent(this.message);
+    final RegisterUser userData;
+
+  const OTPResent(this.userData);
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [userData];
 }
 
 class AccountLoggedOut extends AccountStates {

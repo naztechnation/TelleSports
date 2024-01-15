@@ -6,7 +6,7 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 import '../../../utils/navigator/page_navigator.dart';
-import '../../auth/signin_screen/signin_screen.dart';
+import '../../auth/signin_screen/sign_in_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class CreateNewPasswordScreen extends StatelessWidget {

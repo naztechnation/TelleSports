@@ -95,6 +95,33 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
+  Future<void> resendVerifyCode({
+    required String email,
+  }) async {
+    try {
+      emit(AccountProcessing());
+
+      final user = await accountRepository.resendVerifyCode(
+        email: email,
+      );
+
+      emit(OTPResent(user));
+    } on ApiException catch (e) {
+      emit(AccountApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(AccountNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+
   Future<void> forgotPassword({
     required String email,
   }) async {
@@ -121,6 +148,7 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
+   
   Future<void> resetPassword({
     required String email,
     required String password,

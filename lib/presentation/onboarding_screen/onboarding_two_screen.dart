@@ -4,8 +4,9 @@ import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 
+import '../../handlers/secure_handler.dart';
 import '../../utils/navigator/page_navigator.dart';
-import '../auth/signin_screen/signin_screen.dart';
+import '../auth/signin_screen/sign_in_screen.dart';
 import '../auth/sign_up_screen/sign_up_screen.dart';
 
 class OnboardingTwoScreen extends StatelessWidget {
@@ -97,10 +98,15 @@ class OnboardingTwoScreen extends StatelessWidget {
 
    onTapCreateAnAccount(BuildContext context) {
     AppNavigator.pushAndReplacePage(context, page: SignUpScreen());
+    StorageHandler.saveOnboardState('true');
+
   }
  
   onTapLogInToYourAccount(BuildContext context) {
     AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+
+    StorageHandler.saveOnboardState('true');
+
 
   }
 }

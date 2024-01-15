@@ -5,8 +5,9 @@ import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 
+import '../../handlers/secure_handler.dart';
 import '../auth/sign_up_screen/sign_up_screen.dart';
-import '../auth/signin_screen/signin_screen.dart';
+import '../auth/signin_screen/sign_in_screen.dart';
 
 class OnboardingThreeScreen extends StatelessWidget {
   const OnboardingThreeScreen({Key? key}) : super(key: key);
@@ -80,10 +81,16 @@ class OnboardingThreeScreen extends StatelessWidget {
 
   onTapCreateAnAccount(BuildContext context) {
     AppNavigator.pushAndReplacePage(context, page: SignUpScreen());
+
+    StorageHandler.saveOnboardState('true');
+
   }
  
   onTapLogInToYourAccount(BuildContext context) {
     AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+
+    StorageHandler.saveOnboardState('true');
+
 
   }
 }

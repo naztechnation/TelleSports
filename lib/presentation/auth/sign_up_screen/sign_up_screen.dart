@@ -15,7 +15,7 @@ import '../../../requests/repositories/account_repo/account_repository_impl.dart
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
-import '../signin_screen/signin_screen.dart';
+import '../signin_screen/sign_in_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class SignUpScreen extends StatelessWidget {
@@ -53,6 +53,8 @@ class SignUpScreen extends StatelessWidget {
 
                         //       username: _usernameController.text,
                         //     ));
+
+                         onTapRegister(context);
                         Modals.showToast(state.userData.message ?? '',
                             messageType: MessageType.success);
                         // serviceProvider1.resetImage();
@@ -105,8 +107,8 @@ class SignUpScreen extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(horizontal: 4.h),
                                   title: 'Creating Account...',
                                   onPressed: () {
-                                    registerUser(context);
-                                   // onTapRegister(context);
+                                    // registerUser(context);
+                                    onTapRegister(context);
                                   }),
                               SizedBox(height: 9.v),
                               RichText(
@@ -283,7 +285,7 @@ class SignUpScreen extends StatelessWidget {
   }
 
   onTapRegister(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: VerifyAccountScreen());
+    AppNavigator.pushAndStackPage(context, page: VerifyAccountScreen(email: emailController.text.trim(),));
   }
 
   onTapLogin(BuildContext context) {
@@ -294,9 +296,9 @@ class SignUpScreen extends StatelessWidget {
   registerUser(BuildContext context){
     if (_formKey.currentState!.validate()) {
 
-     context.read<AccountCubit>().registerUser(username: userNameController.text, 
-     confirmPassword: passwordController.text, email: emailController.text, 
-     password: passwordController.text, phoneNumber: phoneNumberController.text
+     context.read<AccountCubit>().registerUser(username: userNameController.text.trim(), 
+     confirmPassword: passwordController.text.trim(), email: emailController.text.trim(), 
+     password: passwordController.text.trim(), phoneNumber: phoneNumberController.text.trim()
 
      );
       
