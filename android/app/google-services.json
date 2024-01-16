@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "126493581952",
+    "project_id": "tellasport",
+    "storage_bucket": "tellasport.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126493581952:android:3d39708f600b020f3abc65",
+        "android_client_info": {
+          "package_name": "com.tellasport.tellasport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126493581952-6s0bb95on2j17ksksb2lgpnkts8rr35d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tellasport.tellasport",
+            "certificate_hash": "ba59aceac7452673df5fe7138e89592aedaaa666"
+          }
+        },
+        {
+          "client_id": "126493581952-g1actab9irestfb4qtvj9a5pg6sg4mbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7LgHPA0O3BJxASQTC--Tpo133XSSLOsc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126493581952-g1actab9irestfb4qtvj9a5pg6sg4mbc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "126493581952-junkt46t9puh2b2qgp355gec5gpshhtg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tellasport.tellasport"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

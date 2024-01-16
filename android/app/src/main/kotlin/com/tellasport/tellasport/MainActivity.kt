@@ -1,4 +1,4 @@
-package com.tellesports.app
+package com.tellasport.tellasport
 
 import io.flutter.embedding.android.FlutterActivity
 
