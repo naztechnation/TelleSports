@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
+import 'package:tellesports/firebase_options.dart'; 
 import 'package:tellesports/theme/theme_helper.dart';
 import 'package:tellesports/routes/app_routes.dart';
 
@@ -11,7 +12,7 @@ var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+ await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>126493581952-junkt46t9puh2b2qgp355gec5gpshhtg.apps.googleusercontent.com</string>
+	<string>126493581952-qgphq58u36tfnojmbqirffr54m5jum9o.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.126493581952-junkt46t9puh2b2qgp355gec5gpshhtg</string>
+	<string>com.googleusercontent.apps.126493581952-qgphq58u36tfnojmbqirffr54m5jum9o</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>126493581952-6s0bb95on2j17ksksb2lgpnkts8rr35d.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.tellasport.tellasport</string>
+	<string>com.tellesports.tellesports</string>
 	<key>PROJECT_ID</key>
 	<string>tellasport</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:126493581952:ios:d5739b4cd65877043abc65</string>
+	<string>1:126493581952:ios:f661eeeaa626ebc53abc65</string>
 </dict>
 </plist>

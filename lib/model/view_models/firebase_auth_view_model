@@ -1,0 +1,61 @@
+
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../core/constants/enums.dart';
+import '../../handlers/secure_handler.dart';
+import 'base_viewmodel.dart';
+
+class FirebaseAuthProvider extends BaseViewModel {
+  FirebaseAuthProvider() {
+    getToken();
+  }
+
+  String _token = "";
+
+
+
+ 
+
+//   bool _showPassword = false;
+
+  setToken(String token) async {
+    _token = token;
+
+    StorageHandler.saveUserToken(_token);
+    setViewState(ViewState.success);
+  }
+
+  getToken() async {
+    _token = await StorageHandler.getUserToken() ?? '';
+    setViewState(ViewState.success);
+  }
+
+  Future<User?> signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    if (googleUser == null) {
+      return null; // User canceled the Google Sign In process
+    }
+
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+    final User? user = authResult.user;
+
+    return user;
+  } catch (error) {
+    print(error);
+    return null;
+  }
+}
+
+
+   String get token => _token;
+}
