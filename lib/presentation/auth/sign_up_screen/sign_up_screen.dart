@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 import '../../../blocs/accounts/account.dart';
 import '../../../core/constants/enums.dart';
 import '../../../model/view_models/account_view_model.dart';
+import '../../../model/view_models/firebase_auth_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
@@ -47,6 +49,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+
+    final authUser = Provider.of<FirebaseAuthProvider>(context, listen: true);
+
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -60,12 +65,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   listener: (context, state) {
                     if (state is AccountLoaded) {
                       if (state.userData.success!) {
-                        
-
-                         onTapRegister(context);
+                        onTapRegister(context);
                         Modals.showToast(state.userData.message ?? '',
                             messageType: MessageType.success);
-                        
                       }
                       //  else if (state.userData.message.username != null) {
                       //   Modals.showToast(state.userData.message.username[0] ?? '',
@@ -110,7 +112,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               SizedBox(height: 24.v),
                               CustomElevatedButton(
                                   text: "Register",
-                                  processing: state is AccountProcessing,
+                                  processing: (state is AccountProcessing ||
+                                      authUser.status),
                                   margin: EdgeInsets.symmetric(horizontal: 4.h),
                                   title: 'Creating Account...',
                                   onPressed: () {
@@ -140,15 +143,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                               SizedBox(height: 42.v),
                               CustomOutlinedButton(
-                                  text: "Sign in with Google",
-                                  margin: EdgeInsets.symmetric(horizontal: 4.h),
-                                  leftIcon: Container(
-                                      margin: EdgeInsets.only(right: 10.h),
-                                      child: CustomImageView(
-                                          imagePath:
-                                              ImageConstant.imgSocialMediaIcons,
-                                          height: 24.adaptSize,
-                                          width: 24.adaptSize))),
+                                text: "Sign in with Google",
+                                margin: EdgeInsets.symmetric(horizontal: 4.h),
+                                leftIcon: Container(
+                                    margin: EdgeInsets.only(right: 10.h),
+                                    child: CustomImageView(
+                                      imagePath:
+                                          ImageConstant.imgSocialMediaIcons,
+                                      height: 24.adaptSize,
+                                      width: 24.adaptSize,
+                                    )),
+                                onPressed: () async {
+                                  User? user =
+                                      await authUser.signInWithGoogle();
+                                  if (user != null) {
+                                    
+
+                                  Modals.showToast("Google Sign-In successful. User ID: ${user.uid}");
+
+                                  } else {
+                                  Modals.showToast("Google Sign-In failed.");
+
+                                  }
+
+                                },
+                              ),
                               SizedBox(height: 13.v),
                               CustomOutlinedButton(
                                   text: "Sign in with Apple",
@@ -160,7 +179,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               .imgSocialMediaIconsOnprimary,
                                           height: 24.adaptSize,
                                           width: 24.adaptSize)),
-                                  onPressed: () {
+                                  onPressed: () async{
+
+                                    await authUser.signOut();
+
+                                    Modals.showToast(authUser.successMessage);
                                     //  onTapSignInWithApple(context);
                                   }),
                               SizedBox(height: 13.v),
@@ -216,13 +239,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Text("Username", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
-              controller: userNameController,
-              hintText: "Create a username",
-              hintStyle: CustomTextStyles.titleSmallGray600,
-              validator: (value) {
-                        return Validator.validate(value, 'Username');
-                      },
-              )
+            controller: userNameController,
+            hintText: "Create a username",
+            hintStyle: CustomTextStyles.titleSmallGray600,
+            validator: (value) {
+              return Validator.validate(value, 'Username');
+            },
+          )
         ]));
   }
 
@@ -233,14 +256,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Text("E-mail ", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
-              controller: emailController,
-              hintText: "Enter your email",
-              hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputType: TextInputType.emailAddress,
-               validator: (value) {
-                        return Validator.validateEmail(value, 'Email');
-                      },
-              )
+            controller: emailController,
+            hintText: "Enter your email",
+            hintStyle: CustomTextStyles.titleSmallGray600,
+            textInputType: TextInputType.emailAddress,
+            validator: (value) {
+              return Validator.validateEmail(value, 'Email');
+            },
+          )
         ]));
   }
 
@@ -251,73 +274,74 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Text("Phone number", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
-              controller: phoneNumberController,
-              hintText: "Enter your phone number",
-              hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputType: TextInputType.phone,
-               validator: (value) {
-                        return Validator.validate(value, 'Contact');
-                      },
-              )
+            controller: phoneNumberController,
+            hintText: "Enter your phone number",
+            hintStyle: CustomTextStyles.titleSmallGray600,
+            textInputType: TextInputType.phone,
+            validator: (value) {
+              return Validator.validate(value, 'Contact');
+            },
+          )
         ]));
   }
 
-  Widget _buildPasswordTextField(BuildContext context,) {
+  Widget _buildPasswordTextField(
+    BuildContext context,
+  ) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Create a password", style: theme.textTheme.titleSmall),
           SizedBox(height: 2.v),
           CustomTextFormField(
-              controller: passwordController,
-              hintText: "Enter your password",
-              hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputAction: TextInputAction.done,
-              obscureText: isShowPassword1,
-
-              textInputType: TextInputType.visiblePassword,
-              suffix: Container(
-                  margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
-                  child: GestureDetector(
-                  onTap: () {
-                    showPassword1();
-                  },
-                  child: isShowPassword1
-                      ? Icon(
-                          Icons.visibility_off,
-                          size: 24,
-                        )
-                      : Icon(Icons.visibility, size: 24),
-                ),),
-              suffixConstraints: BoxConstraints(maxHeight: 48.v),
-              contentPadding:
-                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v),
-                   validator: (value) {
-                        return Validator.validate(value,'Password');
-                      },
-                  )
+            controller: passwordController,
+            hintText: "Enter your password",
+            hintStyle: CustomTextStyles.titleSmallGray600,
+            textInputAction: TextInputAction.done,
+            obscureText: isShowPassword1,
+            textInputType: TextInputType.visiblePassword,
+            suffix: Container(
+              margin: EdgeInsets.fromLTRB(30.h, 12.v, 8.h, 12.v),
+              child: GestureDetector(
+                onTap: () {
+                  showPassword1();
+                },
+                child: isShowPassword1
+                    ? Icon(
+                        Icons.visibility_off,
+                        size: 24,
+                      )
+                    : Icon(Icons.visibility, size: 24),
+              ),
+            ),
+            suffixConstraints: BoxConstraints(maxHeight: 48.v),
+            contentPadding: EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v),
+            validator: (value) {
+              return Validator.validate(value, 'Password');
+            },
+          )
         ]));
   }
 
   onTapRegister(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: VerifyAccountScreen(email: emailController.text.trim(),));
+    AppNavigator.pushAndStackPage(context,
+        page: VerifyAccountScreen(
+          email: emailController.text.trim(),
+        ));
   }
 
   onTapLogin(BuildContext context) {
     AppNavigator.pushAndStackPage(context, page: SigninScreen());
   }
 
-  registerUser(BuildContext context){
+  registerUser(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-
-     context.read<AccountCubit>().registerUser(username: userNameController.text.trim(), 
-     confirmPassword: passwordController.text.trim(), email: emailController.text.trim(), 
-     password: passwordController.text.trim(), phoneNumber: phoneNumberController.text.trim()
-
-     );
-      
-      }
-
-
+      context.read<AccountCubit>().registerUser(
+          username: userNameController.text.trim(),
+          confirmPassword: passwordController.text.trim(),
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+          phoneNumber: phoneNumberController.text.trim());
+    }
   }
 }
