@@ -181,10 +181,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           width: 24.adaptSize)),
                                   onPressed: () async{
 
-                                    await authUser.signOut();
+                                    UserCredential? user =
+                                      await authUser.signInWithApple();
+                                  if (user != null) {
+                                    
 
-                                    Modals.showToast(authUser.successMessage);
-                                    //  onTapSignInWithApple(context);
+                                  Modals.showToast(authUser.successMessage);
+
+                                  } else {
+                                  Modals.showToast(authUser.successMessage);
+
+                                  }
                                   }),
                               SizedBox(height: 13.v),
                               Container(

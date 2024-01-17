@@ -1,7 +1,6 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tellesports/widgets/modals.dart';
 
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
@@ -17,10 +16,6 @@ class FirebaseAuthProvider extends BaseViewModel {
   String _successMessage = '';
   bool _status = false;
 
-
-
-  
-
   setToken(String token) async {
     _token = token;
 
@@ -34,118 +29,147 @@ class FirebaseAuthProvider extends BaseViewModel {
   }
 
   Future<User?> signInWithGoogle() async {
-  try {
+    try {
       _status = true;
-    setViewState(ViewState.success);
+      setViewState(ViewState.success);
 
-    
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    if (googleUser == null) {
+      if (googleUser == null) {
+        _successMessage = 'Authentication cancelled';
+        _status = false;
+        setViewState(ViewState.success);
 
-      _successMessage = 'Authentication cancelled';
-      _status = false;
-    setViewState(ViewState.success);
+        return null;
+      }
 
-      return null; 
-    }
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+      final UserCredential authResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = authResult.user;
 
-    final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
-    final User? user = authResult.user;
+      if (authResult != null) {
+        Map<String, dynamic> userInfo = {
+          "email": user!.email,
+          "name": user.displayName,
+          "imageUrl": user.photoURL,
+          "id": user.uid,
+        };
+      }
 
-  //final name = user.
-
-   
+      Modals.showToast(user?.displayName ?? '');
 
       _successMessage = 'Authentication successfull';
       _status = false;
-       setViewState(ViewState.success);
+      setViewState(ViewState.success);
 
+      return user;
+    } catch (error) {
+      if (error is FirebaseAuthException) {
+        switch (error.code) {
+          case 'account-exists-with-different-credential':
+            _successMessage = 'Account already exists';
+            _status = false;
 
-    return user;
-  } catch (error) {
-    
-    
+            break;
+          case 'invalid-credential':
+            _successMessage = 'Invalid credential';
+            _status = false;
+            break;
+          case 'operation-not-allowed':
+            _successMessage = 'Operation not allowed';
+            _status = false;
+            break;
+          case 'user-disabled':
+            _successMessage =
+                'User account has been disabled by an administrator';
+            _status = false;
+            break;
+          case 'user-not-found':
+            _successMessage = 'User not found';
+            _status = false;
+            break;
+          case 'wrong-password':
+            _successMessage = 'Wrong password';
+            _status = false;
+            break;
+          default:
+            _successMessage = "Error during authentication: ${error.message}";
+            _status = false;
+        }
 
-    if (error is FirebaseAuthException) {
-      switch (error.code) {
-        case 'account-exists-with-different-credential':
-           _successMessage = 'Account already exists';
-     _status = false;
+        setViewState(ViewState.success);
+      } else {
+        _successMessage = "Unexpected error during authentication: $error";
+        _status = false;
 
-          break;
-        case 'invalid-credential':
-          
-
-           _successMessage = 'Invalid credential';
-     _status = false;
-          break;
-        case 'operation-not-allowed':
-         
-
-          _successMessage = 'Operation not allowed';
-     _status = false;
-          break;
-        case 'user-disabled':
-           
-           _successMessage = 'User account has been disabled by an administrator';
-     _status = false;
-          break;
-        case 'user-not-found':
-           
-           _successMessage = 'User not found';
-     _status = false;
-          break;
-        case 'wrong-password':
-          
-           _successMessage = 'Wrong password';
-     _status = false;
-          break;
-        default:
-          
-           _successMessage = "Error during authentication: ${error.message}";
-     _status = false;
+        setViewState(ViewState.success);
       }
 
-       setViewState(ViewState.success);
-
-    } else {
-     
-       _successMessage = "Unexpected error during authentication: $error";
-     _status = false;
-
-       setViewState(ViewState.success);
-
+      return null;
     }
-
-    return null;
   }
-}
 
-Future<void> signOut() async {
-  try {
+  Future<UserCredential?> signInWithApple() async {
+    try {
+      _status = true;
+      setViewState(ViewState.success);
+      final appleProvider = AppleAuthProvider();
 
-     _status = true;
+      var auth = await FirebaseAuth.instance.signInWithProvider(appleProvider);
 
-    await FirebaseAuth.instance.signOut();
+      _status = false;
+      setViewState(ViewState.success);
 
-     _successMessage = "User signed out successfully";
-     _status = false;
-  } catch (error) {
-    
-    _successMessage = "Error during sign-out: $error";
-     _status = false;
+      if (auth.user != null) {
+        String displayName = auth.user!.displayName ?? '';
+        String email = auth.user!.email ?? '';
+        String id = auth.user!.uid;
+        String photoURL = auth.user!.photoURL ?? '';
+
+        _successMessage = 'Authentication successful';
+        _status = false;
+
+        setViewState(ViewState.success);
+
+        return auth;
+      } else {
+        _successMessage = 'Authentication cancelled';
+        _status = false;
+        setViewState(ViewState.success);
+
+        return null;
+      }
+    } catch (e) {
+      _successMessage = 'Error during Apple sign-in: $e';
+      _status = false;
+      setViewState(ViewState.success);
+
+      return null;
+    }
   }
-}
 
+  Future<void> signOut() async {
+    try {
+      _status = true;
 
-   String get token => _token;
-   String get successMessage => _successMessage;
-   bool get status => _status;
+      await FirebaseAuth.instance.signOut();
+
+      _successMessage = "User signed out successfully";
+      _status = false;
+    } catch (error) {
+      _successMessage = "Error during sign-out: $error";
+      _status = false;
+    }
+  }
+
+  String get token => _token;
+  String get successMessage => _successMessage;
+  bool get status => _status;
 }
