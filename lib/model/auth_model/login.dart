@@ -1,12 +1,16 @@
 class LoginUser {
   bool? success;
+  String? message;
+  String? error;
   Token? token;
   User? user;
 
-  LoginUser({this.success, this.token, this.user});
+  LoginUser({this.success, this.token, this.user, this.message,  this.error});
 
   LoginUser.fromJson(Map<String, dynamic> json) {
     success = json['success'];
+    message = json['message'];
+    error = json['error'];
     token = json['token'] != null ? new Token.fromJson(json['token']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
@@ -14,12 +18,15 @@ class LoginUser {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
+    data['message'] = this.message;
+    data['error'] = this.error;
     if (this.token != null) {
       data['token'] = this.token!.toJson();
     }
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }
+     
     return data;
   }
 }

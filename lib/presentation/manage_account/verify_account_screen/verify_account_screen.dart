@@ -215,6 +215,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
           CustomTextFormField(
               controller: enterDigitCodeController,
               hintText: "Enter 6-digit code",
+              textInputType: TextInputType.number,
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputAction: TextInputAction.done)
         ]));

@@ -131,8 +131,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   onTapSendResetEmail(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      AppNavigator.pushAndStackPage(context, page: ChangePasswordScreen(email: emailController.text,));
-
+     
        context.read<AccountCubit>().forgotPassword(
             email: emailController.text.trim(),
           );

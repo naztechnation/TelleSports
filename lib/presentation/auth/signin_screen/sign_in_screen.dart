@@ -55,18 +55,30 @@ class _SigninScreenState extends State<SigninScreen> {
                         Provider.of<AccountViewModel>(context, listen: false)),
                 child: BlocConsumer<AccountCubit, AccountStates>(
                   listener: (context, state) {
-                    if (state is AccountLoaded) {
-                      if (state.userData.success!) {
+                    if (state is AccountUpdated) {
+                      if (state.user.success ?? false) {
                         StorageHandler.saveIsLoggedIn('true');
-
-                        onTapSignUp(context);
+                        StorageHandler.saveUserToken(state.user.token?.token);
+                        StorageHandler.saveUserEmail(state.user.user?.email);
+                        StorageHandler.saveUserPhone(state.user.user?.phone);
+                           
+                        onTapSignIn(context);
                       } else {
-                        Modals.showToast(state.userData.message!,
-                            messageType: MessageType.error);
-                        if (state.userData.message ==
-                            'Profile is not verified') {
+
+                       if(state.user.error?.isNotEmpty ?? false){
+                        Modals.showToast(state.user.error ?? '');
                           resendCode(context);
+                       }else{
+                         if(state.user.message?.isNotEmpty ?? false){
+                          Modals.showToast(state.user.message ?? '',
+                            messageType: MessageType.error);
+                        }else{
+                           Modals.showToast('Failed to login',
+                            messageType: MessageType.error);
                         }
+                       
+                        
+                       }
                       }
                     } else if (state is OTPResent) {
                       if (state.userData.success == true) {
@@ -152,7 +164,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                 SizedBox(height: 29.v),
                                 CustomElevatedButton(
                                     processing: state is AccountLoading,
-                                    title: 'Authennticating...',
+                                    title: 'Authenticating...',
                                     onPressed: (() => loginUser(context)),
                                     text: "Login",
                                     margin:
@@ -267,10 +279,10 @@ class _SigninScreenState extends State<SigninScreen> {
   loginUser(BuildContext ctx) {
     if (_formKey.currentState!.validate()) {
 
-      onTapSignIn(ctx);
-      // ctx.read<AccountCubit>().loginUser(
-      //     email: emailController.text.trim(),
-      //     password: passwordController.text.trim());
+     // onTapSignIn(ctx);
+      ctx.read<AccountCubit>().loginUser(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
       FocusScope.of(ctx).unfocus();
     }
   }

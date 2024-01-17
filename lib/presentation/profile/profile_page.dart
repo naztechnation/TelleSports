@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/auth/signin_screen/sign_in_screen.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
@@ -181,6 +182,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   onTapLogOut(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.splashScreenOnboardingScreen);
+        AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+
   }
 }

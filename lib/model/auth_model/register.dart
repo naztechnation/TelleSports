@@ -1,24 +1,53 @@
+
+
 class RegisterUser {
-  bool? success;
-  String? code;
-  String? message;
-  String? email;
+    bool? success;
+    int? code;
+    String? message;
+    Errors? errors;
 
-  RegisterUser({this.success, this.code, this.message});
+    RegisterUser({
+        this.success,
+        this.message,
+        this.code,
+        this.errors,
+    });
 
-  RegisterUser.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    code = json['code'];
-    message = json['message'];
-    email = json['email'];
-  }
+    factory RegisterUser.fromJson(Map<String, dynamic> json) => RegisterUser(
+        success: json["success"],
+        message: json["message"],
+        code: json["code"],
+        errors: json["errors"] == null ? null : Errors.fromJson(json["errors"]),
+    );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    data['code'] = this.code;
-    data['message'] = this.message;
-    data['email'] = this.email;
-    return data;
-  }
+    Map<String, dynamic> toJson() => {
+        "success": success,
+        "message": message,
+        "code": code,
+        "errors": errors?.toJson(),
+    };
+}
+
+class Errors {
+    List<String>? username;
+    List<String>? email;
+    List<String>? phone;
+
+    Errors({
+        this.username,
+        this.email,
+        this.phone,
+    });
+
+    factory Errors.fromJson(Map<String, dynamic> json) => Errors(
+        username: json["username"] == null ? [] : List<String>.from(json["username"]!.map((x) => x)),
+        email: json["email"] == null ? [] : List<String>.from(json["email"]!.map((x) => x)),
+        phone: json["phone"] == null ? [] : List<String>.from(json["phone"]!.map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "username": username == null ? [] : List<dynamic>.from(username!.map((x) => x)),
+        "email": email == null ? [] : List<dynamic>.from(email!.map((x) => x)),
+        "phone": phone == null ? [] : List<dynamic>.from(phone!.map((x) => x)),
+    };
 }

@@ -2,6 +2,7 @@ import 'package:tellesports/model/auth_model/login.dart';
 import 'package:tellesports/model/auth_model/register.dart';
 
 import '../../../res/app_strings.dart';
+import '../../../widgets/modals.dart';
 import '../../setup/requests.dart';
 import 'account_repository.dart';
 
@@ -37,9 +38,11 @@ class AccountRepositoryImpl implements AccountRepository {
   @override
   Future<RegisterUser> verifyCode(
       {required String code, required String email, required String url}) async {
+
+      
     final map = await Requests().post(url, body: {
       "email": email,
-      "phone": code,
+      "code": code,
     });
     return RegisterUser.fromJson(map);
   }

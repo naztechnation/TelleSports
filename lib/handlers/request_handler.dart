@@ -19,8 +19,9 @@ class RequestHandler{
       case 200:
         return response.body;
       case 400:
-        throw BadRequestException('handleApiError(map).first.msg');
+        return response.body;
       case 401:
+       return response.body;
       case 403:
         throw UnauthorisedException('handleApiError(map).first.msg');
       case 404:
@@ -50,8 +51,9 @@ class RequestHandler{
       case 200:
         return res.join('');
       case 400:
-      throw BadRequestException('handleApiError(map).first.msg');
+      return res.join('');
       case 401:
+      return res.join('');
       case 403:
       throw UnauthorisedException('handleApiError(map).first.msg');
       case 404:

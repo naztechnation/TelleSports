@@ -68,11 +68,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onTapRegister(context);
                         Modals.showToast(state.userData.message ?? '',
                             messageType: MessageType.success);
+                      }else{
+                          if(state.userData.errors != null){
+
+                            if(state.userData.errors?.email?.isNotEmpty ?? false){
+                              Modals.showToast(state.userData.errors?.email?[0]  ??  '');
+                            }else if(state.userData.errors?.username?.isNotEmpty ?? false){
+                              Modals.showToast(state.userData.errors?.username?[0]  ??  '');
+                            }else if(state.userData.errors?.phone?.isNotEmpty ?? false){
+                              Modals.showToast(state.userData.errors?.phone?[0]  ??  '');
+                            }else {
+                              Modals.showToast(state.userData.message  ??  '');
+
+                            }
+                          }
                       }
-                      //  else if (state.userData.message.username != null) {
-                      //   Modals.showToast(state.userData.message.username[0] ?? '',
-                      //       messageType: MessageType.success);
-                      // }
+                     
                     } else if (state is AccountApiErr) {
                       if (state.message != null) {
                         Modals.showToast(state.message!,
@@ -117,8 +128,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   margin: EdgeInsets.symmetric(horizontal: 4.h),
                                   title: 'Creating Account...',
                                   onPressed: () {
-                                    // registerUser(context);
-                                    onTapRegister(context);
+                                     registerUser(context);
+                                   // onTapRegister(context);
                                   }),
                               SizedBox(height: 9.v),
                               RichText(
