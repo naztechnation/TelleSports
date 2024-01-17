@@ -129,9 +129,11 @@ class FirebaseAuthProvider extends BaseViewModel {
 
       if (auth.user != null) {
         String displayName = auth.user!.displayName ?? '';
-        String email = auth.user!.email ?? '';
+        String email = auth.user?.email ?? '';
         String id = auth.user!.uid;
         String photoURL = auth.user!.photoURL ?? '';
+
+         
 
         _successMessage = 'Authentication successful';
         _status = false;
