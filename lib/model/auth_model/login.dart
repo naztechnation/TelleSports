@@ -4,8 +4,9 @@ class LoginUser {
   String? error;
   Token? token;
   User? user;
+  int? tellacoinBalance;
 
-  LoginUser({this.success, this.token, this.user, this.message,  this.error});
+  LoginUser({this.success, this.token, this.user, this.message,  this.error, this.tellacoinBalance});
 
   LoginUser.fromJson(Map<String, dynamic> json) {
     success = json['success'];
@@ -13,6 +14,7 @@ class LoginUser {
     error = json['error'];
     token = json['token'] != null ? new Token.fromJson(json['token']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    tellacoinBalance = json['tellacoin_balance'];
   }
 
   Map<String, dynamic> toJson() {
@@ -26,6 +28,8 @@ class LoginUser {
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }
+
+    data['tellacoin_balance'] = this.tellacoinBalance;
      
     return data;
   }

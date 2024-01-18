@@ -2,6 +2,8 @@ import 'package:tellesports/model/auth_model/login.dart';
 import 'package:tellesports/model/auth_model/register.dart';
 
 import '../../../model/auth_model/bookies.dart';
+import '../../../model/auth_model/bookies_details.dart';
+import '../../../model/auth_model/converter_history.dart';
 import '../../../res/app_strings.dart';
 import '../../../widgets/modals.dart';
 import '../../setup/requests.dart';
@@ -99,5 +101,55 @@ class AccountRepositoryImpl implements AccountRepository {
     );
 
     return BookiesList.fromJson(map);
+  }
+
+  @override
+  Future<BookiesDetails> convertBetCode(
+      {required String from,
+      required String to,
+      required String bookingCode,
+      required String apiKey}) async {
+     
+    final map = await Requests().post(
+      
+      AppStrings.converterUrl,
+      body: {
+      "from": from,
+      "to": to,
+      "betting_token": bookingCode,
+     
+    },
+    );
+
+    return BookiesDetails.fromJson(map);
+  }
+
+  @override
+  Future<ConverterHistory> addConversionHistory(
+      {required String sourceCode,
+      required String destinationCode,
+      required String bookieTo,
+      required String bookieFrom,
+      required String status}) async {
+    var payload = {
+      "bookie_from": bookieFrom,
+      "bookie_to": bookieTo,
+      "destination_code": destinationCode,
+      "source_code": sourceCode,
+      "status": status
+    };
+    final map = await Requests()
+        .post(AppStrings.conversionHistoryUrl, body: payload);
+
+    return ConverterHistory.fromJson(map);
+  }
+
+  @override
+  Future<ConverterHistory> getConversionHistory() async {
+    final map = await Requests().get(
+      AppStrings.conversionHistoryUrl,
+    );
+
+    return ConverterHistory.fromJson(map);
   }
 }

@@ -1,8 +1,9 @@
 
+
 class BookiesList {
   bool? success;
   String? message;
-  List<BookiesData>? data;
+  List<Data>? data;
 
   BookiesList({this.success, this.message, this.data});
 
@@ -12,9 +13,9 @@ class BookiesList {
     success = json['success'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <BookiesData>[];
+      data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(BookiesData.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
@@ -30,16 +31,16 @@ class BookiesList {
   }
 }
 
-class BookiesData {
+class Data {
   String? bookie;
   String? from;
   String? to;
   String? name;
   String? img;
 
-  BookiesData({this.bookie, this.from, this.to, this.name, this.img});
+  Data({this.bookie, this.from, this.to, this.name, this.img});
 
-  BookiesData.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     bookie = json['bookie'];
     from = json['from'];
     to = json['to'];

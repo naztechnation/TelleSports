@@ -15,6 +15,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.textInputAction = TextInputAction.next,
     this.textInputType = TextInputType.text,
+    
     this.maxLines,
     this.hintText,
     this.hintStyle,
@@ -28,6 +29,8 @@ class CustomTextFormField extends StatelessWidget {
     this.filled = false,
     this.validator,
     this.inputFormatters,
+      this.onChanged,
+
   }) : super(
           key: key,
         );
@@ -36,7 +39,12 @@ class CustomTextFormField extends StatelessWidget {
 
   final double? width;
 
+  
+
   final TextEditingController? controller;
+
+  final ValueChanged<String>? onChanged;
+
 
   final FocusNode? focusNode;
 
@@ -102,6 +110,8 @@ class CustomTextFormField extends StatelessWidget {
           decoration: decoration,
           validator: validator,
           inputFormatters: inputFormatters,
+            onChanged: onChanged,
+
         ),
       );
   InputDecoration get decoration => InputDecoration(
@@ -110,6 +120,7 @@ class CustomTextFormField extends StatelessWidget {
         prefixIcon: prefix,
         prefixIconConstraints: prefixConstraints,
         suffixIcon: suffix,
+        
         suffixIconConstraints: suffixConstraints,
         isDense: true,
         contentPadding: contentPadding ??

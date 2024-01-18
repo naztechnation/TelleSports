@@ -42,6 +42,9 @@ class ModalContentScreen extends StatelessWidget {
             SizedBox(height: 20.v),
             CustomOutlinedButton(
               text: btnText,
+              onPressed: (() {
+                Navigator.pop(context);
+              }),
               margin: EdgeInsets.symmetric(horizontal: 20.h),
             ),
             SizedBox(height: 25.v),

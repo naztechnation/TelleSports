@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/presentation/auth/signin_screen/sign_in_screen.dart';
@@ -5,10 +6,12 @@ import 'package:tellesports/presentation/auth/signin_screen/sign_in_screen.dart'
 import '../../blocs/accounts/account.dart';
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
+import '../../model/auth_model/bookies_details.dart';
 import '../../model/view_models/account_view_model.dart';
 import '../../requests/repositories/account_repo/account_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/custom_outlined_button.dart';
+import '../../widgets/modal_content.dart';
 import '../../widgets/modals.dart';
 import '../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,7 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_icon_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
+import 'converted_code.dart';
 import 'widgets/singleconversion3_item_widget.dart';
 
 class ConvertBetcodes extends StatelessWidget {
@@ -53,16 +57,30 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
   bool isConverted = false;
 
+  String destinationCode = '';
+
+  int notConvertedEvents = 0;
+
   final List<String?> _addressSpinnerItems1 = [
     'Convert To',
   ];
 
   late AccountCubit _accountCubit;
+
   String? fromId = '';
   String? toId = '';
   String username = '';
   String email = '';
   String password = '';
+
+    BookiesDetails? bookie ;
+
+
+            List<ListElement>? bookingEventLists ;
+
+          List<ListElement>? notConvertedBookies;
+
+
 
   getUserDetails() async {
     email = await StorageHandler.getUserEmail() ?? '';
@@ -110,6 +128,53 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
             AppNavigator.pushAndReplacePage(context, page: SigninScreen());
           }
+        } else if (state is BookingsLoaded) {
+           bookie = _accountCubit.viewModel.bookiesDetails;
+
+          destinationCode = bookie?.data?.data?.conversion?.destinationCode ?? '';
+
+          jJhEightyTwoController.text = destinationCode;
+
+          bookingEventLists =
+              _accountCubit.viewModel.getUniformLists;
+
+           notConvertedBookies =
+              _accountCubit.viewModel.notConvertedBookies;
+
+          notConvertedEvents =
+              (bookingEventLists!.length - notConvertedBookies!.length);
+
+          isConverted = true;
+        } else if (state is BookingsError) {
+          Modals.showDialogModal(context,
+              page: ModalContentScreen(
+                title: 'Network Error',
+                body:
+                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                btnText: 'Cancel',
+               headerColorOne: Color.fromARGB(255, 208, 151, 151),
+                headerColorTwo: Color.fromARGB(255, 234, 132, 132)
+              ));
+        } else if (state is BookingsNetworkErr) {
+          Modals.showDialogModal(context,
+              page: ModalContentScreen(
+                title: 'Network Error',
+                body:
+                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                btnText: 'Cancel',
+                headerColorOne: Color.fromARGB(255, 208, 151, 151),
+                headerColorTwo: Color.fromARGB(255, 234, 132, 132)
+              ));
+        } else if (state is BookingsApiErr) {
+          Modals.showDialogModal(context,
+              page: ModalContentScreen(
+                title: 'Network Error',
+                body:
+                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                btnText: 'Cancel',
+                headerColorOne: Color.fromARGB(255, 208, 151, 151),
+                headerColorTwo: Color.fromARGB(255, 234, 132, 132)
+              ));
         } else if (state is AccountApiErr) {
           if (state.message != null) {}
         } else if (state is AccountNetworkErr) {
@@ -133,36 +198,82 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                     SizedBox(height: 14.v),
                     _buildFrameNine(context),
                     SizedBox(height: 14.v),
-                    // mNHController
-                    if (!isConverted) ...[
+                    if (isConverted) ...[
                       CustomElevatedButton(
-                          text: "Copy code",
-                          margin: EdgeInsets.symmetric(horizontal: 20.h),
-                          leftIcon: Container(
-                              margin: EdgeInsets.only(right: 10.h),
-                              child: CustomImageView(
-                                  imagePath: ImageConstant.imgContentcopy,
-                                  height: 24.adaptSize,
-                                  width: 24.adaptSize))),
+                        text: "Copy code",
+                        margin: EdgeInsets.symmetric(horizontal: 20.h),
+                        leftIcon: Container(
+                            margin: EdgeInsets.only(right: 10.h),
+                            child: CustomImageView(
+                                imagePath: ImageConstant.imgContentcopy,
+                                height: 24.adaptSize,
+                                width: 24.adaptSize)),
+                        onPressed: () async {
+                          await Clipboard.setData(
+                              ClipboardData(text: destinationCode));
+                          Modals.showToast('${destinationCode} copied');
+                        },
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 20),
+                            vertical: 5.0, horizontal: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('view details',
-                                style: TextStyle(
-                                    color: Colors.green[700],
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Colors.blue)),
-                            Text('convert again',
-                                style: TextStyle(color: Colors.green[700],
-                                decoration: TextDecoration.underline,
-                                    decorationColor: Colors.blue
-                                )),
+                            GestureDetector(
+                              onTap: (() {
+                                AppNavigator.pushAndStackPage(context, 
+                                page: ConvertedCodePage(destinationCode: int.parse(destinationCode),
+                                 bookie: bookie, bookingEventLists: bookingEventLists, notConvertedEvents: notConvertedEvents,));
+                              }),
+                              child: Text('view details',
+                                  style: TextStyle(
+                                      color: Colors.green[700],
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.green[700])),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isConverted = false;
+                                });
+                              },
+                              child: Text('convert again',
+                                  style: TextStyle(
+                                      color: Colors.green[700],
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.green[700])),
+                            ),
                           ],
                         ),
                       )
+                    ] else ...[
+                      CustomElevatedButton(
+                        text: "Convert Code",
+                        processing: state is BookingsProcessing,
+                        title: 'Converting...',
+                        isDisabled: !(mNHController.text.isNotEmpty &&
+                    _bookieFromDropdownValue != 'Convert from' &&
+                    _bookieToDropdownValue != 'Convert to'),
+                        buttonTextStyle: TextStyle(
+                            color: !(mNHController.text.isNotEmpty &&
+                    _bookieFromDropdownValue != 'Convert from' &&
+                    _bookieToDropdownValue != 'Convert to')
+                                ? Color(0xFF858287)
+                                : Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400),
+                        margin: EdgeInsets.symmetric(horizontal: 20.h),
+                        onPressed: () {
+
+                          
+                          _accountCubit.convertBetCode(
+                              from: fromId ?? '',
+                              to: toId ?? '',
+                              bookingCode: mNHController.text,
+                              apiKey: '');
+                        },
+                      ),
                     ],
                     SizedBox(height: 24.v),
                     Divider(),
@@ -346,8 +457,8 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                       _bookieFromDropdownValue = value ?? 'Convert from';
 
                       int index = _addressSpinnerItems1.indexOf(value);
-                      fromId =
-                          _accountCubit.viewModel.bookiesBookieFrom[index - 1];
+                      toId =
+                          _accountCubit.viewModel.bookiesBookieTo[index - 1];
                     })),
           )
         ]));
@@ -358,15 +469,19 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         padding: EdgeInsets.symmetric(horizontal: 20.h),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           CustomTextFormField(
-              width: 173.h,
-              controller: mNHController,
-              hintText: "Enter code",
-              hintStyle: CustomTextStyles.titleMediumGray700,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 12.h, vertical: 14.v),
-              borderDecoration: TextFormFieldStyleHelper.fillBlueGray,
-              filled: true,
-              fillColor: appTheme.blueGray50),
+            width: 173.h,
+            controller: mNHController,
+            hintText: "Enter code",
+            hintStyle: CustomTextStyles.titleMediumGray700,
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 12.h, vertical: 14.v),
+            borderDecoration: TextFormFieldStyleHelper.fillBlueGray,
+            filled: true,
+            fillColor: appTheme.blueGray50,
+            onChanged: ((value) {
+              setState(() {});
+            }),
+          ),
           Padding(
               padding: EdgeInsets.only(left: 4.h),
               child: CustomTextFormField(

@@ -3,6 +3,8 @@ import 'package:tellesports/model/auth_model/login.dart';
 import 'package:tellesports/model/auth_model/register.dart';
 
 import '../../model/auth_model/bookies.dart';
+import '../../model/auth_model/bookies_details.dart';
+import '../../model/auth_model/converter_history.dart';
 
 abstract class AccountStates extends Equatable {
   const AccountStates();
@@ -89,6 +91,70 @@ class AccountNetworkErr extends AccountStates {
 class AccountApiErr extends AccountStates {
   final String? message;
   const AccountApiErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class BookingsLoading extends AccountStates {
+  @override
+  List<Object> get props => [];
+}
+
+class BookingsProcessing extends AccountStates {
+  @override
+  List<Object> get props => [];
+}
+
+class BookingsLoaded extends AccountStates {
+  final BookiesDetails bookingsData;
+  const BookingsLoaded(this.bookingsData);
+  @override
+  List<Object> get props => [bookingsData];
+}
+
+class ConverterHistoryLoading extends AccountStates {
+  @override
+  List<Object> get props => [];
+}
+
+class ConverterHistoryLoaded extends AccountStates {
+  final ConverterHistory converterHistory;
+  const ConverterHistoryLoaded(this.converterHistory);
+  @override
+  List<Object> get props => [converterHistory];
+}
+
+class BookingsError extends AccountStates {
+  final String convertedCode;
+  const BookingsError(this.convertedCode);
+  @override
+  List<Object> get props => [convertedCode];
+}
+
+class BookingsNetworkErr extends AccountStates {
+  final String? message;
+  const BookingsNetworkErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class BookingsApiErr extends AccountStates {
+  final String? message;
+  const BookingsApiErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class ConveterHistoryNetworkErr extends AccountStates {
+  final String? message;
+  const ConveterHistoryNetworkErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class ConveterHistoryApiErr extends AccountStates {
+  final String? message;
+  const ConveterHistoryApiErr(this.message);
   @override
   List<Object> get props => [message!];
 }

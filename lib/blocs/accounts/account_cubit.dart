@@ -228,4 +228,100 @@ class AccountCubit extends Cubit<AccountStates> {
       }
     }
   }
+
+
+  Future<void> convertBetCode({
+    required String from,
+    required String to,
+    required String bookingCode,
+    required String apiKey,
+  }) async {
+    try {
+      emit(BookingsProcessing());
+
+      final bookings = await accountRepository.convertBetCode(
+        from: from,
+        to: to,
+        bookingCode: bookingCode,
+        apiKey: apiKey,
+      );
+
+      if (bookings.data?.data?.conversion?.destinationCode == null) {
+        emit(const BookingsError(''));
+      } else {
+        emit(BookingsLoaded(bookings));
+      }
+       viewModel.getBookiesDetails(bookings);
+    } on ApiException catch (e) {
+      emit(BookingsApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(BookingsNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  // Future<void> addConversionHistory({
+  //   required String sourceCode,
+  //   required String destinationCode,
+  //   required String bookieTo,
+  //   required String bookieFrom,
+  //   required String status,
+  // }) async {
+  //   try {
+  //     emit(ConverterHistoryLoading());
+
+  //     final history = await bookingRepository.addConversionHistory(
+  //         bookieFrom: bookieFrom,
+  //         bookieTo: bookieTo,
+  //         destinationCode: destinationCode,
+  //         status: status,
+  //         sourceCode: sourceCode);
+
+  //     emit(ConverterHistoryLoaded(history));
+  //     viewModel.setConverterHistory(history);
+  //   } on ApiException catch (e) {
+  //     emit(ConveterHistoryApiErr(e.message));
+  //   } catch (e) {
+  //     if (e is NetworkException ||
+  //         e is BadRequestException ||
+  //         e is UnauthorisedException ||
+  //         e is FileNotFoundException ||
+  //         e is AlreadyRegisteredException) {
+  //       emit(ConveterHistoryNetworkErr(e.toString()));
+  //     } else {
+  //       rethrow;
+  //     }
+  //   }
+  // }
+
+  // Future<void> getConversionHistory() async {
+  //   try {
+  //     emit(ConverterHistoryLoading());
+
+  //     final history = await bookingRepository.getConversionHistory();
+
+  //     emit(ConverterHistoryLoaded(history));
+
+  //     viewModel.getConverterHistory(history);
+  //   } on ApiException catch (e) {
+  //     emit(ConveterHistoryApiErr(e.message));
+  //   } catch (e) {
+  //     if (e is NetworkException ||
+  //         e is BadRequestException ||
+  //         e is UnauthorisedException ||
+  //         e is FileNotFoundException ||
+  //         e is AlreadyRegisteredException) {
+  //       emit(ConveterHistoryNetworkErr(e.toString()));
+  //     } else {
+  //       rethrow;
+  //     }
+  //   }
+  // }
 }

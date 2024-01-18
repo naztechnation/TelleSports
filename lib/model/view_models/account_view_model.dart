@@ -3,9 +3,14 @@
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
 import '../auth_model/bookies.dart';
+import '../auth_model/bookies_details.dart';
+import '../auth_model/converter_history.dart';
 import 'base_viewmodel.dart';
 
 class AccountViewModel extends BaseViewModel {
+
+  BookiesDetails? _bookiesDetails;
+  ConverterHistory? _converterHistory;
   AccountViewModel() {
     getToken();
   }
@@ -35,13 +40,28 @@ class AccountViewModel extends BaseViewModel {
     setViewState(ViewState.success);
   }
 
+    getBookiesDetails(BookiesDetails bookiesDetails) {
+    _bookiesDetails = bookiesDetails;
+    setViewState(ViewState.success);
+  }
+
+  getConverterHistory(ConverterHistory converterHistory) {
+    _converterHistory = converterHistory;
+    setViewState(ViewState.success);
+  }
+
+  setConverterHistory(ConverterHistory converterHistory) {
+    _converterHistory = converterHistory;
+    setViewState(ViewState.success);
+  }
+
 
    String get token => _token;
 
-   List<Data> get from =>
+   List<BookiesData> get from =>
       _bookiesList?.data?.where((p) => p.from == '1').toList() ?? [];
 
-  List<Data> get to =>
+  List<BookiesData> get to =>
       _bookiesList?.data?.where((p) => p.to == '1').toList() ?? [];
 
   List<String?> get bookiesFrom => from.map((bookie) => bookie.name).toList() ;
@@ -56,4 +76,14 @@ class AccountViewModel extends BaseViewModel {
 
   List<String?> get bookiesId =>
       _bookiesList?.data?.map((bookie) => bookie.bookie).toList() ?? [];
+
+      ConverterHistory? get converterHistory => _converterHistory;
+
+  BookiesDetails? get bookiesDetails => _bookiesDetails;
+  List<ListElement>? get getUniformLists =>
+      _bookiesDetails?.data?.data?.conversion?.dump?.lists ?? [];
+  List<Datum>? get convertionHistoties => _converterHistory?.data ?? [];
+
+  List<ListElement> get notConvertedBookies =>
+      getUniformLists?.where((p) => !(p.isConverted ?? false)).toList() ?? [];
 }

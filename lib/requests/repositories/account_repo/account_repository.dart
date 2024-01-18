@@ -1,6 +1,8 @@
 import 'package:tellesports/model/auth_model/register.dart';
 
 import '../../../model/auth_model/bookies.dart';
+import '../../../model/auth_model/bookies_details.dart';
+import '../../../model/auth_model/converter_history.dart';
 import '../../../model/auth_model/login.dart';
 
 abstract class AccountRepository {
@@ -40,5 +42,22 @@ abstract class AccountRepository {
   });
 
     Future<BookiesList> getBookies();
+
+    Future<BookiesDetails> convertBetCode({
+    required String from,
+    required String to,
+    required String bookingCode,
+    required String apiKey,
+  });
+
+  Future<ConverterHistory> addConversionHistory({
+    required String sourceCode,
+    required String destinationCode,
+    required String bookieTo,
+    required String bookieFrom,
+    required String status,
+  });
+
+  Future<ConverterHistory> getConversionHistory();
 
 }

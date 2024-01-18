@@ -35,7 +35,11 @@ class HomePageState
 
   getUserName() async{
     username = await StorageHandler.getUserName() ?? '';
-
+    Future.delayed(Duration(seconds: 0), (){
+      setState(() {
+      
+    });
+    });
   }
 
   @override
