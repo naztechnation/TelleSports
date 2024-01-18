@@ -1,6 +1,7 @@
 import 'package:tellesports/model/auth_model/login.dart';
 import 'package:tellesports/model/auth_model/register.dart';
 
+import '../../../model/auth_model/bookies.dart';
 import '../../../res/app_strings.dart';
 import '../../../widgets/modals.dart';
 import '../../setup/requests.dart';
@@ -89,5 +90,14 @@ class AccountRepositoryImpl implements AccountRepository {
       "password_confirmation": oldPassword,
     });
     return RegisterUser.fromJson(map);
+  }
+
+  @override
+  Future<BookiesList> getBookies() async {
+    final map = await Requests().post(
+      AppStrings.getBookiesUrl,
+    );
+
+    return BookiesList.fromJson(map);
   }
 }

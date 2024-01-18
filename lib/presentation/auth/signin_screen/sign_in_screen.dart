@@ -61,24 +61,24 @@ class _SigninScreenState extends State<SigninScreen> {
                         StorageHandler.saveUserToken(state.user.token?.token);
                         StorageHandler.saveUserEmail(state.user.user?.email);
                         StorageHandler.saveUserPhone(state.user.user?.phone);
-                           
+                        StorageHandler.saveUserName(state.user.user?.username);
+
+                        StorageHandler.saveUserPassword(passwordController.text);
+
                         onTapSignIn(context);
                       } else {
-
-                       if(state.user.error?.isNotEmpty ?? false){
-                        Modals.showToast(state.user.error ?? '');
+                        if (state.user.error?.isNotEmpty ?? false) {
+                          Modals.showToast(state.user.error ?? '');
                           resendCode(context);
-                       }else{
-                         if(state.user.message?.isNotEmpty ?? false){
-                          Modals.showToast(state.user.message ?? '',
-                            messageType: MessageType.error);
-                        }else{
-                           Modals.showToast('Failed to login',
-                            messageType: MessageType.error);
+                        } else {
+                          if (state.user.message?.isNotEmpty ?? false) {
+                            Modals.showToast(state.user.message ?? '',
+                                messageType: MessageType.error);
+                          } else {
+                            Modals.showToast('Failed to login',
+                                messageType: MessageType.error);
+                          }
                         }
-                       
-                        
-                       }
                       }
                     } else if (state is OTPResent) {
                       if (state.userData.success == true) {
@@ -142,8 +142,8 @@ class _SigninScreenState extends State<SigninScreen> {
                                                         decoration:
                                                             TextDecoration
                                                                 .underline,
-                                                                decorationColor: Colors.blue
-                                                                )))),
+                                                        decorationColor:
+                                                            Colors.blue)))),
                                     Align(
                                         alignment: Alignment.centerRight,
                                         child: GestureDetector(
@@ -157,8 +157,8 @@ class _SigninScreenState extends State<SigninScreen> {
                                                         decoration:
                                                             TextDecoration
                                                                 .underline,
-                                                                decorationColor: Colors.blue
-                                                                )))),
+                                                        decorationColor:
+                                                            Colors.blue)))),
                                   ],
                                 ),
                                 SizedBox(height: 29.v),
@@ -278,8 +278,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   loginUser(BuildContext ctx) {
     if (_formKey.currentState!.validate()) {
-
-     // onTapSignIn(ctx);
+      // onTapSignIn(ctx);
       ctx.read<AccountCubit>().loginUser(
           email: emailController.text.trim(),
           password: passwordController.text.trim());

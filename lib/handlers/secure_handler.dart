@@ -26,7 +26,7 @@ class StorageHandler {
     await storage.delete(key: lastLoginTimeKey);
   }
 
-  static Future<void> saveUserDetails([String? userData]) async {
+  static Future<void> saveUserName([String? userData]) async {
     if (userData != null) {
       await storage.write(key: 'USER', value: userData);
     }
@@ -137,7 +137,7 @@ class StorageHandler {
     return user;
   }
 
-  static Future<String?> getUserDetails() async {
+  static Future<String?> getUserName() async {
     Map<String, String> value = await storage.readAll();
     String? user;
     String? data = value['USER'];

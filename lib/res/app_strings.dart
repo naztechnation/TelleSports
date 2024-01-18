@@ -26,6 +26,16 @@ class AppStrings {
   static String resetPasswordUrl = '${_baseUrl}reset_password';
   static String changePasswordPasswordUrl = '${_baseUrl}change_password';
 
+  static String planUrl = '${_baseUrl}plans';
+  static String confirmPaymentUrl = '${_baseUrl}confirm_flutterwave_subscription';
+  static String reconfirmPaymentUrl = '${_baseUrl}reconfirm';
+  static String conversionHistoryUrl = '${_baseUrl}conversation_history';
+  static String getBookiesUrl = '${_baseUrl}bookies';
+  static String getNotificationsUrl = '${_baseUrl}notification';
+  static String userWalletUrl = '${_baseUrl}user_wallet';
+  static String converterUrl = '${_baseUrl}convert';
+
+
   
   
   

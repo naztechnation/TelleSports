@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/custom_bottom_bar.dart';
 import '../community_one_page/community_tab_page.dart';
-import '../convert_betcodesone_tab_container_page/convert_betcodesone_tab_container_page.dart';
+import '../home_page/home_page.dart';
 import '../profile/profile_page.dart';
 import '../predictions_two_page/predictions_two_page.dart';
 
@@ -38,7 +38,7 @@ class _LandingPageState extends State<LandingPage> {
     Widget _buildPage(int index) {
     switch (index) {
       case 0:
-        return ConvertBetcodesoneTabContainerPage();
+        return HomePage();
       case 1:
         return CommunityTabPage();
       case 2:

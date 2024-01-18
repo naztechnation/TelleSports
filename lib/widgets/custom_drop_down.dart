@@ -10,7 +10,7 @@ class CustomDropDown extends StatelessWidget {
     this.icon,
     this.autofocus = true,
     this.textStyle,
-    this.items,
+    required this.items,
     this.hintText,
     this.hintStyle,
     this.prefix,
@@ -19,7 +19,7 @@ class CustomDropDown extends StatelessWidget {
     this.suffixConstraints,
     this.contentPadding,
     this.validator,
-    this.onChanged,
+    this.onChanged, this.borderWidth = 1, this.borderColor = Colors.transparent,   this.borderRadius = 20,
   }) : super(
           key: key,
         );
@@ -27,6 +27,9 @@ class CustomDropDown extends StatelessWidget {
   final Alignment? alignment;
 
   final double? width;
+  final double borderWidth;
+  final double borderRadius;
+  final Color? borderColor;
 
   final FocusNode? focusNode;
 
@@ -36,7 +39,7 @@ class CustomDropDown extends StatelessWidget {
 
   final TextStyle? textStyle;
 
-  final List<String>? items;
+  final List<String?> items;
 
   final String? hintText;
 
@@ -66,18 +69,27 @@ class CustomDropDown extends StatelessWidget {
         : dropDownWidget;
   }
 
+  OutlineInputBorder _border() => OutlineInputBorder(
+      borderSide: BorderSide(
+          width: borderWidth,
+          color: borderColor ?? Colors.grey,
+          style: BorderStyle.solid),
+      borderRadius: BorderRadius.all(Radius.circular(borderRadius)));
+
+
   Widget get dropDownWidget => SizedBox(
         width: width ?? double.maxFinite,
         child: DropdownButtonFormField(
           focusNode: focusNode ?? FocusNode(),
           icon: icon,
-          autofocus: autofocus!,
+          isExpanded: true,
+          autofocus: false,
           style: textStyle ?? CustomTextStyles.titleSmallPrimary_1,
-          items: items?.map<DropdownMenuItem<String>>((String value) {
+          items: items.map<DropdownMenuItem<String>>((String? value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(
-                value,
+                value ?? '',
                 overflow: TextOverflow.ellipsis,
                 style: hintStyle ?? CustomTextStyles.titleSmallPrimary_1,
               ),
@@ -99,19 +111,8 @@ class CustomDropDown extends StatelessWidget {
         suffixIconConstraints: suffixConstraints,
         isDense: true,
         contentPadding: contentPadding,
-        border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.h),
-              borderSide: BorderSide(
-                color: appTheme.blueGray100,
-                width: 1,
-              ),
-            ),
-        enabledBorder: 
-            OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.h),
-              borderSide: BorderSide(
-                color: appTheme.blueGray100,
-                width: 1,
-              ),
-            ));
+        border: _border( ),
+                  enabledBorder: _border( ),
+                  focusedBorder: _border( ),
+        );
 }

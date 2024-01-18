@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tellesports/core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -26,6 +27,7 @@ class CustomTextFormField extends StatelessWidget {
     this.fillColor,
     this.filled = false,
     this.validator,
+    this.inputFormatters,
   }) : super(
           key: key,
         );
@@ -73,6 +75,8 @@ class CustomTextFormField extends StatelessWidget {
 
   final FormFieldValidator<String>? validator;
 
+  final List<TextInputFormatter>? inputFormatters;
+
   @override
   Widget build(BuildContext context) {
     return alignment != null
@@ -97,7 +101,7 @@ class CustomTextFormField extends StatelessWidget {
           maxLines: maxLines ?? 1,
           decoration: decoration,
           validator: validator,
-          
+          inputFormatters: inputFormatters,
         ),
       );
   InputDecoration get decoration => InputDecoration(

@@ -204,4 +204,28 @@ class AccountCubit extends Cubit<AccountStates> {
       }
     }
   }
+
+   Future<void> getBookies() async {
+    try {
+      emit(AccountProcessing());
+
+      final bookies = await accountRepository.getBookies();
+
+      await viewModel.getBookie(bookies);
+
+      emit(BookieListLoaded(bookies));
+    } on ApiException catch (e) {
+      emit(AccountApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(AccountNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
 }

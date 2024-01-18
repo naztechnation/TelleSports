@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/convert_betcodesfour_page/convert_betcode_page.dart';
+import 'package:tellesports/extentions/custom_string_extension.dart';
 import 'package:tellesports/presentation/view_livescoresone_page/view_livescores_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_circleimage.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_five.dart';
@@ -8,27 +8,45 @@ import 'package:tellesports/widgets/app_bar/appbar_title.dart';
 import 'package:tellesports/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
+import '../../handlers/secure_handler.dart';
+import '../convert_betcode_page/convert_betcode_page.dart'; 
+
+
+
 // ignore_for_file: must_be_immutable
-class ConvertBetcodesoneTabContainerPage extends StatefulWidget {
-  const ConvertBetcodesoneTabContainerPage({Key? key})
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key})
       : super(
           key: key,
         );
 
   @override
-  ConvertBetcodesoneTabContainerPageState createState() =>
-      ConvertBetcodesoneTabContainerPageState();
+  HomePageState createState() =>
+      HomePageState();
 }
 
-class ConvertBetcodesoneTabContainerPageState
-    extends State<ConvertBetcodesoneTabContainerPage>
+class HomePageState
+    extends State<HomePage>
     with TickerProviderStateMixin {
   late TabController tabviewController;
+
+  String username = '';
+  
+
+  getUserName() async{
+    username = await StorageHandler.getUserName() ?? '';
+
+  }
 
   @override
   void initState() {
     super.initState();
+
+    getUserName();
+    
     tabviewController = TabController(length: 2, vsync: this);
+
+    
   }
 
   @override
@@ -42,7 +60,7 @@ class ConvertBetcodesoneTabContainerPageState
           width: double.maxFinite,
           child: Column(
             children: [
-              SizedBox(height: 12.v),
+              SizedBox(height: 30.v),
               _buildTabview(context),
               Expanded(
                 child: SizedBox(
@@ -50,7 +68,7 @@ class ConvertBetcodesoneTabContainerPageState
                   child: TabBarView(
                     controller: tabviewController,
                     children: [
-                      ConvertBetcodesPage(),
+                      ConvertBetcodes(),
                       ViewLivescoresPage(),
                     ],
                   ),
@@ -76,8 +94,9 @@ class ConvertBetcodesoneTabContainerPageState
         ),
       ),
       title: Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 8.h,),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10,),
             AppbarSubtitleFive(
@@ -85,7 +104,7 @@ class ConvertBetcodesoneTabContainerPageState
               margin: EdgeInsets.only(right: 59.h),
             ),
             AppbarTitle(
-              text: "John Doe. ",
+              text: "$username. ".capitalizeFirstOfEach,
             ),
           ],
         ),

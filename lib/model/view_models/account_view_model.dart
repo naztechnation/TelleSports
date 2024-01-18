@@ -2,6 +2,7 @@
 
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
+import '../auth_model/bookies.dart';
 import 'base_viewmodel.dart';
 
 class AccountViewModel extends BaseViewModel {
@@ -10,12 +11,17 @@ class AccountViewModel extends BaseViewModel {
   }
 
   String _token = "";
+  BookiesList? _bookiesList;
 
 
 
- 
 
-//   bool _showPassword = false;
+ Future<void> getBookie(BookiesList bookie) async {
+    _bookiesList = bookie;
+
+    setViewState(ViewState.success);
+  }
+
 
   setToken(String token) async {
     _token = token;
@@ -31,4 +37,23 @@ class AccountViewModel extends BaseViewModel {
 
 
    String get token => _token;
+
+   List<Data> get from =>
+      _bookiesList?.data?.where((p) => p.from == '1').toList() ?? [];
+
+  List<Data> get to =>
+      _bookiesList?.data?.where((p) => p.to == '1').toList() ?? [];
+
+  List<String?> get bookiesFrom => from.map((bookie) => bookie.name).toList() ;
+
+  List<String?> get bookiesTo => to.map((bookie) => bookie.name).toList();
+
+  List<String?> get bookiesBookieFrom =>
+      from.map((bookie) => bookie.bookie).toList();
+
+  List<String?> get bookiesBookieTo =>
+      to.map((bookie) => bookie.bookie).toList();
+
+  List<String?> get bookiesId =>
+      _bookiesList?.data?.map((bookie) => bookie.bookie).toList() ?? [];
 }

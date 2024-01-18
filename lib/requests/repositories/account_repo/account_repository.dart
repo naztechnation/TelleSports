@@ -1,5 +1,6 @@
 import 'package:tellesports/model/auth_model/register.dart';
 
+import '../../../model/auth_model/bookies.dart';
 import '../../../model/auth_model/login.dart';
 
 abstract class AccountRepository {
@@ -37,4 +38,7 @@ abstract class AccountRepository {
     required String password,
     required String confirmPassword,
   });
+
+    Future<BookiesList> getBookies();
+
 }

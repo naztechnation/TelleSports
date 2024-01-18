@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:tellesports/model/auth_model/login.dart';
 import 'package:tellesports/model/auth_model/register.dart';
 
+import '../../model/auth_model/bookies.dart';
+
 abstract class AccountStates extends Equatable {
   const AccountStates();
 }
@@ -61,6 +63,13 @@ class OTPResent extends AccountStates {
   const OTPResent(this.userData);
   @override
   List<Object> get props => [userData];
+}
+
+class BookieListLoaded extends AccountStates {
+  final BookiesList bookiesList;
+  const BookieListLoaded(this.bookiesList);
+  @override
+  List<Object> get props => [bookiesList];
 }
 
 class AccountLoggedOut extends AccountStates {

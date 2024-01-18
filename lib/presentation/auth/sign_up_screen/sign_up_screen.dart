@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -263,6 +264,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             validator: (value) {
               return Validator.validate(value, 'Username');
             },
+             inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'\s'))
+                      ],
           )
         ]));
   }
