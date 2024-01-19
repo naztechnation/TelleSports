@@ -53,21 +53,21 @@ class UserViewModel extends BaseViewModel {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 15),
-              const Padding(
+               Padding(
                 padding: EdgeInsets.only(
                     left: 30.0, right: 8.0, top: 8.0, bottom: 8.0),
                 child: Text('Select the images source',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 16,
-                        // color: AppColors.lightSecondary,
+                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w400)),
               ),
               ListTile(
-                leading: const Icon(
+                leading:   Icon(
                   Icons.photo_camera,
                   size: 25.0,
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 title: const Text('Camera',
                     style: TextStyle(
@@ -87,10 +87,10 @@ class UserViewModel extends BaseViewModel {
                 },
               ),
               ListTile(
-                leading: const Icon(
+                leading:   Icon(
                   Icons.photo,
                   size: 25.0,
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 title: const Text('Gallery',
                     style: TextStyle(

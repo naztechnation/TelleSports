@@ -250,16 +250,16 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   }
 
   onTapCreatePassword(BuildContext context) {
-       AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+      // AppNavigator.pushAndReplacePage(context, page: SigninScreen());
 
 
-      //  if (_formKey.currentState!.validate()) {
-      // context.read<AccountCubit>().changePassword(
-      //     oldPassword: oldPasswordController.text,
-      //     password: passwordController.text.trim(),
-      //     confirmPassword: confirmpasswordController.text.trim());
+       if (_formKey.currentState!.validate()) {
+      context.read<AccountCubit>().changePassword(
+          oldPassword: oldPasswordController.text,
+          password: passwordController.text.trim(),
+          confirmPassword: confirmpasswordController.text.trim());
       FocusScope.of(context).unfocus();
-  //  }
+    }
     ;
 ;
   }

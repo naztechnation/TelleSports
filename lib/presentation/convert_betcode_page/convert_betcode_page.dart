@@ -284,24 +284,40 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                             processing: state is BookingsProcessing,
                             title: 'Converting...',
                             isDisabled: !(mNHController.text.isNotEmpty &&
-                                _bookieFromDropdownValue != 'Convert from' &&
-                                _bookieToDropdownValue != 'Convert to'),
+                                _bookieFromDropdownValue == 'Convert from' &&
+                                _bookieToDropdownValue == 'Convert to'),
                             buttonTextStyle: TextStyle(
                                 color: !(mNHController.text.isNotEmpty &&
-                                        _bookieFromDropdownValue !=
+                                        _bookieFromDropdownValue ==
                                             'Convert from' &&
-                                        _bookieToDropdownValue != 'Convert to')
+                                        _bookieToDropdownValue == 'Convert to')
                                     ? Color(0xFF858287)
                                     : Colors.white,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400),
                             margin: EdgeInsets.symmetric(horizontal: 20.h),
                             onPressed: () {
-                              _accountCubit.convertBetCode(
-                                  from: fromId ?? '',
-                                  to: toId ?? '',
-                                  bookingCode: mNHController.text,
-                                  apiKey: '');
+                              if (int.parse(balance) <= 0) {
+                                Modals.showDialogModal(context,
+                                    page: ModalContentScreen(
+                                      onPressed: () {
+                                        onTapBtnPlus(context);
+                                      },
+                                        title: 'Insufficient Balance',
+                                        body:
+                                            ' You dont have a sufficient balance to convert your codes now. Get a top up from us to continue converting...',
+                                        btnText: 'Top Up',
+                                        headerColorOne:
+                                            Color.fromARGB(255, 208, 151, 151),
+                                        headerColorTwo: Color.fromARGB(
+                                            255, 234, 132, 132)));
+                              } else {
+                                _accountCubit.convertBetCode(
+                                    from: fromId ?? '',
+                                    to: toId ?? '',
+                                    bookingCode: mNHController.text,
+                                    apiKey: '');
+                              }
                             },
                           ),
                         ],
@@ -365,12 +381,11 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
     return Card(
         clipBehavior: Clip.antiAlias,
         elevation: 0,
-        margin: EdgeInsets.all(0),
         color: appTheme.teal800,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusStyle.roundedBorder8),
         child: Container(
-            height: 100.v,
+            height: 90.v,
             width: 350.h,
             decoration: AppDecoration.fillTeal.copyWith(
                 borderRadius: BorderRadiusStyle.roundedBorder8,
@@ -416,18 +431,18 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                                                 .headlineLargeWhiteA700))
                                   ])
                                 ]),
-                            Padding(
-                                padding:
-                                    EdgeInsets.only(top: 10.v, bottom: 13.v),
-                                child: CustomIconButton(
-                                    height: 30.adaptSize,
-                                    width: 30.adaptSize,
-                                    padding: EdgeInsets.all(6.h),
-                                    onTap: () {
-                                      onTapBtnPlus(context);
-                                    },
-                                    child: CustomImageView(
-                                        imagePath: ImageConstant.imgPlus)))
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: CustomIconButton(
+                                  height: 30.adaptSize,
+                                  width: 30.adaptSize,
+                                  padding: EdgeInsets.all(6.h),
+                                  onTap: () {
+                                    onTapBtnPlus(context);
+                                  },
+                                  child: CustomImageView(
+                                      imagePath: ImageConstant.imgPlus)),
+                            )
                           ])))
             ])));
   }
@@ -575,6 +590,6 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
   }
 
   onTapBtnPlus(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: PricingPageScreen());
+    AppNavigator.pushAndStackPage(context, page: PricingPageScreen(balance: balance,));
   }
 }

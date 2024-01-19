@@ -31,18 +31,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class PricingPageScreen extends StatelessWidget {
-  const PricingPageScreen({Key? key}) : super(key: key);
+  final String balance;
+  const PricingPageScreen({Key? key, required this.balance}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => BlocProvider<AccountCubit>(
       create: (BuildContext context) => AccountCubit(
           accountRepository: AccountRepositoryImpl(),
           viewModel: Provider.of<AccountViewModel>(context, listen: false)),
-      child: BuyTellacoinsScreen());
+      child: BuyTellacoinsScreen(balance: balance,));
 }
 
 class BuyTellacoinsScreen extends StatefulWidget {
-  BuyTellacoinsScreen({Key? key})
+
+  final String balance;
+
+  BuyTellacoinsScreen({Key? key, required this.balance})
       : super(
           key: key,
         );
@@ -188,7 +192,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
           title: "Tellasport",
           //logo: AppImages.ball,
         ),
-        isTestMode: false);
+        isTestMode: true);
     final ChargeResponse response = await flutterwave.charge();
 
     if (response != null) {
@@ -209,6 +213,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
 
                   Modals.showToast(
                     'Payment Processed Successfully.',
+                    messageType: MessageType.success
                   )
                 }
             });
@@ -293,10 +298,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
         } else if (state is SubscriptionLoaded) {
           _accountCubit.plansList();
         }
-        //  else if (state is CurrencyLoaded) {
-        //   _accountCubit.plansList();
-        //   selectedCurrency = '';
-        // }
+       
         else if (state is AccountNetworkErr) {
           return EmptyWidget(
             title: 'Network error',
@@ -457,7 +459,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
                         Padding(
                           padding: EdgeInsets.only(left: 6.h),
                           child: Text(
-                            "200",
+                            widget.balance,
                             style: CustomTextStyles.headlineLargeWhiteA700,
                           ),
                         ),

@@ -8,6 +8,7 @@ import 'package:tellesports/routes/app_routes.dart';
 
 import 'model/view_models/account_view_model.dart';
 import 'model/view_models/firebase_auth_view_model.dart';
+import 'model/view_models/user_view_model.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() async{
@@ -22,7 +23,7 @@ void main() async{
     providers: [
       ChangeNotifierProvider(create: (_) => AccountViewModel(), lazy: false),
       // ChangeNotifierProvider(create: (_) => ServiceProviderViewModel(), lazy: false),
-      // ChangeNotifierProvider(create: (_) => UserViewModel(), lazy: false),
+       ChangeNotifierProvider(create: (_) => UserViewModel(), lazy: false),
        ChangeNotifierProvider(create: (_) => FirebaseAuthProvider(), lazy: false),
       // ChangeNotifierProvider(create: (_) => ServiceProviderInAppViewModel(), lazy: false),
     ], 

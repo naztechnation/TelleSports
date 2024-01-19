@@ -27,6 +27,8 @@ dependencies:
   uuid: ^4.3.3
   flutterwave_standard: ^1.0.7
   shared_preferences: ^2.2.2
+  share_plus: ^7.2.1
+  flutter_tawkto: ^0.0.3
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

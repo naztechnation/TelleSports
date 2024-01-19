@@ -10,7 +10,6 @@ import '../landing_page/landing_page.dart';
 import '../onboarding_screen/widget/fading_sliding_in.dart';
 import 'welcome_screen.dart';
 
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
   @override
@@ -24,11 +23,12 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   late AnimationController _animationController;
+  late Animation<double> _animation;
 
   void handleTimeout() {
     changeScreen();
   }
- 
+
   String userLoggedIn = '';
   String isonBoarding = '';
 
@@ -39,16 +39,13 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> changeScreen() async {
     if (isonBoarding == '') {
-      AppNavigator.pushAndReplacePage(context, page: SplashScreenOnboardingScreen());
+      AppNavigator.pushAndReplacePage(context,
+          page: SplashScreenOnboardingScreen());
     } else if (userLoggedIn == '') {
-          AppNavigator.pushAndReplacePage(context, page: SigninScreen());
-
-    } else  {
-          AppNavigator.pushAndStackPage(context, page: LandingPage());
-
+      AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+    } else {
+      AppNavigator.pushAndStackPage(context, page: LandingPage());
     }
-
-     
   }
 
   @override
@@ -57,7 +54,16 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1700),
-    )..forward();
+    );
+
+    final Animation<double> curve = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+
+    _animation = Tween<double>(begin: 0, end: 1).animate(curve);
+
+    _animationController.forward();
     super.initState();
     startTimeout();
   }
@@ -73,10 +79,8 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          
           Align(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -85,31 +89,39 @@ class _SplashScreenState extends State<SplashScreen>
                 FadingSlidingWidget(
                   animationController: _animationController,
                   interval: const Interval(0.5, 0.9),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(60),
-                    child: CustomIconButton(
-                              height: 98.adaptSize,
-                              width: 98.adaptSize,
-                              padding: EdgeInsets.all(5.h),
-                              decoration: IconButtonStyleHelper.fillPrimary,
-                              child: Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: CustomImageView(
-                                    imagePath: ImageConstant.imgLightBulb),
-                              )),
+                  child: AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(0, 100 * (1 - _animation.value)),
+                        child: child,
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
+                      child: CustomIconButton(
+                          height: 98.adaptSize,
+                          width: 98.adaptSize,
+                          padding: EdgeInsets.all(5.h),
+                          decoration: IconButtonStyleHelper.fillPrimary,
+                          child: Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: CustomImageView(
+                                imagePath: ImageConstant.imgLightBulb),
+                          )),
+                    ),
                   ),
-                ),
-                // const SizedBox(
-                //   width: 6,
-                // ),
-                // CustomImageView(
-                //             imagePath: ImageConstant.imgTellasportLogo,
-                //             height: 44.v,
-                //             width: 180.h),
+                  // const SizedBox(
+                  //   width: 6,
+                  // ),
+                  // CustomImageView(
+                  //             imagePath: ImageConstant.imgTellasportLogo,
+                  //             height: 44.v,
+                  //             width: 180.h),
+                )
               ],
             ),
           ),
-           
         ],
       ),
     );

@@ -8,9 +8,10 @@ class ModalContentScreen extends StatelessWidget {
   final String btnText;
   final Color headerColorOne;
   final Color headerColorTwo;
+  final Function()? onPressed;
 
 
-  const ModalContentScreen({Key? key, required this.title, required this.body, required this.btnText, required this.headerColorOne, required this.headerColorTwo})
+  const ModalContentScreen({Key? key, required this.title, required this.body, required this.btnText, required this.headerColorOne, required this.headerColorTwo,  this.onPressed})
       : super(
           key: key,
         );
@@ -42,9 +43,8 @@ class ModalContentScreen extends StatelessWidget {
             SizedBox(height: 20.v),
             CustomOutlinedButton(
               text: btnText,
-              onPressed: (() {
-                Navigator.pop(context);
-              }),
+              onPressed: (onPressed == null) ? () => Navigator.pop(context) : onPressed,
+
               margin: EdgeInsets.symmetric(horizontal: 20.h),
             ),
             SizedBox(height: 25.v),
