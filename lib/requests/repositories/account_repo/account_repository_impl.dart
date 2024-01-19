@@ -4,6 +4,7 @@ import 'package:tellesports/model/auth_model/register.dart';
 import '../../../model/auth_model/bookies.dart';
 import '../../../model/auth_model/bookies_details.dart';
 import '../../../model/auth_model/converter_history.dart';
+import '../../../model/auth_model/plans_list.dart';
 import '../../../res/app_strings.dart';
 import '../../../widgets/modals.dart';
 import '../../setup/requests.dart';
@@ -132,5 +133,14 @@ class AccountRepositoryImpl implements AccountRepository {
     );
 
     return ConverterHistory.fromJson(map);
+  }
+
+   @override
+  Future<PlansList> getPlansList() async {
+    final map = await Requests().get(
+      AppStrings.planUrl,
+    );
+
+    return PlansList.fromJson(map);
   }
 }

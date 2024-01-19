@@ -5,6 +5,7 @@ import 'package:tellesports/model/auth_model/register.dart';
 import '../../model/auth_model/bookies.dart';
 import '../../model/auth_model/bookies_details.dart';
 import '../../model/auth_model/converter_history.dart';
+import '../../model/auth_model/plans_list.dart';
 
 abstract class AccountStates extends Equatable {
   const AccountStates();
@@ -122,6 +123,13 @@ class ConverterHistoryLoaded extends AccountStates {
   const ConverterHistoryLoaded(this.converterHistory);
   @override
   List<Object> get props => [converterHistory];
+}
+
+class PlansLoaded extends AccountStates {
+  final PlansList plansList;
+  const PlansLoaded(this.plansList);
+  @override
+  List<Object> get props => [plansList];
 }
 
 class BookingsError extends AccountStates {

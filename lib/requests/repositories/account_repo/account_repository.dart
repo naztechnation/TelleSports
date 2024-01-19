@@ -4,6 +4,7 @@ import '../../../model/auth_model/bookies.dart';
 import '../../../model/auth_model/bookies_details.dart';
 import '../../../model/auth_model/converter_history.dart';
 import '../../../model/auth_model/login.dart';
+import '../../../model/auth_model/plans_list.dart';
 
 abstract class AccountRepository {
   Future<RegisterUser> registerUser({
@@ -52,5 +53,7 @@ abstract class AccountRepository {
 
 
   Future<ConverterHistory> getConversionHistory();
+
+  Future<PlansList> getPlansList();
 
 }
