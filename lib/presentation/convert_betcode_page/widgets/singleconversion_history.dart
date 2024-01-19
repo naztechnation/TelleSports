@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 
+import '../../../model/auth_model/converter_history.dart';
+
 // ignore: must_be_immutable
-class Singleconversion3ItemWidget extends StatelessWidget {
-  const Singleconversion3ItemWidget({Key? key})
+class SingleconversionHistory extends StatelessWidget {
+
+ final ConverterHistoryData convertionHistoties;
+
+  const SingleconversionHistory({Key? key,required this.convertionHistoties})
       : super(
           key: key,
         );
@@ -25,12 +30,12 @@ class Singleconversion3ItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Sporty Bet".toUpperCase(),
+                "${convertionHistoties.convertedFrom?? ''}".toUpperCase(),
                 style: theme.textTheme.bodySmall,
               ),
               SizedBox(height: 3.v),
               Text(
-                "M12MM678",
+                "${convertionHistoties.sourceCode?? ''}",
                 style: theme.textTheme.titleMedium,
               ),
             ],
@@ -46,13 +51,13 @@ class Singleconversion3ItemWidget extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "NairaBet".toUpperCase(),
+                  "${convertionHistoties.convertedTo?? ''}".toUpperCase(),
                   style: theme.textTheme.bodySmall,
                 ),
               ),
               SizedBox(height: 3.v),
               Text(
-                "M12MM678",
+                "${convertionHistoties.destinationCode?? ''}",
                 style: theme.textTheme.titleMedium,
               ),
             ],

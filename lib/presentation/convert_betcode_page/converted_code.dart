@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../core/app_export.dart';
 import '../../model/auth_model/bookies_details.dart';
 import '../../utils/app_utils.dart';
 
 class ConvertedCodePage extends StatefulWidget {
   final BookiesDetails? bookie;
 
-  final int destinationCode;
+  final String destinationCode;
 
   final List<ListElement>? bookingEventLists;
 
@@ -25,8 +26,7 @@ class ConvertedCodePage extends StatefulWidget {
 
 class _ConvertedCodePageState extends State<ConvertedCodePage>
     with WidgetsBindingObserver {
-  int notConvertedEvents = 0;
-
+   
   @override
   void initState() {
     super.initState();
@@ -36,11 +36,14 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Converted Code',
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
-                color: Theme.of(context).colorScheme.secondary)),
+                color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary)),
         elevation: 0,
       ),
       body: 
@@ -115,24 +118,15 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
                                        
                                       ],
                                     ),
-                                    CircleAvatar(
-                                      radius: 18,
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .secondary
-                                          .withOpacity(0.2),
-                                      child: Icon(
-                                        Icons.arrow_forward,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                    ),
+                                    CustomImageView(
+                imagePath: ImageConstant.imgSwapHoriz,
+                height: 30.adaptSize,
+                width: 30.adaptSize),
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
-                                        Text('$notConvertedEvents events',
+                                        Text('${widget.notConvertedEvents} events',
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500,
@@ -151,7 +145,7 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
                                           height: 10,
                                         ),
                                         Text(
-                                            '${widget.bookie?.data?.data?..conversion?.dump?.destination?.odds}',
+                                            '${widget.bookie?.data?.data?.conversion?.dump?.destination?.odds}',
                                             style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w500,
@@ -259,7 +253,7 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
                                                 ),
                                           const Spacer(),
                                           Text(
-                                              AppUtils.formatComplexDate(
+                                              AppUtils.formatSimpleDate(
                                                   dateTime:
                                                       widget.bookingEventLists?[
                                                               index]
@@ -301,8 +295,8 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
                                                           FontWeight.w700,
                                                       color:
                                                           Theme.of(context)
-                                                              .colorScheme
-                                                              .secondary)),
+                                                      .colorScheme
+                                                      .primary)),
                                             ],
                                           ),
                                           const Spacer(),
@@ -335,7 +329,7 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
                                             height: 8,
                                           ),
                                           Text(
-                                            '${widget.bookingEventLists?[index].home?.marketName}',
+                                            '${widget.bookingEventLists?[index].home?.outcomeName}',
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500,
@@ -365,7 +359,7 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
                                                       FontWeight.w700,
                                                   color: Theme.of(context)
                                                       .colorScheme
-                                                      .secondary)),
+                                                      .primary)),
                                           const Spacer(),
                                           Text(
                                               '${widget.bookie?.data?.data?.conversion?.dump?.destination?.bookie}',
@@ -396,7 +390,7 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
                                             height: 8,
                                           ),
                                           Text(
-                                              '${widget.bookingEventLists?[index].home?.marketName} ',
+                                              '${widget.bookingEventLists?[index].home?.outcomeName} ',
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight:

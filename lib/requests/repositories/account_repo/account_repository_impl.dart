@@ -124,26 +124,7 @@ class AccountRepositoryImpl implements AccountRepository {
     return BookiesDetails.fromJson(map);
   }
 
-  @override
-  Future<ConverterHistory> addConversionHistory(
-      {required String sourceCode,
-      required String destinationCode,
-      required String bookieTo,
-      required String bookieFrom,
-      required String status}) async {
-    var payload = {
-      "bookie_from": bookieFrom,
-      "bookie_to": bookieTo,
-      "destination_code": destinationCode,
-      "source_code": sourceCode,
-      "status": status
-    };
-    final map = await Requests()
-        .post(AppStrings.conversionHistoryUrl, body: payload);
-
-    return ConverterHistory.fromJson(map);
-  }
-
+ 
   @override
   Future<ConverterHistory> getConversionHistory() async {
     final map = await Requests().get(

@@ -7,12 +7,14 @@ import '../../blocs/accounts/account.dart';
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
 import '../../model/auth_model/bookies_details.dart';
+import '../../model/auth_model/converter_history.dart';
 import '../../model/view_models/account_view_model.dart';
 import '../../requests/repositories/account_repo/account_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/custom_outlined_button.dart';
 import '../../widgets/modal_content.dart';
 import '../../widgets/modals.dart';
+import '../../widgets/progress_indicator.dart';
 import '../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -22,7 +24,7 @@ import 'package:tellesports/widgets/custom_icon_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 import 'converted_code.dart';
-import 'widgets/singleconversion3_item_widget.dart';
+import 'widgets/singleconversion_history.dart';
 
 class ConvertBetcodes extends StatelessWidget {
   const ConvertBetcodes({
@@ -53,7 +55,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
   String _bookieFromDropdownValue = 'Convert From';
   String _bookieToDropdownValue = 'Convert To';
-  final List<String?> _addressSpinnerItems = ['Convert from'];
+  List<String?> _addressSpinnerItems = [];
 
   bool isConverted = false;
 
@@ -61,9 +63,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
   int notConvertedEvents = 0;
 
-  final List<String?> _addressSpinnerItems1 = [
-    'Convert To',
-  ];
+  List<String?> _addressSpinnerItems1 = [];
 
   late AccountCubit _accountCubit;
 
@@ -72,22 +72,27 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
   String username = '';
   String email = '';
   String password = '';
+  String balance = '0';
 
-    BookiesDetails? bookie ;
+  BookiesDetails? bookie;
 
+  List<ListElement>? bookingEventLists = [];
 
-            List<ListElement>? bookingEventLists ;
+  List<ListElement>? notConvertedBookies = [];
 
-          List<ListElement>? notConvertedBookies;
-
-
+  List<ConverterHistoryData>? convertionHistoties = [];
 
   getUserDetails() async {
+    _addressSpinnerItems = ['Convert from'];
+    _addressSpinnerItems1 = ['Convert to'];
+
     email = await StorageHandler.getUserEmail() ?? '';
     password = await StorageHandler.getUserPassword() ?? '';
     username = await StorageHandler.getUserName() ?? '';
+    balance = await StorageHandler.getUserBalance() ?? '';
 
     _accountCubit = context.read<AccountCubit>();
+    await _accountCubit.getConversionHistory();
 
     await _accountCubit.getBookies();
 
@@ -110,6 +115,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: BlocConsumer<AccountCubit, AccountStates>(
@@ -122,6 +128,19 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         } else if (state is AccountUpdated) {
           final user = state.user.user;
 
+          if (state.user.success ?? false) {
+            StorageHandler.saveIsLoggedIn('true');
+            StorageHandler.saveUserToken(state.user.token?.token);
+            StorageHandler.saveUserEmail(state.user.user?.email);
+            StorageHandler.saveUserPhone(state.user.user?.phone);
+            StorageHandler.saveUserName(state.user.user?.username);
+            StorageHandler.saveUserBalance(
+                state.user.tellacoinBalance.toString());
+
+            StorageHandler.saveUserPassword(password);
+
+            balance = state.user.tellacoinBalance.toString();
+          }
           if (user?.isActive == '0') {
             Modals.showToast('Your account is not active',
                 messageType: MessageType.error);
@@ -129,17 +148,16 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             AppNavigator.pushAndReplacePage(context, page: SigninScreen());
           }
         } else if (state is BookingsLoaded) {
-           bookie = _accountCubit.viewModel.bookiesDetails;
+          bookie = _accountCubit.viewModel.bookiesDetails;
 
-          destinationCode = bookie?.data?.data?.conversion?.destinationCode ?? '';
+          destinationCode =
+              bookie?.data?.data?.conversion?.destinationCode ?? '';
 
           jJhEightyTwoController.text = destinationCode;
 
-          bookingEventLists =
-              _accountCubit.viewModel.getUniformLists;
+          bookingEventLists = _accountCubit.viewModel.getUniformLists;
 
-           notConvertedBookies =
-              _accountCubit.viewModel.notConvertedBookies;
+          notConvertedBookies = _accountCubit.viewModel.notConvertedBookies;
 
           notConvertedEvents =
               (bookingEventLists!.length - notConvertedBookies!.length);
@@ -148,173 +166,197 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         } else if (state is BookingsError) {
           Modals.showDialogModal(context,
               page: ModalContentScreen(
-                title: 'Network Error',
-                body:
-                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-                btnText: 'Cancel',
-               headerColorOne: Color.fromARGB(255, 208, 151, 151),
-                headerColorTwo: Color.fromARGB(255, 234, 132, 132)
-              ));
+                  title: 'Network Error',
+                  body:
+                      'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                  btnText: 'Cancel',
+                  headerColorOne: Color.fromARGB(255, 208, 151, 151),
+                  headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
         } else if (state is BookingsNetworkErr) {
           Modals.showDialogModal(context,
               page: ModalContentScreen(
-                title: 'Network Error',
-                body:
-                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-                btnText: 'Cancel',
-                headerColorOne: Color.fromARGB(255, 208, 151, 151),
-                headerColorTwo: Color.fromARGB(255, 234, 132, 132)
-              ));
+                  title: 'Network Error',
+                  body:
+                      'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                  btnText: 'Cancel',
+                  headerColorOne: Color.fromARGB(255, 208, 151, 151),
+                  headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
         } else if (state is BookingsApiErr) {
           Modals.showDialogModal(context,
               page: ModalContentScreen(
-                title: 'Network Error',
-                body:
-                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-                btnText: 'Cancel',
-                headerColorOne: Color.fromARGB(255, 208, 151, 151),
-                headerColorTwo: Color.fromARGB(255, 234, 132, 132)
-              ));
+                  title: 'Network Error',
+                  body:
+                      'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                  btnText: 'Cancel',
+                  headerColorOne: Color.fromARGB(255, 208, 151, 151),
+                  headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
         } else if (state is AccountApiErr) {
           if (state.message != null) {}
         } else if (state is AccountNetworkErr) {
           if (state.message != null) {}
+        } else if (state is ConverterHistoryLoaded) {
+          convertionHistoties = _accountCubit.viewModel.convertionHistoties;
         }
       },
       builder: (context, state) {
-        return Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: SizedBox(
-                width: mediaQueryData.size.width,
-                child: SingleChildScrollView(
-                    child: Column(children: [
-                  SizedBox(height: 16.v),
-                  Column(children: [
-                    _buildTelacoinsBalance(context),
-                    SizedBox(height: 24.v),
-                    Divider(),
-                    SizedBox(height: 23.v),
-                    _buildBetCodeSelector(context),
-                    SizedBox(height: 14.v),
-                    _buildFrameNine(context),
-                    SizedBox(height: 14.v),
-                    if (isConverted) ...[
-                      CustomElevatedButton(
-                        text: "Copy code",
-                        margin: EdgeInsets.symmetric(horizontal: 20.h),
-                        leftIcon: Container(
-                            margin: EdgeInsets.only(right: 10.h),
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgContentcopy,
-                                height: 24.adaptSize,
-                                width: 24.adaptSize)),
-                        onPressed: () async {
-                          await Clipboard.setData(
-                              ClipboardData(text: destinationCode));
-                          Modals.showToast('${destinationCode} copied');
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: (() {
-                                AppNavigator.pushAndStackPage(context, 
-                                page: ConvertedCodePage(destinationCode: int.parse(destinationCode),
-                                 bookie: bookie, bookingEventLists: bookingEventLists, notConvertedEvents: notConvertedEvents,));
-                              }),
-                              child: Text('view details',
-                                  style: TextStyle(
-                                      color: Colors.green[700],
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Colors.green[700])),
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: RefreshIndicator(
+            onRefresh: () async {
+              _accountCubit.loginUser(email: email, password: password);
+              await _accountCubit.getConversionHistory();
+            },
+            child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: SizedBox(
+                    width: mediaQueryData.size.width,
+                    child: SingleChildScrollView(
+                        child: Column(children: [
+                      SizedBox(height: 16.v),
+                      Column(children: [
+                        _buildTelacoinsBalance(context),
+                        SizedBox(height: 24.v),
+                        Divider(),
+                        SizedBox(height: 23.v),
+                        _buildBetCodeSelector(context),
+                        SizedBox(height: 14.v),
+                        _buildFrameNine(context),
+                        SizedBox(height: 14.v),
+                        if (isConverted) ...[
+                          CustomElevatedButton(
+                            text: "Copy code",
+                            margin: EdgeInsets.symmetric(horizontal: 20.h),
+                            leftIcon: Container(
+                                margin: EdgeInsets.only(right: 10.h),
+                                child: CustomImageView(
+                                    imagePath: ImageConstant.imgContentcopy,
+                                    height: 24.adaptSize,
+                                    width: 24.adaptSize)),
+                            onPressed: () async {
+                              await Clipboard.setData(
+                                  ClipboardData(text: destinationCode));
+                              Modals.showToast('${destinationCode} copied');
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: (() {
+                                    AppNavigator.pushAndStackPage(context,
+                                        page: ConvertedCodePage(
+                                          destinationCode: destinationCode,
+                                          bookie: bookie,
+                                          bookingEventLists: bookingEventLists,
+                                          notConvertedEvents:
+                                              notConvertedEvents,
+                                        ));
+                                  }),
+                                  child: Text('view details',
+                                      style: TextStyle(
+                                          color: Colors.green[700],
+                                          decoration: TextDecoration.underline,
+                                          decorationColor: Colors.green[700])),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isConverted = false;
+                                    });
+                                  },
+                                  child: Text('convert again',
+                                      style: TextStyle(
+                                          color: Colors.green[700],
+                                          decoration: TextDecoration.underline,
+                                          decorationColor: Colors.green[700])),
+                                ),
+                              ],
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isConverted = false;
-                                });
-                              },
-                              child: Text('convert again',
-                                  style: TextStyle(
-                                      color: Colors.green[700],
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Colors.green[700])),
-                            ),
+                          )
+                        ] else ...[
+                          CustomElevatedButton(
+                            text: "Convert Code",
+                            processing: state is BookingsProcessing,
+                            title: 'Converting...',
+                            isDisabled: !(mNHController.text.isNotEmpty &&
+                                _bookieFromDropdownValue != 'Convert from' &&
+                                _bookieToDropdownValue != 'Convert to'),
+                            buttonTextStyle: TextStyle(
+                                color: !(mNHController.text.isNotEmpty &&
+                                        _bookieFromDropdownValue !=
+                                            'Convert from' &&
+                                        _bookieToDropdownValue != 'Convert to')
+                                    ? Color(0xFF858287)
+                                    : Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400),
+                            margin: EdgeInsets.symmetric(horizontal: 20.h),
+                            onPressed: () {
+                              _accountCubit.convertBetCode(
+                                  from: fromId ?? '',
+                                  to: toId ?? '',
+                                  bookingCode: mNHController.text,
+                                  apiKey: '');
+                            },
+                          ),
+                        ],
+                        SizedBox(height: 24.v),
+                        Divider(),
+                        SizedBox(height: 23.v),
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 20.h),
+                                child: Row(children: [
+                                  CustomImageView(
+                                      imagePath:
+                                          ImageConstant.imgIcRoundHistory,
+                                      height: 24.adaptSize,
+                                      width: 24.adaptSize,
+                                      margin: EdgeInsets.only(bottom: 1.v)),
+                                  Padding(
+                                      padding: EdgeInsets.only(left: 4.h),
+                                      child: Text("Conversion History",
+                                          style: CustomTextStyles
+                                              .titleMediumBlack900Bold))
+                                ]))),
+                        SizedBox(height: 16.v),
+                        if (state is ConverterHistoryLoading) ...[
+                          ProgressIndicators.circularProgressBar()
+                        ] else ...[
+                          if (convertionHistoties?.isNotEmpty ?? false) ...[
+                            _buildSingleConversion(context)
+                          ] else ...[
+                            SizedBox(height: 24.v),
+                            Text(
+                                "Start converting betcodes from 200 available bookies!",
+                                style: CustomTextStyles.labelLargeBlack900),
+                            SizedBox(height: 10.v),
+                            _buildBuyTellacoins(context),
+                            SizedBox(height: 11.v),
+                            Container(
+                                height: 198.v,
+                                width: 193.h,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 28.h, vertical: 25.v),
+                                child: CustomImageView(
+                                    fit: BoxFit.cover,
+                                    imagePath:
+                                        ImageConstant.imgIllustrationStartup,
+                                    width: MediaQuery.sizeOf(context).width,
+                                    alignment: Alignment.bottomLeft))
                           ],
-                        ),
-                      )
-                    ] else ...[
-                      CustomElevatedButton(
-                        text: "Convert Code",
-                        processing: state is BookingsProcessing,
-                        title: 'Converting...',
-                        isDisabled: !(mNHController.text.isNotEmpty &&
-                    _bookieFromDropdownValue != 'Convert from' &&
-                    _bookieToDropdownValue != 'Convert to'),
-                        buttonTextStyle: TextStyle(
-                            color: !(mNHController.text.isNotEmpty &&
-                    _bookieFromDropdownValue != 'Convert from' &&
-                    _bookieToDropdownValue != 'Convert to')
-                                ? Color(0xFF858287)
-                                : Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400),
-                        margin: EdgeInsets.symmetric(horizontal: 20.h),
-                        onPressed: () {
-
-                          
-                          _accountCubit.convertBetCode(
-                              from: fromId ?? '',
-                              to: toId ?? '',
-                              bookingCode: mNHController.text,
-                              apiKey: '');
-                        },
-                      ),
-                    ],
-                    SizedBox(height: 24.v),
-                    Divider(),
-                    SizedBox(height: 23.v),
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 20.h),
-                            child: Row(children: [
-                              CustomImageView(
-                                  imagePath: ImageConstant.imgIcRoundHistory,
-                                  height: 24.adaptSize,
-                                  width: 24.adaptSize,
-                                  margin: EdgeInsets.only(bottom: 1.v)),
-                              Padding(
-                                  padding: EdgeInsets.only(left: 4.h),
-                                  child: Text("Conversion History",
-                                      style: CustomTextStyles
-                                          .titleMediumBlack900Bold))
-                            ]))),
-                    SizedBox(height: 16.v),
-                    _buildSingleConversion(context),
-                    SizedBox(height: 17.v),
-                    Text(
-                        "Start converting betcodes from 200 available bookies!",
-                        style: CustomTextStyles.labelLargeBlack900),
-                    SizedBox(height: 10.v),
-                    _buildBuyTellacoins(context),
-                    SizedBox(height: 11.v),
-                    Container(
-                        height: 198.v,
-                        width: 193.h,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 28.h, vertical: 25.v),
-                        child: CustomImageView(
-                            fit: BoxFit.cover,
-                            imagePath: ImageConstant.imgIllustrationStartup,
-                            width: MediaQuery.sizeOf(context).width,
-                            alignment: Alignment.bottomLeft))
-                  ])
-                ]))));
+                        ],
+                      ]),
+                      SizedBox(height: 24.v),
+                    ])))),
+          ),
+        );
       },
     ));
   }
@@ -369,7 +411,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                                             top: 8.v, bottom: 7.v)),
                                     Padding(
                                         padding: EdgeInsets.only(left: 6.h),
-                                        child: Text("2000",
+                                        child: Text(balance,
                                             style: CustomTextStyles
                                                 .headlineLargeWhiteA700))
                                   ])
@@ -391,77 +433,84 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
   }
 
   Widget _buildBetCodeSelector(BuildContext context) {
-    return Container(
-        width: double.maxFinite,
-        padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 9.v),
-        decoration: AppDecoration.fillWhiteA,
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Expanded(
-            flex: 8,
-            child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.v),
-                child: CustomDropDown(
-                    suffix: Container(
-                      margin: EdgeInsets.only(
-                        right: 8.h,
+    return GestureDetector(
+      onTap: () {
+        if (_addressSpinnerItems.isEmpty) {
+          _accountCubit.getBookies();
+        }
+      },
+      child: Container(
+          width: double.maxFinite,
+          padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 9.v),
+          decoration: AppDecoration.fillWhiteA,
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(
+              flex: 8,
+              child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5.v),
+                  child: CustomDropDown(
+                      suffix: Container(
+                        margin: EdgeInsets.only(
+                          right: 8.h,
+                        ),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgArrowdropdown,
+                          color: Colors.green,
+                          height: 24.adaptSize,
+                          width: 24.adaptSize,
+                        ),
                       ),
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowdropdown,
-                        color: Colors.green,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                      ),
-                    ),
-                    icon: SizedBox.shrink(),
-                    hintText: "Convert from",
-                    items: _addressSpinnerItems,
-                    onChanged: (value) {
-                      _bookieFromDropdownValue = value ?? 'Convert from';
+                      icon: SizedBox.shrink(),
+                      hintText: "Convert from",
+                      items: _addressSpinnerItems,
+                      onChanged: (value) {
+                        _bookieFromDropdownValue = value ?? 'Convert from';
 
-                      int index = _addressSpinnerItems.indexOf(value);
-                      fromId =
-                          _accountCubit.viewModel.bookiesBookieFrom[index - 1];
-                    })),
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          CustomImageView(
-              imagePath: ImageConstant.imgSwapHoriz,
-              height: 30.adaptSize,
-              width: 30.adaptSize),
-          SizedBox(
-            width: 5,
-          ),
-          Expanded(
-            flex: 8,
-            child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.v),
-                child: CustomDropDown(
-                    suffix: Container(
-                      margin: EdgeInsets.only(
-                        right: 8.h,
+                        int index = _addressSpinnerItems.indexOf(value);
+                        fromId = _accountCubit
+                            .viewModel.bookiesBookieFrom[index - 1];
+                      })),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            CustomImageView(
+                imagePath: ImageConstant.imgSwapHoriz,
+                height: 30.adaptSize,
+                width: 30.adaptSize),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              flex: 8,
+              child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5.v),
+                  child: CustomDropDown(
+                      suffix: Container(
+                        margin: EdgeInsets.only(
+                          right: 8.h,
+                        ),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgArrowdropdown,
+                          color: Colors.green,
+                          height: 24.adaptSize,
+                          width: 24.adaptSize,
+                        ),
                       ),
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowdropdown,
-                        color: Colors.green,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                      ),
-                    ),
-                    icon: SizedBox.shrink(),
-                    hintText: "Convert to",
-                    items: _addressSpinnerItems1,
-                    onChanged: (value) {
-                      _bookieFromDropdownValue = value ?? 'Convert from';
+                      icon: SizedBox.shrink(),
+                      hintText: "Convert to",
+                      items: _addressSpinnerItems1,
+                      onChanged: (value) {
+                        _bookieFromDropdownValue = value ?? 'Convert from';
 
-                      int index = _addressSpinnerItems1.indexOf(value);
-                      toId =
-                          _accountCubit.viewModel.bookiesBookieTo[index - 1];
-                    })),
-          )
-        ]));
+                        int index = _addressSpinnerItems1.indexOf(value);
+                        toId =
+                            _accountCubit.viewModel.bookiesBookieTo[index - 1];
+                      })),
+            )
+          ])),
+    );
   }
 
   Widget _buildFrameNine(BuildContext context) {
@@ -508,15 +557,21 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             separatorBuilder: (context, index) {
               return SizedBox(height: 16.v);
             },
-            itemCount: 4,
+            itemCount: convertionHistoties!.length,
             itemBuilder: (context, index) {
-              return Singleconversion3ItemWidget();
+              return SingleconversionHistory(
+                  convertionHistoties: convertionHistoties![index]);
             }));
   }
 
   Widget _buildBuyTellacoins(BuildContext context) {
     return CustomOutlinedButton(
-        text: "Buy Tellacoins", margin: EdgeInsets.symmetric(horizontal: 20.h));
+      text: "Buy Tellacoins",
+      margin: EdgeInsets.symmetric(horizontal: 20.h),
+      onPressed: () {
+        onTapBtnPlus(context);
+      },
+    );
   }
 
   onTapBtnPlus(BuildContext context) {

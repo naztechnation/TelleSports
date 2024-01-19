@@ -267,61 +267,30 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-  // Future<void> addConversionHistory({
-  //   required String sourceCode,
-  //   required String destinationCode,
-  //   required String bookieTo,
-  //   required String bookieFrom,
-  //   required String status,
-  // }) async {
-  //   try {
-  //     emit(ConverterHistoryLoading());
+  
 
-  //     final history = await bookingRepository.addConversionHistory(
-  //         bookieFrom: bookieFrom,
-  //         bookieTo: bookieTo,
-  //         destinationCode: destinationCode,
-  //         status: status,
-  //         sourceCode: sourceCode);
+  Future<void> getConversionHistory() async {
+    try {
+      emit(ConverterHistoryLoading());
 
-  //     emit(ConverterHistoryLoaded(history));
-  //     viewModel.setConverterHistory(history);
-  //   } on ApiException catch (e) {
-  //     emit(ConveterHistoryApiErr(e.message));
-  //   } catch (e) {
-  //     if (e is NetworkException ||
-  //         e is BadRequestException ||
-  //         e is UnauthorisedException ||
-  //         e is FileNotFoundException ||
-  //         e is AlreadyRegisteredException) {
-  //       emit(ConveterHistoryNetworkErr(e.toString()));
-  //     } else {
-  //       rethrow;
-  //     }
-  //   }
-  // }
+      final history = await accountRepository.getConversionHistory();
 
-  // Future<void> getConversionHistory() async {
-  //   try {
-  //     emit(ConverterHistoryLoading());
+     await viewModel.getConverterHistory(history);
 
-  //     final history = await bookingRepository.getConversionHistory();
+      emit(ConverterHistoryLoaded(history));
 
-  //     emit(ConverterHistoryLoaded(history));
-
-  //     viewModel.getConverterHistory(history);
-  //   } on ApiException catch (e) {
-  //     emit(ConveterHistoryApiErr(e.message));
-  //   } catch (e) {
-  //     if (e is NetworkException ||
-  //         e is BadRequestException ||
-  //         e is UnauthorisedException ||
-  //         e is FileNotFoundException ||
-  //         e is AlreadyRegisteredException) {
-  //       emit(ConveterHistoryNetworkErr(e.toString()));
-  //     } else {
-  //       rethrow;
-  //     }
-  //   }
-  // }
+    } on ApiException catch (e) {
+      emit(ConveterHistoryApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(ConveterHistoryNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
 }

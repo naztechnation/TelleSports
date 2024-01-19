@@ -50,13 +50,6 @@ abstract class AccountRepository {
     required String apiKey,
   });
 
-  Future<ConverterHistory> addConversionHistory({
-    required String sourceCode,
-    required String destinationCode,
-    required String bookieTo,
-    required String bookieFrom,
-    required String status,
-  });
 
   Future<ConverterHistory> getConversionHistory();
 

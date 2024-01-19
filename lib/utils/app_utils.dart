@@ -29,6 +29,15 @@ class AppUtils {
     return outputDate;
   }
 
+   static String formatSimpleDate({required String dateTime}) {
+    DateTime parseDate = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateTime);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat('d MMM y hh:mm a');
+    var outputDate = outputFormat.format(inputDate);
+
+    return outputDate;
+  }
+
   static String formatComplexDateOnly({required String dateTime}) {
     DateTime parseDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateTime);
     var inputDate = DateTime.parse(parseDate.toString());

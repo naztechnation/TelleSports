@@ -82,7 +82,7 @@ class AccountViewModel extends BaseViewModel {
   BookiesDetails? get bookiesDetails => _bookiesDetails;
   List<ListElement>? get getUniformLists =>
       _bookiesDetails?.data?.data?.conversion?.dump?.lists ?? [];
-  List<Datum>? get convertionHistoties => _converterHistory?.data ?? [];
+  List<ConverterHistoryData>? get convertionHistoties => _converterHistory?.data ?? [];
 
   List<ListElement> get notConvertedBookies =>
       getUniformLists?.where((p) => !(p.isConverted ?? false)).toList() ?? [];
