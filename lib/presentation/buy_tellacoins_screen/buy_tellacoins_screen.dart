@@ -30,8 +30,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:uuid/uuid.dart';
 
-
-
 class PricingPageScreen extends StatelessWidget {
   const PricingPageScreen({Key? key}) : super(key: key);
 
@@ -40,8 +38,9 @@ class PricingPageScreen extends StatelessWidget {
       create: (BuildContext context) => AccountCubit(
           accountRepository: AccountRepositoryImpl(),
           viewModel: Provider.of<AccountViewModel>(context, listen: false)),
-      child:   BuyTellacoinsScreen());
+      child: BuyTellacoinsScreen());
 }
+
 class BuyTellacoinsScreen extends StatefulWidget {
   BuyTellacoinsScreen({Key? key})
       : super(
@@ -55,7 +54,7 @@ class BuyTellacoinsScreen extends StatefulWidget {
 class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
   late AccountCubit _accountCubit;
 
- String planId = '';
+  String planId = '';
 
   bool eventHasHappened = false;
 
@@ -90,6 +89,48 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
   List<Datum> plans = [];
 
   bool isLoading = false;
+
+  Map<String, String> firstPricing = {
+    "NGN": '500',
+    "AUD": '1.69',
+    "CAD": '1.49',
+    "RWF": '1200',
+    "XAF": '500',
+    "UGX": '4000',
+    "KES": '150',
+    "ZAR": '20',
+    "USD": '1',
+    "GHS": '11.47',
+    "TZS": '2500',
+  };
+
+  Map<String, String> secondPricing = {
+    "NGN": '1000',
+    "AUD": '2.69',
+    "CAD": '2.99',
+    "RWF": '1200',
+    "XAF": '1000',
+    "UGX": '8000',
+    "KES": '300',
+    "ZAR": '35',
+    "USD": '1.99',
+    "GHS": '21',
+    "TZS": '4000',
+  };
+
+  Map<String, String> thirdPricing = {
+    "NGN": '2000',
+    "AUD": '3.69',
+    "CAD": '5.99',
+    "RWF": '1200',
+    "XAF": '2000',
+    "UGX": '16000',
+    "KES": '600',
+    "ZAR": '70',
+    "USD": '2.99',
+    "GHS": '40',
+    "TZS": '8000',
+  };
 
   Future<void> checkEventStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -166,7 +207,9 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
                   //       info: info,
                   //     )),
 
-      Modals.showToast('Payment Processed Successfully.',)
+                  Modals.showToast(
+                    'Payment Processed Successfully.',
+                  )
                 }
             });
       }
@@ -176,55 +219,17 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
     }
   }
 
-  final List<Map<String, dynamic>> myList = [
-    {
-      'amount': 'N2000',
-      'title': 'Community leader',
-      'color': Color(0xFF1E654A),
-      'bg': Color(0xFF84CBB0),
-      'body': [
-        '150 Tellacoins',
-        'Create and manage a community.',
-        'Earn rewards and money through your community.'
-      ],
-      'isCommunity': true,
-    },
-    {
-      'amount': 'N1500',
-      'title': 'Regular',
-      'color': Color(0xFF1E654A),
-      'bg': Color(0xFF84CBB0),
-      'body': [
-        '100 Tellacoins',
-        'Join communities and connect with other users.',
-      ],
-      'isFlagTrue': false,
-    },
-    {
-      'amount': 'N700',
-      'title': 'Starter',
-      'color': Color(0xFF1E654A),
-      'bg': Color(0xFF84CBB0),
-      'body': [
-        '50 Tellacoins',
-        'Join communities and connect with other users.',
-      ],
-      'isFlagTrue': false,
-    },
-  ];
-
-
-    @override
+  @override
   void initState() {
     transactionId = uuid.v1();
     _asyncInitMethod();
     getUserData();
     checkEventStatus();
-    
+
     super.initState();
   }
 
-   void _asyncInitMethod() {
+  void _asyncInitMethod() {
     _accountCubit = context.read<AccountCubit>();
     _accountCubit.plansList();
   }
@@ -234,110 +239,125 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
     mediaQueryData = MediaQuery.of(context);
 
     return SafeArea(
-      child: BlocConsumer<AccountCubit, AccountStates>(
-            listener: (context, state) {
-               if (state is ReconfirmPayLoaded) {
-                
+      child:
+          BlocConsumer<AccountCubit, AccountStates>(listener: (context, state) {
+        if (state is ReconfirmPayLoaded) {
+          if (state.userData.success!) {
+            removeTime();
 
-                if (state.userData.success!) {
+            Modals.showToast("Payment confirmed successfully",
+                messageType: MessageType.success);
+          } else {
+            removeTime();
 
-                  removeTime();
+            Modals.showToast('This transaction has already been confirmed');
 
-                   
-
-                      Modals.showToast("Payment confirmed successfully", messageType: MessageType.success);
-                }else{
-                  removeTime();
-
-                  Modals.showToast('This transaction has already been confirmed');
-                  
-                  AppNavigator.pushAndReplacePage(context,
-                              page: LandingPage(
-                               
-                              ));
-                }
-              }
-            },
-            builder: (context, state) {
-              if (state is AccountProcessing) {
-                return Container(
-                    color: Colors.white,
-                    height: AppUtils.deviceScreenSize(context).height,
-                    width: AppUtils.deviceScreenSize(context).width,
-                    child: const LoadingPage(length: 20));
-              } else if (state is SubscriptionProcessing) {
-                return Container(
-                    color: Colors.white,
-                    height: AppUtils.deviceScreenSize(context).height,
-                    width: AppUtils.deviceScreenSize(context).width,
-                    child: const LoadingPage(length: 20));
-              } else if (state is ReconfirmPayProcessing) {
-                return Container(
-                    color: Colors.white,
-                    height: AppUtils.deviceScreenSize(context).height,
-                    width: AppUtils.deviceScreenSize(context).width,
-                    child: const LoadingPage(length: 20));
-              }  else if (state is SubscriptionNetworkErr) {
-               
-                return EmptyWidget(
-                  title: 'Network error',
-                  description: state.message,
-                  onRefresh: () => _accountCubit
-                      .confirmSubscriptionn(txId, url, planId)
-                      .then((value) => {Modals.showToast(txId)}),
-                );
-              } else if (state is SubscriptionApiErr) {
-                return EmptyWidget(
-                  title: 'Network error',
-                  description: state.message,
-                  onRefresh: () => _accountCubit
-                      .confirmSubscriptionn(txId, url, planId)
-                      .then((value) => {}),
-                );
-              } else if (state is SubscriptionLoaded) {
-                _accountCubit.plansList();
-              }
-              //  else if (state is CurrencyLoaded) {
-              //   _accountCubit.plansList();
-              //   selectedCurrency = '';
-              // }
-               else if (state is AccountNetworkErr) {
-                return EmptyWidget(
-                  title: 'Network error',
-                  description: state.message,
-                  onRefresh: () => _accountCubit.plansList(),
-                );
-              } else if (state is AccountApiErr) {
-                return EmptyWidget(
-                  title: 'Network error',
-                  description: state.message,
-                  onRefresh: () => _accountCubit.plansList(),
-                );
-              } else if (state is PlansLoaded) {
-                plans = state.plansList.data ?? [];}
-                return (plans.isEmpty)
-                    ? const Center(child: Text('No Plans Available'))
-                    : Scaffold(
-          appBar: _buildAppBar(context),
-          body: Container(
-            width: double.maxFinite,
-            padding: EdgeInsets.symmetric(vertical: 21.v),
-            child: Column(
-              children: [
-                _buildTelacoinsBalance(context),
-                SizedBox(height: 16.v),
-                _buildCashTellacoins(context),
-                SizedBox(height: 16.v),
-                Divider(
-                  color: appTheme.gray50001,
+            AppNavigator.pushAndReplacePage(context, page: LandingPage());
+          }
+        }
+      }, builder: (context, state) {
+        if (state is AccountProcessing) {
+          return Container(
+              color: Colors.white,
+              height: AppUtils.deviceScreenSize(context).height,
+              width: AppUtils.deviceScreenSize(context).width,
+              child: const LoadingPage(length: 20));
+        } else if (state is SubscriptionProcessing) {
+          return Container(
+              color: Colors.white,
+              height: AppUtils.deviceScreenSize(context).height,
+              width: AppUtils.deviceScreenSize(context).width,
+              child: const LoadingPage(length: 20));
+        } else if (state is ReconfirmPayProcessing) {
+          return Container(
+              color: Colors.white,
+              height: AppUtils.deviceScreenSize(context).height,
+              width: AppUtils.deviceScreenSize(context).width,
+              child: const LoadingPage(length: 20));
+        } else if (state is SubscriptionNetworkErr) {
+          return EmptyWidget(
+            title: 'Network error',
+            description: state.message,
+            onRefresh: () => _accountCubit
+                .confirmSubscriptionn(txId, url, planId)
+                .then((value) => {Modals.showToast(txId)}),
+          );
+        } else if (state is SubscriptionApiErr) {
+          return EmptyWidget(
+            title: 'Network error',
+            description: state.message,
+            onRefresh: () => _accountCubit
+                .confirmSubscriptionn(txId, url, planId)
+                .then((value) => {}),
+          );
+        } else if (state is SubscriptionLoaded) {
+          _accountCubit.plansList();
+        }
+        //  else if (state is CurrencyLoaded) {
+        //   _accountCubit.plansList();
+        //   selectedCurrency = '';
+        // }
+        else if (state is AccountNetworkErr) {
+          return EmptyWidget(
+            title: 'Network error',
+            description: state.message,
+            onRefresh: () => _accountCubit.plansList(),
+          );
+        } else if (state is AccountApiErr) {
+          return EmptyWidget(
+            title: 'Network error',
+            description: state.message,
+            onRefresh: () => _accountCubit.plansList(),
+          );
+        } else if (state is PlansLoaded) {
+          plans = state.plansList.data ?? [];
+        }
+        return (plans.isEmpty)
+            ? const Center(child: Text('No Plans Available'))
+            : Scaffold(
+                appBar: _buildAppBar(context),
+                body: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(vertical: 21.v),
+                  child: Column(
+                    children: [
+                      _buildTelacoinsBalance(context),
+                      SizedBox(height: 16.v),
+                      _buildCashTellacoins(context),
+                      SizedBox(height: 16.v),
+                      Divider(
+                        color: appTheme.gray50001,
+                      ),
+                      SizedBox(height: 15.v),
+                      _buildCommunityLeader(context),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 15.v),
-                _buildCommunityLeader(context),
-              ],
-            ),
-          ),
-        );
-  }),
+                bottomNavigationBar: (eventHasHappened )
+            ? SizedBox(
+                height: 100,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: CustomElevatedButton(
+                          onPressed: () {
+                            reconfirmTransaction();
+                          },
+                          processing: isLoading,
+                       text:  'Reconfirm payment'
+                       ),
+                    )
+                  ],
+                ))
+            : const SizedBox.shrink(),
+              );
+
+              
+      }),
     );
   }
 
@@ -458,7 +478,8 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
         leftIcon: CustomImageView(
           imagePath: ImageConstant.cash,
         ),
-        onPressed: () => AppNavigator.pushAndStackPage(context, page: WithdrawTellaCoins()),
+        onPressed: () =>
+            AppNavigator.pushAndStackPage(context, page: WithdrawTellaCoins()),
         text: "  Cash Tellacoins",
         margin: EdgeInsets.symmetric(horizontal: 20.h));
   }
@@ -478,28 +499,124 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
               height: 24.v,
             );
           },
-          itemCount: myList.length,
+          itemCount: plans.length,
           itemBuilder: (context, index) {
             return CommunityleaderItemWidget(
-              data: myList[index],
-              body: myList[index]['body'],
+              plans: plans[index],
+              onTap: () {
+               
+                setState(() {
+                  selectedPlan = plans[index].name ?? '';
+                  planId = plans[index].id.toString();
+                });
+                Modals.showBottomSheetModal(context,
+                    isScrollControlled: false,
+                    isDissmissible: true,
+                    heightFactor: 0.7,
+                    page: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14.0, vertical: 22.0),
+                            child: Text('To Purchase Tellacoins Pay With...',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        Colors.black)),
+                          ),
+                          const Divider(),
+                          const SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: (() {
+                              Navigator.pop(context);
+                              
+
+                              Modals.showDialogModal(context,
+                                      page: _getCurrency('flutterwave'))
+                                  .then((value) => {
+                                        if (selectedCurrency == '')
+                                          {}
+                                        else
+                                          {
+                                            if (selectedCurrency == 'NGN')
+                                              {
+                                                _handlePaymentInitialization(
+                                                    info: plans[index].price ??
+                                                        ''),
+                                              }
+                                            else
+                                              {
+                                                _handlePaymentInitialization(
+                                                    info: plans[index].price ??
+                                                        ''),
+                                              }
+                                          }
+                                      });
+                            }),
+                            child: Container(
+                             
+                              padding: const EdgeInsets.all(12.0),
+                              width: MediaQuery.of(context).size.width,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  
+                                  Text('Flutterwave',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black)),
+                                          Icon(Icons.arrow_forward_ios)
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 5),
+                          const Divider(),
+                                                         
+                          const SizedBox(height: 45),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.lock,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 13,
+                              ),
+                              Text('Secured Payment',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary)),
+                            ],
+                          ),
+                        ]));
+             
+              },
             );
           },
         ),
       ),
     );
+
+    
   }
 
-
-
-   Future<void> markEventAsHappened({required String transactId,required String plansId}) async {
-    
+  Future<void> markEventAsHappened(
+      {required String transactId, required String plansId}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final currentTimestamp = DateTime.now().millisecondsSinceEpoch;
     prefs.setInt('eventTimestamp', currentTimestamp);
- prefs.setString('txId', transactId);
+    prefs.setString('txId', transactId);
     prefs.setString('planId', plansId);
-   
+
     setState(() {
       eventHasHappened = true;
     });
@@ -512,23 +629,103 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
     String transactionId = prefs.getString('txId') ?? '';
     String accessToken = await StorageHandler.getUserToken() ?? '';
 
-    if(planIdentity.isNotEmpty && transactionId.isNotEmpty && accessToken.isNotEmpty){
-      
+    if (planIdentity.isNotEmpty &&
+        transactionId.isNotEmpty &&
+        accessToken.isNotEmpty) {
       setState(() {
         isLoading = true;
       });
       await _accountCubit.reconfirmPayment(
-        transactionId: transactionId,
-        planId: planIdentity,
-        accessToken: accessToken);
-         setState(() {
+          transactionId: transactionId,
+          planId: planIdentity,
+          accessToken: accessToken);
+      setState(() {
         isLoading = false;
       });
-    }else{
+    } else {
       Modals.showToast('cant verify at the moment');
-       
     }
+  }
 
-   
+  Widget _getCurrency(String paymentType) {
+    List<String> currencies = [];
+    if (paymentType == 'flutterwave') {
+      currencies = [
+        "NGN",
+        "AUD",
+        "CAD",
+        "RWF",
+        "XAF",
+        "UGX",
+        "KES",
+        "ZAR",
+        "USD",
+        "GHS",
+        "TZS",
+      ];
+    } else {
+      currencies = [
+        "NGN",
+      ];
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Text(
+            'Choose currency to pay with...'.toUpperCase(),
+            textAlign: TextAlign.start,
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500),
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Divider(height: 1),
+        const SizedBox(height: 8),
+        Expanded(
+          child: ListView(
+            shrinkWrap: true,
+            children: currencies
+                .map((currency) => ListTile(
+                      onTap: () => {_handleCurrencyTap(currency)},
+                      title: Column(
+                        children: [
+                          Text(
+                            currency,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 4),
+                          const Divider(height: 1)
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _handleCurrencyTap(String currency) {
+    setState(() {
+      selectedCurrency = currency;
+      if (selectedPlan != '') {
+        if (selectedPlan == 'Starter') {
+          amount = firstPricing[selectedCurrency] ?? '';
+        } else if (selectedPlan == 'Regular') {
+          amount = secondPricing[selectedCurrency] ?? '';
+        } else if (selectedPlan == 'Community leader') {
+          amount = thirdPricing[selectedCurrency] ?? '';
+        }
+      }
+    });
+    Navigator.pop(context);
   }
 }

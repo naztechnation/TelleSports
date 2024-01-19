@@ -575,6 +575,6 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
   }
 
   onTapBtnPlus(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: BuyTellacoinsScreen());
+    AppNavigator.pushAndStackPage(context, page: PricingPageScreen());
   }
 }

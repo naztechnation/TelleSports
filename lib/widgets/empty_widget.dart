@@ -15,37 +15,39 @@ class EmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // const ImageView.svg(AppImages.icEmptyIcon),
-            const SizedBox(height: 25),
-            Text(title,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
-            if (description != null) ...[
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // const ImageView.svg(AppImages.icEmptyIcon),
               const SizedBox(height: 25),
-              Text(description!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w400))
+              Text(title,
+                  style:
+                      const TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
+              if (description != null) ...[
+                const SizedBox(height: 25),
+                Text(description!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w400))
+              ],
+              if (onRefresh != null) ...[
+                const SizedBox(height: 25),
+      
+                CustomElevatedButton(
+                                      title: 'Authenticating...',
+                                      onPressed: onRefresh!,
+                                      text: btnText,
+                                      buttonTextStyle:  TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 4.h)),
+                
+              ]
             ],
-            if (onRefresh != null) ...[
-              const SizedBox(height: 25),
-
-              CustomElevatedButton(
-                                    title: 'Authenticating...',
-                                    onPressed: onRefresh!,
-                                    text: btnText,
-                                    buttonTextStyle:  TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h)),
-              
-            ]
-          ],
+          ),
         ),
       ),
     );

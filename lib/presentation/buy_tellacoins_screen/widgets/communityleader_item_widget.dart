@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 
+import '../../../model/auth_model/plans_list.dart';
 import '../../../widgets/custom_outlined_button.dart';
 
 // ignore: must_be_immutable
 class CommunityleaderItemWidget extends StatelessWidget {
-  final List<String> body;
-  final Map<String, dynamic> data;
+  final Datum plans;
+   final Function() onTap;
 
-  const CommunityleaderItemWidget({
+    CommunityleaderItemWidget({
     Key? key,
-    required this.body,
-    required this.data,
+    required this.plans, required this.onTap,
   }) : super(
           key: key,
         );
@@ -32,7 +32,7 @@ class CommunityleaderItemWidget extends StatelessWidget {
             height: 105.v,
             width: 350.h,
             decoration: BoxDecoration(
-              color: data['color'],
+              color: Color(0xFF1E654A),
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
             ),
             child: Stack(
@@ -47,7 +47,6 @@ class CommunityleaderItemWidget extends StatelessWidget {
                 ),
                 CustomImageView(
                   color: Color(0xFF144432),
-
                   imagePath: ImageConstant.imgEllipse85,
                   height: 40.v,
                   width: 288.h,
@@ -67,20 +66,20 @@ class CommunityleaderItemWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${data['title']}".toUpperCase(),
+                                "${plans.name}".toUpperCase(),
                                 style:
                                     CustomTextStyles.bodyMediumDMSansWhiteA700,
                               ),
                               SizedBox(height: 1.v),
                               Text(
-                                "${data['amount']}".toUpperCase(),
+                                "${plans.price}".toUpperCase(),
                                 style: CustomTextStyles
                                     .headlineLargeInterWhiteA700,
                               ),
                             ],
                           ),
                         ),
-                        if (data['isCommunity'] == true)
+                        if (plans.name == "Community leader")
                           CustomElevatedButton(
                             height: 23.v,
                             width: 82.h,
@@ -97,36 +96,37 @@ class CommunityleaderItemWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15.v),
-          for (String bodyItem in body)
-            Padding(
-              padding: EdgeInsets.only(left: 12.h),
-              child: Row(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgIcRoundCheck,
-                    height: 17.adaptSize,
-                    width: 17.adaptSize,
-                    margin: EdgeInsets.only(bottom: 1.v),
-                  ),
-                  Expanded(
-                    flex: 8,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 4.h),
-                      child: Text(
-                        bodyItem,
-                        style: CustomTextStyles.titleSmallBluegray900Bold,
-                      ),
+          // for (String bodyItem in body)
+          Padding(
+            padding: EdgeInsets.only(left: 12.h),
+            child: Row(
+              children: [
+                CustomImageView(
+                  imagePath: ImageConstant.imgIcRoundCheck,
+                  height: 17.adaptSize,
+                  width: 17.adaptSize,
+                  margin: EdgeInsets.only(bottom: 1.v),
+                ),
+                Expanded(
+                  flex: 8,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 4.h),
+                    child: Text(
+                      plans.functionality ?? '',
+                      style: CustomTextStyles.titleSmallBluegray900Bold,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
           SizedBox(height: 15.v),
-          if (data['isCommunity'] == true) ...[
+          if (plans.name == "Community leader") ...[
             CustomElevatedButton(
               text: "Buy now",
               margin: EdgeInsets.symmetric(horizontal: 12.h),
               alignment: Alignment.center,
+              onPressed: onTap,
             ),
           ] else ...[
             _buildBuyTellacoins(context),
@@ -139,9 +139,9 @@ class CommunityleaderItemWidget extends StatelessWidget {
 
   Widget _buildBuyTellacoins(BuildContext context) {
     return CustomOutlinedButton(
-        text: "Buy Now", margin: EdgeInsets.symmetric(horizontal: 20.h),
-        onPressed: () {
-        },
-        );
+      text: "Buy Now",
+      margin: EdgeInsets.symmetric(horizontal: 20.h),
+      onPressed: onTap,
+    );
   }
 }
