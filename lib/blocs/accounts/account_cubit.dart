@@ -26,7 +26,9 @@ class AccountCubit extends Cubit<AccountStates> {
       final user = await accountRepository.registerUser(
         email: email,
         password: password,
-        phone: phoneNumber, username: username, confirmPassword: confirmPassword,
+        phone: phoneNumber,
+        username: username,
+        confirmPassword: confirmPassword,
       );
 
       // await viewModel.setToken(user.token ?? '');
@@ -71,12 +73,15 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-  Future<void> verifyCode({required String code, required String email, required String url}) async {
+  Future<void> verifyCode(
+      {required String code,
+      required String email,
+      required String url}) async {
     try {
       emit(AccountLoading());
 
-      final userData =
-          await accountRepository.verifyCode(code: code,  email: email, url: url);
+      final userData = await accountRepository.verifyCode(
+          code: code, email: email, url: url);
 
       // await viewModel.setToken(userData.token ?? '');
       emit(AccountLoaded(userData));
@@ -121,7 +126,6 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-
   Future<void> forgotPassword({
     required String email,
   }) async {
@@ -148,7 +152,6 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-   
   Future<void> resetPassword({
     required String email,
     required String password,
@@ -158,7 +161,9 @@ class AccountCubit extends Cubit<AccountStates> {
       emit(ResetPasswordLoading());
 
       final user = await accountRepository.resetPassword(
-        password: password, email: email, confirmPassword: confirmPassword,
+        password: password,
+        email: email,
+        confirmPassword: confirmPassword,
       );
 
       emit(ResetPasswordLoaded(user));
@@ -186,7 +191,9 @@ class AccountCubit extends Cubit<AccountStates> {
       emit(ResetPasswordLoading());
 
       final user = await accountRepository.changePassword(
-        password: password,  confirmPassword: confirmPassword, oldPassword: oldPassword,
+        password: password,
+        confirmPassword: confirmPassword,
+        oldPassword: oldPassword,
       );
 
       emit(ResetPasswordLoaded(user));
@@ -205,7 +212,7 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-   Future<void> getBookies() async {
+  Future<void> getBookies() async {
     try {
       emit(AccountProcessing());
 
@@ -229,7 +236,6 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-
   Future<void> convertBetCode({
     required String from,
     required String to,
@@ -251,7 +257,7 @@ class AccountCubit extends Cubit<AccountStates> {
       } else {
         emit(BookingsLoaded(bookings));
       }
-       viewModel.getBookiesDetails(bookings);
+      viewModel.getBookiesDetails(bookings);
     } on ApiException catch (e) {
       emit(BookingsApiErr(e.message));
     } catch (e) {
@@ -267,18 +273,15 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-  
-
   Future<void> getConversionHistory() async {
     try {
       emit(ConverterHistoryLoading());
 
       final history = await accountRepository.getConversionHistory();
 
-     await viewModel.getConverterHistory(history);
+      await viewModel.getConverterHistory(history);
 
       emit(ConverterHistoryLoaded(history));
-
     } on ApiException catch (e) {
       emit(ConveterHistoryApiErr(e.message));
     } catch (e) {
@@ -294,7 +297,7 @@ class AccountCubit extends Cubit<AccountStates> {
     }
   }
 
-Future<void> plansList() async {
+  Future<void> plansList() async {
     try {
       emit(AccountProcessing());
 
@@ -310,6 +313,61 @@ Future<void> plansList() async {
           e is FileNotFoundException ||
           e is AlreadyRegisteredException) {
         emit(AccountNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> reconfirmPayment({
+    required String planId,
+    required String transactionId,
+    required String accessToken,
+  }) async {
+    try {
+      emit(ReconfirmPayProcessing());
+
+      final transaction = await accountRepository.reconfirmTransaction(
+        planId: planId,
+        transactionId: transactionId,
+        accessToken: accessToken,
+      );
+ 
+
+      emit(ReconfirmPayLoaded(transaction));
+    } on ApiException catch (e) {
+      emit(CurrencyApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(CurrencyNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> confirmSubscriptionn(String transactionId, String url, String planId) async {
+    try {
+      emit(SubscriptionProcessing());
+
+      final transactionResponse = await accountRepository.confirmSubscription(
+          id: transactionId, url: url, plan: planId);
+
+      emit(SubscriptionLoaded(transactionResponse));
+      await viewModel.getPaymentStatus(transactionResponse);
+    } on ApiException catch (e) {
+      emit(SubscriptionApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(SubscriptionNetworkErr(e.toString()));
       } else {
         rethrow;
       }

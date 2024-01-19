@@ -85,13 +85,19 @@ class _SplashScreenState extends State<SplashScreen>
                 FadingSlidingWidget(
                   animationController: _animationController,
                   interval: const Interval(0.5, 0.9),
-                  child: CustomIconButton(
-                            height: 98.adaptSize,
-                            width: 98.adaptSize,
-                            padding: EdgeInsets.all(5.h),
-                            decoration: IconButtonStyleHelper.fillPrimary,
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgLightBulb)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(60),
+                    child: CustomIconButton(
+                              height: 98.adaptSize,
+                              width: 98.adaptSize,
+                              padding: EdgeInsets.all(5.h),
+                              decoration: IconButtonStyleHelper.fillPrimary,
+                              child: Padding(
+                                padding: const EdgeInsets.all(18.0),
+                                child: CustomImageView(
+                                    imagePath: ImageConstant.imgLightBulb),
+                              )),
+                  ),
                 ),
                 // const SizedBox(
                 //   width: 6,

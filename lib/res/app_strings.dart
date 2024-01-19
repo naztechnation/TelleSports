@@ -6,7 +6,7 @@ class AppStrings {
 
   ///flutterwave api
   static const String flutterwaveApiKey =
-      "FLWPUBK_TEST-e244b020ccc49bcf667b0e3f26dc056b-X";
+      "FLWPUBK_TEST-62ae24e3e73ba2fbfc4b160200354ffb-X";
 
   ///base url
 

@@ -4,6 +4,7 @@ import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
 import '../auth_model/bookies.dart';
 import '../auth_model/bookies_details.dart';
+import '../auth_model/confirm_subscriptions.dart';
 import '../auth_model/converter_history.dart';
 import 'base_viewmodel.dart';
 
@@ -17,6 +18,8 @@ class AccountViewModel extends BaseViewModel {
 
   String _token = "";
   BookiesList? _bookiesList;
+  ConfirmSubscription? _confirmSubscription;
+
 
 
 
@@ -55,6 +58,13 @@ class AccountViewModel extends BaseViewModel {
     setViewState(ViewState.success);
   }
 
+  Future<void> getPaymentStatus(
+      ConfirmSubscription? confirmSubscription) async {
+    _confirmSubscription = confirmSubscription;
+
+    setViewState(ViewState.success);
+  }
+
 
    String get token => _token;
 
@@ -86,4 +96,7 @@ class AccountViewModel extends BaseViewModel {
 
   List<ListElement> get notConvertedBookies =>
       getUniformLists?.where((p) => !(p.isConverted ?? false)).toList() ?? [];
+
+  bool get paymentStatus => _confirmSubscription?.success ?? false;
+
 }

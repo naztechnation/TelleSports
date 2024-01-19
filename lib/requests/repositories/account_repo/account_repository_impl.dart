@@ -3,8 +3,10 @@ import 'package:tellesports/model/auth_model/register.dart';
 
 import '../../../model/auth_model/bookies.dart';
 import '../../../model/auth_model/bookies_details.dart';
+import '../../../model/auth_model/confirm_subscriptions.dart';
 import '../../../model/auth_model/converter_history.dart';
 import '../../../model/auth_model/plans_list.dart';
+import '../../../model/auth_model/reconfirm_sub.dart';
 import '../../../res/app_strings.dart';
 import '../../../widgets/modals.dart';
 import '../../setup/requests.dart';
@@ -143,4 +145,36 @@ class AccountRepositoryImpl implements AccountRepository {
 
     return PlansList.fromJson(map);
   }
+
+  @override
+  Future<ConfirmSubscription> confirmSubscription({required String? id, required String? plan, required String url})
+   async{
+    var payload = {
+      "id": id,
+      "plan": plan,
+    };
+
+    final map = await Requests().post(url, body: payload);
+
+    return ConfirmSubscription.fromJson(map);
+  }
+  
+  @override
+  Future<ConfirmedSubscription> reconfirmTransaction({required String planId, 
+  required String transactionId, required String accessToken})async{
+    var payload = {
+      "id": transactionId,
+      "plan": planId,
+    };
+
+    final map = await Requests().post(AppStrings.reconfirmPaymentUrl, body: payload,
+     headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $accessToken',
+    });
+    
+
+    return ConfirmedSubscription.fromJson(map);
+  }
+
 }

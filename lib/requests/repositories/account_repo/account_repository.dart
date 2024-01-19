@@ -2,9 +2,11 @@ import 'package:tellesports/model/auth_model/register.dart';
 
 import '../../../model/auth_model/bookies.dart';
 import '../../../model/auth_model/bookies_details.dart';
+import '../../../model/auth_model/confirm_subscriptions.dart';
 import '../../../model/auth_model/converter_history.dart';
 import '../../../model/auth_model/login.dart';
 import '../../../model/auth_model/plans_list.dart';
+import '../../../model/auth_model/reconfirm_sub.dart';
 
 abstract class AccountRepository {
   Future<RegisterUser> registerUser({
@@ -55,5 +57,17 @@ abstract class AccountRepository {
   Future<ConverterHistory> getConversionHistory();
 
   Future<PlansList> getPlansList();
+
+  
+   Future<ConfirmSubscription> confirmSubscription(
+      {required String? id, required String? plan, required String url});
+
+ 
+
+  Future<ConfirmedSubscription> reconfirmTransaction({
+    required String planId,
+    required String transactionId,
+    required String accessToken,
+  });
 
 }

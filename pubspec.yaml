@@ -24,6 +24,9 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   sign_in_with_apple: ^5.0.0
+  uuid: ^4.3.3
+  flutterwave_standard: ^1.0.7
+  shared_preferences: ^2.2.2
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

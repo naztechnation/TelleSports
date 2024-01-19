@@ -4,8 +4,10 @@ import 'package:tellesports/model/auth_model/register.dart';
 
 import '../../model/auth_model/bookies.dart';
 import '../../model/auth_model/bookies_details.dart';
+import '../../model/auth_model/confirm_subscriptions.dart';
 import '../../model/auth_model/converter_history.dart';
 import '../../model/auth_model/plans_list.dart';
+import '../../model/auth_model/reconfirm_sub.dart';
 
 abstract class AccountStates extends Equatable {
   const AccountStates();
@@ -132,6 +134,18 @@ class PlansLoaded extends AccountStates {
   List<Object> get props => [plansList];
 }
 
+class ReconfirmPayProcessing extends AccountStates {
+  @override
+  List<Object> get props => [];
+}
+
+class ReconfirmPayLoaded extends AccountStates {
+  final ConfirmedSubscription userData;
+  const ReconfirmPayLoaded(this.userData);
+  @override
+  List<Object> get props => [userData];
+}
+
 class BookingsError extends AccountStates {
   final String convertedCode;
   const BookingsError(this.convertedCode);
@@ -163,6 +177,46 @@ class ConveterHistoryNetworkErr extends AccountStates {
 class ConveterHistoryApiErr extends AccountStates {
   final String? message;
   const ConveterHistoryApiErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class SubscriptionProcessing extends AccountStates {
+  @override
+  List<Object> get props => [];
+}
+
+class SubscriptionLoaded extends AccountStates {
+  final ConfirmSubscription confirmSubscription;
+  const SubscriptionLoaded(this.confirmSubscription);
+  @override
+  List<Object> get props => [confirmSubscription];
+}
+
+class SubscriptionNetworkErr extends AccountStates {
+  final String? message;
+  const SubscriptionNetworkErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class SubscriptionApiErr extends AccountStates {
+  final String? message;
+  const SubscriptionApiErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class CurrencyNetworkErr extends AccountStates {
+  final String? message;
+  const CurrencyNetworkErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class CurrencyApiErr extends AccountStates {
+  final String? message;
+  const CurrencyApiErr(this.message);
   @override
   List<Object> get props => [message!];
 }
