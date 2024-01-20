@@ -113,6 +113,8 @@ class UserViewModel extends BaseViewModel {
         });
   }
 
+
+  
   String getCurrentTime(int timestampInSeconds) {
     if (timestampInSeconds == '0') {
       return '';

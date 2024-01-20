@@ -32,7 +32,7 @@ class Datum {
   String? name;
   String? tellacoin;
   String? price;
-  String? functionality;
+  List<String>? functionality;
   String? createdAt;
   String? updatedAt;
 
@@ -50,7 +50,7 @@ class Datum {
     name = json['name'];
     tellacoin = json['tellacoin'];
     price = json['price'];
-    functionality = json['functionality'];
+    functionality = json['functionality'].cast<String>();
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }

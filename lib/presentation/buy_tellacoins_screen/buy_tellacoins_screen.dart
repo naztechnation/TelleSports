@@ -190,7 +190,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
             "ussd, card, barter, payattitude, account, banktransfer, mpesa, mobilemoneyghana, mobilemoneyfranco, mobilemoneyuganda, mobilemoneyrwanda, mobilemoneyzambia, nqr",
         customization: Customization(
           title: "Tellasport",
-          //logo: AppImages.ball,
+          logo: ImageConstant.imgNavIcons,
         ),
         isTestMode: true);
     final ChargeResponse response = await flutterwave.charge();
@@ -315,7 +315,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
           plans = state.plansList.data ?? [];
         }
         return (plans.isEmpty)
-            ? const Center(child: Text('No Plans Available'))
+            ? Scaffold(body: const Center(child: Text('No Plans Available')))
             : Scaffold(
                 appBar: _buildAppBar(context),
                 body: Container(
@@ -503,7 +503,10 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
           },
           itemCount: plans.length,
           itemBuilder: (context, index) {
-            return CommunityleaderItemWidget(
+           if(plans[index].name == 'Free Plan'){
+            return SizedBox.shrink();
+           }else{
+             return CommunityleaderItemWidget(
               plans: plans[index],
               onTap: () {
                
@@ -603,6 +606,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
              
               },
             );
+           }
           },
         ),
       ),

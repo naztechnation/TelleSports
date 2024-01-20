@@ -120,6 +120,9 @@ class HomePageState
             horizontal: 20.h,
             vertical: 16.v,
           ),
+          onTap: (){
+            
+          },
         ),
       ],
     );

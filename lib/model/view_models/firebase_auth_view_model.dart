@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tellesports/widgets/modals.dart';
 
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
+import '../../presentation/auth/signin_screen/sign_in_screen.dart';
+import '../../utils/navigator/page_navigator.dart';
 import 'base_viewmodel.dart';
 
 class FirebaseAuthProvider extends BaseViewModel {
@@ -157,11 +160,17 @@ class FirebaseAuthProvider extends BaseViewModel {
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut(BuildContext context) async {
     try {
       _status = true;
 
       await FirebaseAuth.instance.signOut();
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+    await StorageHandler.clearCache();
+    StorageHandler.saveOnboardState('true');
+
+    AppNavigator.pushAndReplacePage(context, page: SigninScreen());
 
       _successMessage = "User signed out successfully";
       _status = false;
@@ -170,6 +179,8 @@ class FirebaseAuthProvider extends BaseViewModel {
       _status = false;
     }
   }
+
+  
 
   String get token => _token;
   String get successMessage => _successMessage;

@@ -10,6 +10,7 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 import '../../../blocs/accounts/account.dart';
 import '../../../core/constants/enums.dart';
 import '../../../model/view_models/account_view_model.dart';
+import '../../../model/view_models/firebase_auth_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
@@ -59,6 +60,8 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+        final user = Provider.of<FirebaseAuthProvider>(context, listen: true);
+
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -79,8 +82,8 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                             Duration(
                               seconds: 3,
                             ), () {
-                          AppNavigator.pushAndReplacePage(context,
-                              page: SigninScreen());
+                                                    user.signOut(context);
+;
                         });
                       } else {
                         Modals.showToast(state.userData.message ?? '',

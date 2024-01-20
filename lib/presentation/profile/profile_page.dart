@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/core/constants/enums.dart';
-import 'package:tellesports/handlers/secure_handler.dart';
-import 'package:tellesports/presentation/auth/signin_screen/sign_in_screen.dart';
+import 'package:tellesports/handlers/secure_handler.dart'; 
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/modals.dart';
 
+import '../../model/view_models/firebase_auth_view_model.dart';
 import '../../widgets/custom_outlined_button.dart';
 import '../chats_settings_screen/chats_settings_screen.dart';
 import '../live_chat/live_chat.dart';
@@ -37,6 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {});
   }
 
+  
+
   @override
   void initState() {
     getUserData();
@@ -46,64 +49,69 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+
+        final user = Provider.of<FirebaseAuthProvider>(context, listen: true);
+
     return SafeArea(
         child: Scaffold(
             appBar: _buildAppBar(context),
             body: Container(
                 width: double.maxFinite,
                 padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 24.v),
-                child: Column(children: [
-                  _buildAvatarFrame(context),
-                  // SizedBox(height: 24.v),
-                  // _buildSettingsFrame(context),
-                  SizedBox(height: 24.v),
-                  _buildShareFrame(context,
-                      text: "Contact support",
-                      image: ImageConstant.imgHelpCenter, onTap: () {
-                    AppNavigator.pushAndStackPage(context,
-                        page: LiveChat(
-                          username: username,
-                          email: email,
-                        ));
-                  }),
-                  SizedBox(height: 24.v),
-                  _buildShareFrame(context,
-                      text: "Change Password",
-                      image: ImageConstant.imgHelpCenter, onTap: () {
-                    AppNavigator.pushAndStackPage(context,
-                        page: CreateNewPasswordScreen());
-                  }),
-                  SizedBox(height: 24.v),
-                  _buildShareFrame(context,
-                      text: "Share Tellasport",
-                      image: ImageConstant.imgShareGray700, onTap: () async {
-                    final result = await Share.shareWithResult(
-                        'check out our mobile app on app store: , and play store:');
-
-                    if (result.status == ShareResultStatus.success) {
-                      Modals.showToast('Thank you for sharing our platform',
-                          messageType: MessageType.success);
-                    }
-                  }),
-                  SizedBox(height: 24.v),
-                  CustomElevatedButton(
-                      text: "Log out",
-                      buttonStyle: CustomButtonStyles.fillRedTL8,
-                      onPressed: () {
-                        onTapLogOut(context);
-                      }),
-                  SizedBox(height: 24.v),
-                  CustomOutlinedButton(
-                      text: "Delete your account",
-                      buttonTextStyle: TextStyle(color: Colors.red),
-                      buttonStyle: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        side: BorderSide(
-                          color: Colors.red,
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    _buildAvatarFrame(context),
+                    // SizedBox(height: 24.v),
+                    // _buildSettingsFrame(context),
+                    SizedBox(height: 24.v),
+                    _buildShareFrame(context,
+                        text: "Contact support",
+                        image: ImageConstant.imgHelpCenter, onTap: () {
+                      AppNavigator.pushAndStackPage(context,
+                          page: LiveChat(
+                            username: username,
+                            email: email,
+                          ));
+                    }),
+                    SizedBox(height: 24.v),
+                    _buildShareFrame(context,
+                        text: "Change Password",
+                        image: ImageConstant.imgHelpCenter, onTap: () {
+                      AppNavigator.pushAndStackPage(context,
+                          page: CreateNewPasswordScreen());
+                    }),
+                    SizedBox(height: 24.v),
+                    _buildShareFrame(context,
+                        text: "Share Tellasport",
+                        image: ImageConstant.imgShareGray700, onTap: () async {
+                      final result = await Share.shareWithResult(
+                          'check out our mobile app on app store: , and play store:');
+                  
+                      if (result.status == ShareResultStatus.success) {
+                        Modals.showToast('Thank you for sharing our platform',
+                            messageType: MessageType.success);
+                      }
+                    }),
+                    SizedBox(height: 24.v),
+                    CustomElevatedButton(
+                        text: "Log out",
+                        buttonStyle: CustomButtonStyles.fillRedTL8,
+                        onPressed: () {
+                          user.signOut(context);
+                        }),
+                    SizedBox(height: 24.v),
+                    CustomOutlinedButton(
+                        text: "Delete your account",
+                        buttonTextStyle: TextStyle(color: Colors.red),
+                        buttonStyle: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          side: BorderSide(
+                            color: Colors.red,
+                          ),
                         ),
-                      ),
-                      onPressed: () {}),
-                ]))));
+                        onPressed: () {}),
+                  ]),
+                ))));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -225,7 +233,5 @@ class _ProfilePageState extends State<ProfilePage> {
         ));
   }
 
-  onTapLogOut(BuildContext context) {
-    AppNavigator.pushAndReplacePage(context, page: SigninScreen());
-  }
+  
 }

@@ -96,7 +96,7 @@ class CommunityleaderItemWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15.v),
-          // for (String bodyItem in body)
+           for (String bodyItem in plans.functionality!)
           Padding(
             padding: EdgeInsets.only(left: 12.h),
             child: Row(
@@ -112,7 +112,7 @@ class CommunityleaderItemWidget extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(left: 4.h),
                     child: Text(
-                      plans.functionality ?? '',
+                      bodyItem,
                       style: CustomTextStyles.titleSmallBluegray900Bold,
                     ),
                   ),
