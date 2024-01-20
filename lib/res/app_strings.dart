@@ -32,6 +32,7 @@ class AppStrings {
   static String conversionHistoryUrl = '${_baseUrl}conversation_history';
   static String getBookiesUrl = '${_baseUrl}bookies';
   static String getNotificationsUrl = '${_baseUrl}notification';
+  static String getNotificationsDetailsUrl(String notifyId) => '${_baseUrl}notification/$notifyId';
   static String userWalletUrl = '${_baseUrl}user_wallet';
   static String converterUrl = '${_baseUrl}convert';
 

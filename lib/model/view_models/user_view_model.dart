@@ -13,6 +13,7 @@ class UserViewModel extends BaseViewModel {
   ImagePicker picker = ImagePicker();
 
   File? imageURl;
+
  
   int _activeTab = 0;
 
@@ -22,6 +23,11 @@ class UserViewModel extends BaseViewModel {
   Future<void> clearImage() async {
     imageURl = null;
     setViewState(ViewState.success);
+  }
+
+
+  getUnreadMessages(){
+
   }
 
   Future<File> fileFromImageUrl(

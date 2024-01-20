@@ -6,6 +6,8 @@ import '../../model/auth_model/bookies.dart';
 import '../../model/auth_model/bookies_details.dart';
 import '../../model/auth_model/confirm_subscriptions.dart';
 import '../../model/auth_model/converter_history.dart';
+import '../../model/auth_model/notifications.dart';
+import '../../model/auth_model/notifications_details.dart';
 import '../../model/auth_model/plans_list.dart';
 import '../../model/auth_model/reconfirm_sub.dart';
 
@@ -146,6 +148,30 @@ class ReconfirmPayLoaded extends AccountStates {
   List<Object> get props => [userData];
 }
 
+class NotificationsLoading extends AccountStates {
+  @override
+  List<Object> get props => [];
+}
+
+class NotificationsLoaded extends AccountStates {
+  final NotificationsList notify;
+  const NotificationsLoaded(this.notify);
+  @override
+  List<Object> get props => [notify];
+}
+
+class NotificationsDetailsLoading extends AccountStates {
+  @override
+  List<Object> get props => [];
+}
+
+class NotificationsDetailsLoaded extends AccountStates {
+  final NotificationsDetails notify;
+  const NotificationsDetailsLoaded(this.notify);
+  @override
+  List<Object> get props => [notify];
+}
+
 class BookingsError extends AccountStates {
   final String convertedCode;
   const BookingsError(this.convertedCode);
@@ -217,6 +243,20 @@ class CurrencyNetworkErr extends AccountStates {
 class CurrencyApiErr extends AccountStates {
   final String? message;
   const CurrencyApiErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class NotificationsNetworkErr extends AccountStates {
+  final String? message;
+  const NotificationsNetworkErr(this.message);
+  @override
+  List<Object> get props => [message!];
+}
+
+class NotificationsApiErr extends AccountStates {
+  final String? message;
+  const NotificationsApiErr(this.message);
   @override
   List<Object> get props => [message!];
 }

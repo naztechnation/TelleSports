@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -368,6 +367,61 @@ class AccountCubit extends Cubit<AccountStates> {
           e is FileNotFoundException ||
           e is AlreadyRegisteredException) {
         emit(SubscriptionNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> getNotifications(
+      ) async {
+    try {
+      emit(NotificationsLoading());
+
+      final notifications = await accountRepository.getNotificationsList(
+       
+        
+      );
+
+      await viewModel.filterUnreadNotifications(notifications);
+
+      emit(NotificationsLoaded(notifications));
+    } on ApiException catch (e) {
+      emit(NotificationsApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(NotificationsNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+
+  Future<void> getNotificationsDetails({required String notifyId}
+      ) async {
+    try {
+      emit(NotificationsDetailsLoading());
+
+      final notifications = await accountRepository.getNotificationsDetails(notifyId: notifyId
+       
+        
+      );
+
+      emit(NotificationsDetailsLoaded(notifications));
+    } on ApiException catch (e) {
+      emit(NotificationsApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(NotificationsNetworkErr(e.toString()));
       } else {
         rethrow;
       }

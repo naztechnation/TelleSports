@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/extentions/custom_string_extension.dart';
+import 'package:tellesports/presentation/notifications/notifications.dart';
 import 'package:tellesports/presentation/view_livescoresone_page/view_livescores_page.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_circleimage.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_five.dart';
 import 'package:tellesports/widgets/app_bar/appbar_title.dart';
@@ -9,6 +12,7 @@ import 'package:tellesports/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
 import '../../handlers/secure_handler.dart';
+import '../../model/view_models/account_view_model.dart';
 import '../convert_betcode_page/convert_betcode_page.dart'; 
 
 
@@ -57,9 +61,12 @@ class HomePageState
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
 
+    final user = Provider.of<AccountViewModel>(context, listen: true);
+
+
     return SafeArea(
       child: Scaffold(
-        appBar: _buildAppBar(context),
+        appBar: _buildAppBar(context, user),
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -86,7 +93,7 @@ class HomePageState
   }
 
  
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, var user) {
     return CustomAppBar(
       leadingWidth: 60.h,
       leading: AppbarLeadingCircleimage(
@@ -114,15 +121,29 @@ class HomePageState
         ),
       ),
       actions: [
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgNotificationsNone,
-          margin: EdgeInsets.symmetric(
-            horizontal: 20.h,
-            vertical: 16.v,
-          ),
-          onTap: (){
-            
-          },
+        Stack(
+          children: [
+           if(user.length != 0)...[
+             Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: Text(user.unReadMessages),),
+            ),
+           ],
+            AppbarTrailingImage(
+              imagePath: ImageConstant.imgNotificationsNone,
+              margin: EdgeInsets.symmetric(
+                horizontal: 20.h,
+                vertical: 16.v,
+              ),
+              onTap: (){
+                AppNavigator.pushAndStackPage(context, page: NotificationsScreen());
+              },
+            ),
+          ],
         ),
       ],
     );

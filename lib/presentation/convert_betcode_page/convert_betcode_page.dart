@@ -95,6 +95,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
     await _accountCubit.getConversionHistory();
 
     await _accountCubit.getBookies();
+    await _accountCubit.getNotifications();
 
     setState(() {
       if (password == '' || email == '') {

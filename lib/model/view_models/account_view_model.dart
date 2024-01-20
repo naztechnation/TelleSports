@@ -1,17 +1,20 @@
-
-
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
 import '../auth_model/bookies.dart';
 import '../auth_model/bookies_details.dart';
 import '../auth_model/confirm_subscriptions.dart';
 import '../auth_model/converter_history.dart';
+import '../auth_model/notifications.dart';
 import 'base_viewmodel.dart';
 
 class AccountViewModel extends BaseViewModel {
-
   BookiesDetails? _bookiesDetails;
   ConverterHistory? _converterHistory;
+
+  int _unreadMessageLength = 0;
+
+  List<NotificationsListData> _notifications = [];
+
   AccountViewModel() {
     getToken();
   }
@@ -20,16 +23,22 @@ class AccountViewModel extends BaseViewModel {
   BookiesList? _bookiesList;
   ConfirmSubscription? _confirmSubscription;
 
+  filterUnreadNotifications(NotificationsList notificationsList) {
+    _notifications = notificationsList.data
+            ?.where((notification) => notification.read == 0)
+            .toList() ??
+        [];
 
-
-
-
- Future<void> getBookie(BookiesList bookie) async {
-    _bookiesList = bookie;
+    _unreadMessageLength = _notifications.length;
 
     setViewState(ViewState.success);
   }
 
+  Future<void> getBookie(BookiesList bookie) async {
+    _bookiesList = bookie;
+
+    setViewState(ViewState.success);
+  }
 
   setToken(String token) async {
     _token = token;
@@ -43,7 +52,7 @@ class AccountViewModel extends BaseViewModel {
     setViewState(ViewState.success);
   }
 
-    getBookiesDetails(BookiesDetails bookiesDetails) {
+  getBookiesDetails(BookiesDetails bookiesDetails) {
     _bookiesDetails = bookiesDetails;
     setViewState(ViewState.success);
   }
@@ -65,16 +74,15 @@ class AccountViewModel extends BaseViewModel {
     setViewState(ViewState.success);
   }
 
+  String get token => _token;
 
-   String get token => _token;
-
-   List<BookiesData> get from =>
+  List<BookiesData> get from =>
       _bookiesList?.data?.where((p) => p.from == '1').toList() ?? [];
 
   List<BookiesData> get to =>
       _bookiesList?.data?.where((p) => p.to == '1').toList() ?? [];
 
-  List<String?> get bookiesFrom => from.map((bookie) => bookie.name).toList() ;
+  List<String?> get bookiesFrom => from.map((bookie) => bookie.name).toList();
 
   List<String?> get bookiesTo => to.map((bookie) => bookie.name).toList();
 
@@ -87,16 +95,18 @@ class AccountViewModel extends BaseViewModel {
   List<String?> get bookiesId =>
       _bookiesList?.data?.map((bookie) => bookie.bookie).toList() ?? [];
 
-      ConverterHistory? get converterHistory => _converterHistory;
+  ConverterHistory? get converterHistory => _converterHistory;
 
   BookiesDetails? get bookiesDetails => _bookiesDetails;
   List<ListElement>? get getUniformLists =>
       _bookiesDetails?.data?.data?.conversion?.dump?.lists ?? [];
-  List<ConverterHistoryData>? get convertionHistoties => _converterHistory?.data ?? [];
+  List<ConverterHistoryData>? get convertionHistoties =>
+      _converterHistory?.data ?? [];
 
   List<ListElement> get notConvertedBookies =>
       getUniformLists?.where((p) => !(p.isConverted ?? false)).toList() ?? [];
 
   bool get paymentStatus => _confirmSubscription?.success ?? false;
 
+  int get unReadMessages => _unreadMessageLength;
 }

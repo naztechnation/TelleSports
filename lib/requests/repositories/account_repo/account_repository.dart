@@ -5,6 +5,8 @@ import '../../../model/auth_model/bookies_details.dart';
 import '../../../model/auth_model/confirm_subscriptions.dart';
 import '../../../model/auth_model/converter_history.dart';
 import '../../../model/auth_model/login.dart';
+import '../../../model/auth_model/notifications.dart';
+import '../../../model/auth_model/notifications_details.dart';
 import '../../../model/auth_model/plans_list.dart';
 import '../../../model/auth_model/reconfirm_sub.dart';
 
@@ -58,7 +60,9 @@ abstract class AccountRepository {
 
   Future<PlansList> getPlansList();
 
-  
+   Future<NotificationsList> getNotificationsList();
+   Future<NotificationsDetails> getNotificationsDetails({required String notifyId});
+
    Future<ConfirmSubscription> confirmSubscription(
       {required String? id, required String? plan, required String url});
 
