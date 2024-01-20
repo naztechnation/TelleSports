@@ -123,18 +123,21 @@ class HomePageState
       actions: [
         Stack(
           children: [
-           if(user.length != 0)...[
-             Align(
-              alignment: Alignment.topRight,
+           if(user.unReadMessages != 0)...[
+             
+             Positioned(
+              top: 7,
+              right: 12,
               child: Container(
-                height: 30,
-                width: 30,
-                decoration: BoxDecoration(shape: BoxShape.circle),
-                child: Text(user.unReadMessages),),
+                height: 22,
+                width: 22,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                child: Center(child: Text(user.unReadMessages.toString(), style: TextStyle(color: Colors.white),)),),
             ),
            ],
             AppbarTrailingImage(
               imagePath: ImageConstant.imgNotificationsNone,
+              
               margin: EdgeInsets.symmetric(
                 horizontal: 20.h,
                 vertical: 16.v,

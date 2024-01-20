@@ -12,6 +12,9 @@ import '../../blocs/accounts/account.dart';
 import '../../model/auth_model/notifications_details.dart';
 import '../../model/view_models/account_view_model.dart';
 import '../../requests/repositories/account_repo/account_repository_impl.dart';
+import '../../utils/app_utils.dart';
+import '../../widgets/app_bar/appbar_leading_image.dart';
+import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/appbar_subtitle_one.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/empty_widget.dart';
@@ -68,14 +71,13 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
 
-    final timeFormat = Provider.of<UserViewModel>(context, listen: false);
 
     return Scaffold(
       appBar: _buildAppBar(context),
 
       body: BlocConsumer<AccountCubit, AccountStates>(listener: (context, state) {
         if (state is  NotificationsDetailsLoaded) {
-          if (state.notify.success == 1) {
+          if (state.notify.success ?? false) {
             notifications = state.notify.data;
             setState(() {});
           } else {}
@@ -97,75 +99,79 @@ class _NotificationsState extends State<Notifications> {
 
         return (state is NotificationsDetailsLoading )
             ? const LoadingPage()
-            : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(children: [
-            SafeArea(
-              child: SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.04,
-              ),
-            ),
-           
-            const SizedBox(
-              height: 40,
-            ),
-            Expanded(
-                child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: AppColors.lightSecondary.withOpacity(0.1),
-                        border: Border(
-                            bottom: BorderSide(color: Colors.grey.shade300))),
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    child:   Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          
-                          SizedBox(height: 12.0),
-                          Text(
-                            notifications?.message ?? '',
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 12,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400, fontSize: 14),
+            : Column(children: [
+               
+              SingleChildScrollView(
+                            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.1),
+                      border: Border(
+                          bottom: BorderSide(color: Colors.green.shade300))),
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  child:   Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        
+                        SizedBox(height: 12.0),
+                        Text(
+                          notifications?.message ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 12,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 14),
+                        ),
+                        SizedBox(height: 20.0),
+                        Padding(
+                          padding: EdgeInsets.only(right: 12.0),
+                          child: Text(
+                                  AppUtils.formatComplexDate(
+                                          dateTime: notifications?.createdAt ??
+                                              ''),
+                            
                           ),
-                          SizedBox(height: 20.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                               
-                              Padding(
-                                padding: EdgeInsets.only(right: 12.0),
-                                child: Text(
-                                        timeFormat.getCurrentTime(int.parse(notifications?.createdAt ?? ''))  ,
-                                  
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ))
-          ]),
-        );},
+                  ),
+                )
+              ],
+                            ),
+                          )
+            ]);},
       ),
     );
   }
 
    PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        height: 93.v,
-        centerTitle: true,
-        title: AppbarSubtitleOne(
-            text: "Notifications", margin: EdgeInsets.only(top: 61.v, bottom: 7.v)),
-        styleType: Style.bgOutline_4);
+      height: 86.v,
+      leadingWidth: 44.h,
+      leading: AppbarLeadingImage(
+        imagePath: ImageConstant.imgArrowBack,
+        margin: EdgeInsets.only(
+          left: 20.h,
+          top: 10.v,
+          bottom: 12.v,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+      centerTitle: true,
+      title: AppbarSubtitle(
+        text: "Notification",
+        margin: EdgeInsets.only(
+          top: 10.v,
+          bottom: 8.v,
+        ),
+      ),
+      styleType: Style.bgFill,
+    );
   }
 }
+
