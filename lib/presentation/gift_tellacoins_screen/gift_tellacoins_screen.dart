@@ -1,18 +1,106 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/handlers/secure_handler.dart';
+import 'package:tellesports/presentation/buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_icon_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
+import 'package:tellesports/widgets/modal_content.dart';
 
+import '../../blocs/user/user.dart';
+import '../../core/constants/enums.dart';
+import '../../model/view_models/user_view_model.dart';
+import '../../requests/repositories/user_repo/user_repository_impl.dart';
+import '../../utils/navigator/page_navigator.dart';
+import '../../utils/validator.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
+import '../../widgets/modals.dart';
+import '../landing_page/landing_page.dart';
 
-// ignore_for_file: must_be_immutable
+
 class GiftTellacoinsScreen extends StatelessWidget {
-  GiftTellacoinsScreen({Key? key}) : super(key: key);
+    final String desUserId;
 
+  const GiftTellacoinsScreen({Key? key, required this.desUserId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => BlocProvider<UserCubit>(
+      create: (BuildContext context) => UserCubit(
+          userRepository: UserRepositoryImpl(),
+          viewModel: Provider.of<UserViewModel>(context, listen: false)),
+      child: GiftTellacoin(desUserId: desUserId,));
+}
+class GiftTellacoin extends StatefulWidget {
+  final String desUserId;
+  GiftTellacoin({Key? key,required this.desUserId}) : super(key: key);
+
+  @override
+  State<GiftTellacoin> createState() => _GiftTellacoinState();
+}
+
+class _GiftTellacoinState extends State<GiftTellacoin> {
   TextEditingController amountController = TextEditingController();
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+
+  String balance = '';
+
+  Color amountColor = Colors.black;
+
+  Timer? _debounce;
+  bool isSufficient  = false;
+
+
+  late UserCubit _accountCubit;
+
+
+  getUserBalance()async{
+
+    balance = await StorageHandler.getUserBalance() ?? '';
+
+    Future.delayed(Duration(seconds: 0),(){
+      setState(() {
+        
+      });
+    });
+  }
+
+   void _asyncInitMethod() {
+    _accountCubit = context.read<UserCubit>();
+     amountController.addListener(updateTextColor);
+
+  }
+
+    void updateTextColor() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        double enteredAmount = double.tryParse(amountController.text) ?? 0;
+        double staticAmount = double.tryParse( balance) ?? 0;
+
+        amountColor = enteredAmount > staticAmount ? Colors.red : Colors.black;
+        if(amountController.text.isNotEmpty){
+          isSufficient = enteredAmount > staticAmount ? true : false;
+        }else{
+          isSufficient = false;
+        }
+       });
+    });
+  }
+
+  @override
+  void initState() {
+     getUserBalance();
+     _asyncInitMethod();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,24 +109,82 @@ class GiftTellacoinsScreen extends StatelessWidget {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: _buildAppBar(context),
-            body: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 29.v),
-                child: Column(children: [
-                  _buildTellacoinsBalance(context),
-                  SizedBox(height: 39.v),
-                  _buildTextField(context),
-                  SizedBox(height: 24.v),
-                  CustomElevatedButton(
-                      text: "Gift Tellacoins",
-                      leftIcon: Container(
-                          margin: EdgeInsets.only(right: 10.h),
-                          child: CustomImageView(
-                              imagePath: ImageConstant.imgCardgiftcard,
-                              height: 24.adaptSize,
-                              width: 24.adaptSize))),
-                  SizedBox(height: 5.v)
-                ]))));
+            body: BlocConsumer<UserCubit, UserStates>(
+                  listener: (context, state) {
+                    if (state is TransferCoinLoaded) {
+                      if (state.tellacoin.success!) {
+                        Modals.showToast(state.tellacoin.message ?? '');
+
+                        StorageHandler.saveUserBalance(state.tellacoin.data?.tellaCoins.toString());
+
+                        Future.delayed(
+                            Duration(
+                              seconds: 2,
+                            ), () {
+                          AppNavigator.pushAndReplacePage(context,
+                              page: LandingPage());
+                        });
+                      } else {
+                        Modals.showToast(state.tellacoin.message ?? '',
+                            messageType: MessageType.error);
+                      }
+                    } else if (state is UserApiErr) {
+                      if (state.message != null) {
+                        Modals.showToast(state.message ?? '',
+                            messageType: MessageType.error);
+                      }
+                    } else if (state is UserNetworkErr) {
+                      if (state.message != null) {
+                        Modals.showToast(state.message ?? '',
+                            messageType: MessageType.error);
+                      }
+                    }
+                  },
+                  builder: (context, state) => Form(
+                        key: _formKey,
+              
+                child: Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 29.v),
+                    child: Column(children: [
+                      _buildTellacoinsBalance(context),
+                      SizedBox(height: 39.v),
+                      _buildTextField(context),
+                      SizedBox(height: 24.v),
+                      CustomElevatedButton(
+                          text: "Gift Tellacoins",
+                          title: 'Transfering tellacoin...',
+                          processing: state is TransferCoinLoading,
+                          isDisabled: isSufficient,
+                          leftIcon: Container(
+                              margin: EdgeInsets.only(right: 10.h),
+                              child: CustomImageView(
+                                  imagePath: ImageConstant.imgCardgiftcard,
+                                  height: 24.adaptSize,
+                                  width: 24.adaptSize)),
+                                  onPressed: () {
+                                    Modals.showDialogModal(context,
+                                page: ModalContentScreen(
+                                    title: 'Continue With Transfer',
+                                    body:
+                                        'N.B: Are you sure you want transfer ${amountController.text} Tellacoins to ${widget.desUserId}. As This action can\'t be reversed.',
+                                    btnText: 'Proceed',
+                                    
+                                    onPressed: () {
+                                                                          trasferTellaCoin();
+
+                                      Navigator.pop(context);
+                                    },
+                                    headerColorOne:
+                                        Color.fromARGB(255, 208, 151, 151),
+                                    headerColorTwo:
+                                        Color.fromARGB(255, 234, 132, 132)));
+                                  },
+                                  ),
+                      SizedBox(height: 5.v)
+                    ])),
+              ),
+            )));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -141,7 +287,7 @@ class GiftTellacoinsScreen extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: 6.h),
                           child: Text(
-                            "200",
+                            balance,
                             style: CustomTextStyles.headlineLargeWhiteA700,
                           ),
                         ),
@@ -165,12 +311,34 @@ class GiftTellacoinsScreen extends StatelessWidget {
           controller: amountController,
           hintText: "ex. 20",
           hintStyle: CustomTextStyles.titleSmallGray600,
-          textInputAction: TextInputAction.done)
+          textInputAction: TextInputAction.done,
+            textInputType: TextInputType.number,
+            onChanged: (value) {
+              _formKey.currentState!.validate();
+            },
+           validator: (value) {
+             
+              return Validator.validate(value, 'Amount');
+            },
+          ),
+           Visibility(
+                        visible: isSufficient && amountController.text.isNotEmpty,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Text('Insufficient funds', style: TextStyle(color: Colors.red, fontSize: 10),),
+                        )), 
     ]);
   }
 
-  /// Navigates to the buyTellacoinsScreen when the action is triggered.
   onTapBtnPlus(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.buyTellacoinsScreen);
+    AppNavigator.pushAndStackPage(context, page: PricingPageScreen(balance: balance));
   }
+
+  trasferTellaCoin(){
+    if (_formKey.currentState!.validate()) {
+
+    _accountCubit.transferTellaCoin(amount: amountController.text, userId: widget.desUserId);
+
+  }
+}
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/gift_tellacoins_screen/gift_tellacoins_screen.dart';
 import 'package:tellesports/presentation/user_info_page/user_info_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 
+import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
 
 class IndividualUserInfo extends StatefulWidget {
@@ -222,6 +224,8 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
   }
 
   onTapGiftTellacoins(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.giftTellacoinsScreen);
+
+
+    AppNavigator.pushAndStackPage(context, page: GiftTellacoinsScreen(desUserId: 'Nazzy'));
   }
 }

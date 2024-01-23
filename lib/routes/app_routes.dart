@@ -113,7 +113,6 @@ class AppRoutes {
     communityChatScreen: (context) => CommunityChatScreen(),
     
     
-    giftTellacoinsScreen: (context) => GiftTellacoinsScreen(),
     communityInfoScreen: (context) => CommunityInfoScreen(),
   };
 }
