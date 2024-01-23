@@ -63,6 +63,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         StorageHandler.saveUserPhone(state.user.user?.phone);
                         StorageHandler.saveUserName(state.user.user?.username);
                         StorageHandler.saveUserPlan(state.user.plan?.name);
+                        StorageHandler.saveUserId(state.user.user?.id.toString());
                         StorageHandler.saveUserBalance(state.user.tellacoinBalance.toString());
 
                         StorageHandler.saveUserPassword(passwordController.text);

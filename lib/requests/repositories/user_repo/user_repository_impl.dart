@@ -1,7 +1,26 @@
  
+import 'package:tellesports/model/auth_model/transfer_tellacoin.dart';
+
+import '../../../res/app_strings.dart';
+import '../../setup/requests.dart';
 import 'user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
+  @override
+  Future<TransferTellacoin> transferTellaCoins({required String desUserId, required String amount}) async {
+
+    final map = await Requests().post(
+      
+      AppStrings.transferTellacoinUrl,
+       
+       body: {
+        'amount': amount,
+        'to_': desUserId
+      }
+    );
+
+    return TransferTellacoin.fromJson(map);
+  }
  
   
 

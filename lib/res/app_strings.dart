@@ -37,8 +37,10 @@ class AppStrings {
   static String converterUrl = '${_baseUrl}convert';
   static String updateUserProfileUrl = '${_baseUrl}profile';
   static String uploadUserImageUrl = '${_baseUrl}upload_profile_image';
+  static String deleteUserUrl(String userId) => '${_baseUrl}delete-account/$userId';
+  static String transferTellacoinUrl = '${_baseUrl}transfer-coin';
 
-
+  
   
   
   

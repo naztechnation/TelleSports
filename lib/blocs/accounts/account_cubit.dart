@@ -480,5 +480,30 @@ class AccountCubit extends Cubit<AccountStates> {
         rethrow;
       }
     }
+      }
+
+    Future<void> deleteUserProfile(
+      { required String userId}) async {
+    try {
+      emit(DeletingUserLoading());
+
+      final userData =
+          await accountRepository.deleteUserData(userId: userId);
+
+      emit(DeletingUserLoaded(userData));
+    } on ApiException catch (e) {
+      emit(AccountApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(AccountNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
   }
-}
+  }
+

@@ -70,13 +70,6 @@ class EditProfileScreen extends StatelessWidget {
             } else {
               Modals.showToast(state.user.message ?? '');
             }
-          } else if (state is AccountLoaded) {
-            if (state.userData.success == true) {
-              updateUserProfile(context, user.imageURl!);
-            } else {
-              Modals.showToast(state.userData.message ?? '',
-                  messageType: MessageType.success);
-            }
           } else if (state is AccountApiErr) {
             if (state.message != null) {
               Modals.showToast(state.message!, messageType: MessageType.error);
@@ -177,18 +170,15 @@ class EditProfileScreen extends StatelessWidget {
                     CustomElevatedButton(
                       title: 'Updating Profile...',
                       processing:
-                          state is AccountLoading || state is AccountProcessing,
+                          state is AccountLoading ,
                       text: "Save changes",
                       onPressed: () {
                         if (user.imageURl == null) {
                           Modals.showToast('Please select an image to update');
                         } else {
                           if (_formKey.currentState!.validate()) {
-                            if (profileImage == '') {
-                              updateProfilePicture(context, user.imageURl!);
-                            } else {
-                              updateUserProfile(context, user.imageURl!);
-                            }
+                                                         updateUserProfile(context, user.imageURl!);
+
                           }
                         }
                       },

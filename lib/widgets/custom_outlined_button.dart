@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/base_button.dart';
 
+import 'progress_indicator.dart';
+
 class CustomOutlinedButton extends BaseButton {
   CustomOutlinedButton({
     Key? key,
     this.decoration,
     this.leftIcon,
+    this.processing = false,
+    this.title = 'Loading...',
+
     this.rightIcon,
     this.label,
     VoidCallback? onPressed,
@@ -37,6 +42,10 @@ class CustomOutlinedButton extends BaseButton {
   final Widget? rightIcon;
 
   final Widget? label;
+  final bool processing;
+  final String title ;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +57,33 @@ class CustomOutlinedButton extends BaseButton {
         : buildOutlinedButtonWidget;
   }
 
-  Widget get buildOutlinedButtonWidget => Container(
+  Widget get buildOutlinedButtonWidget => (processing)
+      ? Container(
+                  height: this.height ?? 42.v,
+
+          width: this.width ?? double.maxFinite,
+          margin: margin,
+          decoration: decoration,
+          child: OutlinedButton(
+            style: buttonStyle,
+            onPressed: () {},
+            child: Align(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: ProgressIndicators.circularProgressBar()),
+                      const SizedBox(width: 13,),
+                  Text(title, style: TextStyle(color: Colors.red),)
+                ],
+              ),
+            ),
+          ),
+        )
+      : Container(
         height: this.height ?? 42.v,
         width: this.width ?? double.maxFinite,
         margin: margin,

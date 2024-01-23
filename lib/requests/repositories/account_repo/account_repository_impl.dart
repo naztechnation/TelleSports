@@ -12,7 +12,6 @@ import '../../../model/auth_model/notifications_details.dart';
 import '../../../model/auth_model/plans_list.dart';
 import '../../../model/auth_model/reconfirm_sub.dart';
 import '../../../res/app_strings.dart';
-import '../../../widgets/modals.dart';
 import '../../setup/requests.dart';
 import 'account_repository.dart';
 
@@ -199,7 +198,6 @@ class AccountRepositoryImpl implements AccountRepository {
   @override
   Future<RegisterUser> uploadProfileImage({required File image}) async {
 
-    Modals.showToast(image.path);
     final map = await Requests().post(
       
       AppStrings.uploadUserImageUrl,
@@ -225,6 +223,18 @@ class AccountRepositoryImpl implements AccountRepository {
       body: {
         'phone': phone
       }
+    );
+
+    return LoginUser.fromJson(map);
+  }
+  
+  @override
+  Future<LoginUser> deleteUserData({required String userId}) async {
+    final map = await Requests().get(
+      
+      AppStrings.deleteUserUrl(userId),
+       
+       
     );
 
     return LoginUser.fromJson(map);

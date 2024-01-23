@@ -87,4 +87,10 @@ abstract class AccountRepository {
     
   });
 
+    Future<LoginUser> deleteUserData({
+    
+    required String userId,
+    
+  });
+
 }

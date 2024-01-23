@@ -1,16 +1,17 @@
 
 
 
+import '../../../model/auth_model/transfer_tellacoin.dart';
+
 abstract class UserRepository {
 
 
 
-  //   Future<BookiesDetails> getBookieDetails({
-  //   required String from,
-  //   required String to,
-  //   required String bookingCode,
-  //   required String apiKey,
-  // });
+    Future<TransferTellacoin> transferTellaCoins({
+    required String desUserId,
+    required String amount,
+    
+  });
 
   // Future<ConverterHistory> addConversionHistory({
   //   required String sourceCode,

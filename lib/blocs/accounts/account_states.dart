@@ -43,6 +43,18 @@ class ResetPasswordLoaded extends AccountStates {
   List<Object> get props => [userData];
 }
 
+class DeletingUserLoading extends AccountStates {
+  @override
+  List<Object> get props => [];
+}
+
+class DeletingUserLoaded extends AccountStates {
+  final LoginUser userData;
+  const DeletingUserLoaded(this.userData);
+  @override
+  List<Object> get props => [userData];
+}
+
 class AccountLoaded extends AccountStates {
   final RegisterUser userData;
   const AccountLoaded(this.userData);
