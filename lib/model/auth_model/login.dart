@@ -5,8 +5,9 @@ class LoginUser {
   Token? token;
   User? user;
   int? tellacoinBalance;
+  Plan? plan;
 
-  LoginUser({this.success, this.token, this.user, this.message,  this.error, this.tellacoinBalance});
+  LoginUser({this.success, this.token, this.user, this.message,  this.error, this.tellacoinBalance, this.plan});
 
   LoginUser.fromJson(Map<String, dynamic> json) {
     success = json['success'];
@@ -15,6 +16,7 @@ class LoginUser {
     token = json['token'] != null ? new Token.fromJson(json['token']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     tellacoinBalance = json['tellacoin_balance'];
+    plan = json['plan'] != null ? new Plan.fromJson(json['plan']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -30,6 +32,9 @@ class LoginUser {
     }
 
     data['tellacoin_balance'] = this.tellacoinBalance;
+     if (this.plan != null) {
+      data['plan'] = this.plan!.toJson();
+    }
      
     return data;
   }
@@ -102,6 +107,47 @@ class User {
     data['is_active'] = this.isActive;
     data['activation_code'] = this.activationCode;
     data['email_verified_at'] = this.emailVerifiedAt;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+class Plan {
+  int? id;
+  String? name;
+  String? tellacoin;
+  String? price;
+  List<String>? functionality;
+  String? createdAt;
+  String? updatedAt;
+
+  Plan(
+      {this.id,
+      this.name,
+      this.tellacoin,
+      this.price,
+      this.functionality,
+      this.createdAt,
+      this.updatedAt});
+
+  Plan.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    tellacoin = json['tellacoin'];
+    price = json['price'];
+    functionality = json['functionality'].cast<String>();
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['tellacoin'] = this.tellacoin;
+    data['price'] = this.price;
+    data['functionality'] = this.functionality;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;

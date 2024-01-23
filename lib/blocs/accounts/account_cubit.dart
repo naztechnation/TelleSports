@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/view_models/account_view_model.dart';
@@ -422,6 +424,58 @@ class AccountCubit extends Cubit<AccountStates> {
           e is FileNotFoundException ||
           e is AlreadyRegisteredException) {
         emit(NotificationsNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> uploadUserProfileImage({
+    required File image,
+    
+  }) async {
+    try {
+      emit(AccountProcessing());
+
+      final user = await accountRepository.uploadProfileImage(
+        
+        image: image,
+      );
+
+      emit(AccountLoaded(user));
+    } on ApiException catch (e) {
+      emit(AccountApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(AccountNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> uploadUserProfile(
+      {required File image, required String phone}) async {
+    try {
+      emit(AccountLoading());
+
+      final userData =
+          await accountRepository.uploadUserProfile(image: image, phone: phone);
+
+      emit(AccountUpdated(userData));
+    } on ApiException catch (e) {
+      emit(AccountApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(AccountNetworkErr(e.toString()));
       } else {
         rethrow;
       }

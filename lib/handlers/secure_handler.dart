@@ -32,6 +32,12 @@ class StorageHandler {
     }
   }
 
+    static Future<void> saveUserPlan([String? plan]) async {
+    if (plan != null) {
+      await storage.write(key: 'PLAN', value: plan);
+    }
+  }
+
    static Future<void> saveUserEmail([String? email]) async {
     if (email != null) {
       await storage.write(key: 'EMAIL', value: email);
@@ -82,6 +88,16 @@ class StorageHandler {
     Map<String, String> value = await storage.readAll();
     String? user;
     String? data = value['EMAIL'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+   static Future<String?> getUserPlan() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['PLAN'];
     if (data != null) {
       user = data;
     }

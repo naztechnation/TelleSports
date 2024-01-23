@@ -35,6 +35,8 @@ class AppStrings {
   static String getNotificationsDetailsUrl(String notifyId) => '${_baseUrl}notification/$notifyId';
   static String userWalletUrl = '${_baseUrl}user_wallet';
   static String converterUrl = '${_baseUrl}convert';
+  static String updateUserProfileUrl = '${_baseUrl}profile';
+  static String uploadUserImageUrl = '${_baseUrl}upload_profile_image';
 
 
   

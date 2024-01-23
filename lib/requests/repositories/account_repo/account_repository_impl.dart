@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:tellesports/model/auth_model/login.dart';
 import 'package:tellesports/model/auth_model/notifications.dart';
 import 'package:tellesports/model/auth_model/register.dart';
@@ -10,6 +12,7 @@ import '../../../model/auth_model/notifications_details.dart';
 import '../../../model/auth_model/plans_list.dart';
 import '../../../model/auth_model/reconfirm_sub.dart';
 import '../../../res/app_strings.dart';
+import '../../../widgets/modals.dart';
 import '../../setup/requests.dart';
 import 'account_repository.dart';
 
@@ -191,6 +194,40 @@ class AccountRepositoryImpl implements AccountRepository {
     );
 
     return NotificationsDetails.fromJson(map);
+  }
+
+  @override
+  Future<RegisterUser> uploadProfileImage({required File image}) async {
+
+    Modals.showToast(image.path);
+    final map = await Requests().post(
+      
+      AppStrings.uploadUserImageUrl,
+      files: {
+        'profile_image': image
+      },
+       body: {
+        'phone': ''
+      }
+    );
+
+    return RegisterUser.fromJson(map);
+  }
+
+  @override
+  Future<LoginUser> uploadUserProfile({required File image, required String phone}) async {
+    final map = await Requests().post(
+      
+      AppStrings.updateUserProfileUrl,
+      files: {
+        'profile_image': image
+      },
+      body: {
+        'phone': phone
+      }
+    );
+
+    return LoginUser.fromJson(map);
   }
 
 

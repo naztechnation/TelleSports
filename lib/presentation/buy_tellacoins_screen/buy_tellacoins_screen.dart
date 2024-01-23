@@ -75,6 +75,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
   String txId = '';
 
   String message = '';
+  String plan = '';
 
   String amount = '';
 
@@ -161,6 +162,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
   getUserData() async {
     email = await StorageHandler.getUserEmail() ?? '';
     password = await StorageHandler.getUserPassword() ?? '';
+    plan = await StorageHandler.getUserPlan() ?? '';
 
     setState(() {});
   }
@@ -393,9 +395,9 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
   Widget _buildStarterPlan(BuildContext context) {
     return CustomElevatedButton(
       height: 23.v,
-      width: 106.h,
-      text: "Starter plan".toUpperCase(),
-      margin: EdgeInsets.only(right: 12.h),
+      width: (plan.toUpperCase() == 'community leader'.toUpperCase()) ? 150.h : 106.h,
+      text: plan.toUpperCase(),
+      margin: EdgeInsets.only(right: 12.h, left: 12.h),
       buttonStyle: CustomButtonStyles.fillTeal,
       buttonTextStyle: CustomTextStyles.labelLargeInter,
       alignment: Alignment.centerRight,

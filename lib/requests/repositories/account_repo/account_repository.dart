@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:tellesports/model/auth_model/register.dart';
 
 import '../../../model/auth_model/bookies.dart';
@@ -72,6 +74,17 @@ abstract class AccountRepository {
     required String planId,
     required String transactionId,
     required String accessToken,
+  });
+
+  Future<RegisterUser> uploadProfileImage({
+    required File image,
+    
+  });
+
+   Future<LoginUser> uploadUserProfile({
+    required File image,
+    required String phone,
+    
   });
 
 }
