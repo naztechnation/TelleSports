@@ -44,5 +44,36 @@ class UserCubit extends Cubit<UserStates> {
     }
   }
 
- 
+  Future<void> updateAccount({
+    required String bank,
+    required String accountName,
+    required String accountNumber,
+    
+  }) async {
+    try {
+      emit(TransferCoinLoading());
+
+      final agents = await userRepository.updateAccount(
+        bank: bank,
+        accountName: accountName,
+        accountNumber: accountNumber,
+        
+      );
+
+      emit(TransferCoinLoaded(agents));
+    } on ApiException catch (e) {
+      emit(UserApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(UserNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
 }

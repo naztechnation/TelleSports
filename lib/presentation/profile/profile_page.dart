@@ -6,6 +6,7 @@ import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/core/constants/enums.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
 import 'package:tellesports/presentation/auth/signin_screen/sign_in_screen.dart';
+import 'package:tellesports/presentation/manage_account/update_account.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
@@ -114,6 +115,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           image: ImageConstant.imgHelpCenter, onTap: () {
                         AppNavigator.pushAndStackPage(context,
                             page: CreateNewPasswordScreen());
+                      }),
+                       SizedBox(height: 24.v),
+                      _buildShareFrame(context,
+                          text: "Update Account",
+                          image: ImageConstant.imgHelpCenter, onTap: () {
+                        AppNavigator.pushAndStackPage(context,
+                            page: UpdateAccountScreen());
                       }),
                       SizedBox(height: 24.v),
                       _buildShareFrame(context,

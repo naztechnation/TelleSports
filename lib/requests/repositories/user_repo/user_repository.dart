@@ -1,7 +1,7 @@
 
 
 
-import '../../../model/auth_model/transfer_tellacoin.dart';
+import '../../../model/user_model/transfer_tellacoin.dart';
 
 abstract class UserRepository {
 
@@ -10,6 +10,13 @@ abstract class UserRepository {
     Future<TransferTellacoin> transferTellaCoins({
     required String desUserId,
     required String amount,
+    
+  });
+
+  Future<TransferTellacoin> updateAccount({
+    required String bank,
+    required String accountName,
+    required String accountNumber,
     
   });
 

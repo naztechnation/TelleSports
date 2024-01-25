@@ -12,12 +12,9 @@ import '../../../core/constants/enums.dart';
 import '../../../model/view_models/account_view_model.dart';
 import '../../../model/view_models/firebase_auth_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
-import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
-import '../../auth/signin_screen/sign_in_screen.dart';
 
-// ignore_for_file: must_be_immutable
 class CreateNewPasswordScreen extends StatefulWidget {
   CreateNewPasswordScreen({Key? key}) : super(key: key);
 

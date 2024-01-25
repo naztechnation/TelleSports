@@ -30,9 +30,9 @@ class Data {
   int? tellaCoins;
   String? createdAt;
   String? updatedAt;
-  Null? bank;
-  Null? accountName;
-  Null? accountNumber;
+  String? bank;
+  String? accountName;
+  String? accountNumber;
 
   Data(
       {this.id,

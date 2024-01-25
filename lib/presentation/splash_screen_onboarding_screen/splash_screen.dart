@@ -100,8 +100,8 @@ class _SplashScreenState extends State<SplashScreen>
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(60),
                       child: CustomIconButton(
-                          height: 98.adaptSize,
-                          width: 98.adaptSize,
+                          height: 120.adaptSize,
+                          width: 120.adaptSize,
                           padding: EdgeInsets.all(5.h),
                           decoration: IconButtonStyleHelper.fillPrimary,
                           child: Padding(

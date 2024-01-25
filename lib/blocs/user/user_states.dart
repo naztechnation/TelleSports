@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../model/auth_model/transfer_tellacoin.dart'; 
+import '../../model/user_model/transfer_tellacoin.dart'; 
 
 
 abstract class UserStates extends Equatable {
