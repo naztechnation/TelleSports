@@ -85,7 +85,7 @@ class CustomImageView extends StatelessWidget {
 
   Widget _buildImageView() {
     if (imagePath != null) {
-      switch (imagePath!.imageType) {
+      switch (imagePath?.imageType) {
         case ImageType.svg:
           return Container(
             height: height,
@@ -100,7 +100,7 @@ class CustomImageView extends StatelessWidget {
           );
         case ImageType.file:
           return Image.file(
-            File(imagePath!),
+            File(imagePath ?? File('').path),
             height: height,
             width: width,
             fit: fit ?? BoxFit.cover,
@@ -110,13 +110,13 @@ class CustomImageView extends StatelessWidget {
           return CachedNetworkImage(
             height: height,
             width: width,
-            fit: fit,
-            imageUrl: imagePath!,
+            fit: fit ?? BoxFit.cover,
+            imageUrl: imagePath ?? '',
             color: color,
             placeholder: (context, url) => Container(
               height: 30,
               width: 30,
-              child: LinearProgressIndicator(
+              child: CircularProgressIndicator(
                 color: Colors.grey.shade200,
                 backgroundColor: Colors.grey.shade100,
               ),

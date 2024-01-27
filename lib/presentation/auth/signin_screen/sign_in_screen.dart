@@ -65,6 +65,10 @@ class _SigninScreenState extends State<SigninScreen> {
                         StorageHandler.saveUserPlan(state.user.plan?.name);
                         StorageHandler.saveUserId(state.user.user?.id.toString());
                         StorageHandler.saveUserBalance(state.user.tellacoinBalance.toString());
+                        StorageHandler.saveUserPhoto(state.user.profilePicture.toString());
+                        StorageHandler.saveUserAccountName(state.user.userWallet?.accountName.toString());
+                        StorageHandler.saveUserAccountNumber(state.user.userWallet?.accountNumber.toString());
+                        StorageHandler.saveUserBank(state.user.userWallet?.bank.toString());
 
                         StorageHandler.saveUserPassword(passwordController.text);
 

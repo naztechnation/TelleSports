@@ -196,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
         },
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           CustomImageView(
-              imagePath: ImageConstant.imgNavIcons,
+              imagePath: photo,
               height: 64.adaptSize,
               width: 64.adaptSize,
               radius: BorderRadius.circular(32.h)),

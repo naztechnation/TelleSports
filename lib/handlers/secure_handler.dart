@@ -50,6 +50,25 @@ class StorageHandler {
     }
   }
 
+   static Future<void> saveUserBank([String? balance]) async {
+    if (balance != null) {
+      await storage.write(key: 'BANK', value: balance);
+    }
+  }
+
+   static Future<void> saveUserAccountName([String? balance]) async {
+    if (balance != null) {
+      await storage.write(key: 'ACTNAME', value: balance);
+    }
+  }
+
+
+   static Future<void> saveUserAccountNumber([String? balance]) async {
+    if (balance != null) {
+      await storage.write(key: 'ACTNUMBER', value: balance);
+    }
+  }
+
    static Future<void> saveUserPhone([String? email]) async {
     if (email != null) {
       await storage.write(key: 'PHONE', value: email);
@@ -154,6 +173,38 @@ class StorageHandler {
     }
     return user;
   }
+
+static Future<String?> getUserBank() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['BANK'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+  static Future<String?> getUserAccountNumber() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['ACTNUMBER'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+  static Future<String?> getUserAccountName() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['ACTNAME'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+
 
   static Future<String?> getUserPhoto() async {
     Map<String, String> value = await storage.readAll();

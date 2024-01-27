@@ -12,6 +12,7 @@ import '../../../core/constants/enums.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../blocs/user/user.dart';
+import '../../handlers/secure_handler.dart';
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/user_repo/user_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
@@ -31,8 +32,26 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  
- 
+  String bankName = '';
+  String accountNumber = '';
+  String accountName = '';
+   getUserData() async {
+    bankName = await StorageHandler.getUserBank() ?? '';
+    accountNumber = await StorageHandler.getUserAccountNumber() ?? '';
+    accountName = await StorageHandler.getUserAccountName() ?? '';
+
+    setState(() {
+      accountNameController.text = accountName;
+    bankNameController.text = bankName;
+    accountNumberController.text = accountNumber;
+    });
+   }
+
+   @override
+  void initState() {
+     getUserData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,11 +112,11 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
                         Text("This would be used to recieve your tellacoin once you are eligible to do so.",
                             style: CustomTextStyles.titleSmallBluegray900),
                         SizedBox(height: 29.v),
-                        _buildOldPasswordTextField(context),
+                        _buildAccountNameField(context),
                         SizedBox(height: 11.v),
-                        _buildPasswordTextField(context),
+                        _buildAccountNumberField(context),
                         SizedBox(height: 11.v),
-                        _buildConfirmPasswordTextField(context),
+                        _buildBankField(context),
                         SizedBox(height: 32.v),
                         CustomElevatedButton(
                             text: "Update Account",
@@ -123,7 +142,7 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
             margin: EdgeInsets.fromLTRB(24.h, 20.v, 350.h, 20.v)));
   }
 
-  Widget _buildOldPasswordTextField(BuildContext context) {
+  Widget _buildAccountNameField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -143,7 +162,7 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
         ]));
   }
 
-  Widget _buildPasswordTextField(BuildContext context) {
+  Widget _buildAccountNumberField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -163,7 +182,7 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
         ]));
   }
 
-  Widget _buildConfirmPasswordTextField(BuildContext context) {
+  Widget _buildBankField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

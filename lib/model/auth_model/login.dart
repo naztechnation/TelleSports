@@ -5,7 +5,9 @@ class LoginUser {
   Token? token;
   User? user;
   int? tellacoinBalance;
+  UserWallet? userWallet;
   Plan? plan;
+  String? profilePicture;
 
   LoginUser({this.success, this.token, this.user, this.message,  this.error, this.tellacoinBalance, this.plan});
 
@@ -16,7 +18,11 @@ class LoginUser {
     token = json['token'] != null ? new Token.fromJson(json['token']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     tellacoinBalance = json['tellacoin_balance'];
+    userWallet = json['user_wallet'] != null
+        ? new UserWallet.fromJson(json['user_wallet'])
+        : null;
     plan = json['plan'] != null ? new Plan.fromJson(json['plan']) : null;
+    profilePicture = json['profile_picture'];
   }
 
   Map<String, dynamic> toJson() {
@@ -32,11 +38,17 @@ class LoginUser {
     }
 
     data['tellacoin_balance'] = this.tellacoinBalance;
-     if (this.plan != null) {
+     if (this.userWallet != null) {
+      data['user_wallet'] = this.userWallet!.toJson();
+    }
+    if (this.plan != null) {
       data['plan'] = this.plan!.toJson();
     }
-     
+    data['profile_picture'] = this.profilePicture;
     return data;
+  
+     
+    
   }
 }
 
@@ -150,6 +162,63 @@ class Plan {
     data['functionality'] = this.functionality;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    return data;
+  }
+
+  
+}
+
+class UserWallet {
+  int? id;
+  int? userId;
+  int? plansId;
+  int? tellaCoins;
+  String? createdAt;
+  String? updatedAt;
+  String? bank;
+  String? accountName;
+  String? accountNumber;
+  Plan? plan;
+
+  UserWallet(
+      {this.id,
+      this.userId,
+      this.plansId,
+      this.tellaCoins,
+      this.createdAt,
+      this.updatedAt,
+      this.bank,
+      this.accountName,
+      this.accountNumber,
+      this.plan});
+
+  UserWallet.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['user_id'];
+    plansId = json['plans_id'];
+    tellaCoins = json['tella_coins'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    bank = json['bank'];
+    accountName = json['account_name'];
+    accountNumber = json['account_number'];
+    plan = json['plan'] != null ? new Plan.fromJson(json['plan']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['user_id'] = this.userId;
+    data['plans_id'] = this.plansId;
+    data['tella_coins'] = this.tellaCoins;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['bank'] = this.bank;
+    data['account_name'] = this.accountName;
+    data['account_number'] = this.accountNumber;
+    if (this.plan != null) {
+      data['plan'] = this.plan!.toJson();
+    }
     return data;
   }
 }

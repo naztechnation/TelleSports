@@ -49,7 +49,7 @@ class ConvertBetcodesPage extends StatefulWidget {
 // ignore_for_file: must_be_immutable
 class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
     with AutomaticKeepAliveClientMixin<ConvertBetcodesPage> {
-  TextEditingController mNHController = TextEditingController();
+  TextEditingController converterCodeController = TextEditingController();
 
   TextEditingController jJhEightyTwoController = TextEditingController();
 
@@ -135,9 +135,17 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             StorageHandler.saveUserEmail(state.user.user?.email);
             StorageHandler.saveUserPhone(state.user.user?.phone);
             StorageHandler.saveUserName(state.user.user?.username);
-            
-                        StorageHandler.saveUserPlan(state.user.plan?.name);
-                        StorageHandler.saveUserBalance(state.user.tellacoinBalance.toString());
+
+            StorageHandler.saveUserPlan(state.user.plan?.name);
+            StorageHandler.saveUserBalance(
+                state.user.tellacoinBalance.toString());
+
+            StorageHandler.saveUserPhoto(state.user.profilePicture.toString());
+            StorageHandler.saveUserAccountName(
+                state.user.userWallet?.accountName.toString());
+            StorageHandler.saveUserAccountNumber(
+                state.user.userWallet?.accountNumber.toString());
+            StorageHandler.saveUserBank(state.user.userWallet?.bank.toString());
 
             StorageHandler.saveUserPassword(password);
 
@@ -285,14 +293,16 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                             text: "Convert Code",
                             processing: state is BookingsProcessing,
                             title: 'Converting...',
-                            isDisabled: !(mNHController.text.isNotEmpty &&
-                                _bookieFromDropdownValue == 'Convert from' &&
-                                _bookieToDropdownValue == 'Convert to'),
+                            isDisabled: !(converterCodeController
+                                    .text.isNotEmpty &&
+                                _bookieFromDropdownValue != 'Convert from' &&
+                                _bookieToDropdownValue != 'Convert to'),
                             buttonTextStyle: TextStyle(
-                                color: !(mNHController.text.isNotEmpty &&
-                                        _bookieFromDropdownValue ==
+                                color: !(converterCodeController
+                                            .text.isNotEmpty &&
+                                        _bookieFromDropdownValue !=
                                             'Convert from' &&
-                                        _bookieToDropdownValue == 'Convert to')
+                                        _bookieToDropdownValue != 'Convert to')
                                     ? Color(0xFF858287)
                                     : Colors.white,
                                 fontSize: 13,
@@ -302,9 +312,9 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                               if (int.parse(balance) <= 0) {
                                 Modals.showDialogModal(context,
                                     page: ModalContentScreen(
-                                      onPressed: () {
-                                        onTapBtnPlus(context);
-                                      },
+                                        onPressed: () {
+                                          onTapBtnPlus(context);
+                                        },
                                         title: 'Insufficient Balance',
                                         body:
                                             ' You dont have a sufficient balance to convert your codes now. Get a top up from us to continue converting...',
@@ -317,7 +327,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                                 _accountCubit.convertBetCode(
                                     from: fromId ?? '',
                                     to: toId ?? '',
-                                    bookingCode: mNHController.text,
+                                    bookingCode: converterCodeController.text,
                                     apiKey: '');
                               }
                             },
@@ -483,7 +493,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                       items: _addressSpinnerItems,
                       onChanged: (value) {
                         _bookieFromDropdownValue = value ?? 'Convert from';
-
+                        setState(() {});
                         int index = _addressSpinnerItems.indexOf(value);
                         fromId = _accountCubit
                             .viewModel.bookiesBookieFrom[index - 1];
@@ -519,7 +529,8 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                       hintText: "Convert to",
                       items: _addressSpinnerItems1,
                       onChanged: (value) {
-                        _bookieFromDropdownValue = value ?? 'Convert from';
+                        _bookieToDropdownValue = value ?? 'Convert to';
+                        setState(() {});
 
                         int index = _addressSpinnerItems1.indexOf(value);
                         toId =
@@ -536,7 +547,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           CustomTextFormField(
             width: 173.h,
-            controller: mNHController,
+            controller: converterCodeController,
             hintText: "Enter code",
             hintStyle: CustomTextStyles.titleMediumGray700,
             contentPadding:
@@ -592,6 +603,9 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
   }
 
   onTapBtnPlus(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: PricingPageScreen(balance: balance,));
+    AppNavigator.pushAndStackPage(context,
+        page: PricingPageScreen(
+          balance: balance,
+        ));
   }
 }
