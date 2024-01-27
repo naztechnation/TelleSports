@@ -66,7 +66,9 @@ class FirebaseAuthProvider extends BaseViewModel {
         };
       }
 
-      Modals.showToast(user?.displayName ?? '');
+       
+
+       
 
       _successMessage = 'Authentication successfull';
       _status = false;
@@ -135,6 +137,8 @@ class FirebaseAuthProvider extends BaseViewModel {
         String email = auth.user?.email ?? '';
         String id = auth.user!.uid;
         String photoURL = auth.user!.photoURL ?? '';
+
+      
 
          
 

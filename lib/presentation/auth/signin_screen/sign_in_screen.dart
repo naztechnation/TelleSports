@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/presentation/auth/sign_up_screen/sign_up_screen.dart';
@@ -11,6 +15,7 @@ import '../../../blocs/accounts/account.dart';
 import '../../../core/constants/enums.dart';
 import '../../../handlers/secure_handler.dart';
 import '../../../model/view_models/account_view_model.dart';
+import '../../../model/view_models/firebase_auth_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
@@ -35,6 +40,8 @@ class _SigninScreenState extends State<SigninScreen> {
 
   bool isShowPassword1 = false;
 
+  bool isGoogle = false;
+
   showPassword1() {
     setState(() {
       isShowPassword1 = !isShowPassword1;
@@ -44,154 +51,189 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+    final authUser = Provider.of<FirebaseAuthProvider>(context, listen: true);
+
     return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: BlocProvider<AccountCubit>(
-                lazy: false,
-                create: (_) => AccountCubit(
-                    accountRepository: AccountRepositoryImpl(),
-                    viewModel:
-                        Provider.of<AccountViewModel>(context, listen: false)),
-                child: BlocConsumer<AccountCubit, AccountStates>(
-                  listener: (context, state) {
-                    if (state is AccountUpdated) {
-                      if (state.user.success ?? false) {
-                        StorageHandler.saveIsLoggedIn('true');
-                        StorageHandler.saveUserToken(state.user.token?.token);
-                        StorageHandler.saveUserEmail(state.user.user?.email);
-                        StorageHandler.saveUserPhone(state.user.user?.phone);
-                        StorageHandler.saveUserName(state.user.user?.username);
-                        StorageHandler.saveUserPlan(state.user.plan?.name);
-                        StorageHandler.saveUserId(state.user.user?.id.toString());
-                        StorageHandler.saveUserBalance(state.user.tellacoinBalance.toString());
-                        StorageHandler.saveUserPhoto(state.user.profilePicture.toString());
-                        StorageHandler.saveUserAccountName(state.user.userWallet?.accountName.toString());
-                        StorageHandler.saveUserAccountNumber(state.user.userWallet?.accountNumber.toString());
-                        StorageHandler.saveUserBank(state.user.userWallet?.bank.toString());
+        child: GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: BlocProvider<AccountCubit>(
+              lazy: false,
+              create: (_) => AccountCubit(
+                  accountRepository: AccountRepositoryImpl(),
+                  viewModel:
+                      Provider.of<AccountViewModel>(context, listen: false)),
+              child: BlocConsumer<AccountCubit, AccountStates>(
+                listener: (context, state) {
+                  if (state is AccountUpdated) {
+                    if (state.user.success ?? false) {
+                      StorageHandler.saveIsLoggedIn('true');
+                      StorageHandler.saveUserToken(state.user.token?.token);
+                      StorageHandler.saveUserEmail(state.user.user?.email);
+                      StorageHandler.saveUserPhone(state.user.user?.phone);
+                      StorageHandler.saveUserName(state.user.user?.username);
+                      StorageHandler.saveUserPlan(state.user.plan?.name);
+                      StorageHandler.saveUserId(state.user.user?.id.toString());
+                      StorageHandler.saveUserBalance(
+                          state.user.tellacoinBalance.toString());
+                      StorageHandler.saveUserPhoto(
+                          state.user.profilePicture.toString());
+                      StorageHandler.saveUserAccountName(
+                          state.user.userWallet?.accountName.toString());
+                      StorageHandler.saveUserAccountNumber(
+                          state.user.userWallet?.accountNumber.toString());
+                      StorageHandler.saveUserBank(
+                          state.user.userWallet?.bank.toString());
 
-                        StorageHandler.saveUserPassword(passwordController.text);
+                      StorageHandler.saveUserPassword(passwordController.text);
 
-                        onTapSignIn(context);
+                      onTapSignIn(context);
+                    } else {
+                      if (state.user.error?.isNotEmpty ?? false) {
+                        Modals.showToast(state.user.error ?? '');
+                        resendCode(context);
                       } else {
-                        if (state.user.error?.isNotEmpty ?? false) {
-                          Modals.showToast(state.user.error ?? '');
-                          resendCode(context);
-                        } else {
+                        if(isGoogle){
+                           Modals.showToast('Please register with google on the registeration page first',
+                              messageType: MessageType.error);
+                                 FirebaseAuth.instance.signOut();
+                                      final GoogleSignIn googleSignIn =
+                                          GoogleSignIn();
+                                        googleSignIn.signOut();
+                        }else{
                           if (state.user.message?.isNotEmpty ?? false) {
-                            Modals.showToast(state.user.message ?? '',
-                                messageType: MessageType.error);
-                          } else {
-                            Modals.showToast('Failed to login',
-                                messageType: MessageType.error);
-                          }
+                          Modals.showToast(state.user.message ?? '',
+                              messageType: MessageType.error);
+                        } else {
+                          Modals.showToast('Failed to login',
+                              messageType: MessageType.error);
                         }
-                      }
-                    } else if (state is OTPResent) {
-                      if (state.userData.success == true) {
-                        Modals.showToast(state.userData.message ?? '',
-                            messageType: MessageType.success);
-                        AppNavigator.pushAndReplacePage(context,
-                            page: VerifyAccountScreen(
-                              email: emailController.text,
-                            ));
-                      } else {
-                        Modals.showToast(state.userData.message ?? '',
-                            messageType: MessageType.success);
-                      }
-                    } else if (state is AccountApiErr) {
-                      if (state.message != null) {
-                        Modals.showToast(state.message!,
-                            messageType: MessageType.error);
-                      }
-                    } else if (state is AccountNetworkErr) {
-                      if (state.message != null) {
-                        Modals.showToast(state.message!,
-                            messageType: MessageType.error);
+                        }
+                        
                       }
                     }
-                  },
-                  builder: (context, state) => Form(
-                      key: _formKey,
-                      child: Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16.h, vertical: 69.v),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomImageView(
-                                    imagePath: ImageConstant.imgTellasportLogo,
-                                    height: 32.v,
-                                    width: 203.h),
-                                SizedBox(height: 44.v),
-                                Text("Welcome  back!",
-                                    style: theme.textTheme.headlineLarge),
-                                SizedBox(height: 30.v),
-                                _buildEmailOrPhoneSection(context),
-                                SizedBox(height: 11.v),
-                                _buildPasswordSection(context),
-                                SizedBox(height: 13.v),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              onTapSignUp(context);
-                                            },
-                                            child: Text("Sign Up Instead",
-                                                style: CustomTextStyles
-                                                    .titleSmallBlue400_1
-                                                    .copyWith(
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-                                                        decorationColor:
-                                                            Colors.blue)))),
-                                    Align(
-                                        alignment: Alignment.centerRight,
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              onTapTxtForgotPassword(context);
-                                            },
-                                            child: Text("Forgot Password?",
-                                                style: CustomTextStyles
-                                                    .titleSmallBlue400_1
-                                                    .copyWith(
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-                                                        decorationColor:
-                                                            Colors.blue)))),
-                                  ],
-                                ),
-                                SizedBox(height: 29.v),
-                                CustomElevatedButton(
-                                    processing: state is AccountLoading,
-                                    title: 'Authenticating...',
-                                    onPressed: (() => loginUser(context)),
-                                    text: "Login",
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h)),
-                                Spacer(),
-                                Text("or login with",
-                                    style: CustomTextStyles.labelLargeGray600),
-                                SizedBox(height: 11.v),
-                                CustomOutlinedButton(
-                                    text: "Sign in with Google",
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h),
-                                    leftIcon: Container(
-                                        margin: EdgeInsets.only(right: 10.h),
-                                        child: CustomImageView(
-                                            imagePath: ImageConstant
-                                                .imgSocialMediaIcons,
-                                            height: 24.adaptSize,
-                                            width: 24.adaptSize))),
-                                SizedBox(height: 13.v),
+                  } else if (state is OTPResent) {
+                    if (state.userData.success == true) {
+                      Modals.showToast(state.userData.message ?? '',
+                          messageType: MessageType.success);
+                      AppNavigator.pushAndReplacePage(context,
+                          page: VerifyAccountScreen(
+                            email: emailController.text,
+                          ));
+                    } else {
+                      Modals.showToast(state.userData.message ?? '',
+                          messageType: MessageType.success);
+                    }
+                  } else if (state is AccountApiErr) {
+                    if (state.message != null) {
+                      Modals.showToast(state.message!,
+                          messageType: MessageType.error);
+                    }
+                  } else if (state is AccountNetworkErr) {
+                    if (state.message != null) {
+                      Modals.showToast(state.message!,
+                          messageType: MessageType.error);
+                    }
+                  }
+                },
+                builder: (context, state) => Form(
+                    key: _formKey,
+                    child: Container(
+                        width: double.maxFinite,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.h, vertical: 69.v),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomImageView(
+                                  imagePath: ImageConstant.imgTellasportLogo,
+                                  height: 32.v,
+                                  width: 203.h),
+                              SizedBox(height: 44.v),
+                              Text("Welcome  back!",
+                                  style: theme.textTheme.headlineLarge),
+                              SizedBox(height: 30.v),
+                              _buildEmailOrPhoneSection(context),
+                              SizedBox(height: 11.v),
+                              _buildPasswordSection(context),
+                              SizedBox(height: 13.v),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            onTapSignUp(context);
+                                          },
+                                          child: Text("Sign Up Instead",
+                                              style: CustomTextStyles
+                                                  .titleSmallBlue400_1
+                                                  .copyWith(
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          Colors.blue)))),
+                                  Align(
+                                      alignment: Alignment.centerRight,
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            onTapTxtForgotPassword(context);
+                                          },
+                                          child: Text("Forgot Password?",
+                                              style: CustomTextStyles
+                                                  .titleSmallBlue400_1
+                                                  .copyWith(
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          Colors.blue)))),
+                                ],
+                              ),
+                              SizedBox(height: 29.v),
+                              CustomElevatedButton(
+                                  processing: state is AccountLoading,
+                                  title: 'Authenticating...',
+                                  onPressed: (() =>
+                                      loginUser(ctx: context, isGoo: false)),
+                                  text: "Login",
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 4.h)),
+                              Spacer(),
+                              Text("or login with",
+                                  style: CustomTextStyles.labelLargeGray600),
+                              SizedBox(height: 11.v),
+                              CustomOutlinedButton(
+                                  text: "Sign in with Google",
+                                  margin: EdgeInsets.symmetric(horizontal: 4.h),
+                                  leftIcon: Container(
+                                      margin: EdgeInsets.only(right: 10.h),
+                                      child: CustomImageView(
+                                        imagePath:
+                                            ImageConstant.imgSocialMediaIcons,
+                                        height: 24.adaptSize,
+                                        width: 24.adaptSize,
+                                        
+                                      )),
+                                      onPressed: () async {
+                                         await FirebaseAuth.instance.signOut();
+                                      final GoogleSignIn googleSignIn =
+                                          GoogleSignIn();
+                                      await googleSignIn.signOut();
+                                          User? user =
+                                              await authUser.signInWithGoogle();
+                                          if (user != null) {
+                                            loginUser(
+                                                ctx: context, isGoo: true);
+                                          }
+                                        },
+                                      ),
+                              SizedBox(height: 13.v),
+                              if (Platform.isIOS)
                                 CustomOutlinedButton(
                                     text: "Sign in with Apple",
                                     margin:
@@ -203,10 +245,25 @@ class _SigninScreenState extends State<SigninScreen> {
                                                 .imgSocialMediaIconsOnprimary,
                                             height: 24.adaptSize,
                                             width: 24.adaptSize)),
-                                    onPressed: () {}),
-                                SizedBox(height: 10.v)
-                              ]))),
-                ))));
+                                    onPressed: () async {
+                                       await FirebaseAuth.instance.signOut();
+                                      final GoogleSignIn googleSignIn =
+                                          GoogleSignIn();
+                                      await googleSignIn.signOut();
+                                      UserCredential? user =
+                                          await authUser.signInWithApple();
+                                      if (user != null) {
+                                        Modals.showToast(
+                                            authUser.successMessage);
+                                      } else {
+                                        Modals.showToast(
+                                            authUser.successMessage);
+                                      }
+                                    }),
+                              SizedBox(height: 10.v)
+                            ]))),
+              ))),
+    ));
   }
 
   Widget _buildEmailOrPhoneSection(BuildContext context) {
@@ -283,12 +340,27 @@ class _SigninScreenState extends State<SigninScreen> {
     }
   }
 
-  loginUser(BuildContext ctx) {
-    if (_formKey.currentState!.validate()) {
-      // onTapSignIn(ctx);
-      ctx.read<AccountCubit>().loginUser(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+  loginUser(
+      {required BuildContext ctx, required bool isGoo, String? email}) async {
+    if (!isGoo) {
+      if (_formKey.currentState!.validate()) {
+        await ctx.read<AccountCubit>().loginUser(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim());
+
+        setState(() {
+          isGoogle = false;
+        });
+        FocusScope.of(ctx).unfocus();
+      }
+    } else {
+      await ctx
+          .read<AccountCubit>()
+          .loginUser(email: email ?? '', password: email ?? '');
+
+      setState(() {
+        isGoogle = true;
+      });
       FocusScope.of(ctx).unfocus();
     }
   }
