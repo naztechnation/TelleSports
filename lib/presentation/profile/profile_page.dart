@@ -39,6 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String phone = '';
   String photo = '';
   String userId = '';
+   bool showDelayedWidget = false;
 
   getUserData() async {
     username = await StorageHandler.getUserName() ?? '';
@@ -53,6 +54,11 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     getUserData();
+     Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        showDelayedWidget = true;
+      });
+    });
     super.initState();
   }
 
@@ -185,6 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
         height: 93.v,
         centerTitle: true,
         title: AppbarSubtitleOne(
+         
             text: "Settings", margin: EdgeInsets.only(top: 61.v, bottom: 7.v)),
         styleType: Style.bgOutline_4);
   }
@@ -195,11 +202,30 @@ class _ProfilePageState extends State<ProfilePage> {
           onTapAvatarFrame(context);
         },
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+       if(photo == 'null')...[
           CustomImageView(
+              imagePath: ImageConstant.imgNavProfilePrimary,
+              height: 64.adaptSize,
+              width: 64.adaptSize,
+              radius: BorderRadius.circular(32.h)),
+       ]else...[
+      if(showDelayedWidget)...[
+        CustomImageView(
               imagePath: photo,
               height: 64.adaptSize,
               width: 64.adaptSize,
               radius: BorderRadius.circular(32.h)),
+      ]else...[
+        SizedBox(
+          height: 14,
+          width: 14,
+          child: CircularProgressIndicator(
+          strokeWidth: 3.5,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          backgroundColor: (Colors.grey)),
+        )
+      ]  
+       ],   
           Padding(
               padding: EdgeInsets.only(left: 10.h, top: 11.v, bottom: 11.v),
               child: Column(
@@ -291,7 +317,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   onTapAvatarFrame(BuildContext context) {
-    if (photo == '') {
+    if (photo == 'null') {
       AppNavigator.pushAndStackPage(context, page: UpdateProfileImageScreen());
     } else {
       AppNavigator.pushAndStackPage(context,

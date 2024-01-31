@@ -47,6 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController phoneNumberGoogleController = TextEditingController();
 
   String googleEmail = '';
+  String code = '';
   
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -84,11 +85,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: BlocConsumer<AccountCubit, AccountStates>(
                       listener: (context, state) {
                         if (state is AccountLoaded) {
-                          if (state.userData.success!) {
+                          if (state.userData.success ?? false) {
                             if (isGoogles) {
                           
                               loginUser(context);
                             } else {
+                                  code = state.userData.code.toString();
+
                               onTapRegister(context);
                               Modals.showToast(state.userData.message ?? '',
                                   messageType: MessageType.success);
@@ -136,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 state.user.userWallet?.bank.toString());
             
                             StorageHandler.saveUserPassword(
-                                passwordController.text);
+                                state.user.user?.email);
             
                             onTapSignIn(context);
                           }
@@ -447,6 +450,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     AppNavigator.pushAndStackPage(context,
         page: VerifyAccountScreen(
           email: emailController.text.trim(),
+          otp: code,
         ));
   }
 

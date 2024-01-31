@@ -35,10 +35,14 @@ class HomePageState
   late TabController tabviewController;
 
   String username = '';
+  String photo = '';
+   bool showDelayedWidget = false;
+
   
 
   getUserName() async{
     username = await StorageHandler.getUserName() ?? '';
+    photo = await StorageHandler.getUserPhoto() ?? '';
     Future.delayed(Duration(seconds: 0), (){
       setState(() {
       
@@ -52,8 +56,13 @@ class HomePageState
 
     getUserName();
     
+    
     tabviewController = TabController(length: 2, vsync: this);
-
+  Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        showDelayedWidget = true;
+      });
+    });
     
   }
 
@@ -66,7 +75,7 @@ class HomePageState
 
     return SafeArea(
       child: Scaffold(
-        appBar: _buildAppBar(context, user),
+        appBar: _buildAppBar(context, user, photo),
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -93,16 +102,29 @@ class HomePageState
   }
 
  
-  PreferredSizeWidget _buildAppBar(BuildContext context, var user) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, var user, String photo) {
     return CustomAppBar(
       leadingWidth: 60.h,
-      leading: AppbarLeadingCircleimage(
+      leading: (photo == 'null') ?  AppbarLeadingCircleimage(
         imagePath: ImageConstant.imgNavIcons,
         margin: EdgeInsets.only(
           left: 20.h,
           top: 5.v,
           bottom: 10.v,
         ),
+      ) : (showDelayedWidget) ? AppbarLeadingCircleimage(
+        imagePath: photo,
+        margin: EdgeInsets.only(
+          left: 20.h,
+          top: 5.v,
+          bottom: 10.v,
+        ),
+      ) :  Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CircularProgressIndicator(
+        strokeWidth: 3.5,
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        backgroundColor: (Colors.grey)),
       ),
       title: Padding(
         padding: EdgeInsets.only(left: 8.h,),

@@ -14,7 +14,6 @@ import '../../../requests/repositories/account_repo/account_repository_impl.dart
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
-import '../change_password/change_password.dart';
 import '../verify_account_screen/verify_account_screen.dart';
 
 // ignore_for_file: must_be_immutable
@@ -48,6 +47,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                         AppNavigator.pushAndStackPage(context,
                             page: VerifyAccountScreen(
                               email: emailController.text.trim(),
+                              otp: '',
                               isForgetPassword: true,
                             ));
                       } else {

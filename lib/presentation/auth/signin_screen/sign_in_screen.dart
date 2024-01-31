@@ -122,6 +122,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       AppNavigator.pushAndReplacePage(context,
                           page: VerifyAccountScreen(
                             email: emailController.text,
+                            otp: '',
                           ));
                     } else {
                       Modals.showToast(state.userData.message ?? '',
@@ -220,15 +221,15 @@ class _SigninScreenState extends State<SigninScreen> {
                                         
                                       )),
                                       onPressed: () async {
-                                         await FirebaseAuth.instance.signOut();
-                                      final GoogleSignIn googleSignIn =
-                                          GoogleSignIn();
-                                      await googleSignIn.signOut();
+                                      //    await FirebaseAuth.instance.signOut();
+                                      // final GoogleSignIn googleSignIn =
+                                      //     GoogleSignIn();
+                                      // await googleSignIn.signOut();
                                           User? user =
                                               await authUser.signInWithGoogle();
                                           if (user != null) {
                                             loginUser(
-                                                ctx: context, isGoo: true);
+                                                ctx: context, isGoo: true, email: user.email);
                                           }
                                         },
                                       ),
@@ -357,6 +358,8 @@ class _SigninScreenState extends State<SigninScreen> {
       await ctx
           .read<AccountCubit>()
           .loginUser(email: email ?? '', password: email ?? '');
+
+          Modals.showToast(email ?? '');
 
       setState(() {
         isGoogle = true;

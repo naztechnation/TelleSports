@@ -21,9 +21,10 @@ import '../create_new_password_screen/create_new_password_screen.dart';
 // ignore_for_file: must_be_immutable
 class VerifyAccountScreen extends StatefulWidget {
   final String email;
+  final String otp;
   final bool isForgetPassword;
   VerifyAccountScreen(
-      {Key? key, required this.email, this.isForgetPassword = false})
+      {Key? key, required this.email, this.isForgetPassword = false, required this.otp})
       : super(key: key);
 
   @override
@@ -113,7 +114,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                                   style: CustomTextStyles.titleSmallBlue800)
                             ]),
                             textAlign: TextAlign.left),
-                        Text("Enter the code to verify your account.",
+                        Text("Enter the code to verify your account. ${widget.otp}",
                             style: CustomTextStyles.titleSmallBluegray900),
                         SizedBox(height: 29.v),
                         _buildTextField(context),

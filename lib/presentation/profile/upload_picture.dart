@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
@@ -14,6 +15,7 @@ import '../../core/constants/enums.dart';
 import '../../model/view_models/account_view_model.dart';
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/account_repo/account_repository_impl.dart';
+import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/image_view.dart';
 import '../../widgets/modals.dart';
 
@@ -42,6 +44,8 @@ class UpdateProfileImageScreen extends StatelessWidget {
             if (state.userData.success == true) {
                Modals.showToast( 'image upload successful',
                   messageType: MessageType.success);
+                  AppNavigator.pushAndReplacePage(context, page: LandingPage());
+
             } else {
               Modals.showToast(state.userData.message ?? '',
                   messageType: MessageType.error);

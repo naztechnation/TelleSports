@@ -140,6 +140,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             StorageHandler.saveUserBalance(
                 state.user.tellacoinBalance.toString());
 
+
             StorageHandler.saveUserPhoto(state.user.profilePicture.toString());
             StorageHandler.saveUserAccountName(
                 state.user.userWallet?.accountName.toString());
