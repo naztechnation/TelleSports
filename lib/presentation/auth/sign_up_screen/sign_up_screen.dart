@@ -73,241 +73,243 @@ class _SignUpScreenState extends State<SignUpScreen> {
             
           },
           child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              body: BlocProvider<AccountCubit>(
-                  lazy: false,
-                  create: (_) => AccountCubit(
-                      accountRepository: AccountRepositoryImpl(),
-                      viewModel:
-                          Provider.of<AccountViewModel>(context, listen: false)),
-                  child: BlocConsumer<AccountCubit, AccountStates>(
-                    listener: (context, state) {
-                      if (state is AccountLoaded) {
-                        if (state.userData.success!) {
-                          if (isGoogles) {
-                        
-                            loginUser(context);
-                          } else {
-                            onTapRegister(context);
-                            Modals.showToast(state.userData.message ?? '',
-                                messageType: MessageType.success);
-                          }
-                        } else {
-          
-                          if (state.userData.errors != null) {
-                            if (state.userData.errors?.email?.isNotEmpty ??
-                                false) {
-                              Modals.showToast(
-                                  state.userData.errors?.email?[0] ?? '');
-                            } else if (state
-                                    .userData.errors?.username?.isNotEmpty ??
-                                false) {
-                              Modals.showToast(
-                                  state.userData.errors?.username?[0] ?? '');
-                            } else if (state.userData.errors?.phone?.isNotEmpty ??
-                                false) {
-                              Modals.showToast(
-                                  state.userData.errors?.phone?[0] ?? '');
+            body: Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: BlocProvider<AccountCubit>(
+                    lazy: false,
+                    create: (_) => AccountCubit(
+                        accountRepository: AccountRepositoryImpl(),
+                        viewModel:
+                            Provider.of<AccountViewModel>(context, listen: false)),
+                    child: BlocConsumer<AccountCubit, AccountStates>(
+                      listener: (context, state) {
+                        if (state is AccountLoaded) {
+                          if (state.userData.success!) {
+                            if (isGoogles) {
+                          
+                              loginUser(context);
                             } else {
-                              Modals.showToast(state.userData.message ?? '');
+                              onTapRegister(context);
+                              Modals.showToast(state.userData.message ?? '',
+                                  messageType: MessageType.success);
+                            }
+                          } else {
+            
+                            if (state.userData.errors != null) {
+                              if (state.userData.errors?.email?.isNotEmpty ??
+                                  false) {
+                                Modals.showToast(
+                                    state.userData.errors?.email?[0] ?? '');
+                              } else if (state
+                                      .userData.errors?.username?.isNotEmpty ??
+                                  false) {
+                                Modals.showToast(
+                                    state.userData.errors?.username?[0] ?? '');
+                              } else if (state.userData.errors?.phone?.isNotEmpty ??
+                                  false) {
+                                Modals.showToast(
+                                    state.userData.errors?.phone?[0] ?? '');
+                              } else {
+                                Modals.showToast(state.userData.message ?? '');
+                              }
                             }
                           }
+                        } else if (state is AccountUpdated) {
+                          if (state.user.success ?? false) {
+                            StorageHandler.saveIsLoggedIn('true');
+                            StorageHandler.saveUserToken(state.user.token?.token);
+                            StorageHandler.saveUserEmail(state.user.user?.email);
+                            StorageHandler.saveUserPhone(state.user.user?.phone);
+                            StorageHandler.saveUserName(state.user.user?.username);
+                            StorageHandler.saveUserPlan(state.user.plan?.name);
+                            StorageHandler.saveUserId(
+                                state.user.user?.id.toString());
+                            StorageHandler.saveUserBalance(
+                                state.user.tellacoinBalance.toString());
+                            StorageHandler.saveUserPhoto(
+                                state.user.profilePicture.toString());
+                            StorageHandler.saveUserAccountName(
+                                state.user.userWallet?.accountName.toString());
+                            StorageHandler.saveUserAccountNumber(
+                                state.user.userWallet?.accountNumber.toString());
+                            StorageHandler.saveUserBank(
+                                state.user.userWallet?.bank.toString());
+            
+                            StorageHandler.saveUserPassword(
+                                passwordController.text);
+            
+                            onTapSignIn(context);
+                          }
+                        } else if (state is AccountApiErr) {
+                          if (state.message != null) {
+                            Modals.showToast(state.message!,
+                                messageType: MessageType.error);
+                          }
+                        } else if (state is AccountNetworkErr) {
+                          if (state.message != null) {
+                            Modals.showToast(state.message!,
+                                messageType: MessageType.error);
+                          }
                         }
-                      } else if (state is AccountUpdated) {
-                        if (state.user.success ?? false) {
-                          StorageHandler.saveIsLoggedIn('true');
-                          StorageHandler.saveUserToken(state.user.token?.token);
-                          StorageHandler.saveUserEmail(state.user.user?.email);
-                          StorageHandler.saveUserPhone(state.user.user?.phone);
-                          StorageHandler.saveUserName(state.user.user?.username);
-                          StorageHandler.saveUserPlan(state.user.plan?.name);
-                          StorageHandler.saveUserId(
-                              state.user.user?.id.toString());
-                          StorageHandler.saveUserBalance(
-                              state.user.tellacoinBalance.toString());
-                          StorageHandler.saveUserPhoto(
-                              state.user.profilePicture.toString());
-                          StorageHandler.saveUserAccountName(
-                              state.user.userWallet?.accountName.toString());
-                          StorageHandler.saveUserAccountNumber(
-                              state.user.userWallet?.accountNumber.toString());
-                          StorageHandler.saveUserBank(
-                              state.user.userWallet?.bank.toString());
-          
-                          StorageHandler.saveUserPassword(
-                              passwordController.text);
-          
-                          onTapSignIn(context);
-                        }
-                      } else if (state is AccountApiErr) {
-                        if (state.message != null) {
-                          Modals.showToast(state.message!,
-                              messageType: MessageType.error);
-                        }
-                      } else if (state is AccountNetworkErr) {
-                        if (state.message != null) {
-                          Modals.showToast(state.message!,
-                              messageType: MessageType.error);
-                        }
-                      }
-                    },
-                    builder: (context, state) => SingleChildScrollView(
-                      child: Form(
-                          key: _formKey,
-                          child: Container(
-                              width: double.maxFinite,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.h, vertical: 45.v),
-                              child: Column(children: [
-                                SizedBox(height: 23.v),
-                                CustomImageView(
-                                    imagePath: ImageConstant.imgTellasportLogo,
-                                    height: 32.v,
-                                    width: 203.h),
-                                SizedBox(height: 32.v),
-                                Text("Register",
-                                    style: theme.textTheme.headlineLarge),
-                                SizedBox(height: 13.v),
-                                _buildUsernameTextField(context),
-                                SizedBox(height: 10.v),
-                                _buildEmailTextField(context),
-                                SizedBox(height: 10.v),
-                                _buildPhoneNumberTextField(context),
-                                SizedBox(height: 10.v),
-                                _buildPasswordTextField(context),
-                                SizedBox(height: 24.v),
-                                CustomElevatedButton(
-                                    text: "Register",
+                      },
+                      builder: (context, state) => SingleChildScrollView(
+                        child: Form(
+                            key: _formKey,
+                            child: Container(
+                                width: double.maxFinite,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.h, vertical: 45.v),
+                                child: Column(children: [
+                                  SizedBox(height: 23.v),
+                                  CustomImageView(
+                                      imagePath: ImageConstant.imgTellasportLogo,
+                                      height: 32.v,
+                                      width: 203.h),
+                                  SizedBox(height: 32.v),
+                                  Text("Register",
+                                      style: theme.textTheme.headlineLarge),
+                                  SizedBox(height: 13.v),
+                                  _buildUsernameTextField(context),
+                                  SizedBox(height: 10.v),
+                                  _buildEmailTextField(context),
+                                  SizedBox(height: 10.v),
+                                  _buildPhoneNumberTextField(context),
+                                  SizedBox(height: 10.v),
+                                  _buildPasswordTextField(context),
+                                  SizedBox(height: 24.v),
+                                  CustomElevatedButton(
+                                      text: "Register",
+                                      processing: (state is AccountProcessing ||
+                                          authUser.status ||
+                                          state is AccountLoading),
+                                      margin: EdgeInsets.symmetric(horizontal: 4.h),
+                                      title: 'Creating Account...',
+                                      onPressed: () {
+                                        registerUser(
+                                            context: context, isGoogle: false);
+                                        // onTapRegister(context);
+                                      }),
+                                  SizedBox(height: 9.v),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Already have an account? ",
+                                          style: CustomTextStyles
+                                              .titleSmallBluegray900_1,
+                                        ),
+                                        TextSpan(
+                                          text: "Sign in",
+                                          style: CustomTextStyles.titleSmallPrimary,
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              onTapLogin(context);
+                                            },
+                                        ),
+                                      ],
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  SizedBox(height: 42.v),
+                                  CustomOutlinedButton(
+                                    text: "Sign in with Google",
                                     processing: (state is AccountProcessing ||
                                         authUser.status ||
                                         state is AccountLoading),
-                                    margin: EdgeInsets.symmetric(horizontal: 4.h),
-                                    title: 'Creating Account...',
-                                    onPressed: () {
-                                      registerUser(
-                                          context: context, isGoogle: false);
-                                      // onTapRegister(context);
-                                    }),
-                                SizedBox(height: 9.v),
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: "Already have an account? ",
-                                        style: CustomTextStyles
-                                            .titleSmallBluegray900_1,
-                                      ),
-                                      TextSpan(
-                                        text: "Sign in",
-                                        style: CustomTextStyles.titleSmallPrimary,
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            onTapLogin(context);
-                                          },
-                                      ),
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                SizedBox(height: 42.v),
-                                CustomOutlinedButton(
-                                  text: "Sign in with Google",
-                                  processing: (state is AccountProcessing ||
-                                      authUser.status ||
-                                      state is AccountLoading),
-                                  title: 'Verfying account...',
-                                  margin: EdgeInsets.symmetric(horizontal: 4.h),
-                                  leftIcon: Container(
-                                      margin: EdgeInsets.only(right: 10.h),
-                                      child: CustomImageView(
-                                        imagePath:
-                                            ImageConstant.imgSocialMediaIcons,
-                                        height: 24.adaptSize,
-                                        width: 24.adaptSize,
-                                      )),
-                                  onPressed: () async {
-                                     await FirebaseAuth.instance.signOut();
-                                      final GoogleSignIn googleSignIn =
-                                          GoogleSignIn();
-                                      await googleSignIn.signOut();
-                                    Modals.showBottomSheetModal(
-                                      context,
-                                      isDissmissible: true,
-                                      heightFactor: 0.9,
-                                      page: registerUserWithGoogle(
-                                          authUser, context),
-                                    );
-                                  },
-                                ),
-                                SizedBox(height: 13.v),
-                               if (Platform.isIOS) 
-                                CustomOutlinedButton(
-                                    text: "Sign in with Apple",
+                                    title: 'Verfying account...',
                                     margin: EdgeInsets.symmetric(horizontal: 4.h),
                                     leftIcon: Container(
                                         margin: EdgeInsets.only(right: 10.h),
                                         child: CustomImageView(
-                                            imagePath: ImageConstant
-                                                .imgSocialMediaIconsOnprimary,
-                                            height: 24.adaptSize,
-                                            width: 24.adaptSize)),
+                                          imagePath:
+                                              ImageConstant.imgSocialMediaIcons,
+                                          height: 24.adaptSize,
+                                          width: 24.adaptSize,
+                                        )),
                                     onPressed: () async {
-                                      await FirebaseAuth.instance.signOut();
-                                      final GoogleSignIn googleSignIn =
-                                          GoogleSignIn();
-                                      await googleSignIn.signOut();
-                                      UserCredential? user =
-                                          await authUser.signInWithApple();
-                                      if (user != null) {
-                                        Modals.showToast(authUser.successMessage);
-                                      } else {
-                                        Modals.showToast(authUser.successMessage);
-                                      }
-                                    }),
-                                SizedBox(height: 13.v),
-                                Container(
-                                    width: 342.h,
-                                    margin: EdgeInsets.symmetric(horizontal: 7.h),
-                                    child: RichText(
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                              text: "By ",
-                                              style: CustomTextStyles
-                                                  .titleSmallBluegray900_1),
-                                          TextSpan(
-                                              text: "signing up",
-                                              style: CustomTextStyles
-                                                  .titleSmallBluegray900_1),
-                                          TextSpan(
-                                              text: ", you agree to ",
-                                              style: CustomTextStyles
-                                                  .titleSmallBluegray900_1),
-                                          TextSpan(
-                                              text: "our",
-                                              style: CustomTextStyles
-                                                  .titleSmallBluegray900_1),
-                                          TextSpan(text: " "),
-                                          TextSpan(
-                                              text: "Terms of Service",
-                                              style: CustomTextStyles
-                                                  .titleSmallBlue400),
-                                          TextSpan(
-                                              text: " and ",
-                                              style: CustomTextStyles
-                                                  .titleSmallBluegray900_1),
-                                          TextSpan(
-                                              text: "Privacy Policy",
-                                              style: CustomTextStyles
-                                                  .titleSmallBlue400),
-                                          TextSpan(
-                                              text: ".",
-                                              style: CustomTextStyles
-                                                  .titleSmallBluegray900_1)
-                                        ]),
-                                        textAlign: TextAlign.center))
-                              ]))),
-                    ),
-                  ))),
+                                       await FirebaseAuth.instance.signOut();
+                                        final GoogleSignIn googleSignIn =
+                                            GoogleSignIn();
+                                        await googleSignIn.signOut();
+                                      Modals.showBottomSheetModal(
+                                        context,
+                                        isDissmissible: true,
+                                        heightFactor: 0.9,
+                                        page: registerUserWithGoogle(
+                                            authUser, context),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(height: 13.v),
+                                 if (Platform.isIOS) 
+                                  CustomOutlinedButton(
+                                      text: "Sign in with Apple",
+                                      margin: EdgeInsets.symmetric(horizontal: 4.h),
+                                      leftIcon: Container(
+                                          margin: EdgeInsets.only(right: 10.h),
+                                          child: CustomImageView(
+                                              imagePath: ImageConstant
+                                                  .imgSocialMediaIconsOnprimary,
+                                              height: 24.adaptSize,
+                                              width: 24.adaptSize)),
+                                      onPressed: () async {
+                                        await FirebaseAuth.instance.signOut();
+                                        final GoogleSignIn googleSignIn =
+                                            GoogleSignIn();
+                                        await googleSignIn.signOut();
+                                        UserCredential? user =
+                                            await authUser.signInWithApple();
+                                        if (user != null) {
+                                          Modals.showToast(authUser.successMessage);
+                                        } else {
+                                          Modals.showToast(authUser.successMessage);
+                                        }
+                                      }),
+                                  SizedBox(height: 13.v),
+                                  Container(
+                                      width: 342.h,
+                                      margin: EdgeInsets.symmetric(horizontal: 7.h),
+                                      child: RichText(
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text: "By ",
+                                                style: CustomTextStyles
+                                                    .titleSmallBluegray900_1),
+                                            TextSpan(
+                                                text: "signing up",
+                                                style: CustomTextStyles
+                                                    .titleSmallBluegray900_1),
+                                            TextSpan(
+                                                text: ", you agree to ",
+                                                style: CustomTextStyles
+                                                    .titleSmallBluegray900_1),
+                                            TextSpan(
+                                                text: "our",
+                                                style: CustomTextStyles
+                                                    .titleSmallBluegray900_1),
+                                            TextSpan(text: " "),
+                                            TextSpan(
+                                                text: "Terms of Service",
+                                                style: CustomTextStyles
+                                                    .titleSmallBlue400),
+                                            TextSpan(
+                                                text: " and ",
+                                                style: CustomTextStyles
+                                                    .titleSmallBluegray900_1),
+                                            TextSpan(
+                                                text: "Privacy Policy",
+                                                style: CustomTextStyles
+                                                    .titleSmallBlue400),
+                                            TextSpan(
+                                                text: ".",
+                                                style: CustomTextStyles
+                                                    .titleSmallBluegray900_1)
+                                          ]),
+                                          textAlign: TextAlign.center))
+                                ]))),
+                      ),
+                    ))),
+          ),
         ));
   }
 
@@ -470,7 +472,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             confirmPassword: passwordController.text.trim(),
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
-            phoneNumber: phoneNumberController.text.trim());
+            phoneNumber: phoneNumberController.text.trim(), activated: 'false');
       }
     } else {
       setState(() {
@@ -485,7 +487,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           confirmPassword: password ?? '',
           email: email ?? '',
           password: password ?? '',
-          phoneNumber: phoneNumber ?? '');
+          phoneNumber: phoneNumber ?? '',
+          activated: 'true'
+          );
 
 
       phoneNumberGoogleController.clear();

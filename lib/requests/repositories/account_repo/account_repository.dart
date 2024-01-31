@@ -19,6 +19,8 @@ abstract class AccountRepository {
     required String password,
     required String confirmPassword,
     required String phone,
+    required String activated,
+
   });
 
   Future<LoginUser> loginUser({

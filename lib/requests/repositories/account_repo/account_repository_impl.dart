@@ -23,6 +23,7 @@ class AccountRepositoryImpl implements AccountRepository {
     required String password,
     required String confirmPassword,
     required String phone,
+    required String activated,
   }) async {
     final map = await Requests().post(AppStrings.registerUserUrl, body: {
       "username": username,
@@ -30,6 +31,7 @@ class AccountRepositoryImpl implements AccountRepository {
       "password": password,
       "password_confirmation": confirmPassword,
       "phone": phone,
+      "activated": activated
     });
     return RegisterUser.fromJson(map);
   }
