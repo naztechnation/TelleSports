@@ -67,7 +67,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
 
                         if(widget.isForgetPassword){
                           Future.delayed(Duration(seconds: 2), () {
-                          onTapLogin(context);
+                          onTapVerifyAccount(context);
                         });
                         }else{
                           Future.delayed(Duration(seconds: 2), () {
@@ -107,15 +107,14 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                             text: TextSpan(children: [
                               TextSpan(
                                   text: "Code has been send to ",
-                                  style:
-                                      CustomTextStyles.titleSmallBluegray900_1),
+                                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: Colors.black)),
                               TextSpan(
                                   text: widget.email,
-                                  style: CustomTextStyles.titleSmallBlue800)
+                                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: Colors.blue.shade600))
                             ]),
                             textAlign: TextAlign.left),
                         Text("Enter the code to verify your account. ${widget.otp}",
-                            style: CustomTextStyles.titleSmallBluegray900),
+                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black)),
                         SizedBox(height: 29.v),
                         _buildTextField(context),
                         SizedBox(height: 12.v),

@@ -22,9 +22,9 @@ class OnboardingThreeScreen extends StatelessWidget {
                   width: double.maxFinite,
                   padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 53.v),
                   child: Column(children: [
-                    SizedBox(height: 26.v),
+                    SizedBox(height: 18.v),
                     Container(
-                        padding: EdgeInsets.symmetric(horizontal: 1.h),
+                        padding: EdgeInsets.symmetric(horizontal: 0.h),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -38,7 +38,7 @@ class OnboardingThreeScreen extends StatelessWidget {
                             style:
                                 CustomTextStyles.headlineLargeRed400.copyWith(
                               height: 1.10,
-                              fontSize: 22.0,
+                              fontSize: 27.0,
                             ),
                           ),
                         ),

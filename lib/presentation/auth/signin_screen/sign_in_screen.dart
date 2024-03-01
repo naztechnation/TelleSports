@@ -161,39 +161,43 @@ class _SigninScreenState extends State<SigninScreen> {
                               SizedBox(height: 11.v),
                               _buildPasswordSection(context),
                               SizedBox(height: 13.v),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            onTapSignUp(context);
-                                          },
-                                          child: Text("Sign Up Instead",
-                                              style: CustomTextStyles
-                                                  .titleSmallBlue400_1
-                                                  .copyWith(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.blue)))),
-                                  Align(
-                                      alignment: Alignment.centerRight,
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            onTapTxtForgotPassword(context);
-                                          },
-                                          child: Text("Forgot Password?",
-                                              style: CustomTextStyles
-                                                  .titleSmallBlue400_1
-                                                  .copyWith(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.blue)))),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal:15.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: GestureDetector(
+                                            onTap: () {
+                                              onTapSignUp(context);
+                                            },
+                                            child: Text("Sign Up Instead",
+                                                style: CustomTextStyles
+                                                    .titleSmallBlue400_1
+                                                    .copyWith(
+                                                      
+                                                        decoration: TextDecoration
+                                                            .underline,
+                                                        decorationColor:
+                                                            Colors.blue)))),
+                                    Align(
+                                        alignment: Alignment.centerRight,
+                                        child: GestureDetector(
+                                            onTap: () {
+                                              onTapTxtForgotPassword(context);
+                                            },
+                                            child: Text("Forgot Password?",
+                                                style: CustomTextStyles
+                                                    .titleSmallBlue400_1
+                                                    .copyWith(
+                                                        decoration: TextDecoration
+                                                            .underline,
+                                                        decorationColor:
+                                                            Colors.blue)))),
+                                  ],
+                                ),
                               ),
                               SizedBox(height: 29.v),
                               CustomElevatedButton(
@@ -206,7 +210,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                       EdgeInsets.symmetric(horizontal: 4.h)),
                               Spacer(),
                               Text("or login with",
-                                  style: CustomTextStyles.labelLargeGray600),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black38)),
                               SizedBox(height: 11.v),
                               CustomOutlinedButton(
                                   text: "Sign in with Google",
@@ -271,7 +275,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("E-mail", style: theme.textTheme.titleSmall),
+          Text("E-mail", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 2.v),
           CustomTextFormField(
               controller: emailController,
@@ -288,7 +292,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Padding(
       padding: EdgeInsets.only(left: 8.h),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text("Password", style: theme.textTheme.titleSmall),
+        Text("Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
         SizedBox(height: 3.v),
         CustomTextFormField(
             controller: passwordController,

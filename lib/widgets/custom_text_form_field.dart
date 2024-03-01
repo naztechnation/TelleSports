@@ -99,10 +99,8 @@ class CustomTextFormField extends StatelessWidget {
         width: width ?? double.maxFinite,
         child: TextFormField(
           controller: controller,
-          focusNode: focusNode ?? FocusNode(),
-          autofocus: autofocus!,
           readOnly: readOnly,
-          style: textStyle ?? theme.textTheme.titleSmall,
+          style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w600),
           obscureText: obscureText!,
           textInputAction: textInputAction,
           keyboardType: textInputType,
@@ -116,10 +114,11 @@ class CustomTextFormField extends StatelessWidget {
       );
   InputDecoration get decoration => InputDecoration(
         hintText: hintText ?? "",
-        hintStyle: hintStyle ?? CustomTextStyles.titleMediumBluegray100,
+        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16, fontWeight: FontWeight.w300),
         prefixIcon: prefix,
         prefixIconConstraints: prefixConstraints,
         suffixIcon: suffix,
+        
         
         suffixIconConstraints: suffixConstraints,
         isDense: true,
@@ -170,7 +169,7 @@ class CustomTextFormField extends StatelessWidget {
         ),
         errorStyle: TextStyle(
           color: appTheme.red600,
-          fontSize: 12.fSize,
+          fontSize: 14.fSize,
         ),
       );
 }

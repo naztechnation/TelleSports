@@ -119,11 +119,11 @@ class CustomTextStyles {
   // Title text style
   static get titleMediumBlack900 => theme.textTheme.titleMedium!.copyWith(
         color: appTheme.black900,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
       );
   static get titleMediumBlack900Bold => theme.textTheme.titleMedium!.copyWith(
-        color: appTheme.black900,
-        fontSize: 18.fSize,
+        color: appTheme.blueGray700,
+        fontSize: 17.fSize,
         fontWeight: FontWeight.w700,
       );
   static get titleMediumBlack900_1 => theme.textTheme.titleMedium!.copyWith(
@@ -211,7 +211,7 @@ class CustomTextStyles {
   static get titleSmallInterWhiteA700 =>
       theme.textTheme.titleSmall!.inter.copyWith(
         color: appTheme.whiteA700,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
       );
   static get titleSmallPoppinsBlue400 =>
       theme.textTheme.titleSmall!.poppins.copyWith(

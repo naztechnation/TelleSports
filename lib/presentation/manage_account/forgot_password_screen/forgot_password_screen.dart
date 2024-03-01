@@ -40,7 +40,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 child: BlocConsumer<AccountCubit, AccountStates>(
                   listener: (context, state) {
                     if (state is AccountLoaded) {
-                      if (state.userData.success!) {
+                      if (state.userData.success ?? false) {
                         Modals.showToast(state.userData.message ?? '',
                             messageType: MessageType.success);
 
@@ -76,22 +76,26 @@ class ForgotPasswordScreen extends StatelessWidget {
                                 style: theme.textTheme.headlineLarge),
                             SizedBox(height: 9.v),
                             Container(
-                                width: 339.h,
                                 margin: EdgeInsets.symmetric(horizontal: 9.h),
                                 child: Text(
                                     "No worries! Enter your email address below and we will send you a code to reset password.",
-                                    maxLines: 2,
+                                    maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
-                                    style: CustomTextStyles
-                                        .labelLargeBluegray700)),
+                                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400))),
                             SizedBox(height: 31.v),
                             _buildTextField(context),
                             SizedBox(height: 32.v),
                             CustomElevatedButton(
                                 text: "Send reset email",
+                                processing: state is AccountProcessing,
                                 margin: EdgeInsets.symmetric(horizontal: 4.h),
                                 onPressed: () {
+                            //       AppNavigator.pushAndStackPage(context,
+                            // page: VerifyAccountScreen(
+                            //   email: emailController.text.trim(),
+                            //   otp: '',
+                            //   isForgetPassword: true,));
                                   onTapSendResetEmail(context);
                                 }),
                             SizedBox(height: 5.v)
@@ -114,7 +118,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("E-mail", style: theme.textTheme.titleSmall),
+          Text("E-mail", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 2.v),
           CustomTextFormField(
             controller: emailController,

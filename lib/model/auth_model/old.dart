@@ -4,7 +4,7 @@ class LoginUser {
   String? error;
   Token? token;
   User? user;
-  String? tellacoinBalance;
+  int? tellacoinBalance;
   UserWallet? userWallet;
   Plan? plan;
   String? profilePicture;
@@ -80,7 +80,6 @@ class User {
   String? emailVerifiedAt;
   String? createdAt;
   String? updatedAt;
-  String? deletedAt;
 
   User(
       {this.id,
@@ -93,9 +92,7 @@ class User {
       this.activationCode,
       this.emailVerifiedAt,
       this.createdAt,
-      this.updatedAt,
-      this.deletedAt
-      });
+      this.updatedAt});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -109,7 +106,6 @@ class User {
     emailVerifiedAt = json['email_verified_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-     deletedAt = json['deleted_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -174,9 +170,9 @@ class Plan {
 
 class UserWallet {
   int? id;
-  String? userId;
-  String? plansId;
-  String? tellaCoins;
+  int? userId;
+  int? plansId;
+  int? tellaCoins;
   String? createdAt;
   String? updatedAt;
   String? bank;

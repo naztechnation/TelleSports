@@ -32,23 +32,25 @@ class OnboardingOneScreen extends StatelessWidget {
               SizedBox(height: 26.v),
               Expanded(
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.center,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 12.h),
+                    padding: EdgeInsets.only(right: 0.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            "Quick and easy bet code conversions...",
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style:
-                                CustomTextStyles.headlineLargePrimary.copyWith(
-                              height: 1.10,
-                              fontSize: 22.0,
+                          child: Align(
+                            child: Text(
+                              "Quick and easy bet code conversions...",
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style:
+                                  CustomTextStyles.headlineLargePrimary.copyWith(
+                                height: 1.12,
+                                fontSize: 27.0,
+                              ),
                             ),
                           ),
                         ),
