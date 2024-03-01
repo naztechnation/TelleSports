@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       // _buildSettingsFrame(context),
                       SizedBox(height: 24.v),
                       _buildShareFrame(context,
-                          text: "Contact support",
+                          text: "Contact Support",
                           image: ImageConstant.imgHelpCenter, onTap: () {
                         AppNavigator.pushAndStackPage(context,
                             page: LiveChat(
@@ -157,9 +157,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           text: "Delete your account",
                           processing: state is DeletingUserLoading,
                           title: 'Deleting account...',
-                          buttonTextStyle: TextStyle(color: Colors.red),
+                          buttonTextStyle: TextStyle(color: Colors.red, fontSize: 15),
                           buttonStyle: OutlinedButton.styleFrom(
                             foregroundColor: Colors.red,
+                            
                             side: BorderSide(
                               color: Colors.red,
                             ),
@@ -188,11 +189,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        height: 93.v,
+        height: 80.v,
         centerTitle: true,
         title: AppbarSubtitleOne(
          
-            text: "Settings", margin: EdgeInsets.only(top: 61.v, bottom: 7.v)),
+            text: "Settings", margin: EdgeInsets.only(top: 20.v, bottom: 1.v)),
         styleType: Style.bgOutline_4);
   }
 
@@ -234,7 +235,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(username,
                         style: CustomTextStyles.titleMediumOnPrimaryBold18),
                     SizedBox(height: 3.v),
-                    Text(email, style: theme.textTheme.labelMedium)
+                    Text(email, style: TextStyle(fontSize: 14, color: Colors.black))
                   ])),
           Spacer(),
           CustomImageView(
@@ -308,8 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Padding(
                 padding: EdgeInsets.only(top: 4.v, bottom: 1.v),
                 child: Text(text,
-                    style: theme.textTheme.titleSmall!
-                        .copyWith(color: theme.colorScheme.onPrimary))),
+                    style: TextStyle(fontSize: 14, color: Colors.black))),
             CustomImageView(
                 imagePath: image, height: 24.adaptSize, width: 24.adaptSize)
           ])),

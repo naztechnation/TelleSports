@@ -109,8 +109,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   child: Text(
                                       "Please enter and confirm your new password.",
                                       textAlign: TextAlign.left,
-                                      style: CustomTextStyles
-                                          .titleSmallBluegray900),
+                                      style: TextStyle(fontSize: 19, fontWeight: FontWeight.w400, color: Colors.black)
+                                      ),
                                 ),
                                 Align(
                                   alignment: Alignment.centerLeft,

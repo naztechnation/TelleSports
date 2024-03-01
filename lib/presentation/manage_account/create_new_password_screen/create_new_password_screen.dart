@@ -19,7 +19,8 @@ class CreateNewPasswordScreen extends StatefulWidget {
   CreateNewPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreateNewPasswordScreen> createState() => _CreateNewPasswordScreenState();
+  State<CreateNewPasswordScreen> createState() =>
+      _CreateNewPasswordScreenState();
 }
 
 class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
@@ -48,7 +49,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     });
   }
 
-    showPassword3() {
+  showPassword3() {
     setState(() {
       isShowPassword3 = !isShowPassword3;
     });
@@ -57,7 +58,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-        final user = Provider.of<FirebaseAuthProvider>(context, listen: true);
+    final user = Provider.of<FirebaseAuthProvider>(context, listen: true);
 
     return SafeArea(
         child: Scaffold(
@@ -79,8 +80,8 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                             Duration(
                               seconds: 3,
                             ), () {
-                                                    user.signOut(context);
-;
+                          user.signOut(context);
+                          ;
                         });
                       } else {
                         Modals.showToast(state.userData.message ?? '',
@@ -99,46 +100,56 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                     }
                   },
                   builder: (context, state) => Form(
-                  key: _formKey,
-                  child: Container(
-                      width: double.maxFinite,
-                      padding: EdgeInsets.symmetric(horizontal: 16.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                        Text("Create New Password",
-                            style: theme.textTheme.headlineLarge),
-                        SizedBox(height: 14.v),
-                        Text("Please enter and confirm your new password.",
-                            style: CustomTextStyles.titleSmallBluegray900),
-                        Text("You will need to login after you reset.",
-                            style: CustomTextStyles.titleSmallBluegray900),
-                        SizedBox(height: 29.v),
-                        _buildOldPasswordTextField(context),
-                        SizedBox(height: 11.v),
-                        _buildPasswordTextField(context),
-                        SizedBox(height: 11.v),
-                        _buildConfirmPasswordTextField(context),
-                        SizedBox(height: 32.v),
-                        CustomElevatedButton(
-                            text: "Create Password",
-                            processing: state is ResetPasswordLoading,
-                            margin: EdgeInsets.symmetric(horizontal: 4.h),
-                            onPressed: () {
-                              onTapCreatePassword(context);
-                            }),
-                        SizedBox(height: 5.v)
-                      ]))),
-            ))));
+                      key: _formKey,
+                      child: Container(
+                          width: double.maxFinite,
+                          padding: EdgeInsets.symmetric(horizontal: 16.h),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Create New Password",
+                                    style: theme.textTheme.headlineLarge),
+                                SizedBox(height: 14.v),
+                                Text(
+                                    "Please enter and confirm your new password.",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black)),
+                                SizedBox(height: 5.v),
+
+                                Text("You will need to login after you reset.",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black)),
+                                SizedBox(height: 29.v),
+                                _buildOldPasswordTextField(context),
+                                SizedBox(height: 11.v),
+                                _buildPasswordTextField(context),
+                                SizedBox(height: 11.v),
+                                _buildConfirmPasswordTextField(context),
+                                SizedBox(height: 32.v),
+                                CustomElevatedButton(
+                                    text: "Create Password",
+                                    processing: state is ResetPasswordLoading,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 4.h),
+                                    onPressed: () {
+                                      onTapCreatePassword(context);
+                                    }),
+                                SizedBox(height: 5.v)
+                              ]))),
+                ))));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
         leadingWidth: 389.h,
         leading: AppbarLeadingImage(
-          onTap: (){
-            Navigator.pop(context); 
-          },
+            onTap: () {
+              Navigator.pop(context);
+            },
             imagePath: ImageConstant.imgVector,
             margin: EdgeInsets.fromLTRB(24.h, 20.v, 350.h, 20.v)));
   }
@@ -147,7 +158,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Password", style: theme.textTheme.titleSmall),
+          Text("Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: oldPasswordController,
@@ -182,14 +193,14 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Password", style: theme.textTheme.titleSmall),
+          Text("Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: passwordController,
               hintText: 'Enter new password',
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputType: TextInputType.visiblePassword,
-               validator: (value) {
+              validator: (value) {
                 return Validator.validate(value, 'Password');
               },
               suffix: Container(
@@ -217,7 +228,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Confirm Password", style: theme.textTheme.titleSmall),
+          Text("Confirm Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: confirmpasswordController,
@@ -225,7 +236,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.visiblePassword,
-               validator: (value) {
+              validator: (value) {
                 return Validator.validate(value, 'Password');
               },
               suffix: Container(
@@ -250,10 +261,9 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   }
 
   onTapCreatePassword(BuildContext context) {
-      // AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+    // AppNavigator.pushAndReplacePage(context, page: SigninScreen());
 
-
-       if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       context.read<AccountCubit>().changePassword(
           oldPassword: oldPasswordController.text,
           password: passwordController.text.trim(),
@@ -261,6 +271,6 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
       FocusScope.of(context).unfocus();
     }
     ;
-;
+    ;
   }
 }

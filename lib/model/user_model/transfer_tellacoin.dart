@@ -1,4 +1,3 @@
-
 class TransferTellacoin {
   bool? success;
   Data? data;
@@ -25,9 +24,9 @@ class TransferTellacoin {
 
 class Data {
   int? id;
-  int? userId;
-  int? plansId;
-  int? tellaCoins;
+  String? userId;
+  String? plansId;
+  String? tellaCoins;
   String? createdAt;
   String? updatedAt;
   String? bank;

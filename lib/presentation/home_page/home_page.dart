@@ -114,6 +114,7 @@ class HomePageState
         ),
       ) : (showDelayedWidget) ? AppbarLeadingCircleimage(
         imagePath: photo,
+        
         margin: EdgeInsets.only(
           left: 20.h,
           top: 5.v,
@@ -122,7 +123,7 @@ class HomePageState
       ) :  Padding(
         padding: const EdgeInsets.all(16.0),
         child: CircularProgressIndicator(
-        strokeWidth: 3.5,
+        strokeWidth: 3,
         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
         backgroundColor: (Colors.grey)),
       ),

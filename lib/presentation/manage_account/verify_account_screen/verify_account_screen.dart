@@ -186,6 +186,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                               title: 'Verifying Code...',
                               margin: EdgeInsets.symmetric(horizontal: 4.h),
                               onPressed: () {
+                                
                                 _verifyCode(context);
                               }),
                         ],

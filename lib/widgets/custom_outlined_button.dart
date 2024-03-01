@@ -77,7 +77,7 @@ class CustomOutlinedButton extends BaseButton {
                       width: 15,
                       child: ProgressIndicators.circularProgressBar()),
                       const SizedBox(width: 13,),
-                  Text(title, style: TextStyle(color: Colors.red),)
+                  Text(title, style: TextStyle(color: Colors.red, fontSize: 14),)
                 ],
               ),
             ),
@@ -98,7 +98,7 @@ class CustomOutlinedButton extends BaseButton {
               leftIcon ?? const SizedBox.shrink(),
               Text(
                 text,
-                style: buttonTextStyle ?? CustomTextStyles.titleMediumBlack900,
+                style: buttonTextStyle ?? TextStyle(color: Colors.black, fontSize: 15),
               ),
               rightIcon ?? const SizedBox.shrink(),
             ],

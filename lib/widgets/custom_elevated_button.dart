@@ -71,7 +71,7 @@ class CustomElevatedButton extends BaseButton {
                       width: 15,
                       child: ProgressIndicators.circularProgressBar()),
                       const SizedBox(width: 13,),
-                  Text(title, style: TextStyle(color: Colors.white),)
+                  Text(title, style: TextStyle(fontSize: 15, color: Colors.white),)
                 ],
               ),
             ),
