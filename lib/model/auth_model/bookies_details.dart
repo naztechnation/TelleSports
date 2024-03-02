@@ -1,415 +1,494 @@
- 
-
 class BookiesDetails {
+    BookiesDetails({
+        required this.success,
+        required this.data,
+    });
+
     final bool? success;
     final BookiesDetailsData? data;
 
-    BookiesDetails({
-        this.success,
-        this.data,
-    });
+    BookiesDetails copyWith({
+        bool? success,
+        BookiesDetailsData? data,
+    }) {
+        return BookiesDetails(
+            success: success ?? this.success,
+            data: data ?? this.data,
+        );
+    }
 
-    factory BookiesDetails.fromJson(Map<String, dynamic> json) => BookiesDetails(
-        success: json["success"],
-        data: json["data"] == null ? null : BookiesDetailsData.fromJson(json["data"]),
-    );
+    factory BookiesDetails.fromJson(Map<String, dynamic> json){ 
+        return BookiesDetails(
+            success: json["success"],
+            data: json["data"] == null ? null : BookiesDetailsData.fromJson(json["data"]),
+        );
+    }
 
     Map<String, dynamic> toJson() => {
         "success": success,
         "data": data?.toJson(),
     };
+
+    @override
+    String toString(){
+        return "$success, $data, ";
+    }
 }
 
 class BookiesDetailsData {
-    final DataData? data;
-    final int? status;
-    final String? message;
-
     BookiesDetailsData({
-        this.data,
-        this.status,
-        this.message,
+        required this.data,
+        required this.message,
+        required this.status,
     });
 
-    factory BookiesDetailsData.fromJson(Map<String, dynamic> json) => BookiesDetailsData(
-        data: json["data"] == null ? null : DataData.fromJson(json["data"]),
-        status: json["status"],
-        message: json["message"],
-    );
+    final DataData? data;
+    final String? message;
+    final int? status;
+
+    BookiesDetailsData copyWith({
+        DataData? data,
+        String? message,
+        int? status,
+    }) {
+        return BookiesDetailsData(
+            data: data ?? this.data,
+            message: message ?? this.message,
+            status: status ?? this.status,
+        );
+    }
+
+    factory BookiesDetailsData.fromJson(Map<String, dynamic> json){ 
+        return BookiesDetailsData(
+            data: json["data"] == null ? null : DataData.fromJson(json["data"]),
+            message: json["message"],
+            status: json["status"],
+        );
+    }
 
     Map<String, dynamic> toJson() => {
         "data": data?.toJson(),
-        "status": status,
         "message": message,
+        "status": status,
     };
+
+    @override
+    String toString(){
+        return "$data, $message, $status, ";
+    }
 }
 
 class DataData {
-    final List<dynamic>? errors;
-    final String? status;
-    final Conversion? conversion;
-
     DataData({
-        this.errors,
-        this.status,
-        this.conversion,
+        required this.errors,
+        required this.conversion,
+        required this.status,
     });
 
-    factory DataData.fromJson(Map<String, dynamic> json) => DataData(
-        errors: json["errors"] == null ? [] : List<dynamic>.from(json["errors"]!.map((x) => x)),
-        status: json["status"],
-        conversion: json["conversion"] == null ? null : Conversion.fromJson(json["conversion"]),
-    );
+    final List<dynamic> errors;
+    final Conversion? conversion;
+    final String? status;
+
+    DataData copyWith({
+        List<dynamic>? errors,
+        Conversion? conversion,
+        String? status,
+    }) {
+        return DataData(
+            errors: errors ?? this.errors,
+            conversion: conversion ?? this.conversion,
+            status: status ?? this.status,
+        );
+    }
+
+    factory DataData.fromJson(Map<String, dynamic> json){ 
+        return DataData(
+            errors: json["errors"] == null ? [] : List<dynamic>.from(json["errors"]!.map((x) => x)),
+            conversion: json["conversion"] == null ? null : Conversion.fromJson(json["conversion"]),
+            status: json["status"],
+        );
+    }
 
     Map<String, dynamic> toJson() => {
-        "errors": errors == null ? [] : List<dynamic>.from(errors!.map((x) => x)),
-        "status": status,
+        "errors": errors.map((x) => x).toList(),
         "conversion": conversion?.toJson(),
+        "status": status,
     };
+
+    @override
+    String toString(){
+        return "$errors, $conversion, $status, ";
+    }
 }
 
 class Conversion {
+    Conversion({
+        required this.id,
+        required this.bookiesTrain,
+        required this.bookingCode,
+        required this.destinationCode,
+        required this.dump,
+        required this.channel,
+        required this.status,
+        required this.startsAt,
+        required this.endsAt,
+        required this.gravity,
+        required this.createdAt,
+        required this.updatedAt,
+        required this.percentProgress,
+        required this.errors,
+    });
+
     final int? id;
+    final String? bookiesTrain;
+    final String? bookingCode;
+    final String? destinationCode;
     final Dump? dump;
-    final dynamic errors;
-    final int? status;
     final String? channel;
+    final int? status;
+    final DateTime? startsAt;
     final DateTime? endsAt;
     final int? gravity;
-    final DateTime? startsAt;
     final DateTime? createdAt;
-    final String? identifier;
     final DateTime? updatedAt;
-    final Bookie? homeBookie;
-    final String? bookingCode;
-    final String? bookiesTrain;
-    final String? destBookieKey;
-    final String? destTotalOdds;
-    final String? homeTotalOdds;
-    final String? destinationCode;
     final int? percentProgress;
-    final String? destTotalEvents;
-    final String? homeTotalEvents;
-    final Bookie? destinationBookie;
-    final int? isFullConversion;
-    final int? noOfHomeEntries;
+    final List<dynamic> errors;
 
-    Conversion({
-        this.id,
-        this.dump,
-        this.errors,
-        this.status,
-        this.channel,
-        this.endsAt,
-        this.gravity,
-        this.startsAt,
-        this.createdAt,
-        this.identifier,
-        this.updatedAt,
-        this.homeBookie,
-        this.bookingCode,
-        this.bookiesTrain,
-        this.destBookieKey,
-        this.destTotalOdds,
-        this.homeTotalOdds,
-        this.destinationCode,
-        this.percentProgress,
-        this.destTotalEvents,
-        this.homeTotalEvents,
-        this.destinationBookie,
-        this.isFullConversion,
-        this.noOfHomeEntries,
-    });
+    Conversion copyWith({
+        int? id,
+        String? bookiesTrain,
+        String? bookingCode,
+        String? destinationCode,
+        Dump? dump,
+        String? channel,
+        int? status,
+        DateTime? startsAt,
+        DateTime? endsAt,
+        int? gravity,
+        DateTime? createdAt,
+        DateTime? updatedAt,
+        int? percentProgress,
+        List<dynamic>? errors,
+    }) {
+        return Conversion(
+            id: id ?? this.id,
+            bookiesTrain: bookiesTrain ?? this.bookiesTrain,
+            bookingCode: bookingCode ?? this.bookingCode,
+            destinationCode: destinationCode ?? this.destinationCode,
+            dump: dump ?? this.dump,
+            channel: channel ?? this.channel,
+            status: status ?? this.status,
+            startsAt: startsAt ?? this.startsAt,
+            endsAt: endsAt ?? this.endsAt,
+            gravity: gravity ?? this.gravity,
+            createdAt: createdAt ?? this.createdAt,
+            updatedAt: updatedAt ?? this.updatedAt,
+            percentProgress: percentProgress ?? this.percentProgress,
+            errors: errors ?? this.errors,
+        );
+    }
 
-    factory Conversion.fromJson(Map<String, dynamic> json) => Conversion(
-        id: json["id"],
-        dump: json["dump"] == null ? null : Dump.fromJson(json["dump"]),
-        errors: json["errors"],
-        status: json["status"],
-        channel: json["channel"],
-        endsAt: json["ends_at"] == null ? null : DateTime.parse(json["ends_at"]),
-        gravity: json["gravity"],
-        startsAt: json["starts_at"] == null ? null : DateTime.parse(json["starts_at"]),
-        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-        identifier: json["identifier"],
-        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-        homeBookie: json["home_bookie"] == null ? null : Bookie.fromJson(json["home_bookie"]),
-        bookingCode: json["booking_code"],
-        bookiesTrain: json["bookies_train"],
-        destBookieKey: json["dest_bookie_key"],
-        destTotalOdds: json["dest_total_odds"],
-        homeTotalOdds: json["home_total_odds"],
-        destinationCode: json["destination_code"],
-        percentProgress: json["percent_progress"],
-        destTotalEvents: json["dest_total_events"],
-        homeTotalEvents: json["home_total_events"],
-        destinationBookie: json["destination_bookie"] == null ? null : Bookie.fromJson(json["destination_bookie"]),
-        isFullConversion: json["is_full_conversion"],
-        noOfHomeEntries: json["no_of_home_entries"],
-    );
+    factory Conversion.fromJson(Map<String, dynamic> json){ 
+        return Conversion(
+            id: json["id"],
+            bookiesTrain: json["bookies_train"],
+            bookingCode: json["booking_code"],
+            destinationCode: json["destination_code"],
+            dump: json["dump"] == null ? null : Dump.fromJson(json["dump"]),
+            channel: json["channel"],
+            status: json["status"],
+            startsAt: DateTime.tryParse(json["starts_at"] ?? ""),
+            endsAt: DateTime.tryParse(json["ends_at"] ?? ""),
+            gravity: json["gravity"],
+            createdAt: DateTime.tryParse(json["created_at"] ?? ""),
+            updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
+            percentProgress: json["percent_progress"],
+            errors: json["errors"] == null ? [] : List<dynamic>.from(json["errors"]!.map((x) => x)),
+        );
+    }
 
     Map<String, dynamic> toJson() => {
         "id": id,
+        "bookies_train": bookiesTrain,
+        "booking_code": bookingCode,
+        "destination_code": destinationCode,
         "dump": dump?.toJson(),
-        "errors": errors,
-        "status": status,
         "channel": channel,
+        "status": status,
+        "starts_at": startsAt?.toIso8601String(),
         "ends_at": endsAt?.toIso8601String(),
         "gravity": gravity,
-        "starts_at": startsAt?.toIso8601String(),
         "created_at": createdAt?.toIso8601String(),
-        "identifier": identifier,
         "updated_at": updatedAt?.toIso8601String(),
-        "home_bookie": homeBookie?.toJson(),
-        "booking_code": bookingCode,
-        "bookies_train": bookiesTrain,
-        "dest_bookie_key": destBookieKey,
-        "dest_total_odds": destTotalOdds,
-        "home_total_odds": homeTotalOdds,
-        "destination_code": destinationCode,
         "percent_progress": percentProgress,
-        "dest_total_events": destTotalEvents,
-        "home_total_events": homeTotalEvents,
-        "destination_bookie": destinationBookie?.toJson(),
-        "is_full_conversion": isFullConversion,
-        "no_of_home_entries": noOfHomeEntries,
+        "errors": errors.map((x) => x).toList(),
     };
-}
 
-class Bookie {
-    final int? id;
-    final String? name;
-    final dynamic status;
-    final dynamic details;
-    final String? keyName;
-    final int? countryId;
-    final dynamic createdAt;
-    final DateTime? updatedAt;
-
-    Bookie({
-        this.id,
-        this.name,
-        this.status,
-        this.details,
-        this.keyName,
-        this.countryId,
-        this.createdAt,
-        this.updatedAt,
-    });
-
-    factory Bookie.fromJson(Map<String, dynamic> json) => Bookie(
-        id: json["id"],
-        name: json["name"],
-        status: json["status"],
-        details: json["details"],
-        keyName: json["key_name"],
-        countryId: json["country_id"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "status": status,
-        "details": details,
-        "key_name": keyName,
-        "country_id": countryId,
-        "created_at": createdAt,
-        "updated_at": updatedAt?.toIso8601String(),
-    };
+    @override
+    String toString(){
+        return "$id, $bookiesTrain, $bookingCode, $destinationCode, $dump, $channel, $status, $startsAt, $endsAt, $gravity, $createdAt, $updatedAt, $percentProgress, $errors, ";
+    }
 }
 
 class Dump {
-    final DumpDestination? home;
-    final List<ListElement>? lists;
-    final DumpDestination? destination;
-
     Dump({
-        this.home,
-        this.lists,
-        this.destination,
+        required this.home,
+        required this.destination,
+        required this.lists,
     });
 
-    factory Dump.fromJson(Map<String, dynamic> json) => Dump(
-        home: json["home"] == null ? null : DumpDestination.fromJson(json["home"]),
-        lists: json["lists"] == null ? [] : List<ListElement>.from(json["lists"]!.map((x) => ListElement.fromJson(x))),
-        destination: json["destination"] == null ? null : DumpDestination.fromJson(json["destination"]),
-    );
+    final DumpDestination? home;
+    final DumpDestination? destination;
+    final List<ListElement> lists;
+
+    Dump copyWith({
+        DumpDestination? home,
+        DumpDestination? destination,
+        List<ListElement>? lists,
+    }) {
+        return Dump(
+            home: home ?? this.home,
+            destination: destination ?? this.destination,
+            lists: lists ?? this.lists,
+        );
+    }
+
+    factory Dump.fromJson(Map<String, dynamic> json){ 
+        return Dump(
+            home: json["home"] == null ? null : DumpDestination.fromJson(json["home"]),
+            destination: json["destination"] == null ? null : DumpDestination.fromJson(json["destination"]),
+            lists: json["lists"] == null ? [] : List<ListElement>.from(json["lists"]!.map((x) => ListElement.fromJson(x))),
+        );
+    }
 
     Map<String, dynamic> toJson() => {
         "home": home?.toJson(),
-        "lists": lists == null ? [] : List<dynamic>.from(lists!.map((x) => x.toJson())),
         "destination": destination?.toJson(),
+        "lists": lists.map((x) => x?.toJson()).toList(),
     };
+
+    @override
+    String toString(){
+        return "$home, $destination, $lists, ";
+    }
 }
 
 class DumpDestination {
-    final double? odds;
-    final String? bookie;
-    final int? noOfEntries;
-
     DumpDestination({
-        this.odds,
-        this.bookie,
-        this.noOfEntries,
+        required this.bookie,
+        required this.odds,
     });
 
-    factory DumpDestination.fromJson(Map<String, dynamic> json) => DumpDestination(
-        odds: json["odds"]?.toDouble(),
-        bookie: json["bookie"],
-        noOfEntries: json["no_of_entries"],
-    );
+    final String? bookie;
+    final String? odds;
+
+    DumpDestination copyWith({
+        String? bookie,
+        String? odds,
+    }) {
+        return DumpDestination(
+            bookie: bookie ?? this.bookie,
+            odds: odds ?? this.odds,
+        );
+    }
+
+    factory DumpDestination.fromJson(Map<String, dynamic> json){ 
+        return DumpDestination(
+            bookie: json["bookie"],
+            odds: json["odds"],
+        );
+    }
 
     Map<String, dynamic> toJson() => {
-        "odds": odds,
         "bookie": bookie,
-        "no_of_entries": noOfEntries,
+        "odds": odds,
     };
+
+    @override
+    String toString(){
+        return "$bookie, $odds, ";
+    }
 }
 
 class ListElement {
-    final ListDestination? home;
-    final Sport? sport;
-    final ListDestination? destination;
-    final bool? isConverted;
-    final dynamic exemptReason;
-
     ListElement({
-        this.home,
-        this.sport,
-        this.destination,
-        this.isConverted,
-        this.exemptReason,
+        required this.sport,
+        required this.isConverted,
+        required this.exemptReason,
+        required this.home,
+        required this.destination,
     });
 
-    factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
-        home: json["home"] == null ? null : ListDestination.fromJson(json["home"]),
-        sport: json["sport"] == null ? null : Sport.fromJson(json["sport"]),
-        destination: json["destination"] == null ? null : ListDestination.fromJson(json["destination"]),
-        isConverted: json["is_converted"],
-        exemptReason: json["exempt_reason"],
-    );
+    final Sport? sport;
+    final bool? isConverted;
+    final String? exemptReason;
+    final DestinationDestination? home;
+    final dynamic? destination;
+
+    ListElement copyWith({
+        Sport? sport,
+        bool? isConverted,
+        String? exemptReason,
+        DestinationDestination? home,
+        dynamic? destination,
+    }) {
+        return ListElement(
+            sport: sport ?? this.sport,
+            isConverted: isConverted ?? this.isConverted,
+            exemptReason: exemptReason ?? this.exemptReason,
+            home: home ?? this.home,
+            destination: destination ?? this.destination,
+        );
+    }
+
+    factory ListElement.fromJson(Map<String, dynamic> json){ 
+        return ListElement(
+            sport: json["sport"] == null ? null : Sport.fromJson(json["sport"]),
+            isConverted: json["is_converted"],
+            exemptReason: json["exempt_reason"],
+            home: json["home"] == null ? null : DestinationDestination.fromJson(json["home"]),
+            destination: json["destination"],
+        );
+    }
 
     Map<String, dynamic> toJson() => {
-        "home": home?.toJson(),
         "sport": sport?.toJson(),
-        "destination": destination?.toJson(),
         "is_converted": isConverted,
         "exempt_reason": exemptReason,
+        "home": home?.toJson(),
+        "destination": destination,
     };
+
+    @override
+    String toString(){
+        return "$sport, $isConverted, $exemptReason, $home, $destination, ";
+    }
 }
 
-class ListDestination {
-    final SportId? sportId;
-    final String? awayTeam;
-    final String? homeTeam;
-    final DateTime? itemDate;
+class DestinationDestination {
+    DestinationDestination({
+        required this.itemName,
+        required this.homeTeam,
+        required this.awayTeam,
+        required this.itemDate,
+        required this.tournamentName,
+        required this.categoryName,
+        required this.sportId,
+        required this.marketName,
+        required this.outcomeName,
+        required this.oddValue,
+        required this.itemUtcDate,
+    });
+
     final String? itemName;
-    final double? oddValue;
-    final MarketName? marketName;
-    final OutcomeName? outcomeName;
-    final String? categoryName;
+    final String? homeTeam;
+    final String? awayTeam;
+    final DateTime? itemDate;
     final String? tournamentName;
+    final String? categoryName;
+    final String? sportId;
+    final String? marketName;
+    final String? outcomeName;
+    final String? oddValue;
     final DateTime? itemUtcDate;
 
-    ListDestination({
-        this.sportId,
-        this.awayTeam,
-        this.homeTeam,
-        this.itemDate,
-        this.itemName,
-        this.oddValue,
-        this.marketName,
-        this.outcomeName,
-        this.categoryName,
-        this.tournamentName,
-        this.itemUtcDate,
-    });
+    DestinationDestination copyWith({
+        String? itemName,
+        String? homeTeam,
+        String? awayTeam,
+        DateTime? itemDate,
+        String? tournamentName,
+        String? categoryName,
+        String? sportId,
+        String? marketName,
+        String? outcomeName,
+        String? oddValue,
+        DateTime? itemUtcDate,
+    }) {
+        return DestinationDestination(
+            itemName: itemName ?? this.itemName,
+            homeTeam: homeTeam ?? this.homeTeam,
+            awayTeam: awayTeam ?? this.awayTeam,
+            itemDate: itemDate ?? this.itemDate,
+            tournamentName: tournamentName ?? this.tournamentName,
+            categoryName: categoryName ?? this.categoryName,
+            sportId: sportId ?? this.sportId,
+            marketName: marketName ?? this.marketName,
+            outcomeName: outcomeName ?? this.outcomeName,
+            oddValue: oddValue ?? this.oddValue,
+            itemUtcDate: itemUtcDate ?? this.itemUtcDate,
+        );
+    }
 
-    factory ListDestination.fromJson(Map<String, dynamic> json) => ListDestination(
-        sportId: sportIdValues.map[json["sport_id"]]!,
-        awayTeam: json["away_team"],
-        homeTeam: json["home_team"],
-        itemDate: json["item_date"] == null ? null : DateTime.parse(json["item_date"]),
-        itemName: json["item_name"],
-        oddValue: json["odd_value"]?.toDouble(),
-        marketName: marketNameValues.map[json["market_name"]]!,
-        outcomeName: outcomeNameValues.map[json["outcome_name"]]!,
-        categoryName: json["category_name"],
-        tournamentName: json["tournament_name"],
-        itemUtcDate: json["item_utc_date"] == null ? null : DateTime.parse(json["item_utc_date"]),
-    );
+    factory DestinationDestination.fromJson(Map<String, dynamic> json){ 
+        return DestinationDestination(
+            itemName: json["item_name"],
+            homeTeam: json["home_team"],
+            awayTeam: json["away_team"],
+            itemDate: DateTime.tryParse(json["item_date"] ?? ""),
+            tournamentName: json["tournament_name"],
+            categoryName: json["category_name"],
+            sportId: json["sport_id"],
+            marketName: json["market_name"],
+            outcomeName: json["outcome_name"],
+            oddValue: json["odd_value"],
+            itemUtcDate: DateTime.tryParse(json["item_utc_date"] ?? ""),
+        );
+    }
 
     Map<String, dynamic> toJson() => {
-        "sport_id": sportIdValues.reverse[sportId],
-        "away_team": awayTeam,
-        "home_team": homeTeam,
-        "item_date": itemDate?.toIso8601String(),
         "item_name": itemName,
-        "odd_value": oddValue,
-        "market_name": marketNameValues.reverse[marketName],
-        "outcome_name": outcomeNameValues.reverse[outcomeName],
-        "category_name": categoryName,
+        "home_team": homeTeam,
+        "away_team": awayTeam,
+        "item_date": itemDate?.toIso8601String(),
         "tournament_name": tournamentName,
+        "category_name": categoryName,
+        "sport_id": sportId,
+        "market_name": marketName,
+        "outcome_name": outcomeName,
+        "odd_value": oddValue,
         "item_utc_date": itemUtcDate?.toIso8601String(),
     };
+
+    @override
+    String toString(){
+        return "$itemName, $homeTeam, $awayTeam, $itemDate, $tournamentName, $categoryName, $sportId, $marketName, $outcomeName, $oddValue, $itemUtcDate, ";
+    }
 }
-
-enum MarketName {
-    MARKET_NAME_TOTAL,
-    TOTAL
-}
-
-final marketNameValues = EnumValues({
-    "Total": MarketName.MARKET_NAME_TOTAL,
-    " - Total": MarketName.TOTAL
-});
-
-enum OutcomeName {
-    TOTAL_UNDER_25
-}
-
-final outcomeNameValues = EnumValues({
-    "Total Under (2.5)": OutcomeName.TOTAL_UNDER_25
-});
-
-enum SportId {
-    SOCCER
-}
-
-final sportIdValues = EnumValues({
-    "soccer": SportId.SOCCER
-});
 
 class Sport {
-    final SportId? id;
-    final String? icon;
-
     Sport({
-        this.id,
-        this.icon,
+        required this.id,
+        required this.icon,
     });
 
-    factory Sport.fromJson(Map<String, dynamic> json) => Sport(
-        id: sportIdValues.map[json["id"]]!,
-        icon: json["icon"],
-    );
+    final String? id;
+    final String? icon;
+
+    Sport copyWith({
+        String? id,
+        String? icon,
+    }) {
+        return Sport(
+            id: id ?? this.id,
+            icon: icon ?? this.icon,
+        );
+    }
+
+    factory Sport.fromJson(Map<String, dynamic> json){ 
+        return Sport(
+            id: json["id"],
+            icon: json["icon"],
+        );
+    }
 
     Map<String, dynamic> toJson() => {
-        "id": sportIdValues.reverse[id],
+        "id": id,
         "icon": icon,
     };
-}
 
-class EnumValues<T> {
-    Map<String, T> map;
-    late Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        reverseMap = map.map((k, v) => MapEntry(v, k));
-        return reverseMap;
+    @override
+    String toString(){
+        return "$id, $icon, ";
     }
 }

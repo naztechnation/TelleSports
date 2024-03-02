@@ -113,7 +113,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: Colors.blue.shade600))
                             ]),
                             textAlign: TextAlign.left),
-                        Text("Enter the code to verify your account. ${widget.otp}",
+                        Text("Enter the code to verify your account.",
                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black)),
                         SizedBox(height: 29.v),
                         _buildTextField(context),

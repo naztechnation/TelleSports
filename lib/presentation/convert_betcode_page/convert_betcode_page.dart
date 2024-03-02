@@ -325,11 +325,19 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                                         headerColorTwo: Color.fromARGB(
                                             255, 234, 132, 132)));
                               } else {
-                                _accountCubit.convertBetCode(
+                                if(fromId == null || fromId == ''){
+                                  Modals.showToast('Please select origin bookie');
+
+                                }else if(toId == null || toId == ''){
+                                  Modals.showToast('Please select destination bookie');
+                                }else{
+                                   _accountCubit.convertBetCode(
                                     from: fromId ?? '',
                                     to: toId ?? '',
                                     bookingCode: converterCodeController.text,
                                     apiKey: '');
+                                }
+                               
                               }
                             },
                           ),

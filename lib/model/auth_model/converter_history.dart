@@ -29,7 +29,7 @@ class ConverterHistory {
 
 class ConverterHistoryData {
   int? id;
-  int? userId;
+  String? userId;
   String? convertedFrom;
   String? convertedTo;
   String? sourceCode;

@@ -61,7 +61,7 @@ class CommunityleaderItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 2.v),
+                          padding: EdgeInsets.only(top: 2.v,),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -96,8 +96,8 @@ class CommunityleaderItemWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15.v),
-           for (String bodyItem in plans.functionality!)
-          Padding(
+          // for (String bodyItem in plans.functionality!)
+        if(plans.functionality!.privileges != 'null')  Padding(
             padding: EdgeInsets.only(left: 12.h),
             child: Row(
               children: [
@@ -112,7 +112,32 @@ class CommunityleaderItemWidget extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(left: 4.h),
                     child: Text(
-                      bodyItem,
+                      plans.functionality!.privileges ?? '',
+                      style: CustomTextStyles.titleSmallBluegray900Bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10.v),
+          
+          if(plans.functionality!.ability != null)  Padding(
+            padding: EdgeInsets.only(left: 12.h),
+            child: Row(
+              children: [
+                CustomImageView(
+                  imagePath: ImageConstant.imgIcRoundCheck,
+                  height: 17.adaptSize,
+                  width: 17.adaptSize,
+                  margin: EdgeInsets.only(bottom: 1.v),
+                ),
+                Expanded(
+                  flex: 8,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 4.h),
+                    child: Text(
+                      plans.functionality!.ability ?? '',
                       style: CustomTextStyles.titleSmallBluegray900Bold,
                     ),
                   ),

@@ -394,10 +394,10 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
 
   Widget _buildStarterPlan(BuildContext context) {
     return CustomElevatedButton(
-      height: 23.v,
-      width: (plan.toUpperCase() == 'community leader'.toUpperCase()) ? 150.h : 106.h,
+      height: 31.v,
+      width: (plan.toUpperCase() == 'community leader'.toUpperCase()) ? 150.h : 136.h,
       text: plan.toUpperCase(),
-      margin: EdgeInsets.only(right: 12.h, left: 12.h),
+      margin: EdgeInsets.only(right: 12.h, left: 12.h,),
       buttonStyle: CustomButtonStyles.fillTeal,
       buttonTextStyle: CustomTextStyles.labelLargeInter,
       alignment: Alignment.centerRight,
@@ -484,7 +484,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
         ),
         onPressed: () =>
             AppNavigator.pushAndStackPage(context, page: WithdrawTellaCoins()),
-        text: "  Cash Tellacoins",
+        text: "   Cash Tellacoins",
         margin: EdgeInsets.symmetric(horizontal: 20.h));
   }
 
