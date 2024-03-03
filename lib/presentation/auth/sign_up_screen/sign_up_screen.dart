@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  Country? country;
+
   TextEditingController userNameController = TextEditingController();
 
   TextEditingController emailController = TextEditingController();
@@ -60,6 +63,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
+  void pickCountry() {
+    showCountryPicker(
+        context: context,
+        onSelect: (Country _country) {
+          setState(() {
+            country = _country;
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
@@ -71,9 +84,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: Scaffold(
-        body: Scaffold(
-            resizeToAvoidBottomInset: false,
+      child: 
+         Scaffold(
+            resizeToAvoidBottomInset: true,
             body: BlocProvider<AccountCubit>(
                 lazy: false,
                 create: (_) => AccountCubit(
@@ -166,13 +179,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               SizedBox(height: 32.v),
                               Text("Register",
                                   style: theme.textTheme.headlineLarge),
-                              SizedBox(height: 12.v),
+                              SizedBox(height: 5.v),
                               _buildUsernameTextField(context),
-                              SizedBox(height: 12.v),
+                              SizedBox(height: 5.v),
                               _buildEmailTextField(context),
-                              SizedBox(height: 12.v),
+                              SizedBox(height: 5.v),
                               _buildPhoneNumberTextField(context),
-                              SizedBox(height: 12.v),
+                              SizedBox(height: 5.v),
                               _buildPasswordTextField(context),
                               SizedBox(height: 40.v),
                               CustomElevatedButton(
@@ -215,7 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                               SizedBox(height: 42.v),
                               CustomOutlinedButton(
-                                text: "Sign in with Google",
+                                text: "Sign up with Google",
                                 processing: (state is AccountProcessing ||
                                     authUser.status ||
                                     state is AccountLoading),
@@ -237,6 +250,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   Modals.showBottomSheetModal(
                                     context,
                                     isDissmissible: true,
+                                     isScrollControlled: true,
                                     heightFactor: 0.9,
                                     page: registerUserWithGoogle(
                                         authUser, context),
@@ -332,7 +346,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ))),
       ),
-    ));
+    );
   }
 
   Widget _buildUsernameTextField(BuildContext context) {
@@ -378,10 +392,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Text("Phone number", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
+            prefix:   (country != null) ?  GestureDetector(
+              onTap: () {
+                pickCountry();
+              },
+              child: SizedBox(
+                  width: 85,
+              
+                child: Padding(
+                  padding: const EdgeInsets.only(left:6.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Icon(Icons.arrow_drop_down, color: Colors.green.shade800,size: 25,),
+                        Text('+${country!.phoneCode}', style: TextStyle(fontSize: 16, color: Colors.green),),
+                      ],
+                    )),
+                ),
+              ),
+            ) : GestureDetector(
+              onTap: () {
+                pickCountry();
+                
+              },
+              child: SizedBox(
+                  width: 85,
+              
+                child: Padding(
+                  padding: const EdgeInsets.only(left:6.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Icon(Icons.arrow_drop_down, color: Colors.green.shade800,size: 25,),
+
+                        Text('+234', style: TextStyle(fontSize: 16, color: Colors.green),),
+                      ],
+                    )),
+                ),
+              ),
+            ),
             controller: phoneNumberController,
             hintText: "Enter your phone number",
             hintStyle: CustomTextStyles.titleSmallGray600,
             textInputType: TextInputType.phone,
+            maxLength: 10, 
+        onChanged: (text) {
+          if (text.isNotEmpty && text[0] == '0') {
+            phoneNumberController.value = phoneNumberController.value.copyWith(
+              text: text.substring(1), // Consume the leading zero
+              selection: TextSelection(
+                baseOffset: text.length - 1,
+                extentOffset: text.length - 1,
+              ),
+              composing: TextRange.empty,
+            );
+          }
+        },
             validator: (value) {
               return Validator.validate(value, 'Contact');
             },
@@ -396,11 +464,66 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Text("Phone number", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
+             prefix:   (country != null) ?  GestureDetector(
+              onTap: () {
+                pickCountry();
+              },
+              child: SizedBox(
+                  width: 85,
+              
+                child: Padding(
+                  padding: const EdgeInsets.only(left:6.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Icon(Icons.arrow_drop_down, color: Colors.green.shade800,size: 25,),
+                        Text('+${country!.phoneCode}', style: TextStyle(fontSize: 16, color: Colors.green),),
+                      ],
+                    )),
+                ),
+              ),
+            ) : GestureDetector(
+              onTap: () {
+                pickCountry();
+                
+              },
+              child: SizedBox(
+                  width: 85,
+              
+                child: Padding(
+                  padding: const EdgeInsets.only(left:6.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Icon(Icons.arrow_drop_down, color: Colors.green.shade800,size: 25,),
+
+                        Text('+234', style: TextStyle(fontSize: 16, color: Colors.green),),
+                      ],
+                    )),
+                ),
+              ),
+            ),
+             onChanged: (text) {
+          if (text.isNotEmpty && text[0] == '0') {
+            phoneNumberGoogleController.value = phoneNumberGoogleController.value.copyWith(
+              text: text.substring(1), 
+              selection: TextSelection(
+                baseOffset: text.length - 1,
+                extentOffset: text.length - 1,
+              ),
+              composing: TextRange.empty,
+            );
+          }
+        },
             controller: phoneNumberGoogleController,
             hintText: "Enter your phone number",
+            maxLength: 10,
             hintStyle: CustomTextStyles.titleSmallGray600,
             textInputType: TextInputType.phone,
             textInputAction: TextInputAction.done,
+            
             validator: (value) {
               return Validator.validate(value, 'Contact');
             },
@@ -459,7 +582,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             suffixConstraints: BoxConstraints(maxHeight: 48.v),
             contentPadding: EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v),
             validator: (value) {
-              return Validator.validate(value, 'Password');
+              return Validator.validatePassword(value,);
             },
           )
         ]));
@@ -521,56 +644,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                    onTap: () {
+        child: Container(
+           padding:
+            MediaQuery.of(context).viewInsets,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.green,
+                      ))
+                ],
+              ),
+              SizedBox(height: 24.v),
+              Text("Please enter the following details to continue",
+                  style: theme.textTheme.titleSmall),
+              SizedBox(height: 10.v),
+              _buildUserNameGoogleTextField(context),
+              SizedBox(height: 20.v),
+              _buildPhoneNumberGoogleTextField(context),
+              SizedBox(height: 24.v),
+              CustomElevatedButton(
+                  text: "Continue",
+                  margin: EdgeInsets.symmetric(horizontal: 4.h),
+                  title: 'Creating Account...',
+                  onPressed: () async {
+                    if (phoneNumberGoogleController.text.isNotEmpty &&
+                        userNameGoogleController.text.isNotEmpty) {
                       Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.green,
-                    ))
-              ],
-            ),
-            SizedBox(height: 24.v),
-            Text("Please enter the following details to continue",
-                style: theme.textTheme.titleSmall),
-            SizedBox(height: 10.v),
-            _buildUserNameGoogleTextField(context),
-            SizedBox(height: 20.v),
-            _buildPhoneNumberGoogleTextField(context),
-            SizedBox(height: 24.v),
-            CustomElevatedButton(
-                text: "Continue",
-                margin: EdgeInsets.symmetric(horizontal: 4.h),
-                title: 'Creating Account...',
-                onPressed: () async {
-                  if (phoneNumberGoogleController.text.isNotEmpty &&
-                      userNameGoogleController.text.isNotEmpty) {
-                    Navigator.pop(context);
-                    User? user = await authUser.signInWithGoogle();
-                    if (user != null) {
-                      //  Modals.showToast(authUser.successMessage);
-
-                      registerUser(
-                          context: ctxt,
-                          isGoogle: true,
-                          email: user.email,
-                          password: user.email,
-                          phoneNumber: phoneNumberGoogleController.text,
-                          username: userNameGoogleController.text);
+                      User? user = await authUser.signInWithGoogle();
+                      if (user != null) {
+                        //  Modals.showToast(authUser.successMessage);
+          
+                        registerUser(
+                            context: ctxt,
+                            isGoogle: true,
+                            email: user.email,
+                            password: user.email,
+                            phoneNumber: phoneNumberGoogleController.text,
+                            username: userNameGoogleController.text);
+                      } else {
+                        Modals.showToast(authUser.successMessage);
+                      }
                     } else {
-                      Modals.showToast(authUser.successMessage);
+                      Modals.showToast('Please fill all fields');
                     }
-                  } else {
-                    Modals.showToast('Please fill all fields');
-                  }
-                }),
-          ],
+                  }),
+            ],
+          ),
         ),
       ),
     );

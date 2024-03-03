@@ -21,22 +21,27 @@ class Validator {
     }
   }
 
-  static String? validatePhone(String? value, [String? countryCode]) {
-    Pattern pattern =
-        r'^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$';
+static String? validatePhone(String? value, [String? countryCode]) {
+  if (value == null || value.isEmpty) {
+    return 'Required.';
+  } 
 
-    RegExp regex = RegExp(pattern as String);
-    if (value!.isEmpty) {
-      return 'Required.';
-    } /*else if (!regex.hasMatch(value)) {
-      return 'Please enter a mobile number.';
-    }*/
-    else if (countryCode != null && countryCode.isEmpty) {
-      return 'Country code is Required';
-    } else {
-      return null;
-    }
+  String pattern =
+      r'^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$';
+
+  RegExp regex = RegExp(pattern);
+  if (!regex.hasMatch(value)) {
+    return 'Please enter a valid mobile number.';
   }
+
+  if (countryCode == null || countryCode.isEmpty) {
+    return 'Country code is required';
+  }
+
+  return null;
+}
+
+
 
   static String? validatePassword(String? password) {
     if (password == null || password.isEmpty) {

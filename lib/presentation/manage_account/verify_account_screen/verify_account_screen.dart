@@ -99,23 +99,28 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                   builder: (context, state) => Container(
                       width: double.maxFinite,
                       padding: EdgeInsets.symmetric(horizontal: 16.h),
-                      child: Column(children: [
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                         Text("Verify Account",
                             style: theme.textTheme.headlineLarge),
                         SizedBox(height: 5.v),
                         RichText(
-                            text: TextSpan(children: [
+                          text: TextSpan(children: [
                               TextSpan(
                                   text: "Code has been send to ",
-                                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: Colors.black)),
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black)),
+                             
                               TextSpan(
                                   text: widget.email,
-                                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: Colors.blue.shade600))
+                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.blue.shade600))
                             ]),
-                            textAlign: TextAlign.left),
+                            textAlign: TextAlign.left, textScaler: TextScaler.linear(1.3)),
+                        SizedBox(height: 1.v),
+                       
                         Text("Enter the code to verify your account.",
-                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black)),
-                        SizedBox(height: 29.v),
+                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black)),
+                        SizedBox(height: 39.v),
                         _buildTextField(context),
                         SizedBox(height: 12.v),
                         if (isCountdownComplete)
@@ -131,8 +136,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                                             padding:
                                                 EdgeInsets.only(bottom: 1.v),
                                             child: Text("Didn’t Receive Code?",
-                                                style: theme
-                                                    .textTheme.bodyMedium)),
+                                                style: TextStyle(fontSize: 14))),
                                         Expanded(
                                           child: GestureDetector(
                                             onTap: () {
@@ -149,7 +153,8 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                                                         .copyWith(
                                                             decoration:
                                                                 TextDecoration
-                                                                    .underline))),
+                                                                    .underline, decorationColor:
+                                                            Colors.blue, fontSize: 15.3))),
                                           ),
                                         )
                                       ])),
@@ -211,7 +216,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Enter Code", style: theme.textTheme.titleSmall),
+          Text("Enter Code", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: enterDigitCodeController,

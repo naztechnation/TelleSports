@@ -158,11 +158,11 @@ class _SigninScreenState extends State<SigninScreen> {
                                   style: theme.textTheme.headlineLarge),
                               SizedBox(height: 30.v),
                               _buildEmailOrPhoneSection(context),
-                              SizedBox(height: 11.v),
+                              SizedBox(height: 5.v),
                               _buildPasswordSection(context),
-                              SizedBox(height: 13.v),
+                              SizedBox(height: 8.v),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal:15.0),
+                                padding: const EdgeInsets.symmetric(horizontal:10.0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -181,7 +181,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                                         decoration: TextDecoration
                                                             .underline,
                                                         decorationColor:
-                                                            Colors.blue)))),
+                                                            Colors.blue, fontSize: 15.3)))),
                                     Align(
                                         alignment: Alignment.centerRight,
                                         child: GestureDetector(
@@ -195,7 +195,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                                         decoration: TextDecoration
                                                             .underline,
                                                         decorationColor:
-                                                            Colors.blue)))),
+                                                            Colors.blue, fontSize: 15.3)))),
                                   ],
                                 ),
                               ),
@@ -209,15 +209,17 @@ class _SigninScreenState extends State<SigninScreen> {
                                   margin:
                                       EdgeInsets.symmetric(horizontal: 4.h)),
                               Spacer(),
-                              Text("or login with",
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black38)),
+                              // Text("or login with",
+                              //     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black38)),
                               SizedBox(height: 11.v),
                               CustomOutlinedButton(
+                                
                                   text: "Sign in with Google",
                                   margin: EdgeInsets.symmetric(horizontal: 4.h),
                                   leftIcon: Container(
                                       margin: EdgeInsets.only(right: 10.h),
                                       child: CustomImageView(
+                                        
                                         imagePath:
                                             ImageConstant.imgSocialMediaIcons,
                                         height: 24.adaptSize,

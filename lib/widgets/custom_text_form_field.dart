@@ -17,6 +17,7 @@ class CustomTextFormField extends StatelessWidget {
     this.textInputType = TextInputType.text,
     
     this.maxLines,
+    this.maxLength = 200,
     this.hintText,
     this.hintStyle,
     this.prefix,
@@ -59,6 +60,7 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType? textInputType;
 
   final int? maxLines;
+  final int? maxLength;
 
   final String? hintText;
 
@@ -100,11 +102,12 @@ class CustomTextFormField extends StatelessWidget {
         child: TextFormField(
           controller: controller,
           readOnly: readOnly,
-          style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w600),
+          style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
           obscureText: obscureText!,
           textInputAction: textInputAction,
           keyboardType: textInputType,
           maxLines: maxLines ?? 1,
+          maxLength: maxLength,
           decoration: decoration,
           validator: validator,
           inputFormatters: inputFormatters,
@@ -119,7 +122,7 @@ class CustomTextFormField extends StatelessWidget {
         prefixIconConstraints: prefixConstraints,
         suffixIcon: suffix,
         
-        
+        counter: SizedBox.shrink(),
         suffixIconConstraints: suffixConstraints,
         isDense: true,
         contentPadding: contentPadding ??

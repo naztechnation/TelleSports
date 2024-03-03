@@ -1,3 +1,5 @@
+import 'package:tellesports/model/auth_model/plans_list.dart';
+
 class LoginUser {
   bool? success;
   String? message;
@@ -134,7 +136,7 @@ class Plan {
   String? name;
   String? tellacoin;
   String? price;
-  List<String>? functionality;
+  Functionality? functionality;
   String? createdAt;
   String? updatedAt;
 
@@ -152,7 +154,9 @@ class Plan {
     name = json['name'];
     tellacoin = json['tellacoin'];
     price = json['price'];
-    functionality = json['functionality'].cast<String>();
+     functionality = json['functionality'] != null
+        ? new Functionality.fromJson(json['functionality'])
+        : null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -163,7 +167,9 @@ class Plan {
     data['name'] = this.name;
     data['tellacoin'] = this.tellacoin;
     data['price'] = this.price;
-    data['functionality'] = this.functionality;
+     if (this.functionality != null) {
+      data['functionality'] = this.functionality!.toJson();
+    }
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;
@@ -223,6 +229,25 @@ class UserWallet {
     if (this.plan != null) {
       data['plan'] = this.plan!.toJson();
     }
+    return data;
+  }
+}
+
+class Functionality {
+  String? ability;
+  String? privileges;
+
+  Functionality({this.ability, this.privileges});
+
+  Functionality.fromJson(Map<String, dynamic> json) {
+    ability = json['ability'];
+    privileges = json['privileges'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ability'] = this.ability;
+    data['privileges'] = this.privileges;
     return data;
   }
 }
