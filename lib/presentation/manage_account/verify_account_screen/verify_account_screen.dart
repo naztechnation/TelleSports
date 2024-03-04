@@ -108,18 +108,18 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                         RichText(
                           text: TextSpan(children: [
                               TextSpan(
-                                  text: "Code has been send to ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black)),
+                                  text: "Code has been sent to ",
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black)),
                              
                               TextSpan(
                                   text: widget.email,
-                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.blue.shade600))
+                                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.green.shade800))
                             ]),
                             textAlign: TextAlign.left, textScaler: TextScaler.linear(1.3)),
                         SizedBox(height: 1.v),
                        
                         Text("Enter the code to verify your account.",
-                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black)),
+                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black)),
                         SizedBox(height: 39.v),
                         _buildTextField(context),
                         SizedBox(height: 12.v),
