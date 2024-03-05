@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/res/app_images.dart';
 
 import '../../handlers/secure_handler.dart';
 import '../../utils/navigator/page_navigator.dart';
@@ -77,51 +78,61 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Stack(
         children: [
-          Align(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                FadingSlidingWidget(
-                  animationController: _animationController,
-                  interval: const Interval(0.5, 0.9),
-                  child: AnimatedBuilder(
-                    animation: _animation,
-                    builder: (context, child) {
-                      return Transform.translate(
-                        offset: Offset(0, 100 * (1 - _animation.value)),
-                        child: child,
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(60),
-                      child: CustomIconButton(
-                          height: 120.adaptSize,
-                          width: 120.adaptSize,
-                          padding: EdgeInsets.all(5.h),
-                          decoration: IconButtonStyleHelper.fillPrimary,
-                          child: Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgLightBulb),
-                          )),
-                    ),
-                  ),
-                  // const SizedBox(
-                  //   width: 6,
-                  // ),
-                  // CustomImageView(
-                  //             imagePath: ImageConstant.imgTellasportLogo,
-                  //             height: 44.v,
-                  //             width: 180.h),
-                )
-              ],
+           
+          Container(height: MediaQuery.sizeOf(context).height,
+            width: MediaQuery.sizeOf(context).width,
+            color: Colors.green.shade100,
             ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Align(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FadingSlidingWidget(
+                      animationController: _animationController,
+                      interval: const Interval(0.5, 0.9),
+                      child: AnimatedBuilder(
+                        animation: _animation,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(0, 100 * (1 - _animation.value)),
+                            child: child,
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: CustomIconButton(
+                              height: 120.adaptSize,
+                              width: 120.adaptSize,
+                              padding: EdgeInsets.all(5.h),
+                              decoration: IconButtonStyleHelper.fillPrimary,
+                              child: Padding(
+                                padding: const EdgeInsets.all(18.0),
+                                child: CustomImageView(
+                                    imagePath: ImageConstant.imgLightBulb),
+                              )),
+                        ),
+                      ),
+                      // const SizedBox(
+                      //   width: 6,
+                      // ),
+                      // CustomImageView(
+                      //             imagePath: ImageConstant.imgTellasportLogo,
+                      //             height: 44.v,
+                      //             width: 180.h),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
+          
         ],
       ),
     );

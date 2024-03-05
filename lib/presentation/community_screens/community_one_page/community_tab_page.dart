@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/community_one_page/community_list_page.dart';
+import 'package:tellesports/core/app_export.dart'; 
 
+import 'community_list_page.dart';
 import 'empty_comunity_page.dart';
 
 // ignore_for_file: must_be_immutable

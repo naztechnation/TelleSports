@@ -7,8 +7,9 @@ import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 
-import '../../utils/navigator/page_navigator.dart';
-import '../../widgets/app_bar/appbar_subtitle.dart';
+ 
+import '../../../utils/navigator/page_navigator.dart';
+import '../../../widgets/app_bar/appbar_subtitle.dart';
 import 'all_users_page.dart';
 import 'widgets/userprofile_item_widget.dart';
 

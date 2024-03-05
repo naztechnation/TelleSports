@@ -1,11 +1,12 @@
-import '../../utils/navigator/page_navigator.dart';
+
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
-
-import '../individual_user_info.dart/individual_user_info.dart';
+ 
+import '../../../utils/navigator/page_navigator.dart';
+import '../../individual_user_info.dart/individual_user_info.dart';
 import 'widgets/userprofile_item_widget.dart';
 
 class AllUsersPage extends StatelessWidget {

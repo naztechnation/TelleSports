@@ -202,7 +202,7 @@ class ImageConstant {
 
   static String imgNavConvert = '$imagePath/img_nav_convert.svg';
 
-  static String imgNavCommunity = '$imagePath/img_nav_community.svg';
+  static String imgNavCommunity = '$imagePath/img_nav_community_blue_400.svg';
 
   static String imgNavPredictions = '$imagePath/img_nav_predictions.svg';
 

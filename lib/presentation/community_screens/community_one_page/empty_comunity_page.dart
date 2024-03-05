@@ -78,15 +78,15 @@ class CommunityTwoPageState extends State<EmptyCommunityPage>
                       SizedBox(height: 41.v),
                       Text(
                         "Join a community and stay up to date on all things sports!",
-                        style: CustomTextStyles.labelLargeBlack900,
+                        style:  TextStyle(fontSize: 15),
                       ),
                       SizedBox(height: 20.v),
 
                       _buildBuyTellacoins(context),
                       SizedBox(height: 10.v),
-                      CustomOutlinedButton(
-                        text: "Explore Communities",
-                      ),
+                      // CustomOutlinedButton(
+                      //   text: "Explore Communities",
+                      // ),
                     ],
                   ),
                 ),

@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart'  as pro;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/presentation/auth/sign_up_screen/sign_up_screen.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
@@ -22,16 +23,17 @@ import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../landing_page/landing_page.dart';
 import '../../manage_account/verify_account_screen/verify_account_screen.dart';
+import '../controller/auth_controller.dart';
 
 // ignore_for_file: must_be_immutable
-class SigninScreen extends StatefulWidget {
+class SigninScreen extends ConsumerStatefulWidget {
   SigninScreen({Key? key}) : super(key: key);
 
   @override
-  State<SigninScreen> createState() => _SigninScreenState();
+  ConsumerState<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _SigninScreenState extends State<SigninScreen> {
+class _SigninScreenState extends ConsumerState<SigninScreen> {
   TextEditingController emailController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
@@ -51,7 +53,7 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-    final authUser = Provider.of<FirebaseAuthProvider>(context, listen: true);
+    final authUser =  pro.Provider.of<FirebaseAuthProvider>(context, listen: true);
 
     return SafeArea(
         child: GestureDetector(
@@ -65,7 +67,7 @@ class _SigninScreenState extends State<SigninScreen> {
               create: (_) => AccountCubit(
                   accountRepository: AccountRepositoryImpl(),
                   viewModel:
-                      Provider.of<AccountViewModel>(context, listen: false)),
+                      pro.Provider.of<AccountViewModel>(context, listen: false)),
               child: BlocConsumer<AccountCubit, AccountStates>(
                 listener: (context, state) {
                   if (state is AccountUpdated) {
@@ -96,23 +98,22 @@ class _SigninScreenState extends State<SigninScreen> {
                         Modals.showToast(state.user.error ?? '');
                         resendCode(context);
                       } else {
-                        if(isGoogle){
-                           Modals.showToast('Please register with google on the registeration page first',
+                        if (isGoogle) {
+                          Modals.showToast(
+                              'Please register with google on the registeration page first',
                               messageType: MessageType.error);
-                                 FirebaseAuth.instance.signOut();
-                                      final GoogleSignIn googleSignIn =
-                                          GoogleSignIn();
-                                        googleSignIn.signOut();
-                        }else{
-                          if (state.user.message?.isNotEmpty ?? false) {
-                          Modals.showToast(state.user.message ?? '',
-                              messageType: MessageType.error);
+                          FirebaseAuth.instance.signOut();
+                          final GoogleSignIn googleSignIn = GoogleSignIn();
+                          googleSignIn.signOut();
                         } else {
-                          Modals.showToast('Failed to login',
-                              messageType: MessageType.error);
+                          if (state.user.message?.isNotEmpty ?? false) {
+                            Modals.showToast(state.user.message ?? '',
+                                messageType: MessageType.error);
+                          } else {
+                            Modals.showToast('Failed to login',
+                                messageType: MessageType.error);
+                          }
                         }
-                        }
-                        
                       }
                     }
                   } else if (state is OTPResent) {
@@ -162,7 +163,8 @@ class _SigninScreenState extends State<SigninScreen> {
                               _buildPasswordSection(context),
                               SizedBox(height: 8.v),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal:10.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -177,11 +179,12 @@ class _SigninScreenState extends State<SigninScreen> {
                                                 style: CustomTextStyles
                                                     .titleSmallBlue400_1
                                                     .copyWith(
-                                                      
-                                                        decoration: TextDecoration
-                                                            .underline,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
                                                         decorationColor:
-                                                            Colors.blue, fontSize: 15.3)))),
+                                                            Colors.blue,
+                                                        fontSize: 15.3)))),
                                     Align(
                                         alignment: Alignment.centerRight,
                                         child: GestureDetector(
@@ -192,10 +195,12 @@ class _SigninScreenState extends State<SigninScreen> {
                                                 style: CustomTextStyles
                                                     .titleSmallBlue400_1
                                                     .copyWith(
-                                                        decoration: TextDecoration
-                                                            .underline,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
                                                         decorationColor:
-                                                            Colors.blue, fontSize: 15.3)))),
+                                                            Colors.blue,
+                                                        fontSize: 15.3)))),
                                   ],
                                 ),
                               ),
@@ -213,32 +218,31 @@ class _SigninScreenState extends State<SigninScreen> {
                               //     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black38)),
                               SizedBox(height: 11.v),
                               CustomOutlinedButton(
-                                
-                                  text: "Sign in with Google",
-                                  margin: EdgeInsets.symmetric(horizontal: 4.h),
-                                  leftIcon: Container(
-                                      margin: EdgeInsets.only(right: 10.h),
-                                      child: CustomImageView(
-                                        
-                                        imagePath:
-                                            ImageConstant.imgSocialMediaIcons,
-                                        height: 24.adaptSize,
-                                        width: 24.adaptSize,
-                                        
-                                      )),
-                                      onPressed: () async {
-                                      //    await FirebaseAuth.instance.signOut();
-                                      // final GoogleSignIn googleSignIn =
-                                      //     GoogleSignIn();
-                                      // await googleSignIn.signOut();
-                                          User? user =
-                                              await authUser.signInWithGoogle();
-                                          if (user != null) {
-                                            loginUser(
-                                                ctx: context, isGoo: true, email: user.email);
-                                          }
-                                        },
-                                      ),
+                                text: "Sign in with Google",
+                                margin: EdgeInsets.symmetric(horizontal: 4.h),
+                                leftIcon: Container(
+                                    margin: EdgeInsets.only(right: 10.h),
+                                    child: CustomImageView(
+                                      imagePath:
+                                          ImageConstant.imgSocialMediaIcons,
+                                      height: 24.adaptSize,
+                                      width: 24.adaptSize,
+                                    )),
+                                onPressed: () async {
+                                  //    await FirebaseAuth.instance.signOut();
+                                  // final GoogleSignIn googleSignIn =
+                                  //     GoogleSignIn();
+                                  // await googleSignIn.signOut();
+                                  User? user =
+                                      await authUser.signInWithGoogle();
+                                  if (user != null) {
+                                    loginUser(
+                                        ctx: context,
+                                        isGoo: true,
+                                        email: user.email);
+                                  }
+                                },
+                              ),
                               SizedBox(height: 13.v),
                               if (Platform.isIOS)
                                 CustomOutlinedButton(
@@ -253,7 +257,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                             height: 24.adaptSize,
                                             width: 24.adaptSize)),
                                     onPressed: () async {
-                                       await FirebaseAuth.instance.signOut();
+                                      await FirebaseAuth.instance.signOut();
                                       final GoogleSignIn googleSignIn =
                                           GoogleSignIn();
                                       await googleSignIn.signOut();
@@ -277,7 +281,8 @@ class _SigninScreenState extends State<SigninScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("E-mail", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          Text("E-mail",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 2.v),
           CustomTextFormField(
               controller: emailController,
@@ -293,8 +298,11 @@ class _SigninScreenState extends State<SigninScreen> {
   Widget _buildPasswordSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 8.h),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text("Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+      child: Column(crossAxisAlignment: 
+      CrossAxisAlignment.start, children: [
+        Text("Password",
+            style: TextStyle(fontSize: 14, 
+            fontWeight: FontWeight.w600)),
         SizedBox(height: 3.v),
         CustomTextFormField(
             controller: passwordController,
@@ -365,12 +373,25 @@ class _SigninScreenState extends State<SigninScreen> {
           .read<AccountCubit>()
           .loginUser(email: email ?? '', password: email ?? '');
 
-          Modals.showToast(email ?? '');
+      Modals.showToast(email ?? '');
 
       setState(() {
         isGoogle = true;
       });
       FocusScope.of(ctx).unfocus();
+    }
+  }
+
+
+   void storeUserData(String name, userId) async {
+
+    if (name.isNotEmpty) {
+      ref.read(authControllerProvider).saveUserDataToFirebase(
+            context,
+            name,
+            null,
+            userId
+          );
     }
   }
 }

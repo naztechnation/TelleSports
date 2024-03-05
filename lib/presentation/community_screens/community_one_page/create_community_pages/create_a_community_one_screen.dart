@@ -5,8 +5,8 @@ import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
-
-import '../../../widgets/app_bar/appbar_subtitle.dart';
+ 
+import '../../../../widgets/app_bar/appbar_subtitle.dart';
 import 'create_a_community_screen.dart';
 
 class CreateACommunityOneScreen extends StatelessWidget {

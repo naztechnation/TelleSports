@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/modals.dart';
+
+import '../handlers/secure_handler.dart';
 
 class CustomBottomBar extends StatefulWidget {
   CustomBottomBar({this.onChanged});
@@ -40,6 +43,19 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       type: BottomBarEnum.Profile,
     )
   ];
+
+  String image = '';
+
+  getUserPhoto()async{
+    image =   await  StorageHandler.getUserPhoto() ?? '';
+
+  }
+
+  @override
+  void initState() {
+     getUserPhoto();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,14 +145,14 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                   imagePath: bottomMenuList[1].activeIcon,
                   height: 40.adaptSize,
                   width: 40.adaptSize,
-                  color: theme.colorScheme.primary,
+                  color: Colors.blue,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),
                   child: Text(
                     bottomMenuList[1].title ?? "",
                     style: CustomTextStyles.labelLargePrimary.copyWith(
-                      color: theme.colorScheme.primary,
+                      color: Colors.blue,
                     ),
                   ),
                 ),
@@ -194,11 +210,13 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CustomImageView(
-                  imagePath: bottomMenuList[3].icon,
-                  height: 40.adaptSize,
-                  width: 40.adaptSize,
-                  color: appTheme.gray50001,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: CustomImageView(
+                    imagePath: (image == '' || image == 'null' || image == null) ? bottomMenuList[3].icon :  image,
+                    height: 40.adaptSize,
+                    width: 40.adaptSize,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 4.v),
@@ -215,18 +233,23 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CustomImageView(
-                  imagePath: bottomMenuList[3].activeIcon,
-                  height: 40.adaptSize,
-                  width: 40.adaptSize,
-                  color: (selectedIndex == 1) ? Color(0xFF3C91E5) :theme.colorScheme.primary,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.primary, width: 2, ), borderRadius: BorderRadius.circular(30)),
+                    child: CustomImageView(
+                      imagePath: (image == '' || image == 'null' || image == null) ? bottomMenuList[3].icon :  image,
+                      height: 40.adaptSize,
+                      width: 40.adaptSize,
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),
                   child: Text(
                     bottomMenuList[3].title ?? "",
                     style: CustomTextStyles.labelLargePrimary.copyWith(
-                      color: (selectedIndex == 1) ? Color(0xFF3C91E5):  theme.colorScheme.primary,
+                      color:   theme.colorScheme.primary,
                     ),
                   ),
                 ),

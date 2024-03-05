@@ -74,6 +74,8 @@ class AccountViewModel extends BaseViewModel {
     setViewState(ViewState.success);
   }
 
+  
+
   String get token => _token;
 
   List<BookiesData> get from =>

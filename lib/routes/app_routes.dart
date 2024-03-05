@@ -6,11 +6,10 @@ import 'package:tellesports/presentation/auth/sign_up_screen/sign_up_screen.dart
 import 'package:tellesports/presentation/auth/signin_screen/sign_in_screen.dart';
 import 'package:tellesports/presentation/manage_account/forgot_password_screen/forgot_password_screen.dart';
 import 'package:tellesports/presentation/manage_account/create_new_password_screen/create_new_password_screen.dart';
-import 'package:tellesports/presentation/buy_tellacoins_screen/buy_tellacoins_screen.dart';
-import 'package:tellesports/presentation/community_chat_screen/community_chat_screen.dart';
-import 'package:tellesports/presentation/gift_tellacoins_screen/gift_tellacoins_screen.dart';
-import 'package:tellesports/presentation/community_info_screen/community_info_screen.dart';
 
+
+import '../presentation/community_screens/community_chat_screen/community_chat_screen.dart';
+import '../presentation/community_screens/community_one_page/community_info_page.dart';
 import '../presentation/splash_screen_onboarding_screen/splash_screen.dart';
 
 class AppRoutes {
