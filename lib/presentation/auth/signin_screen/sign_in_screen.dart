@@ -22,6 +22,7 @@ import '../../../res/app_strings.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
+import '../../community_screens/provider/auth_provider.dart';
 import '../../landing_page/landing_page.dart';
 import '../../manage_account/verify_account_screen/verify_account_screen.dart';
 
@@ -54,6 +55,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
     final authUser =  pro.Provider.of<FirebaseAuthProvider>(context, listen: true);
+
+    final user = pro.Provider.of<AuthProviders>(context, listen: true);
 
     return SafeArea(
         child: GestureDetector(
@@ -92,8 +95,11 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
               
                       StorageHandler.saveUserPassword(passwordController.text);
               
-                      // storeUserData(name:state.user.user?.username.toString() ?? '',userId:  state.user.user?.id.toString()  ?? '', profileImage: (state.user.profilePicture.toString()  != 'null' || state.user.profilePicture.toString()  != ''  || state.user.profilePicture.toString()  != null) ?  state.user.profilePicture.toString() : AppStrings.degaultImage);
-              
+                       updateUser(context: context, user: user, username: state.user.user?.username ?? '', userId: state.user.user?.id.toString() ?? '', image: (state.user.profilePicture.toString()  != 'null' ||
+                         state.user.profilePicture.toString()  != ''  || 
+                         state.user.profilePicture.toString()  != null) ? 
+                          state.user.profilePicture.toString() :
+                          AppStrings.degaultImage, email: state.user.user?.email ?? '', );
                       
                     } else {
                       if (state.user.error?.isNotEmpty ?? false) {
@@ -382,6 +388,16 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
       });
       FocusScope.of(ctx).unfocus();
     }
+  }
+
+  updateUser({required BuildContext context, required  var user, required  String username,
+  required  String userId, required  String image, required  String email})async{
+
+  await  user.uploadUserDetails(username:username,userId:  userId,
+                        imageUrl: image, email:email);
+
+                          onTapSignIn(context);
+              
   }
 
 
