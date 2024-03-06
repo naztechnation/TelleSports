@@ -24,7 +24,6 @@ import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../landing_page/landing_page.dart';
-import '../controller/auth_controller.dart';
 import '../signin_screen/sign_in_screen.dart';
 
 // ignore_for_file: must_be_immutable

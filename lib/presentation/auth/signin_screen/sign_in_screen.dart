@@ -18,12 +18,12 @@ import '../../../handlers/secure_handler.dart';
 import '../../../model/view_models/account_view_model.dart';
 import '../../../model/view_models/firebase_auth_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
+import '../../../res/app_strings.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../landing_page/landing_page.dart';
 import '../../manage_account/verify_account_screen/verify_account_screen.dart';
-import '../controller/auth_controller.dart';
 
 // ignore_for_file: must_be_immutable
 class SigninScreen extends ConsumerStatefulWidget {
@@ -89,10 +89,12 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                           state.user.userWallet?.accountNumber.toString());
                       StorageHandler.saveUserBank(
                           state.user.userWallet?.bank.toString());
-
+              
                       StorageHandler.saveUserPassword(passwordController.text);
-
-                      onTapSignIn(context);
+              
+                      // storeUserData(name:state.user.user?.username.toString() ?? '',userId:  state.user.user?.id.toString()  ?? '', profileImage: (state.user.profilePicture.toString()  != 'null' || state.user.profilePicture.toString()  != ''  || state.user.profilePicture.toString()  != null) ?  state.user.profilePicture.toString() : AppStrings.degaultImage);
+              
+                      
                     } else {
                       if (state.user.error?.isNotEmpty ?? false) {
                         Modals.showToast(state.user.error ?? '');
@@ -383,15 +385,17 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   }
 
 
-   void storeUserData(String name, userId) async {
+  //  void storeUserData({required  String name,required  String userId,required String profileImage}) async {
 
-    if (name.isNotEmpty) {
-      ref.read(authControllerProvider).saveUserDataToFirebase(
-            context,
-            name,
-            null,
-            userId
-          );
-    }
-  }
+  //   if (name.isNotEmpty) {
+  //    await ref.read(authControllerProvider).saveUserDataToFirebase(
+  //           context,
+  //           name,
+  //           profileImage,
+  //           userId
+  //         );
+
+  //         onTapSignIn(context);
+  //   }
+  // }
 }

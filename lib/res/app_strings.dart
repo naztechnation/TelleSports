@@ -58,7 +58,9 @@ class AppStrings {
   static const String profilePic = 'profilePic';
   static const String isGroupChat = 'isGroupChat';
 
-  
+
+  static const String degaultImage = '  https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg';
+
   
   
   

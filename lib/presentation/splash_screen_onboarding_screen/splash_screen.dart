@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/res/app_images.dart';
 
+import 'package:flutter/material.dart';
+import 'package:tellesports/core/utils/size_utils.dart';
+
+import '../../core/app_export.dart';
 import '../../handlers/secure_handler.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/custom_icon_button.dart';
@@ -12,13 +13,13 @@ import '../onboarding_screen/widget/fading_sliding_in.dart';
 import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
+
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _LoadingScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+class _LoadingScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   startTimeout() {
     return Timer(const Duration(seconds: 5), handleTimeout);
   }
@@ -66,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animationController.forward();
     super.initState();
-    startTimeout();
+  //  startTimeout();
   }
 
   @override
@@ -77,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return   Scaffold(
       body: Stack(
         children: [
            

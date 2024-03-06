@@ -46,7 +46,9 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
                   child: TabBarView(
                     controller: tabviewController,
                     children: [
-                       EmptyCommunityPage(),
+                      //ChatsList(),
+                     // ContactsList(),
+                        EmptyCommunityPage(),
                       CommunityListPage(),
                     ],
                   ),
