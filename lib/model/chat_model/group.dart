@@ -31,7 +31,7 @@ class Group {
       'groupId': groupId,
       'lastMessage': lastMessage,
       'groupPic': groupPic,
-      'groupDesc': groupPic,
+      'groupDesc': groupDescription,
       'membersUid': membersUid,
       'timeSent': timeSent.millisecondsSinceEpoch,
       'groupLink': groupLink,

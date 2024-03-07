@@ -3,7 +3,6 @@ import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
-import 'package:tellesports/widgets/custom_outlined_button.dart';
  
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
@@ -48,7 +47,7 @@ class CommunityInfoScreen extends StatelessWidget {
                                           style: CustomTextStyles
                                               .titleMediumOnPrimaryBold18),
                                       SizedBox(height: 2.v),
-                                      Text(groupNumber,
+                                      Text('${groupNumber } Member(s)',
                                           style: CustomTextStyles
                                               .titleSmallBluegray900)
                                     ]))
@@ -85,6 +84,7 @@ class CommunityInfoScreen extends StatelessWidget {
       centerTitle: true,
       title: AppbarSubtitle(
         text: "Community Info",
+        
         margin: EdgeInsets.only(
           top: 49.v,
           bottom: 9.v,
@@ -117,11 +117,11 @@ class CommunityInfoScreen extends StatelessWidget {
                     desc,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall))
+                      style: theme.textTheme.titleSmall!.copyWith(fontSize: 16)))
             ]));
   }
 
   onTapJoinCommunity(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: CommunityChatScreen());
+    // AppNavigator.pushAndStackPage(context, page: CommunityChatScreen(name: '',));
   }
 }

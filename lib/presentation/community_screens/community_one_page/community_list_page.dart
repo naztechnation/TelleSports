@@ -134,12 +134,17 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                         pinnedMessage: groupData
                                                             .pinnedMessage, groupDesription: groupData.groupDescription);
 
+    
+
+
                                                     AppNavigator
                                                         .pushAndStackPage(
                                                             context,
                                                             page:
                                                                 MobileChatScreen(
                                                                   groupData.groupDescription,
+                                                                  groupData.membersUid.length
+                                            .toString(),
                                                               name: groupData
                                                                   .name,
                                                               uid: groupData

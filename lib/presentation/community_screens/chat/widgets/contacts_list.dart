@@ -71,7 +71,8 @@ class ContactsList extends ConsumerWidget {
                                         groupDesription: groupData.groupDescription,
                                         pinnedMessage: groupData.pinnedMessage);
 
-                                        AppNavigator.pushAndStackPage(context, page: MobileChatScreen(groupData.groupDescription,name: groupData.name, uid: groupData.groupId, isGroupChat: true, profilePic: groupData.groupPic,));
+                                        AppNavigator.pushAndStackPage(context, page: MobileChatScreen(groupData.groupDescription,groupData.membersUid.length
+                                            .toString() ,name: groupData.name, uid: groupData.groupId, isGroupChat: true, profilePic: groupData.groupPic,));
                                     
                                   }
                                 } else if (!checkUserExist.isUserExisting) {

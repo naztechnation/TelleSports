@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
@@ -12,12 +13,18 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 import '../community_one_page/community_info_page.dart';
 
-class CommunityChatScreen extends StatelessWidget {
-  CommunityChatScreen({Key? key})
+class CommunityChatScreen extends ConsumerStatefulWidget {
+    
+  CommunityChatScreen({Key? key, })
       : super(
           key: key,
         );
 
+  @override
+  ConsumerState<CommunityChatScreen> createState() => _CommunityChatScreenState();
+}
+
+class _CommunityChatScreenState extends ConsumerState<CommunityChatScreen> {
   TextEditingController messageController = TextEditingController();
 
   @override
@@ -261,7 +268,6 @@ class CommunityChatScreen extends StatelessWidget {
     );
   }
 
-   
   Widget _buildNovCounterStack(BuildContext context) {
     return SizedBox(
       height: 87.v,
@@ -364,7 +370,6 @@ class CommunityChatScreen extends StatelessWidget {
     );
   }
 
-   
   Widget _buildBubble(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(right: 8.h),
@@ -440,7 +445,6 @@ class CommunityChatScreen extends StatelessWidget {
     );
   }
 
-   
   Widget _buildProfilePicture(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(right: 8.h),
@@ -487,7 +491,6 @@ class CommunityChatScreen extends StatelessWidget {
     );
   }
 
-   
   Widget _buildFrame(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
@@ -619,7 +622,6 @@ class CommunityChatScreen extends StatelessWidget {
     );
   }
 
-   
   Widget _buildUiBottomBar(BuildContext context) {
     return Container(
       width: double.maxFinite,
@@ -673,7 +675,6 @@ class CommunityChatScreen extends StatelessWidget {
     );
   }
 
-  
   Widget _buildRightFrame(
     BuildContext context, {
     required String image,

@@ -5,7 +5,13 @@ import 'package:flutter/services.dart';
 
 import '../../../../common/utils/colors.dart';
 import '../../../../common/widgets/loader.dart';
+import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
+import '../../../../widgets/app_bar/appbar_leading_image.dart';
+import '../../../../widgets/app_bar/appbar_subtitle_four.dart';
+import '../../../../widgets/app_bar/appbar_subtitle_two.dart';
+import '../../../../widgets/app_bar/appbar_title_circleimage.dart';
+import '../../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../../widgets/modals.dart'; 
 import '../../auth/controller/auth_controller.dart';
  
@@ -20,8 +26,9 @@ class MobileChatScreen extends ConsumerStatefulWidget {
   final String uid;
   final bool isGroupChat;
   final String profilePic;
+  final String groupNumber;
   final String groupDesc;
-  const MobileChatScreen(this.groupDesc, {
+  const MobileChatScreen(this.groupDesc, this.groupNumber, {
     Key? key,
     required this.name,
     required this.uid,
@@ -86,113 +93,84 @@ userId = await StorageHandler.getUserId() ?? '';
           return false;
         },
         child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: appBarColor,
-            title: widget.isGroupChat
-                ? GestureDetector(
-                    onTap: () {
-                      Navigator.push(
+        backgroundColor: appTheme.lime50,
+        resizeToAvoidBottomInset: false,
+        appBar:  CustomAppBar(
+          
+            height: 84.v,
+            leadingWidth: 44.h,
+            leading: AppbarLeadingImage(
+              imagePath: ImageConstant.imgArrowBackBlue800,
+               onTap: (){
+                                      groupInfo.isSelectedMessage(false);
+                              groupInfo.setSelectedMessage('');
+                              groupInfo.setTextIndex(-1);
+                              Navigator.pop(context);
+
+                    },
+              margin: EdgeInsets.only(
+                left: 20.h,
+                top: 50.v,
+                bottom: 10.v,
+              ),
+            ),
+            title: GestureDetector(
+              onTap: () {
+                 Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => GroupInfoScreen(
                                     name: widget.name,
                                     profilePic: widget.profilePic,
                                   )));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              groupInfo.isSelectedMessage(false);
-                              groupInfo.setSelectedMessage('');
-                              groupInfo.setTextIndex(-1);
-                              Navigator.pop(context);
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 12.h,
+                  top: 43.v,
+                  bottom: 4.v,
+                ),
+                child: Row(
+                  children: [
+                    AppbarTitleCircleimage(
+                      
+                      imagePath:  widget.profilePic,
+                      onTap: (){
+                  //onTapGroup(context);
+              
                             },
-                            child: const Icon(Icons.arrow_back)),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            widget.profilePic,
-                          ),
-                          radius: 20,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Flexible(
-                            child: Text(
-                          widget.name,
-                          style: const TextStyle(fontSize: 16),
-                        )),
-                      ],
                     ),
-                  )
-                : StreamBuilder<dynamic>(
-                    stream: ref
-                        .read(authControllerProvider)
-                        .userDataById(widget.uid),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Loader();
-                      }
-                      return Column(
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.h),
+                      child: Column(
                         children: [
-                          Text(widget.name),
-                          Text(
-                            snapshot.data!.isOnline ? 'online' : 'offline',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.normal,
-                            ),
+                          AppbarSubtitleTwo(
+                            text: widget.name,
+                            onTap: (){
+                  //onTapGroup(context);
+              
+                            },
+                          ),
+                          AppbarSubtitleFour(
+                            text: "${widget.groupNumber }members",
+                            margin: EdgeInsets.only(right: 28.h),
                           ),
                         ],
-                      );
-                    }),
-            centerTitle: false,
-            actions: [
-              // IconButton(
-              //   onPressed: () => makeCall(ref, context),
-              //   icon: const Icon(Icons.video_call),
-              // ),
-              // IconButton(
-              //   onPressed: () {},
-              //   icon: const Icon(Icons.call),
-              // ),
-              if (groupInfo.selectedMessage != '')
-                PopupMenuButton(
-                  onSelected: (result) {
-                    // Navigator.of(context);
-                  },
-                  itemBuilder: (context) => [
-                 if (groupInfo.groupAdminId ==
-                              userId)   PopupMenuItem(
-                      value: 1,
-                      child: GestureDetector(
-                          onTap: () {
-                            groupInfo.updateGroupPinnedChat(
-                                groupInfo.groupId, groupInfo.selectedMessage);
-                          },
-                          child: const Text("Pin Message")),
-                    ),
-                    PopupMenuItem(
-                      value: 1,
-                      child: GestureDetector(
-                          onTap: () {
-                            copyToClipboard(
-                                groupInfo.selectedMessage.toString(),
-                                groupInfo,
-                                context);
-                          },
-                          child: const Text("Copy")),
+                      ),
                     ),
                   ],
                 ),
+              ),
+            ),
+            actions: [
+              // AppbarTrailingImage(
+              //   imagePath: ImageConstant.imgMoreVert,
+              //   margin: EdgeInsets.fromLTRB(20.h, 50.v, 20.h, 10.v),
+              // ),
             ],
-          ),
+            styleType: Style.bgOutline,
+          ),  
+           
           body: GestureDetector(
             onTap: () {
               groupInfo.isSelectedMessage(false);
