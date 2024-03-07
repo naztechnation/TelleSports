@@ -17,17 +17,30 @@ class UserprofileItemWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+       if(image != null || image != "null"|| image != "")...[
         CustomImageView(
-          imagePath: image,
-                                    placeHolder: ImageConstant.imgAvatar,
+          imagePath:   ImageConstant.imgAvatar,
 
-          height: 36.adaptSize,
-          width: 36.adaptSize,
+          height: 50.adaptSize,
+          width: 50.adaptSize,
           radius: BorderRadius.circular(
             18.h,
           ),
           margin: EdgeInsets.symmetric(vertical: 4.v),
         ),
+       ]else...[
+        CustomImageView(
+          imagePath: image,
+                                    placeHolder: ImageConstant.imgAvatar,
+
+          height: 50.adaptSize,
+          width: 50.adaptSize,
+          radius: BorderRadius.circular(
+            18.h,
+          ),
+          margin: EdgeInsets.symmetric(vertical: 4.v),
+        ),
+       ], 
         Expanded(
           child: Container(
             margin: EdgeInsets.only(left: 10.h),

@@ -115,11 +115,12 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:
                                                 () async {
+                                                     checkUserExist.requestedUsers(groupData.requestsMembers);
+                                                  checkUserExist.blockedUsers(groupData.blockedMembers);
                                               if (groupData.membersUid
                                                   .contains(userId)) {
                                                 if (context.mounted) {
-                                                  checkUserExist.requestedUsers(groupData.requestsMembers);
-                                                  checkUserExist.blockedUsers(groupData.blockedMembers);
+                                               
                                                   checkUserExist.addGroupInfo(
                                                       groupNumber: groupData
                                                           .membersUid.length
@@ -157,6 +158,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                 Modals.showToast(
                                                   'You are not a member of this group',
                                                 );
+                                                
                                                 onTapCommunityPageComponent(
                                                   context: context,
                                                   groupImage:

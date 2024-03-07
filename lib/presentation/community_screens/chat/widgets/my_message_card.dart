@@ -110,14 +110,8 @@ class _MyMessageCardState extends State<MyMessageCard> {
                       child: Column(
                         children: [
                           if (isReplying) ...[
-                            Text(
-                              widget.username,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white
-                              ),
-                            ),
-                            const SizedBox(height: 3),
+                           
+                             
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(

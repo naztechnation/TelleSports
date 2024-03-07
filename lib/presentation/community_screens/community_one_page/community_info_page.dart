@@ -14,6 +14,7 @@ import '../../../widgets/modals.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'all_users_page.dart';
 
+import 'widgets/blocked_users.dart';
 import 'widgets/requests_page.dart';
 import 'widgets/userprofile_item_widget.dart';
 
@@ -47,6 +48,8 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   Widget build(BuildContext context) {
     final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
 
+
+    Modals.showToast(groupInfo.groupImageList.toString());
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -121,7 +124,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           SizedBox(height: 24.v),
                           _buildShareCommunity(context, groupInfo.groupLink),
                           SizedBox(height: 24.v),
-                          _buildMedia(context),
+                          _buildMedia(context, groupInfo.groupImageList),
                           SizedBox(height: 24.v),
                           if (groupInfo.groupMembers[0].uid == userId)  SizedBox(height: 18.v),
                         if (groupInfo.groupMembers[0].uid == userId)  GestureDetector(
@@ -153,29 +156,37 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                             )),
                         ),
                           if (groupInfo.groupMembers[0].uid == userId)  SizedBox(height: 18.v),
-                        if (groupInfo.groupMembers[0].uid != userId)  Card(child:Container(
-                               padding: const EdgeInsets.all(10),
+                        if (groupInfo.groupMembers[0].uid == userId)  GestureDetector(
+                          onTap: () {
 
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                              Text('Blocked Users'),
-                              Container(
-                                width: 32.adaptSize,
-                                height: 32.adaptSize,
-                                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Center(
-                                    child: Text(
-                                      "${groupInfo.blockedMembers.length}",
-                                      style: TextStyle(fontSize: 9, color: Colors.white),
+                            AppNavigator.pushAndStackPage(context, page: BlockedUsersPage());
+
+                            
+                          },
+                          child: Card(child:Container(
+                                 padding: const EdgeInsets.all(10),
+                          
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                Text('Blocked Users'),
+                                Container(
+                                  width: 32.adaptSize,
+                                  height: 32.adaptSize,
+                                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Center(
+                                      child: Text(
+                                        "${groupInfo.blockedMembers.length}",
+                                        style: TextStyle(fontSize: 9, color: Colors.white),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],),
-                          )),
+                              ],),
+                            )),
+                        ),
                           // Card(
                           //   elevation: 0.4,
                           //   child: Container(
@@ -324,7 +335,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
         ));
   }
 
-  Widget _buildMedia(BuildContext context) {
+  Widget _buildMedia(BuildContext context, List<String> images) {
     return Card(
       elevation: 0.4,
       child: Container(
@@ -341,35 +352,29 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                         fontFamily: 'DM Sans',
                         fontWeight: FontWeight.w700)),
                 SizedBox(height: 8.v),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomImageView(
-                          imagePath: ImageConstant.imgRectangle237,
-                          height: 60.adaptSize,
-                          width: 60.adaptSize),
-                      CustomImageView(
-                          imagePath: ImageConstant.imgRectangle237,
-                          height: 60.adaptSize,
-                          width: 60.adaptSize),
-                      CustomImageView(
-                          imagePath: ImageConstant.imgRectangle237,
-                          height: 60.adaptSize,
-                          width: 60.adaptSize),
-                      CustomImageView(
-                          imagePath: ImageConstant.imgRectangle237,
-                          height: 60.adaptSize,
-                          width: 60.adaptSize),
-                      CustomImageView(
-                          imagePath: ImageConstant.imgRectangle237,
-                          height: 60.v,
-                          width: 30.h),
-                      CustomImageView(
-                          imagePath: ImageConstant.imgArrowRight,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
-                          margin: EdgeInsets.symmetric(vertical: 18.v))
-                    ])
+                SizedBox(
+                  height: 45,
+                  child: ListView.builder(
+                    itemCount: images.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: ((context, index) {
+                      return  CustomImageView(
+                            imagePath: images[index],
+                            height: 60.adaptSize,
+                            width: 60.adaptSize);
+                  })),
+                ),
+                // Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                     
+                    
+                //       CustomImageView(
+                //           imagePath: ImageConstant.imgArrowRight,
+                //           height: 24.adaptSize,
+                //           width: 24.adaptSize,
+                //           margin: EdgeInsets.symmetric(vertical: 18.v))
+                //     ])
               ])),
     );
   }

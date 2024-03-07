@@ -20,9 +20,11 @@ import '../../../handlers/secure_handler.dart';
 import '../../../model/view_models/account_view_model.dart';
 import '../../../model/view_models/firebase_auth_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
+import '../../../res/app_strings.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
+import '../../community_screens/provider/auth_provider.dart';
 import '../../landing_page/landing_page.dart';
 import '../signin_screen/sign_in_screen.dart';
 
@@ -78,6 +80,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     mediaQueryData = MediaQuery.of(context);
 
     final authUser = Provider.of<FirebaseAuthProvider>(context, listen: true);
+    final user =  Provider.of<AuthProviders>(context, listen: true);
+
 
     return SafeArea(
         child: GestureDetector(
@@ -149,7 +153,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                         StorageHandler.saveUserPassword(state.user.user?.email);
 
-                        onTapSignIn(context);
+                        updateUser(context: context, user: user, username: state.user.user?.username ?? '', userId: state.user.user?.id.toString() ?? '', image: (state.user.profilePicture.toString()  != 'null' ||
+                         state.user.profilePicture.toString()  != ''  || 
+                         state.user.profilePicture.toString()  != null) ? 
+                          state.user.profilePicture.toString() :
+                          AppStrings.degaultImage, email: state.user.user?.email ?? '', );
                       }
                     } else if (state is AccountApiErr) {
                       if (state.message != null) {
@@ -715,5 +723,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     FocusScope.of(ctx).unfocus();
   }
 
+
+ updateUser({required BuildContext context, required  var user, required  String username,
+  required  String userId, required  String image, required  String email})async{
+
+  await  user.uploadUserDetails(username:username,userId:  userId,
+                        imageUrl: image, email:email);
+
+                          onTapSignIn(context);
+              
+  }
    
 }

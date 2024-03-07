@@ -45,16 +45,30 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
         : Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomImageView(
-                imagePath: widget.image,
-                placeHolder: ImageConstant.imgAvatar,
-                height: 50.adaptSize,
-                width: 50.adaptSize,
-                radius: BorderRadius.circular(
-                  25.h,
-                ),
-                margin: EdgeInsets.symmetric(vertical: 4.v),
-              ),
+               if(widget.image != null || widget.image != "null"|| widget.image != "")...[
+        CustomImageView(
+          imagePath:   ImageConstant.imgAvatar,
+
+          height: 50.adaptSize,
+          width: 50.adaptSize,
+          radius: BorderRadius.circular(
+            18.h,
+          ),
+          margin: EdgeInsets.symmetric(vertical: 4.v),
+        ),
+       ]else...[
+        CustomImageView(
+          imagePath: widget.image,
+                                    placeHolder: ImageConstant.imgAvatar,
+
+          height: 50.adaptSize,
+          width: 50.adaptSize,
+          radius: BorderRadius.circular(
+            18.h,
+          ),
+          margin: EdgeInsets.symmetric(vertical: 4.v),
+        ),
+       ], 
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10.h),

@@ -43,6 +43,7 @@ class AuthProviders extends ChangeNotifier {
   String _groupAdminId = '';
   String _groupPinnedMessage = '';
   String _selectedMessage = '';
+  List<String> _groupImageList = [];
   int _textIndex = -1;
 
   ImagePicker picker = ImagePicker();
@@ -138,6 +139,18 @@ class AuthProviders extends ChangeNotifier {
   _updateMessage(String message) {
     _message = message;
     notifyListeners();
+  }
+
+  clearGroupImageList( ){
+    _groupImageList.clear();
+    notifyListeners();
+
+  }
+
+  updateGroupImageList(String groupImages){
+    _groupImageList.add(groupImages);
+    notifyListeners();
+
   }
 
   Future<void> signOut() async {
@@ -733,6 +746,7 @@ class AuthProviders extends ChangeNotifier {
   bool get isUserExisting => _isUserExisting;
   bool get isGroupLocked => _isGroupLocked;
   List<UserModel> get groupMembers => _users;
+  List<String> get groupImageList => _groupImageList;
   List<UserModel> get blockedMembers => _blockedUsers;
   List<UserModel> get requestedMembers => _requestedUsers;
 }

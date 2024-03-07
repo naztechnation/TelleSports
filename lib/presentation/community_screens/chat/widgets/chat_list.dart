@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart' as provider;
+import 'package:tellesports/widgets/modals.dart';
 
  
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/providers/message_reply_provider.dart';
 import '../../../../common/widgets/loader.dart';
 import '../../../../handlers/secure_handler.dart';
+import '../../provider/auth_provider.dart' as pro;
 import '../controller/chat_controller.dart';
 import 'my_message_card.dart';
 import 'sender_message_card.dart';
@@ -55,6 +58,8 @@ class _ChatListState extends ConsumerState<ChatList> {
 userId = await StorageHandler.getUserId() ?? '';
   }
 
+   List<String> groupImages = [];
+
  
 
   @override
@@ -65,6 +70,8 @@ userId = await StorageHandler.getUserId() ?? '';
 
   @override
   Widget build(BuildContext context) {
+    final groupInfo = provider.Provider.of<pro.AuthProviders>(context, listen: true);
+
     return StreamBuilder<List<dynamic>>(
         stream: widget.isGroupChat
             ? ref
@@ -88,6 +95,16 @@ userId = await StorageHandler.getUserId() ?? '';
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final messageData = snapshot.data![index];
+
+             groupInfo.clearGroupImageList();
+
+              if(messageData.type == MessageEnum.image){
+                 
+                  groupInfo.updateGroupImageList(messageData.text);
+                 
+
+             
+              }
               var timeSent =
                   DateFormat('hh:mm a').format(messageData.timeSent.toLocal());
 

@@ -98,28 +98,42 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                       text: "Join community",
                       processing: isLoading,
                       onPressed: () async {
+                        bool isUserAlreadyRequested = false;
+
                         for (var userIds in groupInfo.requestedMembers) {
-                          if (userIds == userId) {
+
+                          if (userIds.uid == userId) {
+                           setState(() {
+                              isUserAlreadyRequested = true;
+                           });
+                          
                             Modals.showToast(
                                 'You already have a pending request here');
                             break;
-                          } else {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            await groupInfo.addUserToRequestsMembers(
-                                widget.groupId, widget.userId, context);
-                            setState(() {
-                              isLoading = false;
-                            });
-
-                            Modals.showToast(
-                                'Request has been sent to community admin for approval',
-                                messageType: MessageType.success);
-
-                            AppNavigator.pushAndStackPage(context,
-                                page: LandingPage());
                           }
+                        }
+
+                       
+
+                        if (!isUserAlreadyRequested) {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                           Modals.showToast(
+                                'Added');
+                          await groupInfo.addUserToRequestsMembers(
+                              widget.groupId, widget.userId, context);
+                          setState(() {
+                            isLoading = false;
+                          });
+
+                          Modals.showToast(
+                              'Request has been sent to community admin for approval',
+                              messageType: MessageType.success);
+
+                          AppNavigator.pushAndStackPage(context,
+                              page: LandingPage());
                         }
                       }),
                   SizedBox(height: 16.v),
