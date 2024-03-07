@@ -375,6 +375,36 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
+   Future<void> addCurrentUserFromMembers(
+      String groupId, String currentUserId, BuildContext context) async {
+    try {
+      final DocumentReference groupDocRef =
+          FirebaseFirestore.instance.collection('groups').doc(groupId);
+
+      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+
+      if (groupSnapshot.exists) {
+        final Map<String, dynamic> groupData =
+            groupSnapshot.data() as Map<String, dynamic>;
+
+        if (groupData.containsKey('membersUid') &&
+            groupData['membersUid'] is List) {
+          final List<dynamic> membersUid = groupData['membersUid'];
+          membersUid.add(currentUserId);
+
+          await groupDocRef.update({'membersUid': membersUid});
+
+          if (context.mounted) {
+            // Navigator.of(context).push(MaterialPageRoute(
+            //     builder: (context) => const MobileLayoutScreen()));
+          }
+        }
+      }
+    } catch (error) {
+      print('Error removing user from members: $error');
+    }
+  }
+
   Future<void> deleteGroup(String groupId, BuildContext context) async {
     try {
       final DocumentReference groupDocRef =
@@ -498,6 +528,7 @@ class AuthProviders extends ChangeNotifier {
   String get groupId => _groupId;
   String get groupAdminId => _groupAdminId;
   String get groupNumber => _groupNumber;
+  String get groupDescription => _groupDescription;
   bool get isSelected => _isSelectedText;
   AuthScreenState get isLogin => _isLogin;
   AuthState get dataStatus => _dataStatus;

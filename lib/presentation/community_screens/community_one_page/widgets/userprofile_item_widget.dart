@@ -3,7 +3,11 @@ import 'package:tellesports/core/app_export.dart';
 
 // ignore: must_be_immutable
 class UserprofileItemWidget extends StatelessWidget {
-  const UserprofileItemWidget({Key? key})
+  final String name; 
+  final String image; 
+  final String bio;
+  final int index; 
+  const UserprofileItemWidget({Key? key, required this.name, required this.bio, required this.index, required this.image})
       : super(
           key: key,
         );
@@ -14,7 +18,9 @@ class UserprofileItemWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CustomImageView(
-          imagePath: ImageConstant.imgDisplayPicture,
+          imagePath: image,
+                                    placeHolder: ImageConstant.imgAvatar,
+
           height: 36.adaptSize,
           width: 36.adaptSize,
           radius: BorderRadius.circular(
@@ -38,7 +44,7 @@ class UserprofileItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Joshua11",
+                      name,
                       style: TextStyle(
                         color: appTheme.gray900,
                         fontSize: 14.fSize,
@@ -48,7 +54,7 @@ class UserprofileItemWidget extends StatelessWidget {
                     ),
                     SizedBox(height: 2.v),
                     Text(
-                      "This is my bio",
+                      bio,
                       style: TextStyle(
                         color: appTheme.gray600,
                         fontSize: 12.fSize,
@@ -61,7 +67,7 @@ class UserprofileItemWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 22.v),
                   child: Text(
-                    "Community manager",
+                   (index ==  0) ?  "Community manager" : "",
                     style: TextStyle(
                       color: appTheme.gray900,
                       fontSize: 10.fSize,

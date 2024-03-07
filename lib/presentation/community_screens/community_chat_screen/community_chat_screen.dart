@@ -332,7 +332,7 @@ class _CommunityChatScreenState extends ConsumerState<CommunityChatScreen> {
                   AppbarTitleCircleimage(
                     imagePath: ImageConstant.imgAvatar,
                     onTap: (){
-                onTapGroup(context);
+                // onTapGroup(context);
 
                           },
                   ),
@@ -343,7 +343,7 @@ class _CommunityChatScreenState extends ConsumerState<CommunityChatScreen> {
                         AppbarSubtitleTwo(
                           text: "Pixsellz Team ",
                           onTap: (){
-                onTapGroup(context);
+                // onTapGroup(context);
 
                           },
                         ),
@@ -718,8 +718,8 @@ class _CommunityChatScreenState extends ConsumerState<CommunityChatScreen> {
     );
   }
 
-  onTapGroup(BuildContext context) {
+  onTapGroup(BuildContext context, String image, String name) {
       
-    AppNavigator.pushAndStackPage(context, page: CommunityInfoScreen());
+    AppNavigator.pushAndStackPage(context, page: CommunityInfoScreen(profilePic: image, name: name,));
   }
 }

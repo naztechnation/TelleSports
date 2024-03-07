@@ -7,17 +7,25 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
 import '../community_chat_screen/community_chat_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/auth_provider.dart' as pro;
+
 
 class CommunityInfoScreen extends StatelessWidget {
   final String groupImage;
   final String groupName;
   final String groupNumber;
+  final String groupId;
+  final String userId;
   final String groupDescription;
-  const CommunityInfoScreen({Key? key, required this.groupImage, required this.groupName, required this.groupNumber, required this.groupDescription}) : super(key: key);
+  const CommunityInfoScreen({Key? key, required this.groupImage, required this.groupName, required this.groupNumber, required this.groupDescription, required this.groupId, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+    final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
+
     return SafeArea(
         child: Scaffold(
             appBar: _buildAppBar(context),
@@ -58,7 +66,9 @@ class CommunityInfoScreen extends StatelessWidget {
                   CustomElevatedButton(
                       text: "Join community",
                       onPressed: () {
-                        onTapJoinCommunity(context);
+              groupInfo.addCurrentUserFromMembers(groupId, userId, context);
+
+                       // onTapJoinCommunity(context);
                       }),
                   SizedBox(height: 16.v),
                   // CustomOutlinedButton(text: "Report community"),
@@ -122,6 +132,6 @@ class CommunityInfoScreen extends StatelessWidget {
   }
 
   onTapJoinCommunity(BuildContext context) {
-    // AppNavigator.pushAndStackPage(context, page: CommunityChatScreen(name: '',));
+     AppNavigator.pushAndStackPage(context, page: CommunityChatScreen( ));
   }
 }

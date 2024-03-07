@@ -113,6 +113,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
                               widget.username,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
+                                color: Colors.white
                               ),
                             ),
                             const SizedBox(height: 3),
@@ -127,6 +128,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
                                 ),
                               ),
                               child: DisplayTextImageGIF(
+                                isMe: true,
                                 message: widget.repliedText,
                                 type: widget.repliedMessageType,
                               ),
@@ -134,7 +136,10 @@ class _MyMessageCardState extends State<MyMessageCard> {
                             const SizedBox(height: 8),
                           ],
                           DisplayTextImageGIF(
+                                isMe: true,
+
                             message: widget.message,
+                            
                             type: widget.type,
                           ),
                         ],
@@ -156,7 +161,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
                         Icon(
                           widget.isSeen ? Icons.done_all : Icons.done,
                           size: 20,
-                          color: widget.isSeen ? Colors.blue : Colors.white60,
+                          color: widget.isSeen ? Colors.green : Colors.white60,
                         ),
                       ],
                     ),

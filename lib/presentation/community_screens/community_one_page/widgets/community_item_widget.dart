@@ -7,10 +7,11 @@ class CommunityPageComponent extends StatelessWidget {
  final String groupName;
  final String lastMessage;
  final String groupPic;
+ final String groupNumber;
  final DateTime date;
   CommunityPageComponent({
     Key? key,
-    this.onTapCommunityPageComponent, required this.groupName, required this.lastMessage, required this.groupPic, required this.date,
+    this.onTapCommunityPageComponent, required this.groupName, required this.lastMessage, required this.groupPic, required this.date, required this.groupNumber,
   }) : super(
           key: key,
         );
@@ -95,7 +96,7 @@ class CommunityPageComponent extends StatelessWidget {
                                 padding: const EdgeInsets.all(4.0),
                                 child: Center(
                                   child: Text(
-                                    "99+",
+                                    "${groupNumber}",
                                     style: TextStyle(fontSize: 9, color: Colors.white),
                                   ),
                                 ),

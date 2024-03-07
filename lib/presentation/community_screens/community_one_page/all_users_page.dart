@@ -9,6 +9,10 @@ import '../../../utils/navigator/page_navigator.dart';
 import '../../individual_user_info.dart/individual_user_info.dart';
 import 'widgets/userprofile_item_widget.dart';
 
+import 'package:provider/provider.dart';
+import '../provider/auth_provider.dart' as pro;
+
+
 class AllUsersPage extends StatelessWidget {
   const AllUsersPage({Key? key})
       : super(
@@ -18,6 +22,9 @@ class AllUsersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+
+    final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
+
 
     return SafeArea(
       child: Scaffold(
@@ -39,13 +46,13 @@ class AllUsersPage extends StatelessWidget {
                 height: 1.v,
               );
             },
-            itemCount: 23,
+            itemCount: groupInfo.groupMembers.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                  onTap: (){
         AppNavigator.pushAndStackPage(context, page: IndividualUserInfo());
       },
-                child: UserprofileItemWidget());
+                child: UserprofileItemWidget(name: groupInfo.groupMembers[index].name, bio: 'My  Bio', index: index, image: groupInfo.groupMembers[index].profilePic,));
             },
           ),
         ),

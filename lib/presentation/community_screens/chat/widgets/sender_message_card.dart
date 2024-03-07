@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:swipe_to/swipe_to.dart';
- 
+
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/utils/colors.dart';
 import 'display_text_image_gif.dart';
-
-
 
 class SenderMessageCard extends StatelessWidget {
   const SenderMessageCard({
@@ -39,15 +37,15 @@ class SenderMessageCard extends StatelessWidget {
             maxWidth: MediaQuery.of(context).size.width - 45,
           ),
           child: Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),
-            
-            color: senderMessageColor,
-            
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: senderMessageColor,
             ),
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            
-                        margin:  EdgeInsets.only(left: 20, right: MediaQuery.of(context).size.width * 0.2, top: 12),
-
+            margin: EdgeInsets.only(
+                left: 20,
+                right: MediaQuery.of(context).size.width * 0.2,
+                top: 12),
             child: Column(
               children: [
                 Padding(
@@ -85,6 +83,8 @@ class SenderMessageCard extends StatelessWidget {
                             ),
                           ),
                           child: DisplayTextImageGIF(
+                                isMe: false,
+
                             message: repliedText,
                             type: repliedMessageType,
                           ),
@@ -92,6 +92,8 @@ class SenderMessageCard extends StatelessWidget {
                         const SizedBox(height: 8),
                       ],
                       DisplayTextImageGIF(
+                                isMe: false,
+
                         message: message,
                         type: type,
                       ),

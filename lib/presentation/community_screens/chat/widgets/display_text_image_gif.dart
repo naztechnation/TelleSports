@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
  
 
 import '../../../../common/enums/message_enum.dart';
+import '../../../../common/utils/colors.dart';
 
 class DisplayTextImageGIF extends StatelessWidget {
   final String message;
   final MessageEnum type;
+  final bool isMe;
   const DisplayTextImageGIF({
     Key? key,
     required this.message,
-    required this.type,
+    required this.type, required this.isMe,
   }) : super(key: key);
 
   @override
@@ -24,8 +26,9 @@ class DisplayTextImageGIF extends StatelessWidget {
           child:  Text(
               message,
               textAlign: TextAlign.start,
-              style: const TextStyle(
+              style:   TextStyle(
                 fontSize: 16,
+                color: isMe ? Colors.white : Colors.black
               ),
             ),
         )

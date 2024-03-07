@@ -48,7 +48,7 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
                     controller: tabviewController,
                     children: [
                        
-                      ContactsList(),
+                      CommunityListPage(),
                       CommunityListPage(),
                     ],
                   ),

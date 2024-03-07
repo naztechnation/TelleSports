@@ -34,6 +34,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
   String userId = '';
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+    setState(() {});
   }
 
   @override
@@ -54,134 +55,152 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
 
     return SafeArea(
         child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.symmetric(horizontal:20.0, vertical: 10),
-              child: buildBuyTellacoins(context),
-            ),
-            body: SizedBox(
-                width: mediaQueryData.size.width,
-                child: SingleChildScrollView(
-                    child: StreamBuilder<List<dynamic>>(
-                        stream: checkUserExist.getAllChatGroups(userId),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const LoadingPage();
-                          } else if (snapshot.data!.isEmpty) {
-                            return EmptyCommunityPage();
-                          }
+      body: Scaffold(
+          resizeToAvoidBottomInset: false,
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+            child: buildBuyTellacoins(context),
+          ),
+          body: SizedBox(
+              width: mediaQueryData.size.width,
+              child: SingleChildScrollView(
+                  child: StreamBuilder<List<dynamic>>(
+                      stream: checkUserExist.getAllChatGroups(userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const LoadingPage();
+                        } else if (snapshot.data!.isEmpty) {
+                          return EmptyCommunityPage();
+                        }
 
-                          return Column(children: [
-                            SizedBox(height: 12.v),
-                            Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.h),
-                                child: Column(children: [
-                                  CustomTextFormField(
-                                      controller: searchController,
-                                      hintText:
-                                          "Search for communities or users",
-                                      hintStyle:
-                                          CustomTextStyles.titleSmallGray400,
-                                      textInputAction: TextInputAction.done,
-                                      prefix: Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              20.h, 5.v, 9.h, 5.v),
-                                          child: CustomImageView(
-                                              imagePath: ImageConstant
-                                                  .imgSearchGray400,
-                                              height: 24.adaptSize,
-                                              width: 24.adaptSize)),
-                                      prefixConstraints:
-                                          BoxConstraints(maxHeight: 34.v),
-                                      contentPadding: EdgeInsets.only(
-                                          top: 7.v, right: 30.h, bottom: 7.v),
-                                      borderDecoration:
-                                          TextFormFieldStyleHelper.fillGray,
-                                      filled: true,
-                                      fillColor: appTheme.gray100),
-                                  SizedBox(height: 22.v),
-                                  Align(
-                                      alignment: Alignment.center,
-                                      child: ListView.separated(
-                                          physics: BouncingScrollPhysics(),
-                                          shrinkWrap: true,
-                                          separatorBuilder: (context, index) {
-                                            return SizedBox(height: 1.v);
-                                          },
-                                          itemCount: snapshot.data!.length,
-                                          itemBuilder: (context, index) {
-                                            var groupData =
-                                                snapshot.data![index];
-                                            return CommunityPageComponent(
-                                              onTapCommunityPageComponent:
-                                                  () async {
-                                                if (groupData.membersUid
-                                                    .contains(userId)) {
-                                                  if (context.mounted) {
-                                                    checkUserExist.addGroupInfo(
-                                                        groupNumber: groupData
+                        return Column(children: [
+                          SizedBox(height: 12.v),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.h),
+                              child: Column(children: [
+                                CustomTextFormField(
+                                    controller: searchController,
+                                    hintText: "Search for communities or users",
+                                    hintStyle:
+                                        CustomTextStyles.titleSmallGray400,
+                                    textInputAction: TextInputAction.done,
+                                    prefix: Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            20.h, 5.v, 9.h, 5.v),
+                                        child: CustomImageView(
+                                            imagePath:
+                                                ImageConstant.imgSearchGray400,
+                                            height: 24.adaptSize,
+                                            width: 24.adaptSize)),
+                                    prefixConstraints:
+                                        BoxConstraints(maxHeight: 34.v),
+                                    contentPadding: EdgeInsets.only(
+                                        top: 7.v, right: 30.h, bottom: 7.v),
+                                    borderDecoration:
+                                        TextFormFieldStyleHelper.fillGray,
+                                    filled: true,
+                                    fillColor: appTheme.gray100),
+                                SizedBox(height: 22.v),
+                                Align(
+                                    alignment: Alignment.center,
+                                    child: ListView.separated(
+                                        physics: BouncingScrollPhysics(),
+                                        shrinkWrap: true,
+                                        separatorBuilder: (context, index) {
+                                          return SizedBox(height: 1.v);
+                                        },
+                                        itemCount: snapshot.data!.length,
+                                        itemBuilder: (context, index) {
+                                          var groupData = snapshot.data![index];
+                                          return CommunityPageComponent(
+                                            onTapCommunityPageComponent:
+                                                () async {
+                                              if (groupData.membersUid
+                                                  .contains(userId)) {
+                                                if (context.mounted) {
+                                                  checkUserExist.addGroupInfo(
+                                                      groupNumber: groupData
+                                                          .membersUid.length
+                                                          .toString(),
+                                                      groupAdminId: groupData
+                                                          .membersUid[0],
+                                                      groupId:
+                                                          groupData.groupId,
+                                                      groupLink:
+                                                          groupData.groupLink,
+                                                      isGroupLocked: groupData
+                                                          .isGroupLocked,
+                                                      pinnedMessage: groupData
+                                                          .pinnedMessage,
+                                                      groupDesription: groupData
+                                                          .groupDescription);
+
+                                                  AppNavigator.pushAndStackPage(
+                                                      context,
+                                                      page: MobileChatScreen(
+                                                        groupData
+                                                            .groupDescription,
+                                                        groupData
                                                             .membersUid.length
                                                             .toString(),
-                                                        groupAdminId: groupData
-                                                            .membersUid[0],
-                                                        groupId:
-                                                            groupData.groupId,
-                                                        groupLink:
-                                                            groupData.groupLink,
-                                                        isGroupLocked: groupData
-                                                            .isGroupLocked,
-                                                        pinnedMessage: groupData
-                                                            .pinnedMessage, groupDesription: groupData.groupDescription);
-
-    
-
-
-                                                    AppNavigator
-                                                        .pushAndStackPage(
-                                                            context,
-                                                            page:
-                                                                MobileChatScreen(
-                                                                  groupData.groupDescription,
-                                                                  groupData.membersUid.length
-                                            .toString(),
-                                                              name: groupData
-                                                                  .name,
-                                                              uid: groupData
-                                                                  .groupId,
-                                                              isGroupChat: true,
-                                                              profilePic:
-                                                                  groupData
-                                                                      .groupPic,
-                                                            ));
-                                                  }
-                                                } else if (!checkUserExist
-                                                    .isUserExisting) {
-                                                  Modals.showToast(
-                                                    'you are not a member of this group',
-                                                  );
-                                                  onTapCommunityPageComponent(
-                                                    context: context, groupImage: groupData
-                                                                      .groupPic, groupName: groupData
-                                                                  .name, groupNumber: groupData
-                                                            .membersUid.length
-                                                            .toString(), groupDescription: groupData.groupDescription,);
+                                                        name: groupData.name,
+                                                        uid: groupData.groupId,
+                                                        isGroupChat: true,
+                                                        profilePic:
+                                                            groupData.groupPic,
+                                                      ));
                                                 }
-                                              },
-                                              groupName: groupData.name,
-                                              lastMessage:
-                                                  groupData.lastMessage,
-                                              groupPic: groupData.groupPic,
-                                              date:
-                                                  groupData.timeSent.toLocal(),
-                                            );
-                                          }))
-                                ]))
-                          ]);
-                        })))));
+                                              } else {
+                                                Modals.showToast(
+                                                  'you are not a member of this group',
+                                                );
+                                                onTapCommunityPageComponent(
+                                                  context: context,
+                                                  groupImage:
+                                                      groupData.groupPic,
+                                                  groupName: groupData.name,
+                                                  groupNumber: groupData
+                                                      .membersUid.length
+                                                      .toString(),
+                                                  groupDescription: groupData
+                                                      .groupDescription,
+                                                  groupId: groupData.groupId,
+                                                  userId: userId,
+                                                );
+                                              }
+                                            },
+                                            groupName: groupData.name,
+                                            lastMessage: groupData.lastMessage,
+                                            groupPic: groupData.groupPic,
+                                            date: groupData.timeSent.toLocal(), groupNumber: groupData
+                                                      .membersUid.length
+                                                      .toString(),
+                                          );
+                                        }))
+                              ]))
+                        ]);
+                      })))),
+    ));
   }
 
-  onTapCommunityPageComponent({required BuildContext context, required String groupImage, required String groupName, required String groupNumber, required String groupDescription,} ) {
-    AppNavigator.pushAndStackPage(context, page: CommunityInfoScreen(groupImage: groupImage, groupName: groupName, groupNumber: groupNumber, groupDescription: groupDescription,));
+  onTapCommunityPageComponent({
+    required BuildContext context,
+    required String groupImage,
+    required String groupName,
+    required String groupNumber,
+    required String groupDescription,
+    required String groupId,
+    required String userId,
+  }) {
+    AppNavigator.pushAndStackPage(context,
+        page: CommunityInfoScreen(
+          groupImage: groupImage,
+          groupName: groupName,
+          groupNumber: groupNumber,
+          groupDescription: groupDescription,
+          groupId: groupId,
+          userId: userId,
+        ));
   }
 }

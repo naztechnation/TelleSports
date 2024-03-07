@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,7 +13,9 @@ import '../../../../common/providers/message_reply_provider.dart';
 import '../../../../common/utils/colors.dart';
 import '../../../../common/utils/utils.dart';
  
+import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
+import '../../../../widgets/custom_text_form_field.dart';
 import '../controller/chat_controller.dart';
 import 'message_reply_preview.dart';
 
@@ -174,10 +179,34 @@ userId = await StorageHandler.getUserId() ?? '';
     return Column(
       children: [
         isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
+        Container(
+      width: double.maxFinite,
+      padding: EdgeInsets.fromLTRB(20.h, 9.v, 20.h, 10.v),
+      decoration: AppDecoration.outlineGray400,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              selectImage();
+            },
+            child: CustomImageView(
+              imagePath: ImageConstant.imgAttachFile,
+              height: 24.adaptSize,
+              width: 24.adaptSize,
+              margin: EdgeInsets.only(
+                top: 5.v,
+                bottom: 31.v,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 12.h,
+                bottom: 26.v,
+              ),
+              child: CustomTextFormField(
                 focusNode: focusNode,
                 controller: _messageController,
                 onChanged: (val) {
@@ -191,110 +220,55 @@ userId = await StorageHandler.getUserId() ?? '';
                     });
                   }
                 },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: mobileChatBoxColor,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                    child: SizedBox(
-                      width: 10,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: toggleEmojiKeyboardContainer,
-                            icon: const Icon(
-                              Icons.emoji_emotions,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          // IconButton(
-                          //   onPressed: selectGIF,
-                          //   icon: const Icon(
-                          //     Icons.gif,
-                          //     color: Colors.grey,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  suffixIcon: SizedBox(
-                    width: 100,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          onPressed: selectImage,
-                          icon: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        // IconButton(
-                        //   onPressed: selectVideo,
-                        //   icon: const Icon(
-                        //     Icons.attach_file,
-                        //     color: Colors.grey,
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                  hintText: 'Type a message!',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
-                    ),
-                  ),
-                  contentPadding: const EdgeInsets.all(10),
+                hintText: "Type a message...",
+                hintStyle: CustomTextStyles.titleSmallGray50001,
+                textInputAction: TextInputAction.done,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 8.h,
+                  vertical: 7.v,
                 ),
+                borderDecoration: TextFormFieldStyleHelper.outlineBlueGrayTL17,
+                filled: true,
+                fillColor: appTheme.gray100,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                bottom: 8,
-                right: 2,
-                left: 2,
-              ),
-              child: CircleAvatar(
-                backgroundColor:   const Color.fromARGB(255, 156, 39, 176),
-                radius: 25,
-                child: GestureDetector(
-                  onTap: (_messageController.text.isNotEmpty) ? sendTextMessage : null,
-                  child: Icon(
-                    isShowSendButton
-                        ? Icons.send
-                        : isRecording
-                            ? Icons.close
-                            : Icons.mic,
-                    color: Colors.white,
-                  ),
-                ),
+          ),
+          GestureDetector(
+            onTap: (_messageController.text.isNotEmpty) ? sendTextMessage : null,
+            child: CustomImageView(
+              imagePath: ImageConstant.imgSend,
+              height: 24.adaptSize,
+              width: 24.adaptSize,
+              margin: EdgeInsets.only(
+                left: 12.h,
+                top: 5.v,
+                bottom: 31.v,
               ),
             ),
-          ],
-        ),
-        // isShowEmojiContainer
-        //     ? SizedBox(
-        //         height: 310,
-        //         child: EmojiPicker(
-        //           onEmojiSelected: ((category, emoji) {
-        //             setState(() {
-        //               _messageController.text =
-        //                   _messageController.text + emoji.emoji;
-        //             });
+          ),
+        ],
+      ),
+    ),
+         
+        isShowEmojiContainer
+            ? SizedBox(
+                height: 310,
+                child: EmojiPicker(
+                  onEmojiSelected: ((category, emoji) {
+                    setState(() {
+                      _messageController.text =
+                          _messageController.text + emoji.emoji;
+                    });
 
-        //             if (!isShowSendButton) {
-        //               setState(() {
-        //                 isShowSendButton = true;
-        //               });
-        //             }
-        //           }),
-        //         ),
-        //       )
-        //     : const SizedBox(),
+                    if (!isShowSendButton) {
+                      setState(() {
+                        isShowSendButton = true;
+                      });
+                    }
+                  }),
+                ),
+              )
+            : const SizedBox(),
       ],
     );
   }

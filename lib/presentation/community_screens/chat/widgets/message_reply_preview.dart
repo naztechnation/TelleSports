@@ -40,14 +40,17 @@ class MessageReplyPreview extends ConsumerWidget {
               GestureDetector(
                 child: const Icon(
                   Icons.close,
-                  size: 16,
+                  size: 28,
+                  color: Colors.blue,
                 ),
+                
                 onTap: () => cancelReply(ref),
               ),
             ],
           ),
           const SizedBox(height: 8),
           DisplayTextImageGIF(
+            isMe: true,
             message: messageReply.message,
             type: messageReply.messageEnum,
           ),

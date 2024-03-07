@@ -7,6 +7,7 @@ import '../../../../common/utils/colors.dart';
 import '../../../../common/widgets/loader.dart';
 import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
+import '../../../../utils/navigator/page_navigator.dart';
 import '../../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../../widgets/app_bar/appbar_subtitle_four.dart';
 import '../../../../widgets/app_bar/appbar_subtitle_two.dart';
@@ -15,6 +16,7 @@ import '../../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../../widgets/modals.dart'; 
 import '../../auth/controller/auth_controller.dart';
  
+import '../../community_one_page/community_info_page.dart';
 import '../../provider/auth_provider.dart' as pro;
 import '../widgets/bottom_chat_field.dart';
 import '../widgets/chat_list.dart';
@@ -93,161 +95,162 @@ userId = await StorageHandler.getUserId() ?? '';
           return false;
         },
         child: Scaffold(
-        backgroundColor: appTheme.lime50,
-        resizeToAvoidBottomInset: false,
-        appBar:  CustomAppBar(
-          
-            height: 84.v,
-            leadingWidth: 44.h,
-            leading: AppbarLeadingImage(
-              imagePath: ImageConstant.imgArrowBackBlue800,
-               onTap: (){
-                                      groupInfo.isSelectedMessage(false);
-                              groupInfo.setSelectedMessage('');
-                              groupInfo.setTextIndex(-1);
-                              Navigator.pop(context);
-
-                    },
-              margin: EdgeInsets.only(
-                left: 20.h,
-                top: 50.v,
-                bottom: 10.v,
-              ),
-            ),
-            title: GestureDetector(
-              onTap: () {
-                 Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => GroupInfoScreen(
-                                    name: widget.name,
-                                    profilePic: widget.profilePic,
-                                  )));
-              },
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 12.h,
-                  top: 43.v,
-                  bottom: 4.v,
+          body: SafeArea(
+            child: Scaffold(
+            backgroundColor: appTheme.lime50,
+            resizeToAvoidBottomInset: false,
+            appBar:  CustomAppBar(
+               
+                leadingWidth: 44.h,
+                leading: AppbarLeadingImage(
+                  imagePath: ImageConstant.imgArrowBackBlue800,
+                   onTap: (){
+                                          groupInfo.isSelectedMessage(false);
+                                  groupInfo.setSelectedMessage('');
+                                  groupInfo.setTextIndex(-1);
+                                  Navigator.pop(context);
+            
+                        },
+                  margin: EdgeInsets.only(
+                    left: 20.h,
+                    top: 0.v,
+                    bottom: 10.v,
+                  ),
                 ),
-                child: Row(
+                title: Padding(
+                  padding: EdgeInsets.only(
+                    left: 12.h,
+                    top: 0.v,
+                    bottom: 4.v,
+                  ),
+                  child: Row(
+                    children: [
+                      AppbarTitleCircleimage(
+                        onTap: (){
+                    //  Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //               builder: (context) => GroupInfoScreen(
+                    //                     name: widget.name,
+                    //                     profilePic: widget.profilePic,
+                    //                   )));
+
+                                            onTapGroup(context, widget.profilePic, widget.name);
+
+                        },
+                        imagePath:  widget.profilePic,
+                        
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8.h),
+                        child: Column(
+                          children: [
+                            AppbarSubtitleTwo(
+                              text: widget.name,
+                              onTap: (){
+                    
+
+                      onTapGroup(context, widget.profilePic, widget.name);
+                        },
+                            ),
+                            AppbarSubtitleFour(
+                              text: "${widget.groupNumber }   member(s)",
+                              margin: EdgeInsets.only(right: 28.h),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  // AppbarTrailingImage(
+                  //   imagePath: ImageConstant.imgMoreVert,
+                  //   margin: EdgeInsets.fromLTRB(20.h, 50.v, 20.h, 10.v),
+                  // ),
+                ],
+                styleType: Style.bgOutline,
+              ),  
+               
+              body: GestureDetector(
+                onTap: () {
+                  groupInfo.isSelectedMessage(false);
+                  groupInfo.setSelectedMessage('');
+                  groupInfo.setTextIndex(-1);
+                },
+                child: Column(
                   children: [
-                    AppbarTitleCircleimage(
-                      
-                      imagePath:  widget.profilePic,
-                      onTap: (){
-                  //onTapGroup(context);
-              
-                            },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.h),
-                      child: Column(
-                        children: [
-                          AppbarSubtitleTwo(
-                            text: widget.name,
-                            onTap: (){
-                  //onTapGroup(context);
-              
-                            },
+                    if (groupInfo.groupPinnedMessage != '')
+                      Container(
+                        height: 55,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                groupInfo.groupPinnedMessage,
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              const Spacer(),
+                              if (groupInfo.groupAdminId ==
+                                  userId)
+                                GestureDetector(
+                                    onTap: () {
+                                      groupInfo.updateGroupPinnedChat(
+                                          groupInfo.groupId, '');
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.black,
+                                    ))
+                            ],
                           ),
-                          AppbarSubtitleFour(
-                            text: "${widget.groupNumber }members",
-                            margin: EdgeInsets.only(right: 28.h),
-                          ),
-                        ],
+                        ),
+                      ),
+                    Expanded(
+                      child: ChatList(
+                        recieverUserId: widget.uid,
+                        isGroupChat: widget.isGroupChat,
                       ),
                     ),
+                    if (groupInfo.isGroupLocked) ...[
+                      (groupInfo.groupAdminId ==
+                              userId)
+                          ? BottomChatField(
+                              recieverUserId: widget.uid,
+                              isGroupChat: widget.isGroupChat,
+                            )
+                          : const Padding(
+                              padding: EdgeInsets.only(bottom: 14.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.lock,
+                                    color: Colors.yellow,
+                                    size: 14,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    'only admins can send messages here',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            )
+                    ] else ...[
+                      BottomChatField(
+                        recieverUserId: widget.uid,
+                        isGroupChat: widget.isGroupChat,
+                      )
+                    ]
                   ],
                 ),
               ),
-            ),
-            actions: [
-              // AppbarTrailingImage(
-              //   imagePath: ImageConstant.imgMoreVert,
-              //   margin: EdgeInsets.fromLTRB(20.h, 50.v, 20.h, 10.v),
-              // ),
-            ],
-            styleType: Style.bgOutline,
-          ),  
-           
-          body: GestureDetector(
-            onTap: () {
-              groupInfo.isSelectedMessage(false);
-              groupInfo.setSelectedMessage('');
-              groupInfo.setTextIndex(-1);
-            },
-            child: Column(
-              children: [
-                if (groupInfo.groupPinnedMessage != '')
-                  Container(
-                    height: 55,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            groupInfo.groupPinnedMessage,
-                            style: const TextStyle(color: Colors.black),
-                          ),
-                          const Spacer(),
-                          if (groupInfo.groupAdminId ==
-                              userId)
-                            GestureDetector(
-                                onTap: () {
-                                  groupInfo.updateGroupPinnedChat(
-                                      groupInfo.groupId, '');
-                                },
-                                child: const Icon(
-                                  Icons.close,
-                                  color: Colors.black,
-                                ))
-                        ],
-                      ),
-                    ),
-                  ),
-                Expanded(
-                  child: ChatList(
-                    recieverUserId: widget.uid,
-                    isGroupChat: widget.isGroupChat,
-                  ),
-                ),
-                if (groupInfo.isGroupLocked) ...[
-                  (groupInfo.groupAdminId ==
-                          userId)
-                      ? BottomChatField(
-                          recieverUserId: widget.uid,
-                          isGroupChat: widget.isGroupChat,
-                        )
-                      : const Padding(
-                          padding: EdgeInsets.only(bottom: 14.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.lock,
-                                color: Colors.yellow,
-                                size: 14,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'only admins can send messages here',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        )
-                ] else ...[
-                  BottomChatField(
-                    recieverUserId: widget.uid,
-                    isGroupChat: widget.isGroupChat,
-                  )
-                ]
-              ],
             ),
           ),
         ),
@@ -264,5 +267,10 @@ userId = await StorageHandler.getUserId() ?? '';
           groupInfo.setTextIndex(-1),
           Navigator.pop(context),
         });
+  }
+
+  onTapGroup(BuildContext context, String image, String name) {
+      
+       AppNavigator.pushAndStackPage(context, page: CommunityInfoScreen(profilePic: image, name: name,));
   }
 }

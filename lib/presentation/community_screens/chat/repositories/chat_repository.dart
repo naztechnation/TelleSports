@@ -311,14 +311,15 @@ class ChatRepository {
         default:
           contactMsg = 'GIF';
       }
-      // _saveDataToContactsSubcollection(
-      //   senderUserData,
-      //   recieverUserData,
-      //   contactMsg,
-      //   timeSent,
-      //   recieverUserId,
-      //   isGroupChat,
-      // );
+      _saveDataToContactsSubcollection(
+        senderUserData,
+        recieverUserData,
+        contactMsg,
+        timeSent,
+        recieverUserId,
+        userId,
+        isGroupChat,
+      );
 
       _saveMessageToMessageSubcollection(
         recieverUserId: recieverUserId,

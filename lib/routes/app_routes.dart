@@ -112,6 +112,6 @@ class AppRoutes {
     communityChatScreen: (context) => CommunityChatScreen(),
     
     
-    communityInfoScreen: (context) => CommunityInfoScreen(),
+    communityInfoScreen: (context) => CommunityInfoScreen(profilePic: '', name: '',),
   };
 }
