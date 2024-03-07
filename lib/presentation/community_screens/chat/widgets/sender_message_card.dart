@@ -10,15 +10,18 @@ class SenderMessageCard extends StatelessWidget {
     Key? key,
     required this.message,
     required this.date,
+    
     required this.type,
     required this.onRightSwipe,
     required this.repliedText,
     required this.username,
-    required this.repliedMessageType,
+    required this.repliedMessageType, required this.name,
   }) : super(key: key);
   final String message;
   final String date;
   final MessageEnum type;
+  final String name;
+
   final Function(dynamic value) onRightSwipe;
   final String repliedText;
   final String username;
@@ -84,6 +87,7 @@ class SenderMessageCard extends StatelessWidget {
                           ),
                           child: DisplayTextImageGIF(
                                 isMe: false,
+                                username: name,
 
                             message: repliedText,
                             type: repliedMessageType,
@@ -93,6 +97,7 @@ class SenderMessageCard extends StatelessWidget {
                       ],
                       DisplayTextImageGIF(
                                 isMe: false,
+                                username:  name,
 
                         message: message,
                         type: type,

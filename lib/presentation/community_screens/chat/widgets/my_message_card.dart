@@ -10,6 +10,7 @@ import 'display_text_image_gif.dart';
 class MyMessageCard extends StatefulWidget {
   final int index;
   final String message;
+  final String name;
   final String date;
   final MessageEnum type;
   final Function(dynamic value) onLeftSwipe;
@@ -28,7 +29,7 @@ class MyMessageCard extends StatefulWidget {
     required this.repliedText,
     required this.username,
     required this.repliedMessageType,
-    required this.isSeen,
+    required this.isSeen, required this.name,
   }) : super(key: key);
 
   @override
@@ -130,6 +131,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
                               child: DisplayTextImageGIF(
                                 isMe: true,
                                 message: widget.repliedText,
+                                username: widget.name,
                                 type: widget.repliedMessageType,
                               ),
                             ),
@@ -137,6 +139,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
                           ],
                           DisplayTextImageGIF(
                                 isMe: true,
+                                username: widget.name,
 
                             message: widget.message,
                             

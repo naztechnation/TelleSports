@@ -178,7 +178,7 @@ class ChatRepository {
               ? senderUsername
               : recieverUserName ?? '',
       repliedMessageType:
-          messageReply == null ? MessageEnum.text : messageReply.messageEnum,
+          messageReply == null ? MessageEnum.text : messageReply.messageEnum, username: senderUsername,
     );
     if (isGroupChat) {
       // groups -> group id -> chat -> message

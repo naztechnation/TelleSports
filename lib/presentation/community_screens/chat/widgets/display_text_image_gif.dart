@@ -7,12 +7,13 @@ import '../../../../common/utils/colors.dart';
 
 class DisplayTextImageGIF extends StatelessWidget {
   final String message;
+  final String username;
   final MessageEnum type;
   final bool isMe;
   const DisplayTextImageGIF({
     Key? key,
     required this.message,
-    required this.type, required this.isMe,
+    required this.type, required this.isMe, required this.username,
   }) : super(key: key);
 
   @override
@@ -23,14 +24,27 @@ class DisplayTextImageGIF extends StatelessWidget {
     return type == MessageEnum.text
         ? Align(
           alignment: Alignment.bottomLeft,
-          child:  Text(
-              message,
-              textAlign: TextAlign.start,
-              style:   TextStyle(
-                fontSize: 16,
-                color: isMe ? Colors.white : Colors.black
-              ),
-            ),
+          child:  Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                  username,
+                  textAlign: TextAlign.start,
+                  style:   TextStyle(
+                    fontSize: 16,
+                    color: isMe ? Colors.black : Colors.black
+                  ),
+                ),
+              Text(
+                  message,
+                  textAlign: TextAlign.start,
+                  style:   TextStyle(
+                    fontSize: 16,
+                    color: isMe ? Colors.white : Colors.black
+                  ),
+                ),
+            ],
+          ),
         )
         : type == MessageEnum.audio
             ? StatefulBuilder(builder: (context, setState) {

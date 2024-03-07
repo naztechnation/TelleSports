@@ -108,7 +108,7 @@ userId = await StorageHandler.getUserId() ?? '';
                     
                     MyMessageCard(
                       message: messageData.text,
-                      
+                      name: messageData.username,
                       index: index,
                       date: timeSent,
                       type: messageData.type,
@@ -129,6 +129,8 @@ userId = await StorageHandler.getUserId() ?? '';
               }
               return SenderMessageCard(
                 message: messageData.text,
+                      name: messageData.username,
+
                 date: timeSent,
                 type: messageData.type,
                 username: messageData.repliedTo,

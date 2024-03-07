@@ -52,7 +52,7 @@ class MessageReplyPreview extends ConsumerWidget {
           DisplayTextImageGIF(
             isMe: true,
             message: messageReply.message,
-            type: messageReply.messageEnum,
+            type: messageReply.messageEnum, username: '',
           ),
         ],
       ),
