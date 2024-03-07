@@ -1,16 +1,12 @@
 import 'dart:io';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-//import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/providers/message_reply_provider.dart';
-import '../../../../common/utils/colors.dart';
 import '../../../../common/utils/utils.dart';
  
 import '../../../../core/app_export.dart';
@@ -250,25 +246,25 @@ userId = await StorageHandler.getUserId() ?? '';
       ),
     ),
          
-        isShowEmojiContainer
-            ? SizedBox(
-                height: 310,
-                child: EmojiPicker(
-                  onEmojiSelected: ((category, emoji) {
-                    setState(() {
-                      _messageController.text =
-                          _messageController.text + emoji.emoji;
-                    });
+        // isShowEmojiContainer
+        //     ? SizedBox(
+        //         height: 310,
+        //         child: EmojiPicker(
+        //           onEmojiSelected: ((category, emoji) {
+        //             setState(() {
+        //               _messageController.text =
+        //                   _messageController.text + emoji.emoji;
+        //             });
 
-                    if (!isShowSendButton) {
-                      setState(() {
-                        isShowSendButton = true;
-                      });
-                    }
-                  }),
-                ),
-              )
-            : const SizedBox(),
+        //             if (!isShowSendButton) {
+        //               setState(() {
+        //                 isShowSendButton = true;
+        //               });
+        //             }
+        //           }),
+        //         ),
+        //       )
+        //     : const SizedBox(),
       ],
     );
   }

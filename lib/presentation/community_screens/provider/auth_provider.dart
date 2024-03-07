@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
+import 'package:tellesports/presentation/landing_page/landing_page.dart';
 
 import '../../../model/chat_model/group.dart';
 import '../../../model/chat_model/user_model.dart';
@@ -31,10 +32,14 @@ class AuthProviders extends ChangeNotifier {
   String _groupNumber = '1';
   String _groupDescription = '';
   List<UserModel> _users = [];
+  List<UserModel> _blockedUsers = [];
+  List<UserModel> _requestedUsers = [];
   bool _isGroupLocked = false;
   bool _isSelectedText = false;
   String _groupLink = '';
   String _groupId = '';
+  String _groupName = '';
+  String _groupPics = '';
   String _groupAdminId = '';
   String _groupPinnedMessage = '';
   String _selectedMessage = '';
@@ -262,7 +267,77 @@ class AuthProviders extends ChangeNotifier {
       return [];
     }
   }
+  Future<List<UserModel>> requestedUsers(List<String> membersUid) async {
+    try {
+      final List<UserModel> users = [];
 
+      for (String userId in membersUid) {
+        final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
+
+        if (userSnapshot.exists) {
+          final Map<String, dynamic> userData =
+              userSnapshot.data() as Map<String, dynamic>;
+
+          final UserModel user = UserModel(
+            uid: userId,
+            name: userData['name'],
+            email: userData['email'],
+            profilePic: userData['profilePic'],
+            isOnline: userData['isOnline'],
+            groupId: [],
+          );
+
+          users.add(user);
+        }
+      }
+      _requestedUsers = users;
+      notifyListeners();
+      return _requestedUsers;
+    } catch (error) {
+      print('Error fetching users: $error');
+      return [];
+    }
+  }
+
+  Future<List<UserModel>> blockedUsers(List<String> membersUid) async {
+    try {
+      final List<UserModel> users = [];
+
+      for (String userId in membersUid) {
+        final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
+
+        if (userSnapshot.exists) {
+          final Map<String, dynamic> userData =
+              userSnapshot.data() as Map<String, dynamic>;
+
+          final UserModel user = UserModel(
+            uid: userId,
+            name: userData['name'],
+            email: userData['email'],
+            profilePic: userData['profilePic'],
+            isOnline: userData['isOnline'],
+            groupId: [],
+          );
+
+          users.add(user);
+        }
+      }
+      notifyListeners();
+
+      _blockedUsers = users;
+      return users;
+    } catch (error) {
+      print('Error fetching users: $error');
+      return [];
+    }
+  }
+ 
   Future<void> updateUserProfile() async {
 
     String userId = await StorageHandler.getUserId() ??  '';
@@ -314,11 +389,15 @@ class AuthProviders extends ChangeNotifier {
       required String pinnedMessage,
       required bool isGroupLocked,
       required String groupId,
+      required String groupName,
+      required String groupPics,
       required String groupAdminId}) {
     _groupNumber = groupNumber;
     _groupDescription =  groupDesription;
     _groupLink = groupLink;
     _groupId = groupId;
+    _groupName = groupName;
+    _groupPics = groupPics;
     _groupAdminId = groupAdminId;
     _groupPinnedMessage = pinnedMessage;
     notifyListeners();
@@ -375,6 +454,70 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
+
+  Future<void> removeCurrentUserFromRequestsMembers(
+      String groupId, String currentUserId, BuildContext context) async {
+    try {
+      final DocumentReference groupDocRef =
+          FirebaseFirestore.instance.collection('groups').doc(groupId);
+
+      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+
+      if (groupSnapshot.exists) {
+        final Map<String, dynamic> groupData =
+            groupSnapshot.data() as Map<String, dynamic>;
+
+        if (groupData.containsKey('requestsMembers') &&
+            groupData['requestsMembers'] is List) {
+          final List<dynamic> membersUid = groupData['requestsMembers'];
+          membersUid.remove(currentUserId);
+
+          await groupDocRef.update({'requestsMembers': membersUid});
+          await addCurrentUserFromMembers(groupId,currentUserId, context);
+
+          if (context.mounted) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const LandingPage()));
+          }
+        }
+      }
+    } catch (error) {
+      print('Error removing user from members: $error');
+    }
+  }
+  Future<void> removeCurrentUserFromBlockedMembers(
+      String groupId, String currentUserId, BuildContext context) async {
+    try {
+      final DocumentReference groupDocRef =
+          FirebaseFirestore.instance.collection('groups').doc(groupId);
+
+      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+
+      if (groupSnapshot.exists) {
+        final Map<String, dynamic> groupData =
+            groupSnapshot.data() as Map<String, dynamic>;
+
+        if (groupData.containsKey('blockedMembers') &&
+            groupData['blockedMembers'] is List) {
+          final List<dynamic> membersUid = groupData['blockedMembers'];
+          membersUid.remove(currentUserId);
+
+          await groupDocRef.update({'blockedMembers': membersUid});
+          await addCurrentUserFromMembers(groupId,currentUserId, context);
+
+          if (context.mounted) {
+            if (context.mounted) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const LandingPage()));
+          }
+          }
+        }
+      }
+    } catch (error) {
+      print('Error removing user from members: $error');
+    }
+  }
+
    Future<void> addCurrentUserFromMembers(
       String groupId, String currentUserId, BuildContext context) async {
     try {
@@ -404,7 +547,59 @@ class AuthProviders extends ChangeNotifier {
       print('Error removing user from members: $error');
     }
   }
+     Future<void> addUserToRequestsMembers(
+      String groupId, String currentUserId, BuildContext context) async {
+    try {
+      final DocumentReference groupDocRef =
+          FirebaseFirestore.instance.collection('groups').doc(groupId);
 
+      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+
+      if (groupSnapshot.exists) {
+        final Map<String, dynamic> groupData =
+            groupSnapshot.data() as Map<String, dynamic>;
+
+        if (groupData.containsKey('requestsMembers') &&
+            groupData['requestsMembers'] is List) {
+          final List<dynamic> requestsUid = groupData['requestsMembers'];
+          requestsUid.add(currentUserId);
+
+          await groupDocRef.update({'requestsMembers': requestsUid});
+
+           
+        }
+      }
+    } catch (error) {
+      print('Error removing user from members: $error');
+    }
+  }
+
+  Future<void> addUserToBlockedMembers(
+      String groupId, String currentUserId, BuildContext context) async {
+    try {
+      final DocumentReference groupDocRef =
+          FirebaseFirestore.instance.collection('groups').doc(groupId);
+
+      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+
+      if (groupSnapshot.exists) {
+        final Map<String, dynamic> groupData =
+            groupSnapshot.data() as Map<String, dynamic>;
+
+        if (groupData.containsKey('blockedMembers') &&
+            groupData['blockedMembers'] is List) {
+          final List<dynamic> blockedUid = groupData['blockedMembers'];
+          blockedUid.add(currentUserId);
+
+          await groupDocRef.update({'blockedMembers': blockedUid});
+
+           
+        }
+      }
+    } catch (error) {
+      print('Error removing user from members: $error');
+    }
+  }
   Future<void> deleteGroup(String groupId, BuildContext context) async {
     try {
       final DocumentReference groupDocRef =
@@ -528,6 +723,8 @@ class AuthProviders extends ChangeNotifier {
   String get groupId => _groupId;
   String get groupAdminId => _groupAdminId;
   String get groupNumber => _groupNumber;
+  String get groupName => _groupName;
+  String get groupPics => _groupPics;
   String get groupDescription => _groupDescription;
   bool get isSelected => _isSelectedText;
   AuthScreenState get isLogin => _isLogin;
@@ -536,4 +733,6 @@ class AuthProviders extends ChangeNotifier {
   bool get isUserExisting => _isUserExisting;
   bool get isGroupLocked => _isGroupLocked;
   List<UserModel> get groupMembers => _users;
+  List<UserModel> get blockedMembers => _blockedUsers;
+  List<UserModel> get requestedMembers => _requestedUsers;
 }

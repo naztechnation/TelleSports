@@ -65,9 +65,9 @@ class UserprofileItemWidget extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 22.v),
+                  padding: EdgeInsets.only(bottom: 0.v),
                   child: Text(
-                   (index ==  0) ?  "Community manager" : "",
+                   (index ==  0) ?  "Community Manager" : "",
                     style: TextStyle(
                       color: appTheme.gray900,
                       fontSize: 10.fSize,

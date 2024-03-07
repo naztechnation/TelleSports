@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/handlers/secure_handler.dart';
+import 'package:tellesports/presentation/landing_page/landing_page.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
-import 'package:tellesports/widgets/custom_text_form_field.dart';
+import 'package:provider/provider.dart' as provider;
+import 'package:tellesports/widgets/modals.dart';
+
+import '../community_screens/provider/auth_provider.dart' as pro;
 
 // ignore_for_file: must_be_immutable
 class UserInfoPage extends StatefulWidget {
@@ -21,9 +27,29 @@ class UserInfoPageState extends State<UserInfoPage>
 
   @override
   bool get wantKeepAlive => true;
+
+  String userId = '';
+
+  bool isLoading = false;
+
+  getCurrentUserId() async {
+    userId = await StorageHandler.getUserId() ?? '';
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getCurrentUserId();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+
+    final groupData =
+        provider.Provider.of<pro.AuthProviders>(context, listen: true);
 
     return SafeArea(
       child: Scaffold(
@@ -38,38 +64,34 @@ class UserInfoPageState extends State<UserInfoPage>
                 padding: EdgeInsets.symmetric(horizontal: 20.h),
                 child: Column(
                   children: [
-                    CustomTextFormField(
-                      controller: notificationsvalueController,
-                      hintText: "Notifications",
-                      textInputAction: TextInputAction.done,
-                      suffix: Container(
-                        margin: EdgeInsets.fromLTRB(30.h, 19.v, 10.h, 19.v),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgVectorBlue400,
-                          height: 10.v,
-                          width: 20.h,
-                        ),
-                      ),
-                      suffixConstraints: BoxConstraints(
-                        maxHeight: 48.v,
-                      ),
-                      contentPadding: EdgeInsets.only(
-                        left: 8.h,
-                        top: 14.v,
-                        bottom: 14.v,
-                      ),
-                      borderDecoration: TextFormFieldStyleHelper.outlineBlack,
-                      filled: true,
-                      fillColor: appTheme.whiteA700,
-                    ),
                     SizedBox(height: 24.v),
-                    CustomElevatedButton(
-                      text: "Block",
-                      buttonStyle: CustomButtonStyles.fillRedTL8,
-                    ),
+                    if (groupData.groupAdminId == userId)
+                      CustomElevatedButton(
+                        text: "Block",
+                        processing: isLoading,
+                        buttonStyle: CustomButtonStyles.fillRedTL8,
+                        onPressed: () async {
+                          if (groupData.groupAdminId == userId) {
+                            Modals.showToast('Oppss you can\'t block yourself');
+                          } else {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await groupData.addUserToBlockedMembers(
+                                groupData.groupId, userId, context);
+                            setState(() {
+                              isLoading = false;
+                            });
+
+                            AppNavigator.pushAndStackPage(context, page: LandingPage());
+                          }
+                        },
+                      ),
                     SizedBox(height: 16.v),
                     CustomOutlinedButton(
                       text: "Report user",
+                        processing: isLoading,
+
                     ),
                   ],
                 ),

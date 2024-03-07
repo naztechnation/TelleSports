@@ -6,7 +6,6 @@ import '../../../handlers/secure_handler.dart';
 import '../../../utils/loader.dart';
 import '../../../widgets/modals.dart';
 import '../chat/screens/mobile_chat_screen.dart';
-import '../community_chat_screen/community_chat_screen.dart';
 import '../community_info_screen/community_info_screen.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'empty_comunity_page.dart';
@@ -119,6 +118,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                               if (groupData.membersUid
                                                   .contains(userId)) {
                                                 if (context.mounted) {
+                                                  checkUserExist.requestedUsers(groupData.requestsMembers);
+                                                  checkUserExist.blockedUsers(groupData.blockedMembers);
                                                   checkUserExist.addGroupInfo(
                                                       groupNumber: groupData
                                                           .membersUid.length
@@ -134,7 +135,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                       pinnedMessage: groupData
                                                           .pinnedMessage,
                                                       groupDesription: groupData
-                                                          .groupDescription);
+                                                          .groupDescription, groupName: groupData.name,
+                                                           groupPics:  groupData.groupPic);
 
                                                   AppNavigator.pushAndStackPage(
                                                       context,
@@ -153,7 +155,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                 }
                                               } else {
                                                 Modals.showToast(
-                                                  'you are not a member of this group',
+                                                  'You are not a member of this group',
                                                 );
                                                 onTapCommunityPageComponent(
                                                   context: context,

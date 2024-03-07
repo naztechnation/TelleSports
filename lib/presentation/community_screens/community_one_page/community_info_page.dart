@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +7,6 @@ import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 
- 
 import '../../../handlers/secure_handler.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
@@ -17,14 +14,15 @@ import '../../../widgets/modals.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'all_users_page.dart';
 
-
+import 'widgets/requests_page.dart';
 import 'widgets/userprofile_item_widget.dart';
 
 // ignore_for_file: must_be_immutable
 class CommunityInfoScreen extends StatefulWidget {
   final String profilePic;
   final String name;
-  CommunityInfoScreen({Key? key, required this.profilePic, required this.name}) : super(key: key);
+  CommunityInfoScreen({Key? key, required this.profilePic, required this.name})
+      : super(key: key);
 
   @override
   State<CommunityInfoScreen> createState() => _CommunityInfoScreenState();
@@ -33,13 +31,10 @@ class CommunityInfoScreen extends StatefulWidget {
 class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   TextEditingController vectorController = TextEditingController();
 
-   String userId = '';
-  getUserId()async{
-
-userId = await StorageHandler.getUserId() ?? '';
-setState(() {
-  
-});
+  String userId = '';
+  getUserId() async {
+    userId = await StorageHandler.getUserId() ?? '';
+    setState(() {});
   }
 
   @override
@@ -85,82 +80,141 @@ setState(() {
                                                   color: appTheme.gray900,
                                                   fontSize: 18.fSize,
                                                   fontFamily: 'DM Sans',
-                                                  fontWeight:
-                                                      FontWeight.w700)),
+                                                  fontWeight: FontWeight.w700)),
                                           SizedBox(height: 2.v),
-                                          Text("${groupInfo.groupNumber} member(s)",
+                                          Text(
+                                              "${groupInfo.groupNumber} member(s)",
                                               style: TextStyle(
                                                   color: theme.colorScheme
                                                       .onPrimaryContainer,
                                                   fontSize: 14.fSize,
                                                   fontFamily: 'DM Sans',
-                                                  fontWeight:
-                                                      FontWeight.w500))
+                                                  fontWeight: FontWeight.w500))
                                         ]))
                               ]),
-                              const SizedBox(height: 12,),
-                          if(groupInfo.groupMembers[0].uid ==  userId)   Column(children: [
-              
-            Card(
-              elevation: 0.3,
-              child: ListTile(
-                leading: const Icon(Icons.notifications, color: Colors.blue,),
-                title: const Text('Mute Group'),
-                trailing: CupertinoSwitch(
-                    value: groupInfo.isGroupLocked,
-                    onChanged: (newValue) => setState(() {
-                      groupInfo.updateGroupLockStatus(groupInfo.groupId, newValue);
-                    } )),
-              ),
-            ),
-             ]),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          if (groupInfo.groupMembers[0].uid == userId)
+                            Column(children: [
+                              Card(
+                                elevation: 0.3,
+                                child: ListTile(
+                                  leading: const Icon(
+                                    Icons.notifications,
+                                    color: Colors.blue,
+                                  ),
+                                  title: const Text('Mute Group'),
+                                  trailing: CupertinoSwitch(
+                                      value: groupInfo.isGroupLocked,
+                                      onChanged: (newValue) => setState(() {
+                                            groupInfo.updateGroupLockStatus(
+                                                groupInfo.groupId, newValue);
+                                          })),
+                                ),
+                              ),
+                            ]),
+                        
                           SizedBox(height: 24.v),
-                          _buildCommunityDescription(context, groupInfo.groupDescription),
+                          _buildCommunityDescription(
+                              context, groupInfo.groupDescription),
                           SizedBox(height: 24.v),
                           _buildShareCommunity(context, groupInfo.groupLink),
                           SizedBox(height: 24.v),
                           _buildMedia(context),
                           SizedBox(height: 24.v),
-                          Card(
-                            elevation: 0.4,
-                            child: 
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                          if (groupInfo.groupMembers[0].uid == userId)  SizedBox(height: 18.v),
+                        if (groupInfo.groupMembers[0].uid == userId)  GestureDetector(
+                          onTap: () {
+                            AppNavigator.pushAndStackPage(context, page: RequestedUsersPage());
+                          },
+                          child: Card(child:Container(
+                                 padding: const EdgeInsets.all(10),
+                          
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                 Text("Chat Notifications",
-                                              style: TextStyle(
-                                                  
-                                                  fontSize: 14.fSize,
-                                                  fontFamily: 'DM Sans',
-                                                  fontWeight:
-                                                      FontWeight.w500)),
-
-                                                      Switch.adaptive(
-                                                        activeColor: Colors.blue,
-                                                        inactiveThumbColor: Colors.black12,
-                                                        inactiveTrackColor: Colors.grey,
-                                                        value: true, onChanged: ((value) {
-                                                        
-                                                      }))
+                                Text('Requests'),
+                                Container(
+                                  width: 32.adaptSize,
+                                  height: 32.adaptSize,
+                                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Center(
+                                      child: Text(
+                                        "${groupInfo.requestedMembers.length}",
+                                        style: TextStyle(fontSize: 9, color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],),
-                            )
-                          ,),
-                          
+                            )),
+                        ),
+                          if (groupInfo.groupMembers[0].uid == userId)  SizedBox(height: 18.v),
+                        if (groupInfo.groupMembers[0].uid != userId)  Card(child:Container(
+                               padding: const EdgeInsets.all(10),
+
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                              Text('Blocked Users'),
+                              Container(
+                                width: 32.adaptSize,
+                                height: 32.adaptSize,
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Center(
+                                    child: Text(
+                                      "${groupInfo.blockedMembers.length}",
+                                      style: TextStyle(fontSize: 9, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],),
+                          )),
+                          // Card(
+                          //   elevation: 0.4,
+                          //   child: Container(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         horizontal: 10, vertical: 20),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //           MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Text("Chat Notifications",
+                          //             style: TextStyle(
+                          //                 fontSize: 14.fSize,
+                          //                 fontFamily: 'DM Sans',
+                          //                 fontWeight: FontWeight.w500)),
+                          //         Switch.adaptive(
+                          //             activeColor: Colors.blue,
+                          //             inactiveThumbColor: Colors.black12,
+                          //             inactiveTrackColor: Colors.grey,
+                          //             value: true,
+                          //             onChanged: ((value) {}))
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           SizedBox(height: 24.v),
-                          _buildUserProfile(context, groupInfo.groupNumber, groupInfo.groupMembers.length,groupInfo),
+                          _buildUserProfile(context, groupInfo.groupNumber,
+                              groupInfo.groupMembers.length, groupInfo),
                           SizedBox(height: 24.v),
                           CustomElevatedButton(
                               text: "Leave community",
                               buttonStyle: CustomButtonStyles.fillRed,
                               onPressed: () {
-                                 if(groupInfo.groupMembers[0].uid ==  userId) {
-              Modals.showToast('You are an admin and can\'t leave the community');
-              }else{
-              groupInfo.removeCurrentUserFromMembers(groupInfo.groupId, userId, context);
-
-              }
+                                if (groupInfo.groupMembers[0].uid == userId) {
+                                  Modals.showToast(
+                                      'You are an admin and can\'t leave the community');
+                                } else {
+                                  groupInfo.removeCurrentUserFromMembers(
+                                      groupInfo.groupId, userId, context);
+                                }
                               }),
                           SizedBox(height: 16.v),
                           CustomOutlinedButton(text: "Report community")
@@ -172,7 +226,7 @@ setState(() {
       height: 86.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
-        onTap: (){
+        onTap: () {
           Navigator.pop(context);
         },
         imagePath: ImageConstant.imgArrowBack,
@@ -191,19 +245,17 @@ setState(() {
         ),
       ),
       styleType: Style.bgOutline,
-      
     );
   }
 
-  Widget _buildCommunityDescription(BuildContext context,  String desc) {
+  Widget _buildCommunityDescription(BuildContext context, String desc) {
     return Card(
-          elevation: 0.4,
-
+      elevation: 0.4,
       child: Container(
           width: 350.h,
           padding: EdgeInsets.all(8.h),
-            // decoration: AppDecoration.outlineBlackF
-            //     .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
+          // decoration: AppDecoration.outlineBlackF
+          //     .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
           child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,8 +271,7 @@ setState(() {
                 Container(
                     width: 312.h,
                     margin: EdgeInsets.only(right: 21.h),
-                    child: Text(
-                        desc,
+                    child: Text(desc,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -241,7 +292,6 @@ setState(() {
           elevation: 0.4,
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 12.v),
-              
               child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,8 +326,7 @@ setState(() {
 
   Widget _buildMedia(BuildContext context) {
     return Card(
-          elevation: 0.4,
-
+      elevation: 0.4,
       child: Container(
           padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 11.v),
           // decoration: AppDecoration.outlineBlackF
@@ -292,38 +341,41 @@ setState(() {
                         fontFamily: 'DM Sans',
                         fontWeight: FontWeight.w700)),
                 SizedBox(height: 8.v),
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  CustomImageView(
-                      imagePath: ImageConstant.imgRectangle237,
-                      height: 60.adaptSize,
-                      width: 60.adaptSize),
-                  CustomImageView(
-                      imagePath: ImageConstant.imgRectangle237,
-                      height: 60.adaptSize,
-                      width: 60.adaptSize),
-                  CustomImageView(
-                      imagePath: ImageConstant.imgRectangle237,
-                      height: 60.adaptSize,
-                      width: 60.adaptSize),
-                  CustomImageView(
-                      imagePath: ImageConstant.imgRectangle237,
-                      height: 60.adaptSize,
-                      width: 60.adaptSize),
-                  CustomImageView(
-                      imagePath: ImageConstant.imgRectangle237,
-                      height: 60.v,
-                      width: 30.h),
-                  CustomImageView(
-                      imagePath: ImageConstant.imgArrowRight,
-                      height: 24.adaptSize,
-                      width: 24.adaptSize,
-                      margin: EdgeInsets.symmetric(vertical: 18.v))
-                ])
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomImageView(
+                          imagePath: ImageConstant.imgRectangle237,
+                          height: 60.adaptSize,
+                          width: 60.adaptSize),
+                      CustomImageView(
+                          imagePath: ImageConstant.imgRectangle237,
+                          height: 60.adaptSize,
+                          width: 60.adaptSize),
+                      CustomImageView(
+                          imagePath: ImageConstant.imgRectangle237,
+                          height: 60.adaptSize,
+                          width: 60.adaptSize),
+                      CustomImageView(
+                          imagePath: ImageConstant.imgRectangle237,
+                          height: 60.adaptSize,
+                          width: 60.adaptSize),
+                      CustomImageView(
+                          imagePath: ImageConstant.imgRectangle237,
+                          height: 60.v,
+                          width: 30.h),
+                      CustomImageView(
+                          imagePath: ImageConstant.imgArrowRight,
+                          height: 24.adaptSize,
+                          width: 24.adaptSize,
+                          margin: EdgeInsets.symmetric(vertical: 18.v))
+                    ])
               ])),
     );
   }
 
-  Widget _buildUserProfile(BuildContext context, String groupNumber, int memberLength, var members) {
+  Widget _buildUserProfile(
+      BuildContext context, String groupNumber, int memberLength, var members) {
     return Card(
       elevation: 0.4,
       child: Container(
@@ -346,23 +398,27 @@ setState(() {
                     separatorBuilder: (context, index) {
                       return SizedBox(height: 8.v);
                     },
-                                  itemCount: memberLength,
-
+                    itemCount: memberLength,
                     itemBuilder: (context, index) {
-                      return UserprofileItemWidget(name: members.groupMembers[index].name, bio: 'My Bio', index: index, image: members.groupMembers[index].profilePic,);
+                      return UserprofileItemWidget(
+                        name: members.groupMembers[index].name,
+                        bio: 'My Bio',
+                        index: index,
+                        image: members.groupMembers[index].profilePic,
+                      );
                     }),
                 SizedBox(height: 12.v),
-
-                    GestureDetector(
-                      onTap: () {
-                        AppNavigator.pushAndStackPage(context, page: AllUsersPage());
-                      },
-                      child: Text("see all >",
+                GestureDetector(
+                  onTap: () {
+                    AppNavigator.pushAndStackPage(context,
+                        page: AllUsersPage());
+                  },
+                  child: Text("see all >",
                       style: TextStyle(
                           fontSize: 16.fSize,
                           fontFamily: 'DM Sans',
                           fontWeight: FontWeight.w500)),
-                    ),
+                ),
               ])),
     );
   }

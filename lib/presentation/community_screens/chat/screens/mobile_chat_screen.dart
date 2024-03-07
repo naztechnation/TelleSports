@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:flutter/services.dart';
-
-import '../../../../common/utils/colors.dart';
-import '../../../../common/widgets/loader.dart';
+ 
 import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
 import '../../../../utils/navigator/page_navigator.dart';
@@ -14,13 +12,11 @@ import '../../../../widgets/app_bar/appbar_subtitle_two.dart';
 import '../../../../widgets/app_bar/appbar_title_circleimage.dart';
 import '../../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../../widgets/modals.dart'; 
-import '../../auth/controller/auth_controller.dart';
  
 import '../../community_one_page/community_info_page.dart';
 import '../../provider/auth_provider.dart' as pro;
 import '../widgets/bottom_chat_field.dart';
 import '../widgets/chat_list.dart';
-import 'group_info.dart';
 
 class MobileChatScreen extends ConsumerStatefulWidget {
   static const String routeName = '/mobile-chat-screen';
@@ -127,14 +123,7 @@ userId = await StorageHandler.getUserId() ?? '';
                     children: [
                       AppbarTitleCircleimage(
                         onTap: (){
-                    //  Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => GroupInfoScreen(
-                    //                     name: widget.name,
-                    //                     profilePic: widget.profilePic,
-                    //                   )));
-
+                    
                                             onTapGroup(context, widget.profilePic, widget.name);
 
                         },

@@ -87,10 +87,7 @@ class CommunityPageComponent extends StatelessWidget {
                             child: Container(
                               width: 32.adaptSize,
                               height: 32.adaptSize,
-                              // padding: EdgeInsets.symmetric(
-                              //   horizontal: 2.h,
-                              //   vertical: 5.v,
-                              // ),
+                               
                               decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF3C91E5)),
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),

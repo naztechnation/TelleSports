@@ -68,7 +68,7 @@ class GroupRepository {
         lastMessage: '',
         groupPic: profileUrl,
         membersUid: [userId, ...uids],
-        timeSent: DateTime.now(), groupDescription: groupDesc,
+        timeSent: DateTime.now(), groupDescription: groupDesc, blockedMembers: [], requestsMembers: [],
       );
 
       await firestore.collection('groups').doc(groupId).set(group.toMap());

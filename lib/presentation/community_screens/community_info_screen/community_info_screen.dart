@@ -1,25 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/core/constants/enums.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
- 
+import 'package:tellesports/widgets/modals.dart';
+
+import '../../../handlers/secure_handler.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
-import '../community_chat_screen/community_chat_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../../landing_page/landing_page.dart';
 import '../provider/auth_provider.dart' as pro;
 
-
-class CommunityInfoScreen extends StatelessWidget {
+class CommunityInfoScreen extends StatefulWidget {
   final String groupImage;
   final String groupName;
   final String groupNumber;
   final String groupId;
   final String userId;
   final String groupDescription;
-  const CommunityInfoScreen({Key? key, required this.groupImage, required this.groupName, required this.groupNumber, required this.groupDescription, required this.groupId, required this.userId}) : super(key: key);
+  const CommunityInfoScreen(
+      {Key? key,
+      required this.groupImage,
+      required this.groupName,
+      required this.groupNumber,
+      required this.groupDescription,
+      required this.groupId,
+      required this.userId})
+      : super(key: key);
+
+  @override
+  State<CommunityInfoScreen> createState() => _CommunityInfoScreenState();
+}
+
+class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
+  String userId = '';
+
+  bool isLoading = false;
+
+  getCurrentUserId() async {
+    userId = await StorageHandler.getUserId() ?? '';
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getCurrentUserId();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +70,7 @@ class CommunityInfoScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CustomImageView(
-                                imagePath: groupImage,
+                                imagePath: widget.groupImage,
                                 placeHolder: ImageConstant.imgAvatar1,
                                 height: 64.adaptSize,
                                 width: 64.adaptSize,
@@ -51,24 +82,45 @@ class CommunityInfoScreen extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(groupName,
+                                      Text(widget.groupName,
                                           style: CustomTextStyles
                                               .titleMediumOnPrimaryBold18),
                                       SizedBox(height: 2.v),
-                                      Text('${groupNumber } Member(s)',
+                                      Text('${widget.groupNumber} Member(s)',
                                           style: CustomTextStyles
                                               .titleSmallBluegray900)
                                     ]))
                           ])),
                   SizedBox(height: 24.v),
-                  _buildCommunityDescription(context, groupDescription),
+                  _buildCommunityDescription(context, widget.groupDescription),
                   SizedBox(height: 24.v),
                   CustomElevatedButton(
                       text: "Join community",
-                      onPressed: () {
-              groupInfo.addCurrentUserFromMembers(groupId, userId, context);
+                      processing: isLoading,
+                      onPressed: () async {
+                        for (var userIds in groupInfo.requestedMembers) {
+                          if (userIds == userId) {
+                            Modals.showToast(
+                                'You already have a pending request here');
+                            break;
+                          } else {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await groupInfo.addUserToRequestsMembers(
+                                widget.groupId, widget.userId, context);
+                            setState(() {
+                              isLoading = false;
+                            });
 
-                       // onTapJoinCommunity(context);
+                            Modals.showToast(
+                                'Request has been sent to community admin for approval',
+                                messageType: MessageType.success);
+
+                            AppNavigator.pushAndStackPage(context,
+                                page: LandingPage());
+                          }
+                        }
                       }),
                   SizedBox(height: 16.v),
                   // CustomOutlinedButton(text: "Report community"),
@@ -81,7 +133,7 @@ class CommunityInfoScreen extends StatelessWidget {
       height: 86.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
-        onTap: (){
+        onTap: () {
           Navigator.pop(context);
         },
         imagePath: ImageConstant.imgArrowBack,
@@ -94,14 +146,12 @@ class CommunityInfoScreen extends StatelessWidget {
       centerTitle: true,
       title: AppbarSubtitle(
         text: "Community Info",
-        
         margin: EdgeInsets.only(
           top: 49.v,
           bottom: 9.v,
         ),
       ),
       styleType: Style.bgOutline,
-      
     );
   }
 
@@ -123,15 +173,15 @@ class CommunityInfoScreen extends StatelessWidget {
               Container(
                   width: 312.h,
                   margin: EdgeInsets.only(right: 21.h),
-                  child: Text(
-                    desc,
+                  child: Text(desc,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall!.copyWith(fontSize: 16)))
+                      style:
+                          theme.textTheme.titleSmall!.copyWith(fontSize: 16)))
             ]));
   }
 
   onTapJoinCommunity(BuildContext context) {
-     AppNavigator.pushAndStackPage(context, page: CommunityChatScreen( ));
+    // AppNavigator.pushAndStackPage(context, page: CommunityChatScreen( ));
   }
 }
