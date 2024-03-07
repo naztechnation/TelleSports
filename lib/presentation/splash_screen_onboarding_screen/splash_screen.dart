@@ -67,7 +67,7 @@ class _LoadingScreenState extends State<SplashScreen> with SingleTickerProviderS
 
     _animationController.forward();
     super.initState();
-  //  startTimeout();
+    startTimeout();
   }
 
   @override

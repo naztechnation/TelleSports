@@ -27,7 +27,7 @@ class GroupRepository {
     required this.ref,
   });
 
-  void createGroup(BuildContext context, String name, File profilePic,
+  void createGroup(BuildContext context, String name,String groupDesc, File profilePic,
       List<Contact> selectedContact) async {
 
         String userId = await StorageHandler.getUserId() ?? '';
@@ -68,7 +68,7 @@ class GroupRepository {
         lastMessage: '',
         groupPic: profileUrl,
         membersUid: [userId, ...uids],
-        timeSent: DateTime.now(),
+        timeSent: DateTime.now(), groupDescription: groupDesc,
       );
 
       await firestore.collection('groups').doc(groupId).set(group.toMap());

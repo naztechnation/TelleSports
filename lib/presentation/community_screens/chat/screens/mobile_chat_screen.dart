@@ -20,7 +20,8 @@ class MobileChatScreen extends ConsumerStatefulWidget {
   final String uid;
   final bool isGroupChat;
   final String profilePic;
-  const MobileChatScreen({
+  final String groupDesc;
+  const MobileChatScreen(this.groupDesc, {
     Key? key,
     required this.name,
     required this.uid,

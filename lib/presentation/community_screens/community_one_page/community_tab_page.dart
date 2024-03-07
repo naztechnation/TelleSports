@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart'; 
 
+import '../chat/widgets/contacts_list.dart';
 import 'community_list_page.dart';
 import 'empty_comunity_page.dart';
 
@@ -46,9 +47,8 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
                   child: TabBarView(
                     controller: tabviewController,
                     children: [
-                      //ChatsList(),
-                     // ContactsList(),
-                        EmptyCommunityPage(),
+                       
+                      ContactsList(),
                       CommunityListPage(),
                     ],
                   ),

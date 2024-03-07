@@ -381,7 +381,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
           .read<AccountCubit>()
           .loginUser(email: email ?? '', password: email ?? '');
 
-      Modals.showToast(email ?? '');
+      
 
       setState(() {
         isGoogle = true;

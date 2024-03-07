@@ -14,7 +14,8 @@ class CreateACommunityScreen extends StatelessWidget {
           key: key,
         );
 
-  TextEditingController placeholderController = TextEditingController();
+    final TextEditingController groupDescriptionController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +50,11 @@ class CreateACommunityScreen extends StatelessWidget {
               ),
               SizedBox(height: 21.v),
               CustomTextFormField(
-                controller: placeholderController,
+                controller: groupDescriptionController,
                 hintText: "Describe your community",
                 textInputAction: TextInputAction.done,
+          maxLines: 4,
+
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 8.h,
                   vertical: 11.v,

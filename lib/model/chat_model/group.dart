@@ -7,6 +7,7 @@ class Group {
   final bool isGroupLocked;
   final String groupLink;
   final String groupPic;
+  final String groupDescription;
   final List<String> membersUid;
   final DateTime timeSent;
   Group( {
@@ -16,6 +17,7 @@ class Group {
     required this.pinnedMessage, 
     required this.groupId,
     required this.lastMessage,
+    required this.groupDescription,
     required this.groupPic,
     required this.membersUid,
     required this.timeSent,
@@ -29,6 +31,7 @@ class Group {
       'groupId': groupId,
       'lastMessage': lastMessage,
       'groupPic': groupPic,
+      'groupDesc': groupPic,
       'membersUid': membersUid,
       'timeSent': timeSent.millisecondsSinceEpoch,
       'groupLink': groupLink,
@@ -47,7 +50,7 @@ class Group {
       membersUid: List<String>.from(map['membersUid']),
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
       groupLink: map['groupLink'] ?? '',
-      isGroupLocked: map['isGroupLocked'] ?? false
+      isGroupLocked: map['isGroupLocked'] ?? false, groupDescription: map['groupDesc'] ?? ''
     );
   }
 }

@@ -23,8 +23,8 @@ class GroupController {
     required this.ref,
   });
 
-  void createGroup(BuildContext context, String name, File profilePic,
+  void createGroup(BuildContext context, String name, File profilePic, String groupDesc,
       List<Contact> selectedContact) {
-     groupRepository.createGroup(context, name, profilePic, selectedContact);
+     groupRepository.createGroup(context, name,groupDesc ,profilePic, selectedContact);
   }
 }

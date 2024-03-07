@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tellesports/core/app_export.dart';
 
 // ignore: must_be_immutable
-class Communitypagecomponent2ItemWidget extends StatelessWidget {
-  Communitypagecomponent2ItemWidget({
+class CommunityPageComponent extends StatelessWidget {
+ final String groupName;
+ final String lastMessage;
+ final String groupPic;
+ final DateTime date;
+  CommunityPageComponent({
     Key? key,
-    this.onTapCommunityPageComponent,
+    this.onTapCommunityPageComponent, required this.groupName, required this.lastMessage, required this.groupPic, required this.date,
   }) : super(
           key: key,
         );
@@ -24,7 +29,7 @@ class Communitypagecomponent2ItemWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomImageView(
-              imagePath: ImageConstant.imgDisplayPicture60x60,
+              imagePath: groupPic,
               height: 60.adaptSize,
               width: 60.adaptSize,
               radius: BorderRadius.circular(
@@ -48,19 +53,19 @@ class Communitypagecomponent2ItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Pixsellz Team",
+                          groupName,
                           style: CustomTextStyles.titleMediumOnPrimary_1,
                         ),
                         SizedBox(height: 1.v),
                         Text(
-                          "Hasan Web",
+                          lastMessage,
                           style: theme.textTheme.titleSmall,
                         ),
                         SizedBox(height: 1.v),
-                        Text(
-                          "GIF",
-                          style: CustomTextStyles.titleSmallGray600,
-                        ),
+                        // Text(
+                        //   "GIF",
+                        //   style: CustomTextStyles.titleSmallGray600,
+                        // ),
                       ],
                     ),
                     Padding(
@@ -71,7 +76,8 @@ class Communitypagecomponent2ItemWidget extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            "12:23",
+                           DateFormat('hh:mm a')
+                                        .format(date),
                             style: CustomTextStyles.titleSmallGray600,
                           ),
                           SizedBox(height: 9.v),

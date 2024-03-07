@@ -29,6 +29,7 @@ class AuthProviders extends ChangeNotifier {
   File? _image;
   bool _isUserExisting = false;
   String _groupNumber = '1';
+  String _groupDescription = '';
   List<UserModel> _users = [];
   bool _isGroupLocked = false;
   bool _isSelectedText = false;
@@ -309,13 +310,13 @@ class AuthProviders extends ChangeNotifier {
   addGroupInfo(
       {required String groupNumber,
       required String groupLink,
+      required String groupDesription,
       required String pinnedMessage,
       required bool isGroupLocked,
       required String groupId,
       required String groupAdminId}) {
     _groupNumber = groupNumber;
-
-    _isGroupLocked = isGroupLocked;
+    _groupDescription =  groupDesription;
     _groupLink = groupLink;
     _groupId = groupId;
     _groupAdminId = groupAdminId;
@@ -332,6 +333,8 @@ class AuthProviders extends ChangeNotifier {
 
         if (group.membersUid.contains(userId)) {
           _isUserExisting = true;
+
+           
 
           fetchUsers(group.membersUid);
         } else {

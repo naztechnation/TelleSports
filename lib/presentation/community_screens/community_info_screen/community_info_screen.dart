@@ -10,7 +10,11 @@ import '../../../widgets/app_bar/appbar_subtitle.dart';
 import '../community_chat_screen/community_chat_screen.dart';
 
 class CommunityInfoScreen extends StatelessWidget {
-  const CommunityInfoScreen({Key? key}) : super(key: key);
+  final String groupImage;
+  final String groupName;
+  final String groupNumber;
+  final String groupDescription;
+  const CommunityInfoScreen({Key? key, required this.groupImage, required this.groupName, required this.groupNumber, required this.groupDescription}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,8 @@ class CommunityInfoScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CustomImageView(
-                                imagePath: ImageConstant.imgAvatar1,
+                                imagePath: groupImage,
+                                placeHolder: ImageConstant.imgAvatar1,
                                 height: 64.adaptSize,
                                 width: 64.adaptSize,
                                 radius: BorderRadius.circular(32.h)),
@@ -39,17 +44,17 @@ class CommunityInfoScreen extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("Pixsellz Team ",
+                                      Text(groupName,
                                           style: CustomTextStyles
                                               .titleMediumOnPrimaryBold18),
                                       SizedBox(height: 2.v),
-                                      Text("120 members",
+                                      Text(groupNumber,
                                           style: CustomTextStyles
                                               .titleSmallBluegray900)
                                     ]))
                           ])),
                   SizedBox(height: 24.v),
-                  _buildCommunityDescription(context),
+                  _buildCommunityDescription(context, groupDescription),
                   SizedBox(height: 24.v),
                   CustomElevatedButton(
                       text: "Join community",
@@ -57,8 +62,8 @@ class CommunityInfoScreen extends StatelessWidget {
                         onTapJoinCommunity(context);
                       }),
                   SizedBox(height: 16.v),
-                  CustomOutlinedButton(text: "Report community"),
-                  SizedBox(height: 5.v)
+                  // CustomOutlinedButton(text: "Report community"),
+                  // SizedBox(height: 5.v)
                 ]))));
   }
 
@@ -90,7 +95,7 @@ class CommunityInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCommunityDescription(BuildContext context) {
+  Widget _buildCommunityDescription(BuildContext context, String desc) {
     return Container(
         width: 350.h,
         padding: EdgeInsets.all(8.h),
@@ -109,7 +114,7 @@ class CommunityInfoScreen extends StatelessWidget {
                   width: 312.h,
                   margin: EdgeInsets.only(right: 21.h),
                   child: Text(
-                      "Lorem ipsum dolor sit amet consectetur. Ac porttitor elementum faucibus pulvinar in iaculis vehicula risus. Tortor viverra praesent viverra magna faucibus ornare iaculis.",
+                    desc,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleSmall))
