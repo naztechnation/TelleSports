@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:tellesports/core/app_export.dart';
 
@@ -50,24 +51,25 @@ class CommunityPageComponent extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          groupName,
-                          style: CustomTextStyles.titleMediumOnPrimary_1,
-                        ),
-                        SizedBox(height: 1.v),
-                        Text(
-                          lastMessage,
-                          style: theme.textTheme.titleSmall,
-                        ),
-                        SizedBox(height: 1.v),
-                        // Text(
-                        //   "GIF",
-                        //   style: CustomTextStyles.titleSmallGray600,
-                        // ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            groupName,
+                            style: CustomTextStyles.titleMediumOnPrimary_1,
+                          ),
+                          SizedBox(height: 1.v),
+                          Text(
+                            lastMessage,
+                            style: theme.textTheme.titleSmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 1.v),
+                         
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(

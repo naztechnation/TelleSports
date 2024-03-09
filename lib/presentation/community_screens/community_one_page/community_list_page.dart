@@ -3,10 +3,9 @@ import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../handlers/secure_handler.dart';
-import '../../../utils/loader.dart';
 import '../../../widgets/modals.dart';
 import '../chat/screens/mobile_chat_screen.dart';
-import '../community_info_screen/community_info_screen.dart';
+import '../community_info_screen/join_community_screen.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'empty_comunity_page.dart';
 import 'widgets/community_item_widget.dart';

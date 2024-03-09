@@ -59,7 +59,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
           alignment: Alignment.centerRight,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width - 40,
+              maxWidth: MediaQuery.of(context).size.width - 35,
             ),
             child: GestureDetector(
               onTap: () {
@@ -86,7 +86,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
                     borderRadius: BorderRadius.circular(12)),
                 margin: EdgeInsets.only(
                     right: 20,
-                    left: MediaQuery.of(context).size.width * 0.2,
+                    left: 0,
                     top: 3),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
@@ -96,8 +96,8 @@ class _MyMessageCardState extends State<MyMessageCard> {
                     Padding(
                       padding: widget.type == MessageEnum.text
                           ? const EdgeInsets.only(
-                              left: 10,
-                              right: 30,
+                              left: 0,
+                              right: 0,
                               top: 5,
                               bottom: 0,
                             )
@@ -115,10 +115,10 @@ class _MyMessageCardState extends State<MyMessageCard> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: backgroundColor.withOpacity(0.5),
+                                color:                                  Colors.grey.shade200,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(
-                                    4,
+                                    12,
                                   ),
                                 ),
                               ),

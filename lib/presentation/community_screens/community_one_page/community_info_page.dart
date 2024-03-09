@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -107,12 +108,28 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                     color: Colors.blue,
                                   ),
                                   title: const Text('Mute Group'),
-                                  trailing: CupertinoSwitch(
-                                      value: groupInfo.isGroupLocked,
-                                      onChanged: (newValue) => setState(() {
-                                            groupInfo.updateGroupLockStatus(
-                                                groupInfo.groupId, newValue);
-                                          })),
+                                  trailing: StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('groups')
+                                        .doc(groupInfo.groupId)
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<DocumentSnapshot>
+                                            snapshot) {
+                                      final isGroupLocked =
+                                          snapshot.data?.get('isGroupLocked') ??
+                                              false;
+
+                                      return CupertinoSwitch(
+                                          value: isGroupLocked,
+                                          activeColor: Colors.blue,
+                                          onChanged: (newValue) => setState(() {
+                                                groupInfo.updateGroupLockStatus(
+                                                    groupInfo.groupId,
+                                                    newValue);
+                                              }));
+                                    },
+                                  ),
                                 ),
                               ),
                             ]),
@@ -477,10 +494,10 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
             onTap: () => Navigator.pop(context),
             child: Center(
               child: Hero(
-                tag: imageUrl, 
+                tag: imageUrl,
                 child: Image.network(
                   imageUrl,
-                  fit: BoxFit.cover   ,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

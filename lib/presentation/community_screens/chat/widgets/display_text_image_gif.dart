@@ -31,16 +31,20 @@ class DisplayTextImageGIF extends StatelessWidget {
                   username,
                   textAlign: TextAlign.start,
                   style:   TextStyle(
-                    fontSize: 16,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
                     color: isMe ? Colors.black : Colors.black
                   ),
                 ),
+                const SizedBox(height: 5,),
               Text(
                   message,
                   textAlign: TextAlign.start,
+                  
                   style:   TextStyle(
+                    wordSpacing: -1,
                     fontSize: 16,
-                    color: isMe ? Colors.white : Colors.black
+                    color: isMe ? Colors.black : Colors.black
                   ),
                 ),
             ],

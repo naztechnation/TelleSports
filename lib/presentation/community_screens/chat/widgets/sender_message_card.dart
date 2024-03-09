@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/utils/colors.dart';
+import '../../provider/auth_provider.dart';
 import 'display_text_image_gif.dart';
 
-class SenderMessageCard extends StatelessWidget {
+class SenderMessageCard extends StatefulWidget {
   const SenderMessageCard({
     Key? key,
     required this.message,
@@ -15,8 +17,12 @@ class SenderMessageCard extends StatelessWidget {
     required this.onRightSwipe,
     required this.repliedText,
     required this.username,
+    required this.index,
+
     required this.repliedMessageType, required this.name,
   }) : super(key: key);
+  final int index;
+
   final String message;
   final String date;
   final MessageEnum type;
@@ -28,94 +34,130 @@ class SenderMessageCard extends StatelessWidget {
   final MessageEnum repliedMessageType;
 
   @override
+  State<SenderMessageCard> createState() => _SenderMessageCardState();
+}
+
+class _SenderMessageCardState extends State<SenderMessageCard> {
+  int textIndex = -1;
+  @override
   Widget build(BuildContext context) {
-    final isReplying = repliedText.isNotEmpty;
+    final isReplying = widget.repliedText.isNotEmpty;
+
+    final groupInfo = Provider.of<AuthProviders>(context, listen: true);
+
 
     return SwipeTo(
-      onRightSwipe: onRightSwipe,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width - 45,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: senderMessageColor,
+      onRightSwipe: widget.onRightSwipe,
+      child: Container(
+         margin: EdgeInsets.only(top: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? 12 : 8),
+        padding: EdgeInsets.only(bottom: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? 3 : 0),
+        decoration: BoxDecoration(
+          color: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? Colors.blue.shade100 : Colors.transparent,
+        ),
+        width: MediaQuery.sizeOf(context).width,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width - 35,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            margin: EdgeInsets.only(
-                left: 20,
-                right: MediaQuery.of(context).size.width * 0.2,
-                top: 12),
-            child: Column(
-              children: [
-                Padding(
-                  padding: type == MessageEnum.text
-                      ? const EdgeInsets.only(
-                          left: 10,
-                          right: 30,
-                          top: 5,
-                          bottom: 10,
-                        )
-                      : const EdgeInsets.only(
-                          left: 5,
-                          top: 5,
-                          right: 5,
-                          bottom: 25,
-                        ),
-                  child: Column(
-                    children: [
-                      if (isReplying) ...[
-                        Text(
-                          username,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: backgroundColor.withOpacity(0.5),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(
-                                5,
+            child: GestureDetector(
+              onTap: () {
+                  setState(() {
+                    groupInfo.isSelectedMessage(false);
+                    groupInfo.setSelectedMessage('');
+                      
+                     groupInfo.setTextIndex(-1) ;
+        
+                  });
+                },
+                onLongPress: () {
+                  setState(() {
+                    groupInfo.isSelectedMessage(true);
+        
+                    groupInfo.setSelectedMessage(widget.message);
+                     groupInfo.setTextIndex(widget.index) ;
+        
+                  });
+                },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: senderMessageColor,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                margin: EdgeInsets.only(
+                    left: 20,
+                    top: 3),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: widget.type == MessageEnum.text
+                          ? const EdgeInsets.only(
+                              left: 10,
+                              right: 30,
+                              top: 5,
+                              bottom: 10,
+                            )
+                          : const EdgeInsets.only(
+                              left: 5,
+                              top: 5,
+                              right: 5,
+                              bottom: 25,
+                            ),
+                      child: Column(
+                        children: [
+                          if (isReplying) ...[
+                            Text(
+                              widget.username,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
+                            const SizedBox(height: 3),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(
+                                    5,
+                                  ),
+                                ),
+                              ),
+                              child: DisplayTextImageGIF(
+                                    isMe: false,
+                                    username: widget.name,
+              
+                                message: widget.repliedText,
+                                type: widget.repliedMessageType,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                          DisplayTextImageGIF(
+                                    isMe: false,
+                                    username:  widget.name,
+              
+                            message: widget.message,
+                            type: widget.type,
                           ),
-                          child: DisplayTextImageGIF(
-                                isMe: false,
-                                username: name,
-
-                            message: repliedText,
-                            type: repliedMessageType,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                      DisplayTextImageGIF(
-                                isMe: false,
-                                username:  name,
-
-                        message: message,
-                        type: type,
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    date,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
                     ),
-                  ),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        widget.date,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
