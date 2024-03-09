@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/utils/loader.dart';
-import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../../widgets/modal_content.dart';
 import '../../../../widgets/modals.dart';
@@ -45,30 +44,30 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
         : Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               if(widget.image != null || widget.image != "null"|| widget.image != "")...[
-        CustomImageView(
-          imagePath:   ImageConstant.imgAvatar,
-
-          height: 50.adaptSize,
-          width: 50.adaptSize,
-          radius: BorderRadius.circular(
-            18.h,
-          ),
-          margin: EdgeInsets.symmetric(vertical: 4.v),
-        ),
-       ]else...[
-        CustomImageView(
-          imagePath: widget.image,
-                                    placeHolder: ImageConstant.imgAvatar,
-
-          height: 50.adaptSize,
-          width: 50.adaptSize,
-          radius: BorderRadius.circular(
-            18.h,
-          ),
-          margin: EdgeInsets.symmetric(vertical: 4.v),
-        ),
-       ], 
+              if (widget.image != null ||
+                  widget.image != "null" ||
+                  widget.image != "") ...[
+                CustomImageView(
+                  imagePath: ImageConstant.imgAvatar,
+                  height: 50.adaptSize,
+                  width: 50.adaptSize,
+                  radius: BorderRadius.circular(
+                    18.h,
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 4.v),
+                ),
+              ] else ...[
+                CustomImageView(
+                  imagePath: widget.image,
+                  placeHolder: ImageConstant.imgAvatar,
+                  height: 50.adaptSize,
+                  width: 50.adaptSize,
+                  radius: BorderRadius.circular(
+                    18.h,
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 4.v),
+                ),
+              ],
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10.h),

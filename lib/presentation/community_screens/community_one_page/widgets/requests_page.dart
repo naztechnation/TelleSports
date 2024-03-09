@@ -80,6 +80,7 @@ class RequestedUsersPage extends StatelessWidget {
       title: AppbarSubtitleOne(
         text: "$groupNumber requests",
       ),
+      styleType: Style.bgOutline,
     );
   }
 }

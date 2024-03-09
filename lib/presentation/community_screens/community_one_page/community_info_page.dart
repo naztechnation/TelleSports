@@ -15,6 +15,7 @@ import '../provider/auth_provider.dart' as pro;
 import 'all_users_page.dart';
 
 import 'widgets/blocked_users.dart';
+import 'widgets/image_view.dart';
 import 'widgets/requests_page.dart';
 import 'widgets/userprofile_item_widget.dart';
 
@@ -48,8 +49,6 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   Widget build(BuildContext context) {
     final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
 
-
-    Modals.showToast(groupInfo.groupImageList.toString());
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -117,7 +116,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                 ),
                               ),
                             ]),
-                        
+
                           SizedBox(height: 24.v),
                           _buildCommunityDescription(
                               context, groupInfo.groupDescription),
@@ -126,67 +125,82 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           SizedBox(height: 24.v),
                           _buildMedia(context, groupInfo.groupImageList),
                           SizedBox(height: 24.v),
-                          if (groupInfo.groupMembers[0].uid == userId)  SizedBox(height: 18.v),
-                        if (groupInfo.groupMembers[0].uid == userId)  GestureDetector(
-                          onTap: () {
-                            AppNavigator.pushAndStackPage(context, page: RequestedUsersPage());
-                          },
-                          child: Card(child:Container(
-                                 padding: const EdgeInsets.all(10),
-                          
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                Text('Requests'),
-                                Container(
-                                  width: 32.adaptSize,
-                                  height: 32.adaptSize,
-                                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Center(
-                                      child: Text(
-                                        "${groupInfo.requestedMembers.length}",
-                                        style: TextStyle(fontSize: 9, color: Colors.white),
+                          if (groupInfo.groupMembers[0].uid == userId)
+                            SizedBox(height: 18.v),
+                          if (groupInfo.groupMembers[0].uid == userId)
+                            GestureDetector(
+                              onTap: () {
+                                AppNavigator.pushAndStackPage(context,
+                                    page: RequestedUsersPage());
+                              },
+                              child: Card(
+                                  child: Container(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Requests'),
+                                    Container(
+                                      width: 32.adaptSize,
+                                      height: 32.adaptSize,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.red),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Center(
+                                          child: Text(
+                                            "${groupInfo.requestedMembers.length}",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],),
-                            )),
-                        ),
-                          if (groupInfo.groupMembers[0].uid == userId)  SizedBox(height: 18.v),
-                        if (groupInfo.groupMembers[0].uid == userId)  GestureDetector(
-                          onTap: () {
-
-                            AppNavigator.pushAndStackPage(context, page: BlockedUsersPage());
-
-                            
-                          },
-                          child: Card(child:Container(
-                                 padding: const EdgeInsets.all(10),
-                          
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                Text('Blocked Users'),
-                                Container(
-                                  width: 32.adaptSize,
-                                  height: 32.adaptSize,
-                                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Center(
-                                      child: Text(
-                                        "${groupInfo.blockedMembers.length}",
-                                        style: TextStyle(fontSize: 9, color: Colors.white),
+                              )),
+                            ),
+                          if (groupInfo.groupMembers[0].uid == userId)
+                            SizedBox(height: 18.v),
+                          if (groupInfo.groupMembers[0].uid == userId)
+                            GestureDetector(
+                              onTap: () {
+                                AppNavigator.pushAndStackPage(context,
+                                    page: BlockedUsersPage());
+                              },
+                              child: Card(
+                                  child: Container(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Blocked Users'),
+                                    Container(
+                                      width: 32.adaptSize,
+                                      height: 32.adaptSize,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.red),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Center(
+                                          child: Text(
+                                            "${groupInfo.blockedMembers.length}",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],),
-                            )),
-                        ),
+                              )),
+                            ),
                           // Card(
                           //   elevation: 0.4,
                           //   child: Container(
@@ -297,7 +311,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   Widget _buildShareCommunity(BuildContext context, String groupLink) {
     return GestureDetector(
         onTap: () {
-          onTapShareCommunity(context);
+          // onTapShareCommunity(context);
         },
         child: Card(
           elevation: 0.4,
@@ -352,29 +366,54 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                         fontFamily: 'DM Sans',
                         fontWeight: FontWeight.w700)),
                 SizedBox(height: 8.v),
-                SizedBox(
-                  height: 45,
-                  child: ListView.builder(
-                    itemCount: images.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: ((context, index) {
-                      return  CustomImageView(
-                            imagePath: images[index],
-                            height: 60.adaptSize,
-                            width: 60.adaptSize);
-                  })),
+                Stack(
+                  children: [
+                    SizedBox(
+                      height: 75,
+                      width: MediaQuery.sizeOf(context).width,
+                      child: ListView.builder(
+                          itemCount: images.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: ((context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                _showFullImage(context, images[index]);
+                              },
+                              child: Hero(
+                                tag: images[index],
+                                child: CustomImageView(
+                                    imagePath: images[index],
+                                    height: 75.adaptSize,
+                                    width: 75.adaptSize),
+                              ),
+                            );
+                          })),
+                    ),
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          AppNavigator.pushAndStackPage(context,
+                              page: ShowAllImageView());
+                        },
+                        child: Container(
+                          height: 75,
+                          width: 35,
+                          color: Colors.grey.shade300,
+                          child: Center(
+                            child: CustomImageView(
+                                imagePath: ImageConstant.imgArrowRight,
+                                height: 30.adaptSize,
+                                width: 30.adaptSize,
+                                margin: EdgeInsets.symmetric(vertical: 18.v)),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                // Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                     
-                    
-                //       CustomImageView(
-                //           imagePath: ImageConstant.imgArrowRight,
-                //           height: 24.adaptSize,
-                //           width: 24.adaptSize,
-                //           margin: EdgeInsets.symmetric(vertical: 18.v))
-                //     ])
               ])),
     );
   }
@@ -428,13 +467,26 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
     );
   }
 
-  /// Navigates to the shareScreen when the action is triggered.
-  onTapShareCommunity(BuildContext context) {
-    // Navigator.pushNamed(context, AppRoutes.shareScreen);
-  }
-
-  /// Navigates to the leaveScreen when the action is triggered.
-  onTapLeaveCommunity(BuildContext context) {
-    // Navigator.pushNamed(context, AppRoutes.leaveScreen);
+  void _showFullImage(BuildContext context, String imageUrl) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(),
+          body: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Center(
+              child: Hero(
+                tag: imageUrl, 
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover   ,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

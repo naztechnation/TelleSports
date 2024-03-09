@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:tellesports/widgets/modals.dart';
 
- 
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/providers/message_reply_provider.dart';
 import '../../../../common/widgets/loader.dart';
@@ -52,25 +50,23 @@ class _ChatListState extends ConsumerState<ChatList> {
         );
   }
 
-    String userId = '';
-  getUserId()async{
-
-userId = await StorageHandler.getUserId() ?? '';
+  String userId = '';
+  getUserId() async {
+    userId = await StorageHandler.getUserId() ?? '';
   }
 
-   List<String> groupImages = [];
-
- 
+  List<String> groupImages = [];
 
   @override
   void initState() {
     super.initState();
-   getUserId();
+    getUserId();
   }
 
   @override
   Widget build(BuildContext context) {
-    final groupInfo = provider.Provider.of<pro.AuthProviders>(context, listen: true);
+    final groupInfo =
+        provider.Provider.of<pro.AuthProviders>(context, listen: true);
 
     return StreamBuilder<List<dynamic>>(
         stream: widget.isGroupChat
@@ -82,35 +78,28 @@ userId = await StorageHandler.getUserId() ?? '';
                 .chatStream(widget.recieverUserId, userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Loader();
+            //  return   SizedBox.shrink();
           }
 
           SchedulerBinding.instance.addPostFrameCallback((_) {
             messageController
                 .jumpTo(messageController.position.maxScrollExtent);
+         
           });
-
+          groupInfo.clearGroupImageList();
           return ListView.builder(
             controller: messageController,
-            itemCount: snapshot.data!.length,
+            itemCount: snapshot.data?.length ?? 0,
             itemBuilder: (context, index) {
-              final messageData = snapshot.data![index];
+              final messageData = snapshot.data?[index];
 
-             groupInfo.clearGroupImageList();
-
-              if(messageData.type == MessageEnum.image){
-                 
-                  groupInfo.updateGroupImageList(messageData.text);
-                 
-
-             
+              if (messageData.type == MessageEnum.image) {
+                groupInfo.updateGroupImageList(messageData.text);
               }
               var timeSent =
                   DateFormat('hh:mm a').format(messageData.timeSent.toLocal());
 
-              if (!messageData.isSeen &&
-                  messageData.recieverid ==
-                      userId) {
+              if (!messageData.isSeen && messageData.recieverid == userId) {
                 ref.read(chatControllerProvider).setChatMessageSeen(
                       context,
                       widget.recieverUserId,
@@ -118,11 +107,9 @@ userId = await StorageHandler.getUserId() ?? '';
                       messageData.messageId,
                     );
               }
-              if (messageData.senderId ==
-                  userId) {
+              if (messageData.senderId == userId) {
                 return Stack(
                   children: [
-                    
                     MyMessageCard(
                       message: messageData.text,
                       name: messageData.username,
@@ -132,7 +119,6 @@ userId = await StorageHandler.getUserId() ?? '';
                       repliedText: messageData.repliedMessage,
                       username: messageData.repliedTo,
                       repliedMessageType: messageData.repliedMessageType,
-
                       onLeftSwipe: (value) => onMessageSwipe(
                         messageData.text,
                         true,
@@ -140,14 +126,12 @@ userId = await StorageHandler.getUserId() ?? '';
                       ),
                       isSeen: messageData.isSeen,
                     ),
-                    
                   ],
                 );
               }
               return SenderMessageCard(
                 message: messageData.text,
-                      name: messageData.username,
-
+                name: messageData.username,
                 date: timeSent,
                 type: messageData.type,
                 username: messageData.repliedTo,

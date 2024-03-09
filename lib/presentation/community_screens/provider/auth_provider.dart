@@ -45,6 +45,8 @@ class AuthProviders extends ChangeNotifier {
   String _selectedMessage = '';
   List<String> _groupImageList = [];
   int _textIndex = -1;
+  ScrollController _scrollController = ScrollController();
+
 
   ImagePicker picker = ImagePicker();
 
@@ -643,6 +645,8 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
+    
+
   Future<void> updateGroupLink(String groupId, String groupLink) async {
     try {
       final DocumentReference groupDocRef =
@@ -654,7 +658,7 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-  Future<void> updateGroupPinnedChat(
+  Future<void> updateGroupPinnedMessage(
       String groupId, String groupPinnedMessage) async {
     try {
       final DocumentReference groupDocRef =
@@ -702,7 +706,15 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-
+   scrollDown() {
+     _scrollController.animateTo(
+      0 ,
+      duration: const Duration(microseconds: 300),
+      curve: Curves.easeOut,
+    );
+    _scrollController = scrollController;
+    notifyListeners();
+  }
 
   Future<User?> signInWithGoogle() async {
     try {
@@ -745,6 +757,7 @@ class AuthProviders extends ChangeNotifier {
   File? get image => _image;
   bool get isUserExisting => _isUserExisting;
   bool get isGroupLocked => _isGroupLocked;
+  ScrollController get scrollController => _scrollController;
   List<UserModel> get groupMembers => _users;
   List<String> get groupImageList => _groupImageList;
   List<UserModel> get blockedMembers => _blockedUsers;

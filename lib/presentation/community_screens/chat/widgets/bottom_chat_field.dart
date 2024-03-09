@@ -173,11 +173,12 @@ userId = await StorageHandler.getUserId() ?? '';
     final messageReply = ref.watch(messageReplyProvider);
     final isShowMessageReply = messageReply != null;
     return Column(
+      mainAxisSize:  MainAxisSize.min,
       children: [
         isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
         Container(
       width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(20.h, 9.v, 20.h, 10.v),
+      padding: EdgeInsets.fromLTRB(20.h, 20.v, 20.h, 10.v),
       decoration: AppDecoration.outlineGray400,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,7 +201,7 @@ userId = await StorageHandler.getUserId() ?? '';
             child: Padding(
               padding: EdgeInsets.only(
                 left: 12.h,
-                bottom: 26.v,
+                bottom: 6.v,
               ),
               child: CustomTextFormField(
                 focusNode: focusNode,
@@ -238,7 +239,7 @@ userId = await StorageHandler.getUserId() ?? '';
               margin: EdgeInsets.only(
                 left: 12.h,
                 top: 5.v,
-                bottom: 31.v,
+                bottom: 3.v,
               ),
             ),
           ),
