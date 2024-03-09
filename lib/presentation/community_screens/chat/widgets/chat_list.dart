@@ -124,7 +124,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                         true,
                         messageData.type,
                       ),
-                      isSeen: messageData.isSeen,
+                      isSeen: messageData.isSeen, messageId: messageData.messageId,
                     ),
                   ],
                 );
@@ -144,6 +144,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                   messageData.type,
                 ),
                 repliedText: messageData.repliedMessage,
+                messageId: messageData.messageId
               );
             },
           );

@@ -1,4 +1,3 @@
-import 'package:tellesports/model/auth_model/plans_list.dart';
 
 class LoginUser {
   bool? success;
@@ -6,7 +5,7 @@ class LoginUser {
   String? error;
   Token? token;
   User? user;
-  String? tellacoinBalance;
+  var tellacoinBalance;
   UserWallet? userWallet;
   Plan? plan;
   String? profilePicture;
@@ -180,9 +179,9 @@ class Plan {
 
 class UserWallet {
   int? id;
-  String? userId;
-  String? plansId;
-  String? tellaCoins;
+  var userId;
+  var plansId;
+  var tellaCoins;
   String? createdAt;
   String? updatedAt;
   String? bank;

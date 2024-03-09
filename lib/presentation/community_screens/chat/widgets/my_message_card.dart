@@ -11,6 +11,7 @@ class MyMessageCard extends StatefulWidget {
   final int index;
   final String message;
   final String name;
+  final String messageId;
   final String date;
   final MessageEnum type;
   final Function(dynamic value) onLeftSwipe;
@@ -25,6 +26,7 @@ class MyMessageCard extends StatefulWidget {
     required this.index,
     required this.date,
     required this.type,
+    required this.messageId,
     required this.onLeftSwipe,
     required this.repliedText,
     required this.username,
@@ -68,6 +70,10 @@ class _MyMessageCardState extends State<MyMessageCard> {
                   groupInfo.setSelectedMessage('');
                     
                    groupInfo.setTextIndex(-1) ;
+                     groupInfo.setMessageId('') ;
+                     groupInfo.setMessageType(MessageEnum.none) ;
+
+
 
                 });
               },
@@ -77,6 +83,10 @@ class _MyMessageCardState extends State<MyMessageCard> {
 
                   groupInfo.setSelectedMessage(widget.message);
                    groupInfo.setTextIndex(widget.index) ;
+                     groupInfo.setMessageId(widget.messageId) ;
+                     groupInfo.setMessageType(widget.type) ;
+
+
 
                 });
               },

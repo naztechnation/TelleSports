@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:flutter/services.dart';
 
+import '../../../../common/enums/message_enum.dart';
 import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
 import '../../../../utils/navigator/page_navigator.dart';
@@ -94,6 +95,9 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
         groupInfo.isSelectedMessage(false);
         groupInfo.setSelectedMessage('');
         groupInfo.setTextIndex(-1);
+        groupInfo.setMessageId('');
+        groupInfo.setMessageType(MessageEnum.none);
+
         Navigator.pop(context);
 
         return false;
@@ -111,6 +115,9 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                   groupInfo.isSelectedMessage(false);
                   groupInfo.setSelectedMessage('');
                   groupInfo.setTextIndex(-1);
+                  groupInfo.setMessageId('');
+                  groupInfo.setMessageType(MessageEnum.none);
+
                   Navigator.pop(context);
                 },
                 margin: EdgeInsets.only(
@@ -155,49 +162,50 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                 ),
               ),
               actions: [
-              if(
-                 (groupInfo.isSelected )
-
-              )  PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert),
-                  onSelected: (String choice) {
-                    if (choice == 'delete') {
-                      
-                    } else if (choice == 'pin') {
-                       groupInfo.updateGroupPinnedMessage(
-                                        groupInfo.groupId, groupInfo.selectedMessage);
-                     
-                    }else if (choice == 'copy') {
-                       copyToClipboard(groupInfo.selectedMessage, groupInfo,context);
-                     
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                      value: 'delete',
-                      child: ListTile(
-                        leading: Icon(Icons.delete),
-                        title: Text('Delete Message'),
+                if (groupInfo.isSelected)
+                  PopupMenuButton<String>(
+                    icon: Icon(Icons.more_vert),
+                    onSelected: (String choice) {
+                      if (choice == 'delete') {
+                        groupInfo.deleteChatMessage(
+                            recieverUserId: widget.uid,
+                            userId: userId,
+                            messageId: groupInfo.messageId.toString());
+                      } else if (choice == 'pin') {
+                        groupInfo.updateGroupPinnedMessage(
+                            groupInfo.groupId, groupInfo.selectedMessage);
+                      } else if (choice == 'copy') {
+                        copyToClipboard(
+                            groupInfo.selectedMessage, groupInfo, context);
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<String>>[
+                      if (groupInfo.groupAdminId == userId)
+                        const PopupMenuItem<String>(
+                          value: 'delete',
+                          child: ListTile(
+                            leading: Icon(Icons.delete),
+                            title: Text('Delete Message'),
+                          ),
+                        ),
+                  if(groupInfo.messageType == MessageEnum.text)    const PopupMenuItem<String>(
+                        value: 'copy',
+                        child: ListTile(
+                          leading: Icon(Icons.copy),
+                          title: Text('Copy'),
+                        ),
                       ),
-                    ),
-                     const PopupMenuItem<String>(
-                      value: 'copy',
-                      child: ListTile(
-                        leading: Icon(Icons.copy),
-                        title: Text('Copy'),
-                      ),
-                    ),
-               if( groupInfo.groupAdminId == userId)  const PopupMenuItem<String>(
-                      value: 'pin',
-                      child: ListTile(
-                        leading: Icon(Icons.push_pin),
-                        title: Text('Pin Message'),
-                      ),
-                    ) 
-                  ],
-                ),
-
+                      if (groupInfo.groupAdminId == userId)
+                        const PopupMenuItem<String>(
+                          value: 'pin',
+                          child: ListTile(
+                            leading: Icon(Icons.push_pin),
+                            title: Text('Pin Message'),
+                          ),
+                        )
+                    ],
+                  ),
                 const SizedBox(
                   width: 5,
                 )
@@ -209,6 +217,8 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                 groupInfo.isSelectedMessage(false);
                 groupInfo.setSelectedMessage('');
                 groupInfo.setTextIndex(-1);
+                groupInfo.setMessageId('');
+                groupInfo.setMessageType(MessageEnum.none);
               },
               child: Column(
                 children: [
@@ -220,18 +230,24 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                         padding: const EdgeInsets.all(12.0),
                         child: Row(
                           children: [
-                            Icon(Icons.push_pin, color: Colors.blue,),
-                            SizedBox(width: 20,),
+                            Icon(
+                              Icons.push_pin,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
                             Expanded(
                               child: Text(
                                 groupInfo.groupPinnedMessage,
                                 textAlign: TextAlign.justify,
-                                
-                                style: const TextStyle(color: Colors.black, wordSpacing: -1),
+                                style: const TextStyle(
+                                    color: Colors.black, wordSpacing: -1),
                               ),
                             ),
-                            SizedBox(width: 10,),
-                             
+                            SizedBox(
+                              width: 10,
+                            ),
                             if (groupInfo.groupAdminId == userId)
                               GestureDetector(
                                   onTap: () {
@@ -319,7 +335,8 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
           groupInfo.isSelectedMessage(false),
           groupInfo.setSelectedMessage(''),
           groupInfo.setTextIndex(-1),
-           
+          groupInfo.setMessageId(''),
+          groupInfo.setMessageType(MessageEnum.none)
         });
   }
 

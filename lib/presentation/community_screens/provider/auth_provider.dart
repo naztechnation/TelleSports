@@ -9,8 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
 import 'package:tellesports/presentation/landing_page/landing_page.dart';
 
+import '../../../common/enums/message_enum.dart';
 import '../../../model/chat_model/group.dart';
 import '../../../model/chat_model/user_model.dart';
+import '../../../widgets/modals.dart';
  
 
 enum AuthState { loading, initial, error, success }
@@ -31,6 +33,8 @@ class AuthProviders extends ChangeNotifier {
   bool _isUserExisting = false;
   String _groupNumber = '1';
   String _groupDescription = '';
+  String _messageId = '';
+    MessageEnum _type = MessageEnum.none;
   List<UserModel> _users = [];
   List<UserModel> _blockedUsers = [];
   List<UserModel> _requestedUsers = [];
@@ -127,6 +131,17 @@ class AuthProviders extends ChangeNotifier {
     _textIndex = textIndex;
     notifyListeners();
   }
+
+  setMessageId(String messageId) {
+    _messageId = messageId;
+    notifyListeners();
+  }
+  setMessageType(MessageEnum type) {
+    _type = type;
+    notifyListeners();
+  }
+
+  
 
   setSelectedMessage(String selectedMessage) {
     _selectedMessage = selectedMessage;
@@ -670,6 +685,7 @@ class AuthProviders extends ChangeNotifier {
       setSelectedMessage('');
 
       setTextIndex(-1);
+      setMessageId('');
       notifyListeners();
     } catch (error) {
       print('Error updating group lock status: $error');
@@ -706,15 +722,36 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-   scrollDown() {
-     _scrollController.animateTo(
-      0 ,
-      duration: const Duration(microseconds: 300),
-      curve: Curves.easeOut,
-    );
-    _scrollController = scrollController;
-    notifyListeners();
-  }
+      
+   Future<void> deleteChatMessage({
+    required String recieverUserId,
+    required String userId,
+     
+    required String messageId,
+     
+  }) async {
+     
+     try {
+          await _firebaseStorage
+  .collection('groups')
+  .doc(recieverUserId)
+  .collection('chats')
+  .doc(messageId)
+  .delete();
+
+  isSelectedMessage(false);
+      setSelectedMessage('');
+
+      setTextIndex(-1);
+      setMessageId('');
+
+     } catch (e) {
+       print(e.toString());
+     }
+   
+      
+     
+    }
 
   Future<User?> signInWithGoogle() async {
     try {
@@ -745,11 +782,13 @@ class AuthProviders extends ChangeNotifier {
   String get selectedMessage => _selectedMessage;
   String get groupPinnedMessage => _groupPinnedMessage;
   String get groupLink => _groupLink;
+  String get messageId => _messageId;
   String get groupId => _groupId;
   String get groupAdminId => _groupAdminId;
   String get groupNumber => _groupNumber;
   String get groupName => _groupName;
   String get groupPics => _groupPics;
+  MessageEnum  get messageType   => _type;
   String get groupDescription => _groupDescription;
   bool get isSelected => _isSelectedText;
   AuthScreenState get isLogin => _isLogin;

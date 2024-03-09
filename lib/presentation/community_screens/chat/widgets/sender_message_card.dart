@@ -12,6 +12,7 @@ class SenderMessageCard extends StatefulWidget {
     Key? key,
     required this.message,
     required this.date,
+    required this.messageId,
     
     required this.type,
     required this.onRightSwipe,
@@ -24,6 +25,7 @@ class SenderMessageCard extends StatefulWidget {
   final int index;
 
   final String message;
+  final String messageId;
   final String date;
   final MessageEnum type;
   final String name;
@@ -68,6 +70,8 @@ class _SenderMessageCardState extends State<SenderMessageCard> {
                     groupInfo.setSelectedMessage('');
                       
                      groupInfo.setTextIndex(-1) ;
+                     groupInfo.setMessageId('') ;
+                     groupInfo.setMessageType(MessageEnum.none) ;
         
                   });
                 },
@@ -77,6 +81,9 @@ class _SenderMessageCardState extends State<SenderMessageCard> {
         
                     groupInfo.setSelectedMessage(widget.message);
                      groupInfo.setTextIndex(widget.index) ;
+                     groupInfo.setMessageId(widget.messageId) ;
+                     groupInfo.setMessageType(widget.type) ;
+
         
                   });
                 },
