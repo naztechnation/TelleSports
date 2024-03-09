@@ -248,6 +248,7 @@ class AuthProviders extends ChangeNotifier {
         profilePic: imageUrl,
         isOnline: true,
         email: email,
+        numberOfGroups: 0,
         groupId: [],
       );
 
@@ -284,6 +285,8 @@ class AuthProviders extends ChangeNotifier {
             email: userData['email'],
             profilePic: userData['profilePic'],
             isOnline: userData['isOnline'],
+            numberOfGroups: userData['numberOfGroups'],
+
             groupId: [],
           );
 
@@ -317,6 +320,8 @@ class AuthProviders extends ChangeNotifier {
             email: userData['email'],
             profilePic: userData['profilePic'],
             isOnline: userData['isOnline'],
+            numberOfGroups: userData['numberOfGroups'],
+
             groupId: [],
           );
 
@@ -352,6 +357,7 @@ class AuthProviders extends ChangeNotifier {
             email: userData['email'],
             profilePic: userData['profilePic'],
             isOnline: userData['isOnline'],
+            numberOfGroups: userData['numberOfGroups'],
             groupId: [],
           );
 

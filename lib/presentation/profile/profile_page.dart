@@ -5,7 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/core/constants/enums.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
-import 'package:tellesports/presentation/auth/signin_screen/sign_in_screen.dart';
+import 'package:tellesports/presentation/auth/sign_in_screen/sign_in_screen.dart';
 import 'package:tellesports/presentation/manage_account/update_account.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
@@ -227,17 +227,22 @@ class _ProfilePageState extends State<ProfilePage> {
         )
       ]  
        ],   
-          Padding(
-              padding: EdgeInsets.only(left: 10.h, top: 11.v, bottom: 11.v),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(username,
-                        style: CustomTextStyles.titleMediumOnPrimaryBold18),
-                    SizedBox(height: 3.v),
-                    Text(email, style: TextStyle(fontSize: 14, color: Colors.black))
-                  ])),
-          Spacer(),
+          Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(left: 10.h, top: 11.v, bottom: 11.v),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(username,
+                          style: CustomTextStyles.titleMediumOnPrimaryBold18),
+                      SizedBox(height: 3.v),
+                      Text(email, 
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 14, color: Colors.black))
+                    ])),
+          ),
+          // Spacer(),
           CustomImageView(
               imagePath: ImageConstant.imgArrowRightGray700,
               height: 24.adaptSize,

@@ -46,6 +46,8 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
     setState(() {});
   }
 
+  bool isUserAlreadyRequested = false;
+
   @override
   void initState() {
     getCurrentUserId();
@@ -56,6 +58,8 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
     final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
+
+    checkUserExists(groupInfo);
 
     return SafeArea(
         child: Scaffold(
@@ -94,48 +98,39 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                   SizedBox(height: 24.v),
                   _buildCommunityDescription(context, widget.groupDescription),
                   SizedBox(height: 24.v),
-                  CustomElevatedButton(
-                      text: "Join community",
-                      processing: isLoading,
-                      onPressed: () async {
-                        bool isUserAlreadyRequested = false;
+                  if (isUserAlreadyRequested) ...[
+                    CustomElevatedButton(
+                        text: "Pending Request",
+                        processing: isLoading,
+                        buttonStyle: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                         
+                        onPressed: () async {}),
+                  ] else ...[
+                    CustomElevatedButton(
+                        text: "Join community",
+                        processing: isLoading,
+                        onPressed: () async {
+                          if (!isUserAlreadyRequested) {
+                            setState(() {
+                              isLoading = true;
+                            });
 
-                        for (var userIds in groupInfo.requestedMembers) {
+                            await groupInfo.addUserToRequestsMembers(
+                                widget.groupId, widget.userId, context);
+                            setState(() {
+                              isLoading = false;
+                            });
 
-                          if (userIds.uid == userId) {
-                           setState(() {
-                              isUserAlreadyRequested = true;
-                           });
-                          
                             Modals.showToast(
-                                'You already have a pending request here');
-                            break;
+                                'Request has been sent to community admin for approval',
+                                messageType: MessageType.success);
+
+                            AppNavigator.pushAndStackPage(context,
+                                page: LandingPage());
                           }
-                        }
+                        }),
+                  ],
 
-                       
-
-                        if (!isUserAlreadyRequested) {
-                          setState(() {
-                            isLoading = true;
-                          });
-
-                           Modals.showToast(
-                                'Added');
-                          await groupInfo.addUserToRequestsMembers(
-                              widget.groupId, widget.userId, context);
-                          setState(() {
-                            isLoading = false;
-                          });
-
-                          Modals.showToast(
-                              'Request has been sent to community admin for approval',
-                              messageType: MessageType.success);
-
-                          AppNavigator.pushAndStackPage(context,
-                              page: LandingPage());
-                        }
-                      }),
                   SizedBox(height: 16.v),
                   // CustomOutlinedButton(text: "Report community"),
                   // SizedBox(height: 5.v)
@@ -197,5 +192,18 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
 
   onTapJoinCommunity(BuildContext context) {
     // AppNavigator.pushAndStackPage(context, page: CommunityChatScreen( ));
+  }
+
+  checkUserExists(var groupInfo) {
+    for (var userIds in groupInfo.requestedMembers) {
+      if (userIds.uid == userId) {
+        setState(() {
+          isUserAlreadyRequested = true;
+        });
+
+        // Modals.showToast('You already have a pending request here');
+        break;
+      }
+    }
   }
 }

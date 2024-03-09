@@ -15,7 +15,7 @@ import '../../../res/app_strings.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/modals.dart';
 import '../../../widgets/progress_indicator.dart';
-import '../../auth/signin_screen/sign_in_screen.dart';
+import '../../auth/sign_in_screen/sign_in_screen.dart';
 import '../create_new_password_screen/create_new_password_screen.dart';
 
 // ignore_for_file: must_be_immutable

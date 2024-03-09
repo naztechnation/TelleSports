@@ -20,7 +20,7 @@ import '../../requests/repositories/account_repo/account_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/image_view.dart';
 import '../../widgets/modals.dart';
-import '../auth/signin_screen/sign_in_screen.dart';
+import '../auth/sign_in_screen/sign_in_screen.dart';
 
 class EditProfileScreen extends StatelessWidget {
   final String username;

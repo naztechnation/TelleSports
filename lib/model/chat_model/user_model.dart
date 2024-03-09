@@ -4,6 +4,7 @@ class UserModel {
   final String profilePic;
   final bool isOnline;
   final String email;
+  final int numberOfGroups;
   final List<String> groupId;
   UserModel({
     required this.name,
@@ -12,6 +13,7 @@ class UserModel {
     required this.isOnline,
     required this.email,
     required this.groupId,
+    required this.numberOfGroups,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,6 +24,7 @@ class UserModel {
       'isOnline': isOnline,
       'email': email,
       'groupId': groupId,
+      'numberOfGroups': numberOfGroups,
     };
   }
 
@@ -32,6 +35,7 @@ class UserModel {
       profilePic: map['profilePic'] ?? '',
       isOnline: map['isOnline'] ?? false,
       email: map['email'] ?? '',
+      numberOfGroups: map['numberOfGroups'] ?? '',
       groupId: List<String>.from(map['groupId']),
     );
   }

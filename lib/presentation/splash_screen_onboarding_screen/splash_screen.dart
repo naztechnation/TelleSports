@@ -7,7 +7,7 @@ import '../../core/app_export.dart';
 import '../../handlers/secure_handler.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/custom_icon_button.dart';
-import '../auth/signin_screen/sign_in_screen.dart';
+import '../auth/sign_in_screen/sign_in_screen.dart';
 import '../landing_page/landing_page.dart';
 import '../onboarding_screen/widget/fading_sliding_in.dart';
 import 'welcome_screen.dart';

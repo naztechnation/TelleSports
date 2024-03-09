@@ -26,7 +26,7 @@ import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../community_screens/provider/auth_provider.dart';
 import '../../landing_page/landing_page.dart';
-import '../signin_screen/sign_in_screen.dart';
+import '../sign_in_screen/sign_in_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class SignUpScreen extends StatefulWidget {

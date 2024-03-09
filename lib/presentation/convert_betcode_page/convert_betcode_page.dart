@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:tellesports/presentation/auth/signin_screen/sign_in_screen.dart';
+import 'package:tellesports/presentation/auth/sign_in_screen/sign_in_screen.dart';
 
 import '../../blocs/accounts/account.dart';
 import '../../core/constants/enums.dart';

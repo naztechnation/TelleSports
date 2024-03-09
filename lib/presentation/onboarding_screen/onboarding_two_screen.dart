@@ -6,7 +6,7 @@ import 'package:tellesports/widgets/custom_outlined_button.dart';
 
 import '../../handlers/secure_handler.dart';
 import '../../utils/navigator/page_navigator.dart';
-import '../auth/signin_screen/sign_in_screen.dart';
+import '../auth/sign_in_screen/sign_in_screen.dart';
 import '../auth/sign_up_screen/sign_up_screen.dart';
 
 class OnboardingTwoScreen extends StatelessWidget {

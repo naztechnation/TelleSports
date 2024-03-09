@@ -5,7 +5,7 @@ import 'package:tellesports/widgets/modals.dart';
 
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
-import '../../presentation/auth/signin_screen/sign_in_screen.dart';
+import '../../presentation/auth/sign_in_screen/sign_in_screen.dart';
 import '../../utils/navigator/page_navigator.dart';
 import 'base_viewmodel.dart';
 
