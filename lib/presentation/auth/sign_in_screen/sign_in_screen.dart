@@ -401,17 +401,5 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   }
 
 
-  //  void storeUserData({required  String name,required  String userId,required String profileImage}) async {
-
-  //   if (name.isNotEmpty) {
-  //    await ref.read(authControllerProvider).saveUserDataToFirebase(
-  //           context,
-  //           name,
-  //           profileImage,
-  //           userId
-  //         );
-
-  //         onTapSignIn(context);
-  //   }
-  // }
+  
 }

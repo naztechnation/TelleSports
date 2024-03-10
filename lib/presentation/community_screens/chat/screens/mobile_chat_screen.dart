@@ -111,6 +111,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
               leadingWidth: 44.h,
               leading: AppbarLeadingImage(
                 imagePath: ImageConstant.imgArrowBackBlue800,
+                
                 onTap: () {
                   groupInfo.isSelectedMessage(false);
                   groupInfo.setSelectedMessage('');
@@ -152,6 +153,10 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                             },
                           ),
                           AppbarSubtitleFour(
+                             onTap: () {
+                              onTapGroup(
+                                  context, widget.profilePic, widget.name);
+                            },
                             text: "${widget.groupNumber}   member(s)",
                             margin: EdgeInsets.only(right: 28.h),
                           ),

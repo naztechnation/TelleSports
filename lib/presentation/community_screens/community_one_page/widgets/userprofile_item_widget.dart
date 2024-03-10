@@ -3,11 +3,16 @@ import 'package:tellesports/core/app_export.dart';
 
 // ignore: must_be_immutable
 class UserprofileItemWidget extends StatelessWidget {
-  final String name; 
-  final String image; 
+  final String name;
+  final String image;
   final String bio;
-  final int index; 
-  const UserprofileItemWidget({Key? key, required this.name, required this.bio, required this.index, required this.image})
+  final int index;
+  const UserprofileItemWidget(
+      {Key? key,
+      required this.name,
+      required this.bio,
+      required this.index,
+      required this.image})
       : super(
           key: key,
         );
@@ -17,36 +22,34 @@ class UserprofileItemWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-       if(image != null || image != "null"|| image != "")...[
-        CustomImageView(
-          imagePath:   ImageConstant.imgAvatar,
-
-          height: 50.adaptSize,
-          width: 50.adaptSize,
-          radius: BorderRadius.circular(
-            18.h,
+        if (image != null || image != "null" || image != "") ...[
+          CustomImageView(
+            imagePath: ImageConstant.imgAvatar,
+            height: 50.adaptSize,
+            width: 50.adaptSize,
+            radius: BorderRadius.circular(
+              18.h,
+            ),
+            margin: EdgeInsets.symmetric(vertical: 4.v),
           ),
-          margin: EdgeInsets.symmetric(vertical: 4.v),
-        ),
-       ]else...[
-        CustomImageView(
-          imagePath: image,
-                                    placeHolder: ImageConstant.imgAvatar,
-
-          height: 50.adaptSize,
-          width: 50.adaptSize,
-          radius: BorderRadius.circular(
-            18.h,
+        ] else ...[
+          CustomImageView(
+            imagePath: image,
+            placeHolder: ImageConstant.imgAvatar,
+            height: 50.adaptSize,
+            width: 50.adaptSize,
+            radius: BorderRadius.circular(
+              18.h,
+            ),
+            margin: EdgeInsets.symmetric(vertical: 4.v),
           ),
-          margin: EdgeInsets.symmetric(vertical: 4.v),
-        ),
-       ], 
+        ],
         Expanded(
           child: Container(
             margin: EdgeInsets.only(left: 10.h),
             padding: EdgeInsets.only(
               top: 3.v,
-              bottom: 2.v,
+              bottom: 14.v,
             ),
             decoration: AppDecoration.outlineGray,
             child: Row(
@@ -80,7 +83,7 @@ class UserprofileItemWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 0.v),
                   child: Text(
-                   (index ==  0) ?  "Community Manager" : "",
+                    (index == 0) ? "Community Manager" : "",
                     style: TextStyle(
                       color: appTheme.gray900,
                       fontSize: 10.fSize,

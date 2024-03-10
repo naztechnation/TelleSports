@@ -29,11 +29,11 @@ class AppbarTitleCircleimage extends StatelessWidget {
         padding: margin ?? EdgeInsets.zero,
         child: CustomImageView(
           imagePath: imagePath,
-          height: 36.adaptSize,
-          width: 36.adaptSize,
-          fit: BoxFit.contain,
+          height: 42.adaptSize,
+          width: 42.adaptSize,
+          fit: BoxFit.cover,
           radius: BorderRadius.circular(
-            18.h,
+            22.h,
           ),
         ),
       ),

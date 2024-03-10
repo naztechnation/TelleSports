@@ -1,20 +1,23 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart' as pro;
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/utils/navigator/page_navigator.dart';
+import 'package:tellesports/handlers/secure_handler.dart';
+import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 import 'package:tellesports/widgets/modals.dart';
- 
+
 import '../../../../common/utils/utils.dart';
+import '../../../../utils/navigator/page_navigator.dart';
 import '../../../../widgets/app_bar/appbar_subtitle.dart';
 import '../../group/controller/group_controller.dart';
 import '../../group/widgets/select_contacts_group.dart';
+import '../../provider/auth_provider.dart';
 import 'create_a_community_screen.dart';
 
 class CreateACommunityOneScreen extends ConsumerStatefulWidget {
@@ -24,12 +27,15 @@ class CreateACommunityOneScreen extends ConsumerStatefulWidget {
         );
 
   @override
-  ConsumerState<CreateACommunityOneScreen> createState() => _CreateACommunityOneScreenState();
+  ConsumerState<CreateACommunityOneScreen> createState() =>
+      _CreateACommunityOneScreenState();
 }
 
-class _CreateACommunityOneScreenState extends ConsumerState<CreateACommunityOneScreen> {
+class _CreateACommunityOneScreenState
+    extends ConsumerState<CreateACommunityOneScreen> {
   final TextEditingController groupNameController = TextEditingController();
-  final TextEditingController groupDescriptionController = TextEditingController();
+  final TextEditingController groupDescriptionController =
+      TextEditingController();
 
   File? image;
 
@@ -40,39 +46,15 @@ class _CreateACommunityOneScreenState extends ConsumerState<CreateACommunityOneS
 
   bool isLoading = false;
 
+  String userId = '';
 
-
-  void createGroup() {
-    if (groupNameController.text.trim().isNotEmpty && 
-     groupDescriptionController.text.trim().isNotEmpty &&
-      image != null) {
-      ref.read(groupControllerProvider).createGroup(
-            context,
-            groupNameController.text.trim(),
-            image!,
-            groupDescriptionController.text.trim(),
-            ref.read(selectedGroupContacts),
-          );
-      ref.read(selectedGroupContacts.state).update((state) => []);
-
-      setState(() {
-        isLoading = true;
-        Future.delayed(Duration(seconds: 6), (){
-        isLoading = false;
-
-          Navigator.pop(context);
-        });
-      
-        
-      });
-    }else{
-      Modals.showToast('Please select all fields');
-    }
+  getUserId() async {
+    userId = await StorageHandler.getUserId() ?? '';
   }
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-   @override
+  @override
   void dispose() {
     super.dispose();
     groupNameController.dispose();
@@ -80,7 +62,15 @@ class _CreateACommunityOneScreenState extends ConsumerState<CreateACommunityOneS
   }
 
   @override
+  void initState() {
+    getUserId();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final groupData = pro.Provider.of<AuthProviders>(context, listen: true);
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -99,31 +89,30 @@ class _CreateACommunityOneScreenState extends ConsumerState<CreateACommunityOneS
               ),
               child: Column(
                 children: [
-
-
-               image == null
-                    ?   Container(
-                    height: 100.adaptSize,
-                    width: 100.adaptSize,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.h,
-                      vertical: 19.v,
-                    ),
-                    // decoration: AppDecoration.outlineBlue200.copyWith(
-                    //   borderRadius: BorderRadiusStyle.circleBorder50,
-                    // ),
-                    child: CustomImageView(
-                      imagePath: ImageConstant.imgLock,
-                      height: 59.v,
-                      width: 65.h,
-                      alignment: Alignment.center,
-                    ),
-                  ) : CircleAvatar(
-                        backgroundImage: FileImage(
-                          image!,
+                  image == null
+                      ? Container(
+                          height: 100.adaptSize,
+                          width: 100.adaptSize,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.h,
+                            vertical: 19.v,
+                          ),
+                          // decoration: AppDecoration.outlineBlue200.copyWith(
+                          //   borderRadius: BorderRadiusStyle.circleBorder50,
+                          // ),
+                          child: CustomImageView(
+                            imagePath: ImageConstant.imgLock,
+                            height: 59.v,
+                            width: 65.h,
+                            alignment: Alignment.center,
+                          ),
+                        )
+                      : CircleAvatar(
+                          backgroundImage: FileImage(
+                            image!,
+                          ),
+                          radius: 64,
                         ),
-                        radius: 64,
-                      ),
                   SizedBox(height: 10.v),
                   GestureDetector(
                     onTap: () {
@@ -160,10 +149,35 @@ class _CreateACommunityOneScreenState extends ConsumerState<CreateACommunityOneS
                     text: "Save and continue",
                     buttonStyle: CustomButtonStyles.fillBlue,
                     processing: isLoading,
-                    onPressed: () {
+                    onPressed: () async {
+                      if (groupNameController.text.trim().isNotEmpty &&
+                          groupDescriptionController.text.trim().isNotEmpty &&
+                          image != null) {
+                        setState(() {
+                          isLoading = true;
+                        });
 
-                      createGroup();
-                      // AppNavigator.pushAndStackPage(context, page: CreateACommunityScreen());
+                        var isTrue = await groupData.checkUserGroupLimit(
+                            userId: userId,
+                            context: context,
+                            name: groupNameController.text.trim(),
+                            groupDesc: groupDescriptionController.text.trim(),
+                            profilePic: image!,
+                            ref: ref);
+                        setState(() {
+                          isLoading = false;
+                        });
+
+                        if (isTrue) {
+                          AppNavigator.pushAndStackPage(context,
+                              page: LandingPage());
+                        } else {
+                          Modals.showToast('Failed  to create group');
+                        }
+                      } else {
+                        Modals.showToast(
+                            'Please input all fields and an image');
+                      }
                     },
                   ),
                   SizedBox(height: 5.v),
@@ -181,7 +195,7 @@ class _CreateACommunityOneScreenState extends ConsumerState<CreateACommunityOneS
       height: 86.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
-        onTap: (){
+        onTap: () {
           Navigator.pop(context);
         },
         imagePath: ImageConstant.imgArrowBack,
@@ -200,7 +214,6 @@ class _CreateACommunityOneScreenState extends ConsumerState<CreateACommunityOneS
         ),
       ),
       styleType: Style.bgOutline,
-      
     );
   }
 
@@ -223,7 +236,7 @@ class _CreateACommunityOneScreenState extends ConsumerState<CreateACommunityOneS
           hintText: "Name your community",
           textInputAction: TextInputAction.next,
         ),
-         Text(
+        Text(
           "Enter description",
           style: TextStyle(
             color: appTheme.gray900,

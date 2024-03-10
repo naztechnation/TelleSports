@@ -8,12 +8,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
 import 'package:tellesports/presentation/landing_page/landing_page.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../common/enums/message_enum.dart';
+import '../../../common/repositories/common_firebase_storage_repository.dart';
 import '../../../model/chat_model/group.dart';
+import '../../../model/chat_model/group.dart' as model;
 import '../../../model/chat_model/user_model.dart';
 import '../../../widgets/modals.dart';
- 
 
 enum AuthState { loading, initial, error, success }
 
@@ -21,7 +23,7 @@ enum AuthScreenState { login, register }
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
- final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
 final FirebaseFirestore _firebaseStorage = FirebaseFirestore.instance;
 
@@ -34,7 +36,7 @@ class AuthProviders extends ChangeNotifier {
   String _groupNumber = '1';
   String _groupDescription = '';
   String _messageId = '';
-    MessageEnum _type = MessageEnum.none;
+  MessageEnum _type = MessageEnum.none;
   List<UserModel> _users = [];
   List<UserModel> _blockedUsers = [];
   List<UserModel> _requestedUsers = [];
@@ -50,7 +52,6 @@ class AuthProviders extends ChangeNotifier {
   List<String> _groupImageList = [];
   int _textIndex = -1;
   ScrollController _scrollController = ScrollController();
-
 
   ImagePicker picker = ImagePicker();
 
@@ -136,12 +137,11 @@ class AuthProviders extends ChangeNotifier {
     _messageId = messageId;
     notifyListeners();
   }
+
   setMessageType(MessageEnum type) {
     _type = type;
     notifyListeners();
   }
-
-  
 
   setSelectedMessage(String selectedMessage) {
     _selectedMessage = selectedMessage;
@@ -158,16 +158,14 @@ class AuthProviders extends ChangeNotifier {
     notifyListeners();
   }
 
-  clearGroupImageList( ){
+  clearGroupImageList() {
     _groupImageList.clear();
     notifyListeners();
-
   }
 
-  updateGroupImageList(String groupImages){
+  updateGroupImageList(String groupImages) {
     _groupImageList.add(groupImages);
     notifyListeners();
-
   }
 
   Future<void> signOut() async {
@@ -194,8 +192,7 @@ class AuthProviders extends ChangeNotifier {
   }
 
   uploadImage(email, username, password) async {
-
-    String userId  = await StorageHandler.getUserId() ?? '';
+    String userId = await StorageHandler.getUserId() ?? '';
     try {
       final storageRef = FirebaseStorage.instance
           .ref()
@@ -207,7 +204,7 @@ class AuthProviders extends ChangeNotifier {
       final imageUrl = await storageRef.getDownloadURL();
 
       await uploadUserDetails(
-          userId: userId, username: username, email:email,imageUrl:  imageUrl);
+          userId: userId, username: username, email: email, imageUrl: imageUrl);
     } catch (e) {
       print(e.toString());
     }
@@ -216,13 +213,11 @@ class AuthProviders extends ChangeNotifier {
   Future<UserModel> retrieveUserData() async {
     Map<String, dynamic> data = <String, dynamic>{};
 
-    String userId = await StorageHandler.getUserId() ??  '';
+    String userId = await StorageHandler.getUserId() ?? '';
     try {
       _setStatus(AuthState.loading);
-      final DocumentSnapshot documentSnapshot = await _firebaseStorage
-          .collection('users')
-          .doc(userId)
-          .get();
+      final DocumentSnapshot documentSnapshot =
+          await _firebaseStorage.collection('users').doc(userId).get();
 
       if (documentSnapshot.exists) {
         _setStatus(AuthState.success);
@@ -237,8 +232,11 @@ class AuthProviders extends ChangeNotifier {
     return UserModel.fromMap(data);
   }
 
-  Future<void> uploadUserDetails({required String userId,required String username,required String email,
-     required  String imageUrl}) async {
+  Future<void> uploadUserDetails(
+      {required String userId,
+      required String username,
+      required String email,
+      required String imageUrl}) async {
     try {
       _setStatus(AuthState.loading);
 
@@ -250,6 +248,7 @@ class AuthProviders extends ChangeNotifier {
         email: email,
         numberOfGroups: 0,
         groupId: [],
+        bio: '',
       );
 
       await _firebaseStorage.collection('users').doc(userId).set(user.toMap());
@@ -263,6 +262,84 @@ class AuthProviders extends ChangeNotifier {
     }
 
     return;
+  }
+
+  Future<bool> checkUserGroupLimit(
+      {required String userId,
+      required BuildContext context,
+      required String name,
+      required String groupDesc,
+      required File profilePic,
+      var ref}) async {
+    var userDoc = await _firebaseStorage.collection('users').doc(userId).get();
+
+    var currentNumberOfGroups = userDoc['numberOfGroups'];
+
+    if (currentNumberOfGroups < 3) {
+      await createGroup(context, name, groupDesc, profilePic, ref);
+      var newNumberOfGroups = currentNumberOfGroups + 1;
+
+      await _firebaseStorage.collection('users').doc(userId).update({
+        'numberOfGroups': newNumberOfGroups,
+      });
+
+      return true;
+    } else {
+      Modals.showToast('Opps you cant create more than 3 groups');
+      return false;
+    }
+  }
+
+  Future<void> updateUserBio(String userId, String currentBio) async {
+    try {
+      await _firebaseStorage.collection('users').doc(userId).update({
+        'bio': currentBio,
+      });
+      Modals.showToast('Bio updated successfully');
+      notifyListeners();
+    } catch (error) {
+      Modals.showToast('Error updating bio');
+    }
+  }
+
+  Future<void> createGroup(BuildContext context, String name, String groupDesc,
+      File profilePic, var ref) async {
+    String userId = await StorageHandler.getUserId() ?? '';
+    try {
+      List<String> uids = [];
+
+      var groupId = const Uuid().v1();
+      var groupLink = const Uuid().v4();
+
+      String profileUrl = await ref
+          .read(commonFirebaseStorageRepositoryProvider)
+          .storeFileToFirebase(
+            'group/$groupId',
+            profilePic,
+          );
+      model.Group group = model.Group(
+        pinnedMessage: '',
+        isGroupLocked: false,
+        groupLink: 'telesportcommunity.com/${groupLink}',
+        senderId: userId,
+        name: name,
+        groupId: groupId,
+        lastMessage: '',
+        groupPic: profileUrl,
+        membersUid: [userId, ...uids],
+        timeSent: DateTime.now(),
+        groupDescription: groupDesc,
+        blockedMembers: [],
+        requestsMembers: [],
+      );
+
+      await _firebaseStorage
+          .collection('groups')
+          .doc(groupId)
+          .set(group.toMap());
+    } catch (e) {
+      Modals.showToast(e.toString());
+    }
   }
 
   Future<List<UserModel>> fetchUsers(List<String> membersUid) async {
@@ -286,7 +363,7 @@ class AuthProviders extends ChangeNotifier {
             profilePic: userData['profilePic'],
             isOnline: userData['isOnline'],
             numberOfGroups: userData['numberOfGroups'],
-
+            bio: userData['bio'],
             groupId: [],
           );
 
@@ -300,6 +377,7 @@ class AuthProviders extends ChangeNotifier {
       return [];
     }
   }
+
   Future<List<UserModel>> requestedUsers(List<String> membersUid) async {
     try {
       final List<UserModel> users = [];
@@ -321,7 +399,7 @@ class AuthProviders extends ChangeNotifier {
             profilePic: userData['profilePic'],
             isOnline: userData['isOnline'],
             numberOfGroups: userData['numberOfGroups'],
-
+            bio: userData['numberOfGroups'],
             groupId: [],
           );
 
@@ -359,6 +437,7 @@ class AuthProviders extends ChangeNotifier {
             isOnline: userData['isOnline'],
             numberOfGroups: userData['numberOfGroups'],
             groupId: [],
+            bio: userData['bio'],
           );
 
           users.add(user);
@@ -373,27 +452,21 @@ class AuthProviders extends ChangeNotifier {
       return [];
     }
   }
- 
-  Future<void> updateUserProfile() async {
 
-    String userId = await StorageHandler.getUserId() ??  '';
+  Future<void> updateUserProfile() async {
+    String userId = await StorageHandler.getUserId() ?? '';
 
     try {
       if (image != null) {
         _setStatus(AuthState.loading);
 
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user_image')
-            .child('${userId}.jpg');
+        final storageRef = FirebaseStorage.instance.ref().child('status');
 
         await storageRef.putFile(image!);
 
         final imageUrl = await storageRef.getDownloadURL();
 
-        final userDocRef = _firebaseStorage
-            .collection('users')
-            .doc(userId);
+        final userDocRef = _firebaseStorage.collection('users').doc(userId);
 
         await userDocRef.update({
           'profilePic': imageUrl,
@@ -429,7 +502,7 @@ class AuthProviders extends ChangeNotifier {
       required String groupPics,
       required String groupAdminId}) {
     _groupNumber = groupNumber;
-    _groupDescription =  groupDesription;
+    _groupDescription = groupDesription;
     _groupLink = groupLink;
     _groupId = groupId;
     _groupName = groupName;
@@ -439,7 +512,7 @@ class AuthProviders extends ChangeNotifier {
     notifyListeners();
   }
 
-  Stream<List<Group>> getAllChatGroups(String  userId) {
+  Stream<List<Group>> getAllChatGroups(String userId) {
     return _firebaseStorage.collection('groups').snapshots().map((event) {
       List<Group> groups = [];
       for (var document in event.docs) {
@@ -448,8 +521,6 @@ class AuthProviders extends ChangeNotifier {
 
         if (group.membersUid.contains(userId)) {
           _isUserExisting = true;
-
-           
 
           fetchUsers(group.membersUid);
         } else {
@@ -490,7 +561,6 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-
   Future<void> removeCurrentUserFromRequestsMembers(
       String groupId, String currentUserId, BuildContext context) async {
     try {
@@ -509,11 +579,11 @@ class AuthProviders extends ChangeNotifier {
           membersUid.remove(currentUserId);
 
           await groupDocRef.update({'requestsMembers': membersUid});
-          await addCurrentUserFromMembers(groupId,currentUserId, context);
+          await addCurrentUserFromMembers(groupId, currentUserId, context);
 
           if (context.mounted) {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const LandingPage()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const LandingPage()));
           }
         }
       }
@@ -521,6 +591,7 @@ class AuthProviders extends ChangeNotifier {
       print('Error removing user from members: $error');
     }
   }
+
   Future<void> removeCurrentUserFromBlockedMembers(
       String groupId, String currentUserId, BuildContext context) async {
     try {
@@ -539,13 +610,13 @@ class AuthProviders extends ChangeNotifier {
           membersUid.remove(currentUserId);
 
           await groupDocRef.update({'blockedMembers': membersUid});
-          await addCurrentUserFromMembers(groupId,currentUserId, context);
+          await addCurrentUserFromMembers(groupId, currentUserId, context);
 
           if (context.mounted) {
             if (context.mounted) {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const LandingPage()));
-          }
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const LandingPage()));
+            }
           }
         }
       }
@@ -554,7 +625,7 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-   Future<void> addCurrentUserFromMembers(
+  Future<void> addCurrentUserFromMembers(
       String groupId, String currentUserId, BuildContext context) async {
     try {
       final DocumentReference groupDocRef =
@@ -583,7 +654,8 @@ class AuthProviders extends ChangeNotifier {
       print('Error removing user from members: $error');
     }
   }
-     Future<void> addUserToRequestsMembers(
+
+  Future<void> addUserToRequestsMembers(
       String groupId, String currentUserId, BuildContext context) async {
     try {
       final DocumentReference groupDocRef =
@@ -601,8 +673,6 @@ class AuthProviders extends ChangeNotifier {
           requestsUid.add(currentUserId);
 
           await groupDocRef.update({'requestsMembers': requestsUid});
-
-           
         }
       }
     } catch (error) {
@@ -628,14 +698,13 @@ class AuthProviders extends ChangeNotifier {
           blockedUid.add(currentUserId);
 
           await groupDocRef.update({'blockedMembers': blockedUid});
-
-           
         }
       }
     } catch (error) {
       print('Error removing user from members: $error');
     }
   }
+
   Future<void> deleteGroup(String groupId, BuildContext context) async {
     try {
       final DocumentReference groupDocRef =
@@ -665,8 +734,6 @@ class AuthProviders extends ChangeNotifier {
       print('Error updating group lock status: $error');
     }
   }
-
-    
 
   Future<void> updateGroupLink(String groupId, String groupLink) async {
     try {
@@ -728,36 +795,28 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-      
-   Future<void> deleteChatMessage({
+  Future<void> deleteChatMessage({
     required String recieverUserId,
     required String userId,
-     
     required String messageId,
-     
   }) async {
-     
-     try {
-          await _firebaseStorage
-  .collection('groups')
-  .doc(recieverUserId)
-  .collection('chats')
-  .doc(messageId)
-  .delete();
+    try {
+      await _firebaseStorage
+          .collection('groups')
+          .doc(recieverUserId)
+          .collection('chats')
+          .doc(messageId)
+          .delete();
 
-  isSelectedMessage(false);
+      isSelectedMessage(false);
       setSelectedMessage('');
 
       setTextIndex(-1);
       setMessageId('');
-
-     } catch (e) {
-       print(e.toString());
-     }
-   
-      
-     
+    } catch (e) {
+      print(e.toString());
     }
+  }
 
   Future<User?> signInWithGoogle() async {
     try {
@@ -794,7 +853,7 @@ class AuthProviders extends ChangeNotifier {
   String get groupNumber => _groupNumber;
   String get groupName => _groupName;
   String get groupPics => _groupPics;
-  MessageEnum  get messageType   => _type;
+  MessageEnum get messageType => _type;
   String get groupDescription => _groupDescription;
   bool get isSelected => _isSelectedText;
   AuthScreenState get isLogin => _isLogin;

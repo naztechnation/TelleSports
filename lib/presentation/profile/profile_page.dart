@@ -22,6 +22,7 @@ import '../../widgets/modal_content.dart';
 import '../chats_settings_screen/chats_settings_screen.dart';
 import '../live_chat/live_chat.dart';
 import '../manage_account/create_new_password_screen/create_new_password_screen.dart';
+import '../manage_account/update_bio.dart';
 import '../notification_settings_screen/notification_settings_screen.dart';
 import 'edit_profile_screen.dart';
 import 'upload_picture.dart';
@@ -128,6 +129,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           image: ImageConstant.imgHelpCenter, onTap: () {
                         AppNavigator.pushAndStackPage(context,
                             page: UpdateAccountScreen());
+                      }),
+                      SizedBox(height: 24.v),
+
+                       _buildShareFrame(context,
+                          text: "Update Bio",
+                          image: ImageConstant.imgHelpCenter, onTap: () {
+                        AppNavigator.pushAndStackPage(context,
+                            page: UpdateChatBioScreen());
                       }),
                       SizedBox(height: 24.v),
                       _buildShareFrame(context,

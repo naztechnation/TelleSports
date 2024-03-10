@@ -140,7 +140,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           SizedBox(height: 24.v),
                           _buildShareCommunity(context, groupInfo.groupLink),
                           SizedBox(height: 24.v),
-                          _buildMedia(context, groupInfo.groupImageList),
+                        if(groupInfo.groupImageList.isNotEmpty)  _buildMedia(context, groupInfo.groupImageList),
                           SizedBox(height: 24.v),
                           if (groupInfo.groupMembers[0].uid == userId)
                             SizedBox(height: 18.v),
@@ -159,8 +159,8 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                   children: [
                                     Text('Requests'),
                                     Container(
-                                      width: 32.adaptSize,
-                                      height: 32.adaptSize,
+                                      width: 26.adaptSize,
+                                      height: 26.adaptSize,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Colors.red),
@@ -197,8 +197,8 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                   children: [
                                     Text('Blocked Users'),
                                     Container(
-                                      width: 32.adaptSize,
-                                      height: 32.adaptSize,
+                                      width: 26.adaptSize,
+                                      height: 26.adaptSize,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Colors.red),
@@ -349,7 +349,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                       Expanded(
                         child: Padding(
                             padding: EdgeInsets.only(top: 3.v, bottom: 1.v),
-                            child: Text("tsportcommunity.com/$groupLink",
+                            child: Text("$groupLink",
                                 style: TextStyle(
                                     color: appTheme.blue300,
                                     fontSize: 14.fSize,
@@ -447,23 +447,26 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("$groupNumber Member(s)",
+                Text("$groupNumber Members(s)",
                     style: TextStyle(
                         fontSize: 16.fSize,
                         fontFamily: 'DM Sans',
                         fontWeight: FontWeight.w700)),
                 SizedBox(height: 8.v),
-                ListView.separated(
+                ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    separatorBuilder: (context, index) {
-                      return SizedBox(height: 8.v);
-                    },
-                    itemCount: memberLength,
+                    // separatorBuilder: (context, index) {
+                    //   return Padding(
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     child: SizedBox(height: 28.v),
+                    //   );
+                    // },
+                    itemCount: (memberLength <= 10) ? memberLength : 10,
                     itemBuilder: (context, index) {
                       return UserprofileItemWidget(
                         name: members.groupMembers[index].name,
-                        bio: 'My Bio',
+                        bio: members.groupMembers[index].bio,
                         index: index,
                         image: members.groupMembers[index].profilePic,
                       );

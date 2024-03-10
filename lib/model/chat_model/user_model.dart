@@ -4,11 +4,13 @@ class UserModel {
   final String profilePic;
   final bool isOnline;
   final String email;
+  final String bio;
   final int numberOfGroups;
   final List<String> groupId;
   UserModel({
     required this.name,
     required this.uid,
+    required this.bio,
     required this.profilePic,
     required this.isOnline,
     required this.email,
@@ -32,10 +34,11 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       uid: map['uid'] ?? '',
+       bio: map['bio'] ?? 'Hi, am new here at Tellasport 🤗🤗',
       profilePic: map['profilePic'] ?? '',
       isOnline: map['isOnline'] ?? false,
       email: map['email'] ?? '',
-      numberOfGroups: map['numberOfGroups'] ?? '',
+      numberOfGroups: map['numberOfGroups'] ?? 0 ,
       groupId: List<String>.from(map['groupId']),
     );
   }
