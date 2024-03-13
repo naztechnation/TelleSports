@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart'  as pro;
+import 'package:provider/provider.dart' as pro;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/presentation/auth/sign_up_screen/sign_up_screen.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
@@ -54,7 +54,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-    final authUser =  pro.Provider.of<FirebaseAuthProvider>(context, listen: true);
+    final authUser =
+        pro.Provider.of<FirebaseAuthProvider>(context, listen: true);
 
     final user = pro.Provider.of<AuthProviders>(context, listen: true);
 
@@ -69,8 +70,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
               lazy: false,
               create: (_) => AccountCubit(
                   accountRepository: AccountRepositoryImpl(),
-                  viewModel:
-                      pro.Provider.of<AccountViewModel>(context, listen: false)),
+                  viewModel: pro.Provider.of<AccountViewModel>(context,
+                      listen: false)),
               child: BlocConsumer<AccountCubit, AccountStates>(
                 listener: (context, state) {
                   if (state is AccountUpdated) {
@@ -92,15 +93,22 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                           state.user.userWallet?.accountNumber.toString());
                       StorageHandler.saveUserBank(
                           state.user.userWallet?.bank.toString());
-              
+
                       StorageHandler.saveUserPassword(passwordController.text);
-              
-                       updateUser(context: context, user: user, username: state.user.user?.username ?? '', userId: state.user.user?.id.toString() ?? '', image: (state.user.profilePicture.toString()  != 'null' ||
-                         state.user.profilePicture.toString()  != ''  || 
-                         state.user.profilePicture.toString()  != null) ? 
-                          state.user.profilePicture.toString() :
-                          AppStrings.degaultImage, email: state.user.user?.email ?? '', );
-                      
+
+                      updateUser(
+                        context: context,
+                        user: user,
+                        username: state.user.user?.username ?? '',
+                        userId: state.user.user?.id.toString() ?? '',
+                        image: (state.user.profilePicture.toString() !=
+                                    'null' ||
+                                state.user.profilePicture.toString() != '' ||
+                                state.user.profilePicture.toString() != null)
+                            ? state.user.profilePicture.toString()
+                            : AppStrings.degaultImage,
+                        email: state.user.user?.email ?? '',
+                      );
                     } else {
                       if (state.user.error?.isNotEmpty ?? false) {
                         Modals.showToast(state.user.error ?? '');
@@ -306,11 +314,9 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   Widget _buildPasswordSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 8.h),
-      child: Column(crossAxisAlignment: 
-      CrossAxisAlignment.start, children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text("Password",
-            style: TextStyle(fontSize: 14, 
-            fontWeight: FontWeight.w600)),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
         SizedBox(height: 3.v),
         CustomTextFormField(
             controller: passwordController,
@@ -381,8 +387,6 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
           .read<AccountCubit>()
           .loginUser(email: email ?? '', password: email ?? '');
 
-      
-
       setState(() {
         isGoogle = true;
       });
@@ -390,16 +394,16 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
     }
   }
 
-  updateUser({required BuildContext context, required  var user, required  String username,
-  required  String userId, required  String image, required  String email})async{
+  updateUser(
+      {required BuildContext context,
+      required var user,
+      required String username,
+      required String userId,
+      required String image,
+      required String email}) async {
+    await user.uploadUserDetails(
+        username: username, userId: userId, imageUrl: image, email: email);
 
-  await  user.uploadUserDetails(username:username,userId:  userId,
-                        imageUrl: image, email:email);
-
-                          onTapSignIn(context);
-              
+    onTapSignIn(context);
   }
-
-
-  
 }

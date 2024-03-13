@@ -18,8 +18,10 @@ import 'message_reply_preview.dart';
 class BottomChatField extends ConsumerStatefulWidget {
   final String recieverUserId;
   final bool isGroupChat;
-  const BottomChatField({
+  final Function onTap;
+  const BottomChatField( {
     Key? key,
+    required this.onTap,
     required this.recieverUserId,
     required this.isGroupChat,
   }) : super(key: key);
@@ -72,6 +74,7 @@ userId = await StorageHandler.getUserId() ?? '';
       setState(() {
         _messageController.text = '';
       });
+      widget.onTap();
     } else {
       var tempDir = await getTemporaryDirectory();
       var path = '${tempDir.path}/flutter_sound.aac';
@@ -111,6 +114,8 @@ userId = await StorageHandler.getUserId() ?? '';
     File? image = await pickImageFromGallery(context);
     if (image != null) {
       sendFileMessage(image, MessageEnum.image);
+      widget.onTap();
+
     }
   }
 

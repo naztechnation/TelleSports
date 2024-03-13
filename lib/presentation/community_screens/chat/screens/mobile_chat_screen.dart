@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:flutter/services.dart';
 
 import '../../../../common/enums/message_enum.dart';
+import '../../../../common/providers/message_reply_provider.dart';
 import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
 import '../../../../utils/navigator/page_navigator.dart';
@@ -12,14 +15,17 @@ import '../../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../../widgets/app_bar/appbar_subtitle_four.dart';
 import '../../../../widgets/app_bar/appbar_subtitle_two.dart';
 import '../../../../widgets/app_bar/appbar_title_circleimage.dart';
-import '../../../../widgets/app_bar/appbar_trailing_image.dart';
+
 import '../../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../../widgets/modals.dart';
 
 import '../../community_one_page/community_info_page.dart';
 import '../../provider/auth_provider.dart' as pro;
+import '../controller/chat_controller.dart';
 import '../widgets/bottom_chat_field.dart';
-import '../widgets/chat_list.dart';
+
+import '../widgets/my_message_card.dart';
+import '../widgets/sender_message_card.dart';
 
 class MobileChatScreen extends ConsumerStatefulWidget {
   static const String routeName = '/mobile-chat-screen';
@@ -45,7 +51,6 @@ class MobileChatScreen extends ConsumerStatefulWidget {
 }
 
 class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
-  final ScrollController messageController = ScrollController();
 
   final _scrollController = ScrollController();
 
@@ -58,7 +63,8 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
     groupInfo.isSelectedMessage(false);
     groupInfo.setSelectedMessage('');
     groupInfo.setTextIndex(-1);
-    messageController.dispose();
+    _scrollController.dispose();
+
   }
 
   void makeCall(WidgetRef ref, BuildContext context) {
@@ -74,14 +80,20 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
   String userId = '';
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+    setState(() {});
   }
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _scrollDown();
+  });
     getUserId();
 
     super.initState();
   }
+
+  
 
   @override
   Widget build(
@@ -89,6 +101,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
   ) {
     final groupInfo =
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
+
 
     return WillPopScope(
       onWillPop: () async {
@@ -111,7 +124,6 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
               leadingWidth: 44.h,
               leading: AppbarLeadingImage(
                 imagePath: ImageConstant.imgArrowBackBlue800,
-                
                 onTap: () {
                   groupInfo.isSelectedMessage(false);
                   groupInfo.setSelectedMessage('');
@@ -144,6 +156,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 8.h),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AppbarSubtitleTwo(
                             text: widget.name,
@@ -153,7 +166,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                             },
                           ),
                           AppbarSubtitleFour(
-                             onTap: () {
+                            onTap: () {
                               onTapGroup(
                                   context, widget.profilePic, widget.name);
                             },
@@ -194,13 +207,14 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                             title: Text('Delete Message'),
                           ),
                         ),
-                  if(groupInfo.messageType == MessageEnum.text)    const PopupMenuItem<String>(
-                        value: 'copy',
-                        child: ListTile(
-                          leading: Icon(Icons.copy),
-                          title: Text('Copy'),
+                      if (groupInfo.messageType == MessageEnum.text)
+                        const PopupMenuItem<String>(
+                          value: 'copy',
+                          child: ListTile(
+                            leading: Icon(Icons.copy),
+                            title: Text('Copy'),
+                          ),
                         ),
-                      ),
                       if (groupInfo.groupAdminId == userId)
                         const PopupMenuItem<String>(
                           value: 'pin',
@@ -227,52 +241,144 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
               },
               child: Column(
                 children: [
-                  if (groupInfo.groupPinnedMessage != '')
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.push_pin,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Expanded(
-                              child: Text(
-                                groupInfo.groupPinnedMessage,
-                                textAlign: TextAlign.justify,
-                                style: const TextStyle(
-                                    color: Colors.black, wordSpacing: -1),
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('groups')
+                        .doc(groupInfo.groupId)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      final pinnedMessage =
+                          snapshot.data?.get('pinnedMessage') ?? false;
+
+                      return (pinnedMessage != '')
+                          ? Container(
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.push_pin,
+                                      color: Colors.blue,
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        pinnedMessage,
+                                        textAlign: TextAlign.justify,
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            wordSpacing: -1),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    if (groupInfo.groupAdminId == userId)
+                                      GestureDetector(
+                                          onTap: () {
+                                            groupInfo.updateGroupPinnedMessage(
+                                                groupInfo.groupId, '');
+                                          },
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.blue,
+                                            size: 28,
+                                          ))
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            if (groupInfo.groupAdminId == userId)
-                              GestureDetector(
-                                  onTap: () {
-                                    groupInfo.updateGroupPinnedMessage(
-                                        groupInfo.groupId, '');
-                                  },
-                                  child: const Icon(
-                                    Icons.close,
-                                    color: Colors.blue,
-                                    size: 28,
-                                  ))
-                          ],
-                        ),
-                      ),
-                    ),
+                            )
+                          : SizedBox.shrink();
+                    },
+                  ),
                   Expanded(
-                    child: ChatList(
-                      recieverUserId: widget.uid,
-                      isGroupChat: widget.isGroupChat,
-                    ),
+                    child: StreamBuilder<List<dynamic>>(
+                        stream: widget.isGroupChat
+                            ? ref
+                                .read(chatControllerProvider)
+                                .groupChatStream(widget.uid)
+                            : ref
+                                .read(chatControllerProvider)
+                                .chatStream(widget.uid, userId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            //  return   SizedBox.shrink();
+                          }
+
+                          groupInfo.clearGroupImageList();
+                          return ListView.builder(
+                            controller: _scrollController,
+                            itemCount: snapshot.data?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              final messageData = snapshot.data?[index];
+
+                              if (messageData.type == MessageEnum.image) {
+                                groupInfo
+                                    .updateGroupImageList(messageData.text);
+                              }
+                              var timeSent = DateFormat('hh:mm a')
+                                  .format(messageData.timeSent.toLocal());
+
+                              if (!messageData.isSeen &&
+                                  messageData.recieverid == userId) {
+                                ref
+                                    .read(chatControllerProvider)
+                                    .setChatMessageSeen(
+                                      context,
+                                      widget.uid,
+                                      userId,
+                                      messageData.messageId,
+                                    );
+                              }
+                              if (messageData.senderId == userId) {
+                                return Stack(
+                                  children: [
+                                    MyMessageCard(
+                                      message: messageData.text,
+                                      name: messageData.username,
+                                      index: index,
+                                      date: timeSent,
+                                      type: messageData.type,
+                                      repliedText: messageData.repliedMessage,
+                                      username: messageData.repliedTo,
+                                      repliedMessageType:
+                                          messageData.repliedMessageType,
+                                      onLeftSwipe: (value) => onMessageSwipe(
+                                        messageData.text,
+                                        true,
+                                        messageData.type,
+                                      ),
+                                      isSeen: messageData.isSeen,
+                                      messageId: messageData.messageId,
+                                    ),
+                                  ],
+                                );
+                              }
+                              return SenderMessageCard(
+                                  index: index,
+                                  message: messageData.text,
+                                  name: messageData.username,
+                                  date: timeSent,
+                                  type: messageData.type,
+                                  username: messageData.repliedTo,
+                                  repliedMessageType:
+                                      messageData.repliedMessageType,
+                                  onRightSwipe: (value) => onMessageSwipe(
+                                        messageData.text,
+                                        false,
+                                        messageData.type,
+                                      ),
+                                  repliedText: messageData.repliedMessage,
+                                  messageId: messageData.messageId);
+                            },
+                          );
+                        }),
                   ),
                   const SizedBox(
                     height: 20,
@@ -290,6 +396,9 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                       return (isGroupLocked)
                           ? (groupInfo.groupAdminId == userId)
                               ? BottomChatField(
+                                  onTap: () {
+                                    _scrollDown();
+                                  },
                                   recieverUserId: widget.uid,
                                   isGroupChat: widget.isGroupChat,
                                 )
@@ -319,6 +428,9 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                                   ),
                                 )
                           : BottomChatField(
+                              onTap: () {
+                                _scrollDown();
+                              },
                               recieverUserId: widget.uid,
                               isGroupChat: widget.isGroupChat,
                             );
@@ -331,6 +443,20 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
         ),
       ),
     );
+  }
+
+  void onMessageSwipe(
+    String message,
+    bool isMe,
+    MessageEnum messageEnum,
+  ) {
+    ref.read(messageReplyProvider.state).update(
+          (state) => MessageReply(
+            message,
+            isMe,
+            messageEnum,
+          ),
+        );
   }
 
   Future<void> copyToClipboard(
@@ -351,5 +477,17 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
           profilePic: image,
           name: name,
         ));
+  }
+
+  void _scrollDown() {
+    // _scrollController.animateTo(
+    //   0 ,
+    //   duration: const Duration(microseconds: 300),
+    //   curve: Curves.easeOut,
+    // );
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
   }
 }

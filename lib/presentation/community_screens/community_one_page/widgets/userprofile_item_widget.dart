@@ -56,29 +56,35 @@ class UserprofileItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        color: appTheme.gray900,
-                        fontSize: 14.fSize,
-                        fontFamily: 'DM Sans',
-                        fontWeight: FontWeight.w500,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: appTheme.gray900,
+                          fontSize: 14.fSize,
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 2.v),
-                    Text(
-                      bio,
-                      style: TextStyle(
-                        color: appTheme.gray600,
-                        fontSize: 12.fSize,
-                        fontFamily: 'DM Sans',
-                        fontWeight: FontWeight.w500,
+                      SizedBox(height: 2.v),
+                      Text(
+                        bio,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: appTheme.gray600,
+                          fontSize: 12.fSize,
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 0.v),

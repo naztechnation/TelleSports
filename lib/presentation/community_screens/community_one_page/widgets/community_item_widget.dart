@@ -84,24 +84,24 @@ class CommunityPageComponent extends StatelessWidget {
                             style: CustomTextStyles.titleSmallGray600,
                           ),
                           SizedBox(height: 9.v),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              width: 32.adaptSize,
-                              height: 32.adaptSize,
+                          // Align(
+                          //   alignment: Alignment.centerRight,
+                          //   child: Container(
+                          //     width: 32.adaptSize,
+                          //     height: 32.adaptSize,
                                
-                              decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF3C91E5)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Center(
-                                  child: Text(
-                                    "${groupNumber}",
-                                    style: TextStyle(fontSize: 9, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          //     decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF3C91E5)),
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.all(4.0),
+                          //       child: Center(
+                          //         child: Text(
+                          //           "${groupNumber}",
+                          //           style: TextStyle(fontSize: 9, color: Colors.white),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

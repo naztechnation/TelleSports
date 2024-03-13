@@ -7,6 +7,7 @@ import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
+import 'package:tellesports/widgets/image_view.dart';
 
 import '../../../handlers/secure_handler.dart';
 import '../../../utils/navigator/page_navigator.dart';
@@ -137,14 +138,14 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           SizedBox(height: 24.v),
                           _buildCommunityDescription(
                               context, groupInfo.groupDescription),
+                          //   SizedBox(height: 24.v),
+                          //  _buildShareCommunity(context, groupInfo.groupLink),
                           SizedBox(height: 24.v),
-                          _buildShareCommunity(context, groupInfo.groupLink),
+                         if(groupInfo.groupImageList.isNotEmpty)  _buildMedia(context, groupInfo.groupImageList),
                           SizedBox(height: 24.v),
-                        if(groupInfo.groupImageList.isNotEmpty)  _buildMedia(context, groupInfo.groupImageList),
-                          SizedBox(height: 24.v),
-                          if (groupInfo.groupMembers[0].uid == userId)
+                           if (groupInfo.groupMembers[0].uid == userId)
                             SizedBox(height: 18.v),
-                          if (groupInfo.groupMembers[0].uid == userId)
+                            if (groupInfo.groupMembers[0].uid == userId)
                             GestureDetector(
                               onTap: () {
                                 AppNavigator.pushAndStackPage(context,
@@ -180,9 +181,9 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                 ),
                               )),
                             ),
-                          if (groupInfo.groupMembers[0].uid == userId)
+                            if (groupInfo.groupMembers[0].uid == userId)
                             SizedBox(height: 18.v),
-                          if (groupInfo.groupMembers[0].uid == userId)
+                            if (groupInfo.groupMembers[0].uid == userId)
                             GestureDetector(
                               onTap: () {
                                 AppNavigator.pushAndStackPage(context,
@@ -396,13 +397,10 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                               onTap: () {
                                 _showFullImage(context, images[index]);
                               },
-                              child: Hero(
-                                tag: images[index],
-                                child: CustomImageView(
-                                    imagePath: images[index],
-                                    height: 75.adaptSize,
-                                    width: 75.adaptSize),
-                              ),
+                              child: CustomImageView(
+                                  imagePath: images[index],
+                                  height: 75.adaptSize,
+                                  width: 75.adaptSize),
                             );
                           })),
                     ),
@@ -496,12 +494,10 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
           body: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Center(
-              child: Hero(
-                tag: imageUrl,
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                ),
+              child: ImageView.network(
+                imageUrl,
+                placeholder: 'assets/images/image_not_found.png',
+                fit: BoxFit.cover,
               ),
             ),
           ),

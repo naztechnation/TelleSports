@@ -248,7 +248,7 @@ class AuthProviders extends ChangeNotifier {
         email: email,
         numberOfGroups: 0,
         groupId: [],
-        bio: '',
+        bio: 'Hi, am new here at Tellasport 🤗🤗',
       );
 
       await _firebaseStorage.collection('users').doc(userId).set(user.toMap());
@@ -368,6 +368,7 @@ class AuthProviders extends ChangeNotifier {
           );
 
           users.add(user);
+
         }
       }
       _users = users;

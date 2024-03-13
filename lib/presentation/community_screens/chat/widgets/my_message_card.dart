@@ -61,7 +61,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
           alignment: Alignment.centerRight,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width - 35,
+              maxWidth: MediaQuery.of(context).size.width - 50,
             ),
             child: GestureDetector(
               onTap: () {
@@ -95,7 +95,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
                     color: messageColor,
                     borderRadius: BorderRadius.circular(12)),
                 margin: EdgeInsets.only(
-                    right: 20,
+                    right: 10,
                     left: 0,
                     top: 3),
                 padding:

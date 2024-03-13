@@ -61,7 +61,7 @@ class _SenderMessageCardState extends State<SenderMessageCard> {
           alignment: Alignment.centerLeft,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width - 35,
+              maxWidth: MediaQuery.of(context).size.width - 45,
             ),
             child: GestureDetector(
               onTap: () {

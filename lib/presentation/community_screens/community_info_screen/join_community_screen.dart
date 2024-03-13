@@ -134,7 +134,8 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                   SizedBox(height: 16.v),
                   // CustomOutlinedButton(text: "Report community"),
                   // SizedBox(height: 5.v)
-                ]))));
+                ]))
+                ));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {

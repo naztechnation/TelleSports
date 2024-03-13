@@ -26,6 +26,7 @@ class UserModel {
       'isOnline': isOnline,
       'email': email,
       'groupId': groupId,
+      'bio': bio,
       'numberOfGroups': numberOfGroups,
     };
   }
@@ -34,7 +35,7 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       uid: map['uid'] ?? '',
-       bio: map['bio'] ?? 'Hi, am new here at Tellasport 🤗🤗',
+      bio: map['bio'] ?? 'Hi, am new here at Tellasport 🤗🤗',
       profilePic: map['profilePic'] ?? '',
       isOnline: map['isOnline'] ?? false,
       email: map['email'] ?? '',
