@@ -77,7 +77,19 @@ class TransferCoin extends StatelessWidget {
                   SizedBox(height: 30.v),
                   CustomElevatedButton(
                     text: "Withdraw Tellacoins",
-                    onPressed: () => Modals.showDialogModal(context, page: ModalContentScreen(title: 'Processing...', body: 'Your withdrawal is being processed. Your account will be credited within 24 hours.', btnText: 'Done', headerColorOne: Color(0xFFFDF9ED), headerColorTwo: Color(0xFFFAF3DA),)),
+                    onPressed: () => Modals.showDialogModal(context,
+                     page: ModalContentScreen(title: 'Processing...', 
+                     body: Text(
+                'Your withdrawal is being processed. Your account will be credited within 24 hours.',
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: appTheme.gray900,
+                  fontSize: 14.fSize,
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ), btnText: 'Done', headerColorOne: Color(0xFFFDF9ED), headerColorTwo: Color(0xFFFAF3DA),)),
                   ),
                   SizedBox(height: 5.v),
                 ],

@@ -486,7 +486,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                 GestureDetector(
                   onTap: () {
                     AppNavigator.pushAndStackPage(context,
-                        page: AllUsersPage());
+                        page: AllUsersPage(users: members,));
                   },
                   child: Text("see all >",
                       style: TextStyle(

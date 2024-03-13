@@ -63,8 +63,8 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                       onPressed: () {
                         onTapGiftTellacoins(context, widget.username);
                       }),
-               if(widget.isGroupAdmin)   SizedBox(height: 24.v),
-                 if(widget.isGroupAdmin)  _buildFrameColumn(context: context, groupName: groupInfo.groupName, groupPics: groupInfo.groupPics, groupNumber: groupInfo.groupNumber,),
+               if(!widget.isGroupAdmin)   SizedBox(height: 24.v),
+                 if(!widget.isGroupAdmin)  _buildFrameColumn(context: context, groupName: groupInfo.groupName, groupPics: groupInfo.groupPics, groupNumber: groupInfo.groupNumber,),
                 if(widget.isGroupAdmin)  SizedBox(height: 24.v),
                   // _buildFrameColumn1(),
                   _buildTabBarView(context)

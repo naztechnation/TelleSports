@@ -5,6 +5,7 @@ import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
  
+import '../../../model/chat_model/user_model.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../individual_user_info.dart/individual_user_info.dart';
 import 'widgets/userprofile_item_widget.dart';
@@ -14,7 +15,8 @@ import '../provider/auth_provider.dart' as pro;
 
 
 class AllUsersPage extends StatelessWidget {
-  const AllUsersPage({Key? key})
+  final List<UserModel> users;
+  const AllUsersPage({Key? key, required this.users})
       : super(
           key: key,
         );
@@ -28,7 +30,7 @@ class AllUsersPage extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        appBar: _buildAppBar(context, groupInfo.groupNumber),
+        appBar: _buildAppBar(context, users.length.toString()),
         body: Padding(
           padding: EdgeInsets.only(
             left: 28.h,
@@ -46,13 +48,13 @@ class AllUsersPage extends StatelessWidget {
                 height: 1.v,
               );
             },
-            itemCount: groupInfo.groupMembers.length,
+            itemCount: users.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                  onTap: (){
-        AppNavigator.pushAndStackPage(context, page: IndividualUserInfo(name: groupInfo.groupMembers[index].name, image: groupInfo.groupMembers[index].profilePic, bio: groupInfo.groupMembers[index].bio, username: groupInfo.groupMembers[index].name, isGroupAdmin: index == 0, ));
+        AppNavigator.pushAndStackPage(context, page: IndividualUserInfo(name: users[index].name, image: users[index].profilePic, bio: users[index].bio, username: users[index].name, isGroupAdmin: index == 0, ));
       },
-                child: UserprofileItemWidget(name: groupInfo.groupMembers[index].name, bio: groupInfo.groupMembers[index].bio, index: index, image: groupInfo.groupMembers[index].profilePic,));
+                child: UserprofileItemWidget(name: users[index].name, bio: users[index].bio, index: index, image: users[index].profilePic,));
             },
           ),
         ),

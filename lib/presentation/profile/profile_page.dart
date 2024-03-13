@@ -178,8 +178,18 @@ class _ProfilePageState extends State<ProfilePage> {
                             Modals.showDialogModal(context,
                                 page: ModalContentScreen(
                                     title: 'Delete your Account!!!',
-                                    body:
-                                        'N.B: Are you sure you want to delete your account. This action can\'t be reversed.',
+                                    body: Text(
+                 'N.B: Are you sure you want to delete your account. This action can\'t be reversed.',
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: appTheme.gray900,
+                  fontSize: 14.fSize,
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+                                       
                                     btnText: 'Delete',
                                     
                                     onPressed: () {

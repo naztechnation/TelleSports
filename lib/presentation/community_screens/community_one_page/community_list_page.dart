@@ -3,6 +3,7 @@ import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../handlers/secure_handler.dart';
+import '../../../model/chat_model/user_model.dart';
 import '../../../widgets/modals.dart';
 import '../chat/screens/mobile_chat_screen.dart';
 import '../community_info_screen/join_community_screen.dart';
@@ -119,12 +120,14 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                   groupData.requestsMembers);
                                               checkUserExist.blockedUsers(
                                                   groupData.blockedMembers);
+                                                  List<String> userItem = removeDuplicates(groupData
+                                                          .membersUid);
                                               if (groupData.membersUid
                                                   .contains(userId)) {
                                                 if (context.mounted) {
                                                   checkUserExist.addGroupInfo(
-                                                      groupNumber: groupData
-                                                          .membersUid.length
+                                                      groupNumber: 
+                                                          userItem.length
                                                           .toString(),
                                                       groupAdminId: groupData
                                                           .membersUid[0],
@@ -147,8 +150,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                       page: MobileChatScreen(
                                                         groupData
                                                             .groupDescription,
-                                                        groupData
-                                                            .membersUid.length
+                                                        userItem.length
                                                             .toString(),
                                                         name: groupData.name,
                                                         uid: groupData.groupId,
@@ -211,4 +213,18 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
           userId: userId,
         ));
   }
+
+
+List<String> removeDuplicates(List<String> items) {
+  Map<int, String> uniqueItems = {};
+
+  items.forEach((item) {
+    if(items.isNotEmpty || items != []){
+    uniqueItems[int.tryParse(item)!] = item;
+
+    }
+  });
+
+  return uniqueItems.values.toList();
+}
 }

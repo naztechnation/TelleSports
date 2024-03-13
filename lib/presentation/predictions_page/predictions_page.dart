@@ -1,4 +1,4 @@
-import 'widgets/userprofile2_item_widget.dart';
+import 'widgets/prediction_container.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
@@ -74,13 +74,13 @@ class PredictionsTwoPage extends StatelessWidget {
                   child: Divider(
                       height: 1.v, thickness: 1.v, color: appTheme.teal200)));
         },
-        itemCount: 3,
+        itemCount: 13,
         itemBuilder: (context, index) {
-          return Userprofile2ItemWidget();
+          return PredictionContainer();
         });
   }
 
   onTapImgArrowLeft(BuildContext context) {
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 }

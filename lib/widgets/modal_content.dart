@@ -4,7 +4,7 @@ import 'package:tellesports/widgets/custom_outlined_button.dart';
 
 class ModalContentScreen extends StatelessWidget {
   final String title;
-  final String body;
+  final Widget body;
   final String btnText;
   final Color headerColorOne;
   final Color headerColorTwo;
@@ -28,17 +28,7 @@ class ModalContentScreen extends StatelessWidget {
             Container(
               width: 350.h,
               margin: EdgeInsets.symmetric(horizontal: 20.h),
-              child: Text(
-                body,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              child: body
             ),
             SizedBox(height: 20.v),
             CustomOutlinedButton(

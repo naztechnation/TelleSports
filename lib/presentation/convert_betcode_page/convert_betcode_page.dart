@@ -178,8 +178,19 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
           Modals.showDialogModal(context,
               page: ModalContentScreen(
                   title: 'Network Error',
-                  body:
-                      'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                  body: Text(
+                                                                            'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+
+
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: appTheme.gray900,
+                  fontSize: 14.fSize,
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
                   btnText: 'Cancel',
                   headerColorOne: Color.fromARGB(255, 208, 151, 151),
                   headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
@@ -187,8 +198,20 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
           Modals.showDialogModal(context,
               page: ModalContentScreen(
                   title: 'Network Error',
-                  body:
-                      'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                  body: Text(
+                                          'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+
+
+
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: appTheme.gray900,
+                  fontSize: 14.fSize,
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
                   btnText: 'Cancel',
                   headerColorOne: Color.fromARGB(255, 208, 151, 151),
                   headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
@@ -196,8 +219,21 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
           Modals.showDialogModal(context,
               page: ModalContentScreen(
                   title: 'Network Error',
-                  body:
-                      'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                  body: Text(
+                                                         'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+
+
+
+
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: appTheme.gray900,
+                  fontSize: 14.fSize,
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
                   btnText: 'Cancel',
                   headerColorOne: Color.fromARGB(255, 208, 151, 151),
                   headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
@@ -317,8 +353,22 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                                           onTapBtnPlus(context);
                                         },
                                         title: 'Insufficient Balance',
-                                        body:
-                                            ' You dont have a sufficient balance to convert your codes now. Get a top up from us to continue converting...',
+                                        body: Text(
+                                                                                                  ' You dont have a sufficient balance to convert your codes now. Get a top up from us to continue converting...',
+
+
+
+
+
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: appTheme.gray900,
+                  fontSize: 14.fSize,
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
                                         btnText: 'Top Up',
                                         headerColorOne:
                                             Color.fromARGB(255, 208, 151, 151),

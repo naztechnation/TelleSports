@@ -118,8 +118,22 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                             Modals.showDialogModal(context,
                                 page: ModalContentScreen(
                                     title: 'Unblock This User',
-                                    body:
-                                        'N.B: Are you sure you want to Unblock this user?',
+                                    body: Text(
+                                                                                      'N.B: Are you sure you want to Unblock this user?',
+
+
+
+
+
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: appTheme.gray900,
+                  fontSize: 14.fSize,
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
                                     btnText: 'Proceed',
                                     onPressed: () async {
                                       Navigator.pop(context);
@@ -161,8 +175,23 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                             Modals.showDialogModal(context,
                                 page: ModalContentScreen(
                                     title: 'Accept Request',
-                                    body:
-                                        'N.B: Are you sure you want to Accept this users request',
+                                    body: Text(
+                                                                                                                             'N.B: Are you sure you want to Accept this users request',
+
+
+
+
+
+
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: appTheme.gray900,
+                  fontSize: 14.fSize,
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
                                     btnText: 'Proceed',
                                     onPressed: () async {
                                       Navigator.pop(context);
