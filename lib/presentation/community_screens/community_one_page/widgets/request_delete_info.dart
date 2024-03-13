@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart' as provider;
@@ -80,29 +81,36 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.name,
-                            style: TextStyle(
-                              color: appTheme.gray900,
-                              fontSize: 14.fSize,
-                              fontFamily: 'DM Sans',
-                              fontWeight: FontWeight.w500,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                
+                                color: appTheme.gray900,
+                                fontSize: 14.fSize,
+                                fontFamily: 'DM Sans',
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 2.v),
-                          Text(
-                            widget.bio,
-                            style: TextStyle(
-                              color: appTheme.gray600,
-                              fontSize: 12.fSize,
-                              fontFamily: 'DM Sans',
-                              fontWeight: FontWeight.w500,
+                            SizedBox(height: 2.v),
+                            Text(
+                              widget.bio,
+                               maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: appTheme.gray600,
+                                fontSize: 12.fSize,
+                                fontFamily: 'DM Sans',
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       if (widget.isDelete) ...[
                         GestureDetector(
@@ -134,11 +142,12 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                                         Color.fromARGB(255, 234, 132, 132)));
                           },
                           child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+
                             decoration: BoxDecoration(
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(20)),
-                            height: 45,
-                            width: 120,
+                            height: 40,
                             child: Align(
                                 child: Text(
                               'Accept',
@@ -184,11 +193,11 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                                     headerColorTwo: Colors.blue));
                           },
                           child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
                             decoration: BoxDecoration(
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(20)),
-                            height: 45,
-                            width: 120,
+                            height: 40,
                             child: Align(
                                 child: Text(
                               'Accept',

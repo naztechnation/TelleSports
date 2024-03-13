@@ -6,7 +6,7 @@ import '../../widgets/custom_bottom_bar.dart';
 import '../community_screens/community_one_page/community_tab_page.dart';
 import '../home_page/home_page.dart';
 import '../profile/profile_page.dart';
-import '../predictions_two_page/predictions_two_page.dart';
+import '../predictions_page/predictions_page.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);

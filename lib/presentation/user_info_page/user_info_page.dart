@@ -64,6 +64,7 @@ class UserInfoPageState extends State<UserInfoPage>
                 padding: EdgeInsets.symmetric(horizontal: 20.h),
                 child: Column(
                   children: [
+                    if (groupData.groupAdminId == userId)
                     SizedBox(height: 24.v),
                     if (groupData.groupAdminId == userId)
                       CustomElevatedButton(
@@ -87,6 +88,7 @@ class UserInfoPageState extends State<UserInfoPage>
                           }
                         },
                       ),
+                    if (groupData.groupAdminId == userId)
                     SizedBox(height: 16.v),
                     CustomOutlinedButton(
                       text: "Report user",

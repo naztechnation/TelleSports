@@ -400,7 +400,7 @@ class AuthProviders extends ChangeNotifier {
             profilePic: userData['profilePic'],
             isOnline: userData['isOnline'],
             numberOfGroups: userData['numberOfGroups'],
-            bio: userData['numberOfGroups'],
+            bio: userData['bio'],
             groupId: [],
           );
 

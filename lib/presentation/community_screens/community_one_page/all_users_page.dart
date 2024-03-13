@@ -50,9 +50,9 @@ class AllUsersPage extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                  onTap: (){
-        AppNavigator.pushAndStackPage(context, page: IndividualUserInfo(name: groupInfo.groupMembers[index].name, image: groupInfo.groupMembers[index].profilePic, bio: '', username: groupInfo.groupMembers[index].name, isGroupAdmin: index == 0, ));
+        AppNavigator.pushAndStackPage(context, page: IndividualUserInfo(name: groupInfo.groupMembers[index].name, image: groupInfo.groupMembers[index].profilePic, bio: groupInfo.groupMembers[index].bio, username: groupInfo.groupMembers[index].name, isGroupAdmin: index == 0, ));
       },
-                child: UserprofileItemWidget(name: groupInfo.groupMembers[index].name, bio: 'My  Bio', index: index, image: groupInfo.groupMembers[index].profilePic,));
+                child: UserprofileItemWidget(name: groupInfo.groupMembers[index].name, bio: groupInfo.groupMembers[index].bio, index: index, image: groupInfo.groupMembers[index].profilePic,));
             },
           ),
         ),

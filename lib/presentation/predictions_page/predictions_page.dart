@@ -1,4 +1,4 @@
-import '../predictions_two_page/widgets/userprofile2_item_widget.dart';
+import 'widgets/userprofile2_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
@@ -29,11 +29,11 @@ class PredictionsTwoPage extends StatelessWidget {
    
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        height: 93.v,
+        height: 73.v,
         centerTitle: true,
         title: AppbarSubtitleOne(
             text: "Predictions",
-            margin: EdgeInsets.only(top: 59.v, bottom: 9.v)),
+            margin: EdgeInsets.only(top: 0.v, bottom: 9.v)),
         styleType: Style.bgOutline_3);
   }
 

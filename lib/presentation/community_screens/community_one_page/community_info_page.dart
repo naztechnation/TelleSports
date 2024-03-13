@@ -10,9 +10,11 @@ import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:tellesports/widgets/image_view.dart';
 
 import '../../../handlers/secure_handler.dart';
+import '../../../model/chat_model/user_model.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
 import '../../../widgets/modals.dart';
+import '../../individual_user_info.dart/individual_user_info.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'all_users_page.dart';
 
@@ -35,6 +37,10 @@ class CommunityInfoScreen extends StatefulWidget {
 class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   TextEditingController vectorController = TextEditingController();
 
+
+  List<UserModel> requestItems = [];
+  List<UserModel> blockedItems = [];
+  List<UserModel> groupMembers = [];
   String userId = '';
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
@@ -50,7 +56,10 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   @override
   Widget build(BuildContext context) {
     final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
-
+                              requestItems = removeDuplicates(groupInfo.requestedMembers);
+                              blockedItems = removeDuplicates(groupInfo.blockedMembers);
+                              groupMembers = removeDuplicates(groupInfo.groupMembers);
+ 
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -99,7 +108,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           const SizedBox(
                             height: 12,
                           ),
-                          if (groupInfo.groupMembers[0].uid == userId)
+                          if (groupInfo.groupAdminId == userId)
                             Column(children: [
                               Card(
                                 elevation: 0.3,
@@ -140,18 +149,19 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                               context, groupInfo.groupDescription),
                           //   SizedBox(height: 24.v),
                           //  _buildShareCommunity(context, groupInfo.groupLink),
-                          SizedBox(height: 24.v),
+                          if(groupInfo.groupImageList.isNotEmpty) SizedBox(height: 24.v),
                          if(groupInfo.groupImageList.isNotEmpty)  _buildMedia(context, groupInfo.groupImageList),
-                          SizedBox(height: 24.v),
-                           if (groupInfo.groupMembers[0].uid == userId)
+                          SizedBox(height: 14.v),
+                           if (groupInfo.groupAdminId == userId)
                             SizedBox(height: 18.v),
-                            if (groupInfo.groupMembers[0].uid == userId)
+                            if (groupInfo.groupAdminId == userId)
                             GestureDetector(
                               onTap: () {
                                 AppNavigator.pushAndStackPage(context,
-                                    page: RequestedUsersPage());
+                                    page: RequestedUsersPage(item: requestItems,));
                               },
                               child: Card(
+                                elevation: 0.2,
                                   child: Container(
                                 padding: const EdgeInsets.all(10),
                                 child: Row(
@@ -169,9 +179,9 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                         padding: const EdgeInsets.all(4.0),
                                         child: Center(
                                           child: Text(
-                                            "${groupInfo.requestedMembers.length}",
+                                            "${requestItems.length}",
                                             style: TextStyle(
-                                                fontSize: 9,
+                                                fontSize: 12,
                                                 color: Colors.white),
                                           ),
                                         ),
@@ -181,15 +191,17 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                 ),
                               )),
                             ),
-                            if (groupInfo.groupMembers[0].uid == userId)
+                            if (groupInfo.groupAdminId == userId)
                             SizedBox(height: 18.v),
-                            if (groupInfo.groupMembers[0].uid == userId)
+                            if (groupInfo.groupAdminId == userId)
                             GestureDetector(
                               onTap: () {
                                 AppNavigator.pushAndStackPage(context,
-                                    page: BlockedUsersPage());
+                                    page: BlockedUsersPage(item: requestItems));
                               },
                               child: Card(
+                                elevation: 0.2,
+
                                   child: Container(
                                 padding: const EdgeInsets.all(10),
                                 child: Row(
@@ -207,9 +219,9 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                         padding: const EdgeInsets.all(4.0),
                                         child: Center(
                                           child: Text(
-                                            "${groupInfo.blockedMembers.length}",
+                                            "${blockedItems.length}",
                                             style: TextStyle(
-                                                fontSize: 9,
+                                                fontSize: 12,
                                                 color: Colors.white),
                                           ),
                                         ),
@@ -245,7 +257,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           // ),
                           SizedBox(height: 24.v),
                           _buildUserProfile(context, groupInfo.groupNumber,
-                              groupInfo.groupMembers.length, groupInfo),
+                              groupMembers.length, groupMembers),
                           SizedBox(height: 24.v),
                           CustomElevatedButton(
                               text: "Leave community",
@@ -454,19 +466,20 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                 ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    // separatorBuilder: (context, index) {
-                    //   return Padding(
-                    //     padding: const EdgeInsets.all(8.0),
-                    //     child: SizedBox(height: 28.v),
-                    //   );
-                    // },
+                     
                     itemCount: (memberLength <= 10) ? memberLength : 10,
                     itemBuilder: (context, index) {
-                      return UserprofileItemWidget(
-                        name: members.groupMembers[index].name,
-                        bio: members.groupMembers[index].bio,
-                        index: index,
-                        image: members.groupMembers[index].profilePic,
+                      return GestureDetector(
+                        onTap: () {
+        AppNavigator.pushAndStackPage(context, page: IndividualUserInfo(name: members[index].name, image: members[index].profilePic, bio: members[index].bio, username: members[index].name, isGroupAdmin: index == 0, ));
+                          
+                        },
+                        child: UserprofileItemWidget(
+                          name: members[index].name,
+                          bio: members[index].bio,
+                          index: index,
+                          image: members[index].profilePic,
+                        ),
                       );
                     }),
                 SizedBox(height: 12.v),
@@ -505,4 +518,17 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
       ),
     );
   }
+
+List<UserModel> removeDuplicates(List<UserModel> items) {
+  Map<int, UserModel> uniqueItems = {};
+
+  items.forEach((item) {
+    if(items.isNotEmpty || items != []){
+    uniqueItems[int.tryParse(item.uid)!] = item;
+
+    }
+  });
+
+  return uniqueItems.values.toList();
+}
 }

@@ -63,9 +63,9 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                       onPressed: () {
                         onTapGiftTellacoins(context, widget.username);
                       }),
-                  SizedBox(height: 24.v),
+               if(widget.isGroupAdmin)   SizedBox(height: 24.v),
                  if(widget.isGroupAdmin)  _buildFrameColumn(context: context, groupName: groupInfo.groupName, groupPics: groupInfo.groupPics, groupNumber: groupInfo.groupNumber,),
-                  SizedBox(height: 24.v),
+                if(widget.isGroupAdmin)  SizedBox(height: 24.v),
                   // _buildFrameColumn1(),
                   _buildTabBarView(context)
                 ]))));
@@ -105,12 +105,21 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
         child: Padding(
             padding: EdgeInsets.only(left: 20.h, right: 45.h),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              CustomImageView(
+             if(widget.image == "" || widget.image == "null")...[
+ CustomImageView(
+                  imagePath: ImageConstant.imgAvatar,
+                  placeHolder: ImageConstant.imgAvatar64x64,
+                  height: 64.adaptSize,
+                  width: 64.adaptSize,
+                  radius: BorderRadius.circular(32.h)),
+             ]else...[
+               CustomImageView(
                   imagePath: widget.image,
                   placeHolder: ImageConstant.imgAvatar64x64,
                   height: 64.adaptSize,
                   width: 64.adaptSize,
                   radius: BorderRadius.circular(32.h)),
+             ],
               Expanded(
                   child: Padding(
                       padding: EdgeInsets.only(left: 10.h, bottom: 11.v),
@@ -228,7 +237,6 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
   Widget _buildTabBarView(BuildContext context) {
     return Expanded(
         child: SizedBox(
-            height: 339.v,
             child: TabBarView(controller: tabviewController, children: [
               UserInfoPage(),
               

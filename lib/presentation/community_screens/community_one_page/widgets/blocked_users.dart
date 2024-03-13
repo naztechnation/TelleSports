@@ -11,13 +11,14 @@ import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
 import 'package:provider/provider.dart';
  
+import '../../../../model/chat_model/user_model.dart';
 import '../../provider/auth_provider.dart' as pro;
-import 'request_delete_info.dart';
-import 'userprofile_item_widget.dart';
+import 'request_delete_info.dart'; 
 
 
 class BlockedUsersPage extends StatelessWidget {
-  const BlockedUsersPage({Key? key})
+  final List<UserModel> item;
+  const BlockedUsersPage({Key? key, required this.item})
       : super(
           key: key,
         );
@@ -38,7 +39,7 @@ class BlockedUsersPage extends StatelessWidget {
             top: 11.v,
             right: 28.h,
           ),
-          child: (groupInfo.blockedMembers.isEmpty) ? Center(child: Text('You dont have any blocked user.')): ListView.separated(
+          child: (item.isEmpty) ? Center(child: Text('You dont have any blocked user.')): ListView.separated(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
             separatorBuilder: (
@@ -49,12 +50,12 @@ class BlockedUsersPage extends StatelessWidget {
                 height: 1.v,
               );
             },
-            itemCount: groupInfo.blockedMembers.length,
+            itemCount: item.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                  onTap: (){
       },
-                child: RequestDeleteInfo(name: groupInfo.blockedMembers[index].name, bio: 'My  Bio', index: index, image: groupInfo.requestedMembers[index].profilePic, isDelete: true, userId: groupInfo.requestedMembers[index].uid,));
+                child: RequestDeleteInfo(name: item[index].name, bio: item[index].bio, index: index, image: groupInfo.requestedMembers[index].profilePic, isDelete: true, userId: groupInfo.requestedMembers[index].uid,));
             },
           ),
         ),
