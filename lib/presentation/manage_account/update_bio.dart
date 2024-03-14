@@ -62,7 +62,7 @@ class _UpdateChatBioScreenState extends State<UpdateChatBioScreen> {
                         textAlign: TextAlign.justify,
                         style: TextStyle(fontSize: 14, letterSpacing: 0)),
                     SizedBox(height: 29.v),
-                    _buildAccountNameField(context),
+                    _buildBioField(context),
                     SizedBox(height: 32.v),
                     CustomElevatedButton(
                         text: "Update Bio",
@@ -98,7 +98,7 @@ class _UpdateChatBioScreenState extends State<UpdateChatBioScreen> {
             margin: EdgeInsets.fromLTRB(24.h, 20.v, 350.h, 20.v)));
   }
 
-  Widget _buildAccountNameField(BuildContext context) {
+  Widget _buildBioField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

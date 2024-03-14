@@ -13,6 +13,7 @@ class CustomTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.textStyle,
     this.obscureText = false,
+
     this.textInputAction = TextInputAction.next,
     this.textInputType = TextInputType.text,
     
@@ -31,6 +32,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.inputFormatters,
       this.onChanged,
+      this.onTap = null,
 
   }) : super(
           key: key,
@@ -46,6 +48,7 @@ class CustomTextFormField extends StatelessWidget {
 
   final ValueChanged<String>? onChanged;
 
+    final GestureTapCallback? onTap;
 
   final FocusNode? focusNode;
 
@@ -112,7 +115,7 @@ class CustomTextFormField extends StatelessWidget {
           validator: validator,
           inputFormatters: inputFormatters,
             onChanged: onChanged,
-
+          onTap: onTap,
         ),
       );
   InputDecoration get decoration => InputDecoration(

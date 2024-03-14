@@ -33,12 +33,12 @@ class Modals {
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 2,
         backgroundColor: messageType == MessageType.success
             ? Colors.green
             : messageType == MessageType.error
                 ? Colors.red
-                : null,
+                : Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
   }
