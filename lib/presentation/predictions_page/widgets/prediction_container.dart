@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/res/app_images.dart';
 import 'package:tellesports/widgets/image_view.dart';
@@ -18,32 +19,81 @@ class PredictionContainer extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Modals.showDialogModal(context,
-                                page: ModalContentScreen(
-                                    title: 'Rate this prediction: ',
-                                    body: Column(children: [],)
-                                        ,
-                                    btnText: 'Proceed',
-                                    onPressed: () async {
+            page: ModalContentScreen(
+                title: 'Rate this prediction: ',
+                body: Column(
+                  children: [
+                    Text(
+                      'Current rating:',
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: appTheme.gray900,
+                        fontSize: 14.fSize,
+                        fontFamily: 'DM Sans',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.symmetric(horizontal:30.0),
 
-
-                                      // Navigator.pop(context);
-                                      // setState(() {
-                                      //   isLoading = true;
-                                      // });
-                                      // await groupInfo
-                                      //     .removeCurrentUserFromBlockedMembers(
-                                      //         groupInfo.groupId,
-                                      //         widget.userId,
-                                      //         context);
-
-                                      // setState(() {
-                                      //   isLoading = true;
-                                      // });
-                                    },
-                                    headerColorOne:
-                                        Color(0xFFFDF9ED),
-                                    headerColorTwo:
-                                        Color(0xFFFAF3DA)));
+                      child: RatingBar.builder(
+                        initialRating: 1,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        ignoreGestures: true,
+                        itemBuilder: (context, _) => Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: ImageView.asset(
+                            AppImages.star,
+                            height: 10,
+                          ),
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 13,),
+                    Text(
+                      'Your rating:',
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: appTheme.gray900,
+                        fontSize: 14.fSize,
+                        fontFamily: 'DM Sans',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    RatingBar.builder(
+                      initialRating: 1,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                      itemBuilder: (context, _) => Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: ImageView.asset(
+                          AppImages.star,
+                          height: 18,
+                        ),
+                      ),
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                      },
+                    ),
+                  ],
+                ),
+                btnText: 'Submit',
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+                headerColorOne: Color(0xFFFDF9ED),
+                headerColorTwo: Color(0xFFFAF3DA)));
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -178,7 +228,6 @@ class PredictionContainer extends StatelessWidget {
                 SizedBox(height: 5.v),
                 ImageView.asset(AppImages.line),
                 SizedBox(height: 15.v),
-      
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -190,7 +239,6 @@ class PredictionContainer extends StatelessWidget {
                         ),
                         SizedBox(height: 1.v),
                         Container(
-                        
                           padding: EdgeInsets.symmetric(
                             horizontal: 4.h,
                             vertical: 1.v,

@@ -90,7 +90,6 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                
                                 color: appTheme.gray900,
                                 fontSize: 14.fSize,
                                 fontFamily: 'DM Sans',
@@ -100,7 +99,7 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                             SizedBox(height: 2.v),
                             Text(
                               widget.bio,
-                               maxLines: 1,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: appTheme.gray600,
@@ -119,21 +118,16 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                                 page: ModalContentScreen(
                                     title: 'Unblock This User',
                                     body: Text(
-                                                                                      'N.B: Are you sure you want to Unblock this user?',
-
-
-
-
-
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                                      'N.B: Are you sure you want to Unblock this user?',
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: appTheme.gray900,
+                                        fontSize: 14.fSize,
+                                        fontFamily: 'DM Sans',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                     btnText: 'Proceed',
                                     onPressed: () async {
                                       Navigator.pop(context);
@@ -157,7 +151,6 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 10),
-
                             decoration: BoxDecoration(
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(20)),
@@ -176,22 +169,16 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                                 page: ModalContentScreen(
                                     title: 'Accept Request',
                                     body: Text(
-                                                                                                                             'N.B: Are you sure you want to Accept this users request',
-
-
-
-
-
-
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                                      'N.B: Are you sure you want to Accept this users request',
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: appTheme.gray900,
+                                        fontSize: 14.fSize,
+                                        fontFamily: 'DM Sans',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                     btnText: 'Proceed',
                                     onPressed: () async {
                                       Navigator.pop(context);
