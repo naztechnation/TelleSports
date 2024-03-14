@@ -32,7 +32,6 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
   TextEditingController winnerOddController = TextEditingController();
   TextEditingController leagueController = TextEditingController();
 
-
   TextEditingController accountNumberController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -40,7 +39,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
   String bankName = '';
   String accountNumber = '';
   String accountName = '';
-   
+
   @override
   void initState() {
     super.initState();
@@ -102,12 +101,10 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
                                 Text("Submit your Predictions",
                                     style: theme.textTheme.headlineLarge),
                                 SizedBox(height: 10.v),
-                                Text(
-                                    "Please enter your predictions here.",
+                                Text("Please enter your predictions here.",
                                     textAlign: TextAlign.justify,
-
-                                    style: TextStyle(fontSize: 14, letterSpacing: 0.2)),
-                                
+                                    style: TextStyle(
+                                        fontSize: 14, letterSpacing: 0.2)),
                                 SizedBox(height: 29.v),
                                 _buildHomeTeamField(context),
                                 SizedBox(height: 11.v),
@@ -115,9 +112,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
                                 SizedBox(height: 11.v),
                                 _buildPredictedWinnerField(context),
                                 SizedBox(height: 11.v),
-
                                 _buildOddsField(context),
-
                                 _buildLeagueField(context),
                                 SizedBox(height: 32.v),
                                 CustomElevatedButton(
@@ -184,7 +179,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
         ]));
   }
 
-   Widget _buildAwayTeamField(BuildContext context) {
+  Widget _buildAwayTeamField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -202,7 +197,6 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
         ]));
   }
-
 
   Widget _buildPredictedWinnerField(BuildContext context) {
     return Padding(
@@ -224,7 +218,6 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
         ]));
   }
 
-
   Widget _buildOddsField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
@@ -244,6 +237,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
         ]));
   }
+
   onTapCreatePassword(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       // context.read<UserCubit>().updateAccount(

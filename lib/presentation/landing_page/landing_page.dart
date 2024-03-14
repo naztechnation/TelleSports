@@ -42,7 +42,7 @@ class _LandingPageState extends State<LandingPage> {
       case 1:
         return CommunityTabPage();
       case 2:
-        return PredictionsTwoPage();
+        return PredictionsPage();
       case 3:
         return ProfilePage();
       default:

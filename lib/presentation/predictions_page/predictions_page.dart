@@ -4,8 +4,8 @@ import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
-class PredictionsTwoPage extends StatelessWidget {
-  const PredictionsTwoPage({Key? key}) : super(key: key);
+class PredictionsPage extends StatelessWidget {
+  const PredictionsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -11,12 +11,15 @@ import '../../../../common/providers/message_reply_provider.dart';
 import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
 import '../../../../utils/navigator/page_navigator.dart';
+import '../../../../utils/validator.dart';
 import '../../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../../widgets/app_bar/appbar_subtitle_four.dart';
 import '../../../../widgets/app_bar/appbar_subtitle_two.dart';
 import '../../../../widgets/app_bar/appbar_title_circleimage.dart';
 
 import '../../../../widgets/app_bar/custom_app_bar.dart';
+import '../../../../widgets/custom_text_form_field.dart';
+import '../../../../widgets/modal_content.dart';
 import '../../../../widgets/modals.dart';
 
 import '../../community_one_page/community_info_page.dart';
@@ -53,6 +56,7 @@ class MobileChatScreen extends ConsumerStatefulWidget {
 class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
 
   final _scrollController = ScrollController();
+  final compaintController = TextEditingController();
 
   @override
   void dispose() {
@@ -67,15 +71,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
 
   }
 
-  void makeCall(WidgetRef ref, BuildContext context) {
-    // ref.read(callControllerProvider).makeCall(
-    //       context,
-    //       widget.name,
-    //       widget.uid,
-    //       widget.profilePic,
-    //       widget.isGroupChat,
-    //     );
-  }
+  
 
   String userId = '';
   getUserId() async {
@@ -195,6 +191,21 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                       } else if (choice == 'copy') {
                         copyToClipboard(
                             groupInfo.selectedMessage, groupInfo, context);
+                      } else if (choice == 'report') {
+                          Modals.showDialogModal(context,
+            page: ModalContentScreen(
+                title: 'Report this message',
+                body: Column(
+                  children: [
+                    _buildComplaintField(context)
+                  ],
+                ),
+                btnText: 'Submit',
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+                headerColorOne: Color(0xFFFDF9ED),
+                headerColorTwo: Color(0xFFFAF3DA)));
                       }
                     },
                     itemBuilder: (BuildContext context) =>
@@ -221,6 +232,14 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                           child: ListTile(
                             leading: Icon(Icons.push_pin),
                             title: Text('Pin Message'),
+                          ),
+                        ),
+                        if (groupInfo.groupAdminId == userId)
+                        const PopupMenuItem<String>(
+                          value: 'report',
+                          child: ListTile(
+                            leading: Icon(Icons.report),
+                            title: Text('Report'),
                           ),
                         )
                     ],
@@ -480,14 +499,30 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
   }
 
   void _scrollDown() {
-    // _scrollController.animateTo(
-    //   0 ,
-    //   duration: const Duration(microseconds: 300),
-    //   curve: Curves.easeOut,
-    // );
+     
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
+  }
+
+   Widget _buildComplaintField(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(left: 8.h),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("Report *", style: theme.textTheme.titleSmall),
+          SizedBox(height: 3.v),
+          CustomTextFormField(
+              controller: compaintController,
+              hintText: "Enter your report here",
+              hintStyle: CustomTextStyles.titleSmallGray600,
+              maxLines: 5,
+              textInputType: TextInputType.name,
+              validator: (value) {
+                return Validator.validate(value, 'Report');
+              },
+              contentPadding:
+                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+        ]));
   }
 }

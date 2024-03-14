@@ -70,7 +70,7 @@ class ShowAllImageView extends StatelessWidget {
 
    PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 50.v,
+      height: 70.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         onTap: () {
@@ -91,7 +91,9 @@ class ShowAllImageView extends StatelessWidget {
           bottom: 9.v,
         ),
       ),
-      styleType: Style.bgOutline,
+      styleType: Style.bgFill,
     );
   }
+
+  
 }
