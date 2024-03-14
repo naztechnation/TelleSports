@@ -1,8 +1,12 @@
+import 'package:flutter/widgets.dart';
+
 import 'widgets/prediction_container.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
+
+import 'widgets/prediction_days.dart';
 
 class PredictionsPage extends StatelessWidget {
   const PredictionsPage({Key? key}) : super(key: key);
@@ -19,8 +23,8 @@ class PredictionsPage extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(children: [
                     SizedBox(height: 24.v),
-                    _buildPredictionsDay(context),
-                    SizedBox(height: 24.v),
+                    CalendarListView(),
+                    SizedBox(height: 35.v),
                     _buildUserProfile(context)
                   ]),
                 ))));

@@ -63,6 +63,13 @@ class AuthProviders extends ChangeNotifier {
 
   List<Group> _dummyData1 = [];
 
+  clearGroupInfo(){
+    _users = [];
+
+    // Modals.showToast(_users.toString());
+    notifyListeners();
+  }
+
   loadImage(BuildContext context) async {
     await showModalBottomSheet<dynamic>(
         context: context,
@@ -239,6 +246,7 @@ class AuthProviders extends ChangeNotifier {
 
     notifyListeners();
   }
+  
   clearSearchList1(){
      _searchResult1.clear();
     _dummyData1.clear();

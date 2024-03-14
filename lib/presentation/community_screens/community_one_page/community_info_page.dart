@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
@@ -41,6 +42,9 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   List<UserModel> blockedItems = [];
   List<UserModel> groupMembers = [];
   String userId = '';
+  bool _dataAdded = false;
+
+  bool isLoading = false;
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
     setState(() {});
@@ -55,13 +59,17 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   @override
   Widget build(BuildContext context) {
     final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
+
+    if (!_dataAdded) {
+     // groupInfo.clearGroupInfo();
+
+      _dataAdded = true;
+    }
     requestItems = removeDuplicates(groupInfo.requestedMembers);
     blockedItems = removeDuplicates(groupInfo.blockedMembers);
     groupMembers = removeDuplicates(groupInfo.groupMembers);
 
     moveItemToFirst(groupInfo.groupAdminId);
-
-     
 
     return SafeArea(
         child: Scaffold(
@@ -263,23 +271,42 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           // ),
                           SizedBox(height: 24.v),
                           _buildUserProfile(context, groupInfo.groupNumber,
-                              groupMembers.length,  groupInfo.groupAdminId),
+                              groupMembers.length, groupInfo.groupAdminId),
                           SizedBox(height: 24.v),
                           CustomElevatedButton(
                               text: "Leave community",
+                              processing: isLoading,
                               buttonStyle: CustomButtonStyles.fillRed,
-                              onPressed: () {
+                              onPressed: () async {
                                 if (groupInfo.groupAdminId == userId) {
                                   Modals.showToast(
                                       'You are an admin and can\'t leave the community');
                                 } else {
-                                  
-                                  groupInfo.removeCurrentUserFromMembers(
-                                      groupInfo.groupId, userId, context);
+                                  Modals.showAlertOptionDialog(context,
+                                      title: 'Exit Community',
+                                      message:
+                                          'Are you sure you want to leave this community.',
+                                      onTap: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    await groupInfo
+                                        .removeCurrentUserFromMembers(
+                                            groupInfo.groupId, userId, context);
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  });
+
+                                  AppNavigator.pushAndStackPage(context,
+                                      page: LandingPage());
                                 }
                               }),
                           SizedBox(height: 16.v),
-                          CustomOutlinedButton(text: "Report community")
+                          CustomOutlinedButton(
+                            text: "Report community",
+                            processing: isLoading,
+                          )
                         ])))));
   }
 
@@ -452,8 +479,8 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
     );
   }
 
-  Widget _buildUserProfile(
-      BuildContext context, String groupNumber, int memberLength, String adminId) {
+  Widget _buildUserProfile(BuildContext context, String groupNumber,
+      int memberLength, String adminId) {
     return Card(
       elevation: 0.4,
       child: Container(
@@ -477,13 +504,15 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                           AppNavigator.pushAndStackPage(context, 
-                           page: IndividualUserInfo(name: groupMembers[index].name,
-                            image: groupMembers[index].profilePic, 
-                            bio: groupMembers[index].bio, 
-                            username: groupMembers[index].name,
-                            isGroupAdmin: adminId == groupMembers[index].uid, ));
-                          
+                          AppNavigator.pushAndStackPage(context,
+                              page: IndividualUserInfo(
+                                name: groupMembers[index].name,
+                                image: groupMembers[index].profilePic,
+                                bio: groupMembers[index].bio,
+                                username: groupMembers[index].name,
+                                isGroupAdmin:
+                                    adminId == groupMembers[index].uid,
+                              ));
                         },
                         child: UserprofileItemWidget(
                           name: groupMembers[index].name,
@@ -545,7 +574,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
     return uniqueItems.values.toList();
   }
 
- void moveItemToFirst(String adminId) {
+  void moveItemToFirst(String adminId) {
     int index = groupMembers.indexWhere((item) => item.uid == adminId);
     if (index != -1) {
       var item = groupMembers.removeAt(index);

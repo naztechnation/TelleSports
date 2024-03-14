@@ -93,6 +93,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                         }
 
                         if (!_dataAdded) {
+                          checkUserExist.clearGroupInfo();
                           provider.Provider.of<pro.AuthProviders>(context,
                                   listen: true)
                               .clearSearchList();
@@ -147,7 +148,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                         itemCount:
                                             checkUserExist.searchResult.length,
                                         itemBuilder: (context, index) {
-                                          var groupData = checkUserExist
+                                          Group groupData = checkUserExist
                                               .searchResult[index];
 
                                           return CommunityPageComponent(
@@ -204,8 +205,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                 List<String> userItem =
                                                     removeDuplicates(
                                                         groupData.membersUid);
-                                                Modals.showToast(
-                                                    userItem.toString());
+                                                 
 
                                                 onTapCommunityPageComponent(
                                                   context: context,

@@ -15,10 +15,7 @@ import 'package:tellesports/widgets/modals.dart';
 import '../../../../common/utils/utils.dart';
 import '../../../../utils/navigator/page_navigator.dart';
 import '../../../../widgets/app_bar/appbar_subtitle.dart';
-import '../../group/controller/group_controller.dart';
-import '../../group/widgets/select_contacts_group.dart';
 import '../../provider/auth_provider.dart';
-import 'create_a_community_screen.dart';
 
 class CreateACommunityOneScreen extends ConsumerStatefulWidget {
   CreateACommunityOneScreen({Key? key})
