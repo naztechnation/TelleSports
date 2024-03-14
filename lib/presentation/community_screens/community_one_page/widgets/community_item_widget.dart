@@ -9,10 +9,10 @@ class CommunityPageComponent extends StatelessWidget {
  final String lastMessage;
  final String groupPic;
  final String groupNumber;
- final DateTime date;
+ final DateTime? date;
   CommunityPageComponent({
     Key? key,
-    this.onTapCommunityPageComponent, required this.groupName, required this.lastMessage, required this.groupPic, required this.date, required this.groupNumber,
+    this.onTapCommunityPageComponent, required this.groupName, required this.lastMessage, required this.groupPic,  this.date, required this.groupNumber,
   }) : super(
           key: key,
         );
@@ -78,9 +78,9 @@ class CommunityPageComponent extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Text(
+                          if(date != null)Text(
                            DateFormat('hh:mm a')
-                                        .format(date),
+                                        .format(date!),
                             style: CustomTextStyles.titleSmallGray600,
                           ),
                           SizedBox(height: 9.v),

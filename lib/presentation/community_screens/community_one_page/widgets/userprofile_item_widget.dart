@@ -6,7 +6,7 @@ class UserprofileItemWidget extends StatelessWidget {
   final String name;
   final String image;
   final String bio;
-  final int index;
+  final bool index;
   const UserprofileItemWidget(
       {Key? key,
       required this.name,
@@ -89,7 +89,7 @@ class UserprofileItemWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 0.v),
                   child: Text(
-                    (index == 0) ? "Community Manager" : "",
+                    (index ) ? "Community Manager" : "",
                     style: TextStyle(
                       color: appTheme.gray900,
                       fontSize: 10.fSize,

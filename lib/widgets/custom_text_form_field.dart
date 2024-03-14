@@ -115,6 +115,7 @@ class CustomTextFormField extends StatelessWidget {
           validator: validator,
           inputFormatters: inputFormatters,
             onChanged: onChanged,
+            focusNode: focusNode,
           onTap: onTap,
         ),
       );

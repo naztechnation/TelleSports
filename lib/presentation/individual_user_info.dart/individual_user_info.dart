@@ -63,9 +63,9 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                       onPressed: () {
                         onTapGiftTellacoins(context, widget.username);
                       }),
-               if(!widget.isGroupAdmin)   SizedBox(height: 24.v),
-                 if(!widget.isGroupAdmin)  _buildFrameColumn(context: context, groupName: groupInfo.groupName, groupPics: groupInfo.groupPics, groupNumber: groupInfo.groupNumber,),
-                if(widget.isGroupAdmin)  SizedBox(height: 24.v),
+                 SizedBox(height: 24.v),
+                   _buildFrameColumn(context: context, groupName: groupInfo.groupName, groupPics: groupInfo.groupPics, groupNumber: groupInfo.groupNumber,),
+                   SizedBox(height: 24.v),
                   // _buildFrameColumn1(),
                   _buildTabBarView(context)
                 ]))));
@@ -153,7 +153,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Community created",
+              Text((widget.isGroupAdmin)? "Community created" : "Community Info",
                   style: CustomTextStyles.titleMediumBluegray900),
               SizedBox(height: 14.v),
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [

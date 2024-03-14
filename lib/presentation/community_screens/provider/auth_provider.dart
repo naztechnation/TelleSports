@@ -55,6 +55,14 @@ class AuthProviders extends ChangeNotifier {
 
   ImagePicker picker = ImagePicker();
 
+  List<Group> _searchResult = [];
+
+  List<Group> _dummyData = [];
+
+  List<Group> _searchResult1 = [];
+
+  List<Group> _dummyData1 = [];
+
   loadImage(BuildContext context) async {
     await showModalBottomSheet<dynamic>(
         context: context,
@@ -165,6 +173,85 @@ class AuthProviders extends ChangeNotifier {
 
   updateGroupImageList(String groupImages) {
     _groupImageList.add(groupImages);
+    notifyListeners();
+  }
+
+  void filterSearchResults(String query) {
+    List<Group> dummySearchList = [];
+    dummySearchList.addAll(_dummyData);
+    if (query.isNotEmpty) {
+      List<Group> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (item.name.toLowerCase().contains(query.toLowerCase())) {
+          dummyListData.add(item);
+        }
+      });
+
+      _searchResult.clear();
+      _searchResult.addAll(dummyListData);
+
+      notifyListeners();
+
+      return;
+    } else {
+      _searchResult.clear();
+      _searchResult.addAll(_dummyData);
+      notifyListeners();
+    }
+  }
+
+  void filterSearchResults1(String query) {
+    List<Group> dummySearchList = [];
+    dummySearchList.addAll(_dummyData1);
+    if (query.isNotEmpty) {
+      List<Group> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (item.name.toLowerCase().contains(query.toLowerCase())) {
+          dummyListData.add(item);
+        }
+      });
+
+      _searchResult1.clear();
+      _searchResult1.addAll(dummyListData);
+
+      notifyListeners();
+
+      return;
+    } else {
+      _searchResult1.clear();
+      _searchResult1.addAll(_dummyData);
+      notifyListeners();
+    }
+  }
+
+  updateSearchList(
+    List<Group> searchList,
+  ) {
+    _searchResult.addAll(searchList);
+    _dummyData.addAll(searchList);
+
+    notifyListeners();
+  }
+
+  clearSearchList(){
+     _searchResult.clear();
+    _dummyData.clear();
+
+    notifyListeners();
+  }
+  clearSearchList1(){
+     _searchResult1.clear();
+    _dummyData1.clear();
+
+    notifyListeners();
+  }
+
+  updateSearchList1(
+    List<Group> searchList,
+  ) {
+    _searchResult1.addAll(searchList);
+    _dummyData1.addAll(searchList);
+
     notifyListeners();
   }
 
@@ -368,7 +455,6 @@ class AuthProviders extends ChangeNotifier {
           );
 
           users.add(user);
-
         }
       }
       _users = users;
@@ -867,4 +953,8 @@ class AuthProviders extends ChangeNotifier {
   List<String> get groupImageList => _groupImageList;
   List<UserModel> get blockedMembers => _blockedUsers;
   List<UserModel> get requestedMembers => _requestedUsers;
+  List<Group> get searchResult => _searchResult;
+  List<Group> get dummyData => _dummyData;
+  List<Group> get searchResult1 => _searchResult1;
+  List<Group> get dummyData1 => _dummyData1;
 }

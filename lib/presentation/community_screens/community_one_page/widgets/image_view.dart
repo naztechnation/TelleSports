@@ -71,14 +71,14 @@ class ShowAllImageView extends StatelessWidget {
    PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 70.v,
-      leadingWidth: 44.h,
+      leadingWidth: 30.h,
       leading: AppbarLeadingImage(
         onTap: () {
           Navigator.pop(context);
         },
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
-          left: 20.h,
+          left: 10.h,
           top: 0.v,
           bottom: 12.v,
         ),

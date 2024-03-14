@@ -37,7 +37,6 @@ class CommunityInfoScreen extends StatefulWidget {
 class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   TextEditingController vectorController = TextEditingController();
 
-
   List<UserModel> requestItems = [];
   List<UserModel> blockedItems = [];
   List<UserModel> groupMembers = [];
@@ -56,10 +55,14 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   @override
   Widget build(BuildContext context) {
     final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
-                              requestItems = removeDuplicates(groupInfo.requestedMembers);
-                              blockedItems = removeDuplicates(groupInfo.blockedMembers);
-                              groupMembers = removeDuplicates(groupInfo.groupMembers);
- 
+    requestItems = removeDuplicates(groupInfo.requestedMembers);
+    blockedItems = removeDuplicates(groupInfo.blockedMembers);
+    groupMembers = removeDuplicates(groupInfo.groupMembers);
+
+    moveItemToFirst(groupInfo.groupAdminId);
+
+     
+
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -149,87 +152,90 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                               context, groupInfo.groupDescription),
                           //   SizedBox(height: 24.v),
                           //  _buildShareCommunity(context, groupInfo.groupLink),
-                          if(groupInfo.groupImageList.isNotEmpty) SizedBox(height: 24.v),
-                         if(groupInfo.groupImageList.isNotEmpty)  _buildMedia(context, groupInfo.groupImageList),
+                          if (groupInfo.groupImageList.isNotEmpty)
+                            SizedBox(height: 24.v),
+                          if (groupInfo.groupImageList.isNotEmpty)
+                            _buildMedia(context, groupInfo.groupImageList),
                           SizedBox(height: 14.v),
-                           if (groupInfo.groupAdminId == userId)
+                          if (groupInfo.groupAdminId == userId)
                             SizedBox(height: 18.v),
-                            if (groupInfo.groupAdminId == userId)
+                          if (groupInfo.groupAdminId == userId)
                             GestureDetector(
                               onTap: () {
                                 AppNavigator.pushAndStackPage(context,
-                                    page: RequestedUsersPage(item: requestItems,));
+                                    page: RequestedUsersPage(
+                                      item: requestItems,
+                                    ));
                               },
                               child: Card(
-                                elevation: 0.2,
+                                  elevation: 0.2,
                                   child: Container(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Requests'),
-                                    Container(
-                                      width: 26.adaptSize,
-                                      height: 26.adaptSize,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.red),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Center(
-                                          child: Text(
-                                            "${requestItems.length}",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white),
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Requests'),
+                                        Container(
+                                          width: 26.adaptSize,
+                                          height: 26.adaptSize,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.red),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: Center(
+                                              child: Text(
+                                                "${requestItems.length}",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )),
+                                  )),
                             ),
-                            if (groupInfo.groupAdminId == userId)
+                          if (groupInfo.groupAdminId == userId)
                             SizedBox(height: 18.v),
-                            if (groupInfo.groupAdminId == userId)
+                          if (groupInfo.groupAdminId == userId)
                             GestureDetector(
                               onTap: () {
                                 AppNavigator.pushAndStackPage(context,
                                     page: BlockedUsersPage(item: requestItems));
                               },
                               child: Card(
-                                elevation: 0.2,
-
+                                  elevation: 0.2,
                                   child: Container(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Blocked Users'),
-                                    Container(
-                                      width: 26.adaptSize,
-                                      height: 26.adaptSize,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.red),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Center(
-                                          child: Text(
-                                            "${blockedItems.length}",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white),
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Blocked Users'),
+                                        Container(
+                                          width: 26.adaptSize,
+                                          height: 26.adaptSize,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.red),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: Center(
+                                              child: Text(
+                                                "${blockedItems.length}",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )),
+                                  )),
                             ),
                           // Card(
                           //   elevation: 0.4,
@@ -257,16 +263,17 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           // ),
                           SizedBox(height: 24.v),
                           _buildUserProfile(context, groupInfo.groupNumber,
-                              groupMembers.length, groupMembers),
+                              groupMembers.length,  groupInfo.groupAdminId),
                           SizedBox(height: 24.v),
                           CustomElevatedButton(
                               text: "Leave community",
                               buttonStyle: CustomButtonStyles.fillRed,
                               onPressed: () {
-                                if (groupInfo.groupMembers[0].uid == userId) {
+                                if (groupInfo.groupAdminId == userId) {
                                   Modals.showToast(
                                       'You are an admin and can\'t leave the community');
                                 } else {
+                                  
                                   groupInfo.removeCurrentUserFromMembers(
                                       groupInfo.groupId, userId, context);
                                 }
@@ -446,7 +453,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   }
 
   Widget _buildUserProfile(
-      BuildContext context, String groupNumber, int memberLength, var members) {
+      BuildContext context, String groupNumber, int memberLength, String adminId) {
     return Card(
       elevation: 0.4,
       child: Container(
@@ -466,19 +473,23 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                 ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                     
                     itemCount: (memberLength <= 10) ? memberLength : 10,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-        AppNavigator.pushAndStackPage(context, page: IndividualUserInfo(name: members[index].name, image: members[index].profilePic, bio: members[index].bio, username: members[index].name, isGroupAdmin: index == 0, ));
+                           AppNavigator.pushAndStackPage(context, 
+                           page: IndividualUserInfo(name: groupMembers[index].name,
+                            image: groupMembers[index].profilePic, 
+                            bio: groupMembers[index].bio, 
+                            username: groupMembers[index].name,
+                            isGroupAdmin: adminId == groupMembers[index].uid, ));
                           
                         },
                         child: UserprofileItemWidget(
-                          name: members[index].name,
-                          bio: members[index].bio,
-                          index: index,
-                          image: members[index].profilePic,
+                          name: groupMembers[index].name,
+                          bio: groupMembers[index].bio,
+                          index: adminId == groupMembers[index].uid,
+                          image: groupMembers[index].profilePic,
                         ),
                       );
                     }),
@@ -486,7 +497,10 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                 GestureDetector(
                   onTap: () {
                     AppNavigator.pushAndStackPage(context,
-                        page: AllUsersPage(users: members,));
+                        page: AllUsersPage(
+                          users: groupMembers,
+                          adminId: adminId,
+                        ));
                   },
                   child: Text("see all >",
                       style: TextStyle(
@@ -519,16 +533,24 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
     );
   }
 
-List<UserModel> removeDuplicates(List<UserModel> items) {
-  Map<int, UserModel> uniqueItems = {};
+  List<UserModel> removeDuplicates(List<UserModel> items) {
+    Map<int, UserModel> uniqueItems = {};
 
-  items.forEach((item) {
-    if(items.isNotEmpty || items != []){
-    uniqueItems[int.tryParse(item.uid)!] = item;
+    items.forEach((item) {
+      if (items.isNotEmpty || items != []) {
+        uniqueItems[int.tryParse(item.uid)!] = item;
+      }
+    });
 
+    return uniqueItems.values.toList();
+  }
+
+ void moveItemToFirst(String adminId) {
+    int index = groupMembers.indexWhere((item) => item.uid == adminId);
+    if (index != -1) {
+      var item = groupMembers.removeAt(index);
+      groupMembers.insert(0, item);
+      setState(() {}); // Rebuild the ListView
     }
-  });
-
-  return uniqueItems.values.toList();
-}
+  }
 }

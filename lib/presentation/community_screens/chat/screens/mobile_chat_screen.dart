@@ -54,7 +54,6 @@ class MobileChatScreen extends ConsumerStatefulWidget {
 }
 
 class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
-
   final _scrollController = ScrollController();
   final compaintController = TextEditingController();
 
@@ -68,10 +67,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
     groupInfo.setSelectedMessage('');
     groupInfo.setTextIndex(-1);
     _scrollController.dispose();
-
   }
-
-  
 
   String userId = '';
   getUserId() async {
@@ -82,14 +78,12 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    _scrollDown();
-  });
+      _scrollDown();
+    });
     getUserId();
 
     super.initState();
   }
-
-  
 
   @override
   Widget build(
@@ -97,7 +91,6 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
   ) {
     final groupInfo =
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
-
 
     return WillPopScope(
       onWillPop: () async {
@@ -192,20 +185,19 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                         copyToClipboard(
                             groupInfo.selectedMessage, groupInfo, context);
                       } else if (choice == 'report') {
-                          Modals.showDialogModal(context,
-            page: ModalContentScreen(
-                title: 'Report this message',
-                body: Column(
-                  children: [
-                    _buildComplaintField(context)
-                  ],
-                ),
-                btnText: 'Submit',
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-                headerColorOne: Color(0xFFFDF9ED),
-                headerColorTwo: Color(0xFFFAF3DA)));
+                        compaintController.text = groupInfo.selectedMessage;
+                        Modals.showDialogModal(context,
+                            page: ModalContentScreen(
+                                title: 'Report this message',
+                                body: Column(
+                                  children: [_buildComplaintField(context)],
+                                ),
+                                btnText: 'Submit',
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                },
+                                headerColorOne: Color(0xFFFDF9ED),
+                                headerColorTwo: Color(0xFFFAF3DA)));
                       }
                     },
                     itemBuilder: (BuildContext context) =>
@@ -234,7 +226,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                             title: Text('Pin Message'),
                           ),
                         ),
-                        if (groupInfo.groupAdminId == userId)
+                      if (groupInfo.groupAdminId == userId)
                         const PopupMenuItem<String>(
                           value: 'report',
                           child: ListTile(
@@ -499,14 +491,12 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
   }
 
   void _scrollDown() {
-     
-
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
   }
 
-   Widget _buildComplaintField(BuildContext context) {
+  Widget _buildComplaintField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -517,6 +507,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
               hintText: "Enter your report here",
               hintStyle: CustomTextStyles.titleSmallGray600,
               maxLines: 5,
+              readOnly: true,
               textInputType: TextInputType.name,
               validator: (value) {
                 return Validator.validate(value, 'Report');

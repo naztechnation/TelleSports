@@ -9,13 +9,12 @@ import '../../../model/chat_model/user_model.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../individual_user_info.dart/individual_user_info.dart';
 import 'widgets/userprofile_item_widget.dart';
-
-import 'package:provider/provider.dart';
-import '../provider/auth_provider.dart' as pro;
+ 
 
 class AllUsersPage extends StatelessWidget {
+  final String adminId;
   final List<UserModel> users;
-  const AllUsersPage({Key? key, required this.users})
+  const AllUsersPage({Key? key, required this.users, required this.adminId})
       : super(
           key: key,
         );
@@ -61,7 +60,7 @@ class AllUsersPage extends StatelessWidget {
                   child: UserprofileItemWidget(
                     name: users[index].name,
                     bio: users[index].bio,
-                    index: index,
+                    index: adminId == users[index].uid,
                     image: users[index].profilePic,
                   ));
             },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart'; 
 
+import '../all_groups.dart';
 import 'community_list_page.dart';
 import 'empty_comunity_page.dart';
 
@@ -38,8 +39,9 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SizedBox(height: 51.v),
+              SizedBox(height: 15.v),
               _buildTopSection(context),
+              
               Expanded(
                 child: SizedBox(
                   height: 631.v,
@@ -48,7 +50,7 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
                     children: [
                        
                       CommunityListPage(),
-                      CommunityListPage(),
+                      AllGroupsListPage(),
                     ],
                   ),
                 ),
@@ -71,7 +73,7 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
             "Tellasport Community",
             style: CustomTextStyles.titleMediumOnPrimaryBold18,
           ),
-          SizedBox(height: 13.v),
+          SizedBox(height: 15.v),
           Container(
             height: 32.v,
             width: 350.h,
