@@ -38,9 +38,10 @@ class MobileChatScreen extends ConsumerStatefulWidget {
   final String profilePic;
   final String groupNumber;
   final String groupDesc;
+  final List<String> membersUid;
   const MobileChatScreen(
     this.groupDesc,
-    this.groupNumber, {
+    this.groupNumber, this.membersUid, {
     Key? key,
     required this.name,
     required this.uid,
@@ -138,7 +139,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                   children: [
                     AppbarTitleCircleimage(
                       onTap: () {
-                        onTapGroup(context, widget.profilePic, widget.name);
+                        onTapGroup(context, widget.profilePic, widget.name, widget.membersUid);
                       },
                       imagePath: widget.profilePic,
                     ),
@@ -151,13 +152,13 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                             text: widget.name,
                             onTap: () {
                               onTapGroup(
-                                  context, widget.profilePic, widget.name);
+                                  context, widget.profilePic, widget.name, widget.membersUid);
                             },
                           ),
                           AppbarSubtitleFour(
                             onTap: () {
                               onTapGroup(
-                                  context, widget.profilePic, widget.name);
+                                  context, widget.profilePic, widget.name,widget.membersUid);
                             },
                             text: "${widget.groupNumber}   member(s)",
                             margin: EdgeInsets.only(right: 28.h),
@@ -318,9 +319,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                                 .chatStream(widget.uid, userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            //  return   SizedBox.shrink();
-                          }
+                              ConnectionState.waiting) {}
 
                           groupInfo.clearGroupImageList();
                           return ListView.builder(
@@ -482,11 +481,15 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
         });
   }
 
-  onTapGroup(BuildContext context, String image, String name) {
+  onTapGroup(BuildContext context, String image, String name, 
+  
+  final List<String> membersUid,
+  
+  ) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(
           profilePic: image,
-          name: name,
+          name: name, membersUid: membersUid,
         ));
   }
 

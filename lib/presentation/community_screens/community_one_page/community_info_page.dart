@@ -28,7 +28,9 @@ import 'widgets/userprofile_item_widget.dart';
 class CommunityInfoScreen extends StatefulWidget {
   final String profilePic;
   final String name;
-  CommunityInfoScreen({Key? key, required this.profilePic, required this.name})
+  final List<String> membersUid;
+
+  CommunityInfoScreen({Key? key, required this.profilePic, required this.name, required this.membersUid})
       : super(key: key);
 
   @override
@@ -65,11 +67,13 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
 
       _dataAdded = true;
     }
+
     requestItems = removeDuplicates(groupInfo.requestedMembers);
     blockedItems = removeDuplicates(groupInfo.blockedMembers);
-    groupMembers = removeDuplicates(groupInfo.groupMembers);
 
     moveItemToFirst(groupInfo.groupAdminId);
+
+    getUsers(groupInfo);
 
     return SafeArea(
         child: Scaffold(
@@ -497,6 +501,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                         fontFamily: 'DM Sans',
                         fontWeight: FontWeight.w700)),
                 SizedBox(height: 8.v),
+                
                 ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -581,5 +586,15 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
       groupMembers.insert(0, item);
       setState(() {}); // Rebuild the ListView
     }
+  }
+
+  getUsers(groupInfo) async{
+
+    groupMembers = await groupInfo.fetchUsers(widget.membersUid);
+
+    setState(() {
+      
+    });
+
   }
 }

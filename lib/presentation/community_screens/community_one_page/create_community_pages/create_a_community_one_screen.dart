@@ -144,6 +144,7 @@ class _CreateACommunityOneScreenState
                   SizedBox(height: 24.v),
                   CustomElevatedButton(
                     text: "Save and continue",
+                    title: "Creating community...",
                     buttonStyle: CustomButtonStyles.fillBlue,
                     processing: isLoading,
                     onPressed: () async {

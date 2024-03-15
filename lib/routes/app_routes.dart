@@ -110,6 +110,6 @@ class AppRoutes {
     
     
     
-    communityInfoScreen: (context) => CommunityInfoScreen(profilePic: '', name: '',),
+    communityInfoScreen: (context) => CommunityInfoScreen(profilePic: '', name: '', membersUid: [],),
   };
 }

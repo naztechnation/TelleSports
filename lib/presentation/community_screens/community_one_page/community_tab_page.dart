@@ -44,7 +44,6 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
               
               Expanded(
                 child: SizedBox(
-                  height: 631.v,
                   child: TabBarView(
                     controller: tabviewController,
                     children: [
@@ -65,7 +64,7 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
    
   Widget _buildTopSection(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.h),
+      margin: EdgeInsets.symmetric(horizontal: 20.h,),
       decoration: AppDecoration.outlineGray,
       child: Column(
         children: [
@@ -75,8 +74,7 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
           ),
           SizedBox(height: 15.v),
           Container(
-            height: 32.v,
-            width: 350.h,
+            height: 42.v,
             decoration: BoxDecoration(
               color: appTheme.whiteA700,
               borderRadius: BorderRadius.circular(

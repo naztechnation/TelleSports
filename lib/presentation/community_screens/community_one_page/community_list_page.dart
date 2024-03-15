@@ -106,13 +106,14 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                         }
 
                         return Column(children: [
-                          SizedBox(height: 12.v),
+                          SizedBox(height: 10.v),
                           Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.h),
                               child: Column(children: [
                                 const SizedBox(height: 15),
                                 CustomTextFormField(
                                     controller: searchController,
+                                    
                                     onChanged: (value) {
                                       checkUserExist.filterSearchResults(value);
                                     },
@@ -122,7 +123,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                     textInputAction: TextInputAction.done,
                                     prefix: Container(
                                         margin: EdgeInsets.fromLTRB(
-                                            20.h, 5.v, 9.h, 5.v),
+                                            5.h, 5.v, 9.h, 5.v),
                                         child: CustomImageView(
                                             imagePath:
                                                 ImageConstant.imgSearchGray400,
@@ -191,6 +192,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                             .groupDescription,
                                                         userItem.length
                                                             .toString(),
+                                                            userItem,
                                                         name: groupData.name,
                                                         uid: groupData.groupId,
                                                         isGroupChat: true,

@@ -154,7 +154,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                   checkUserExist.blockedUsers(
                                                       groupData.blockedMembers);
         
-                                                  if (groupData.membersUid
+                                                  if (userItem
                                                       .contains(userId)) {
                                                     if (context.mounted) {
                                                       checkUserExist.addGroupInfo(
@@ -187,6 +187,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                                     .groupDescription,
                                                                 userItem.length
                                                                     .toString(),
+                                                                    userItem,
                                                                 name: groupData
                                                                     .name,
                                                                 uid: groupData
