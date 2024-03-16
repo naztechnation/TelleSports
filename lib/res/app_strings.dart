@@ -40,6 +40,10 @@ class AppStrings {
   static String deleteUserUrl(String userId) => '${_baseUrl}delete-account/$userId';
   static String transferTellacoinUrl = '${_baseUrl}transfer-coin';
   static String updateAccountUrl = '${_baseUrl}update_account_details';
+  static String getPredictionListUrl(String day) => '${_baseUrl}predictions?day=$day';
+  static String postPredictionUrl = '${_baseUrl}predictions';
+  static String predictionRatingUrl = '${_baseUrl}prediction_rating';
+  
 
 
 
