@@ -98,40 +98,49 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
                       child: Container(
                           width: double.maxFinite,
                           padding: EdgeInsets.symmetric(horizontal: 16.h),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Submit your Predictions",
-                                    style: theme.textTheme.headlineLarge),
-                                SizedBox(height: 10.v),
-                                Text("Please enter your predictions here.",
-                                    textAlign: TextAlign.justify,
-                                    style: TextStyle(
-                                        fontSize: 14, letterSpacing: 0.2)),
-                                SizedBox(height: 29.v),
-                                _buildLeagueField(context),
-                                SizedBox(height: 11.v),
-                                _buildHomeTeamField(context),
-                                SizedBox(height: 11.v),
-                                _buildAwayTeamField(context),
-                                SizedBox(height: 11.v),
-                                _buildPredictedWinnerField(context),
-                                SizedBox(height: 11.v),
-                                _buildOddsField(context),
-                                SizedBox(height: 32.v),
-                                CustomElevatedButton(
-                                    text: "Submit",
-                                    title: 'Submitting data...',
-                                    processing: state is TransferCoinLoading,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h),
-                                    onPressed: () {
-                                       predictedWinnner.clear();
-                                       addPredictedWinnnerList();
-                                      onTapSubmitPredictions(context);
-                                    }),
-                                SizedBox(height: 5.v)
-                              ]))),
+                          child: SingleChildScrollView(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Submit your Predictions",
+                                      style: theme.textTheme.headlineLarge),
+                                  SizedBox(height: 10.v),
+                                  Text("Please enter your predictions here.",
+                                      textAlign: TextAlign.justify,
+                                      style: TextStyle(
+                                          fontSize: 14, letterSpacing: 0.2)),
+                                  SizedBox(height: 29.v),
+                                  _buildLeagueField(context),
+                                  SizedBox(height: 11.v),
+                                  _buildHomeTeamField(context),
+                                  SizedBox(height: 11.v),
+                            
+                                   _buildHomeScoreField(context),
+                                  SizedBox(height: 11.v),
+                                  _buildAwayTeamField(context),
+                                  SizedBox(height: 11.v),
+                                 
+                                  _buildAwayScoreField(context),
+                                  SizedBox(height: 11.v),
+                            
+                                  _buildPredictedWinnerField(context),
+                                  SizedBox(height: 11.v),
+                                  _buildOddsField(context),
+                                  SizedBox(height: 32.v),
+                                  CustomElevatedButton(
+                                      text: "Submit",
+                                      title: 'Submitting data...',
+                                      processing: state is TransferCoinLoading,
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 4.h),
+                                      onPressed: () {
+                                         predictedWinnner.clear();
+                                         addPredictedWinnnerList();
+                                        onTapSubmitPredictions(context);
+                                      }),
+                                  SizedBox(height: 35.v)
+                                ]),
+                          ))),
                 ))));
   }
 
@@ -150,7 +159,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("League", style: theme.textTheme.titleSmall),
+          Text("League *", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
             controller: leagueController,
@@ -181,7 +190,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Home Team", style: theme.textTheme.titleSmall),
+          Text("Home Team *", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: homeTeamController,
@@ -218,7 +227,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Away Team", style: theme.textTheme.titleSmall),
+          Text("Away Team *", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: awayTeamController,
@@ -255,7 +264,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Predicted  Winner", style: theme.textTheme.titleSmall),
+          Text("Predicted  Winner *", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: predictedWinnerController,
@@ -292,11 +301,49 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
         ]));
   }
 
+  Widget _buildHomeScoreField(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(left: 0.h),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("Home Score (Optional)", style: theme.textTheme.titleSmall),
+          SizedBox(height: 3.v),
+          CustomTextFormField(
+              controller: winnerOddController,
+              hintText: 'Enter home score',
+              hintStyle: CustomTextStyles.titleSmallGray600,
+              textInputType: TextInputType.number,
+              // validator: (value) {
+              //   return Validator.validate(value, 'Home score');
+              // },
+              contentPadding:
+                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+        ]));
+  }
+
+   Widget _buildAwayScoreField(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(left: 0.h),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("Away Score (Optional)", style: theme.textTheme.titleSmall),
+          SizedBox(height: 3.v),
+          CustomTextFormField(
+              controller: winnerOddController,
+              hintText: 'Enter away score',
+              hintStyle: CustomTextStyles.titleSmallGray600,
+              textInputType: TextInputType.number,
+              // validator: (value) {
+              //   return Validator.validate(value, 'Away score');
+              // },
+              contentPadding:
+                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+        ]));
+  }
+  
   Widget _buildOddsField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Winner\'s Odd", style: theme.textTheme.titleSmall),
+          Text("Winner\'s Odd *", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
               controller: winnerOddController,
