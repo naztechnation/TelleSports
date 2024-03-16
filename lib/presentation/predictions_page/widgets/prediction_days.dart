@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:tellesports/core/app_export.dart';
 
@@ -10,6 +11,17 @@ class CalendarListView extends StatefulWidget {
 class _CalendarListViewState extends State<CalendarListView> {
   int _selectedDay = DateTime.now().day;
 
+  final _scrollController = ScrollController();
+
+
+@override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollDown();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final DateTime now = DateTime.now();
@@ -20,6 +32,8 @@ class _CalendarListViewState extends State<CalendarListView> {
       height: 65.adaptSize,
       child: ListView.builder(
         itemCount: currentDay,
+                            controller: _scrollController,
+
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
@@ -32,8 +46,7 @@ class _CalendarListViewState extends State<CalendarListView> {
               setState(() {
                 _selectedDay = adjustedIndex;
 
-                print(adjustedIndex.toString());
-
+                
               });
             },
             child: Container(
@@ -76,5 +89,11 @@ class _CalendarListViewState extends State<CalendarListView> {
         },
       ),
     );
+  }
+
+   void _scrollDown() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
   }
 }

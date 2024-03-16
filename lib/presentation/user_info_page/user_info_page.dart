@@ -12,7 +12,9 @@ import '../community_screens/provider/auth_provider.dart' as pro;
 
 // ignore_for_file: must_be_immutable
 class UserInfoPage extends StatefulWidget {
-  const UserInfoPage({Key? key})
+  final bool isGroupAdmin;
+  final String memberId;
+  const UserInfoPage({Key? key, required this.isGroupAdmin, required this.memberId})
       : super(
           key: key,
         );
@@ -51,6 +53,7 @@ class UserInfoPageState extends State<UserInfoPage>
     final groupData =
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
 
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -64,7 +67,7 @@ class UserInfoPageState extends State<UserInfoPage>
                 padding: EdgeInsets.symmetric(horizontal: 20.h),
                 child: Column(
                   children: [
-                    if (groupData.groupAdminId == userId)
+                    if (widget.isGroupAdmin)
                     SizedBox(height: 24.v),
                     if (groupData.groupAdminId == userId)
                       CustomElevatedButton(
@@ -72,14 +75,15 @@ class UserInfoPageState extends State<UserInfoPage>
                         processing: isLoading,
                         buttonStyle: CustomButtonStyles.fillRedTL8,
                         onPressed: () async {
-                          if (groupData.groupAdminId == userId) {
+                          if (widget.isGroupAdmin) {
                             Modals.showToast('Oppss you can\'t block yourself');
                           } else {
                             setState(() {
                               isLoading = true;
                             });
+                            await groupData.removeCurrentUserFromMembers(groupData.groupId, widget.memberId, context);
                             await groupData.addUserToBlockedMembers(
-                                groupData.groupId, userId, context);
+                                groupData.groupId, widget.memberId, context);
                             setState(() {
                               isLoading = false;
                             });

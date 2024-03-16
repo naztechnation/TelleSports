@@ -516,7 +516,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                 bio: groupMembers[index].bio,
                                 username: groupMembers[index].name,
                                 isGroupAdmin:
-                                    adminId == groupMembers[index].uid,
+                                    adminId == groupMembers[index].uid, memberId: groupMembers[index].uid,
                               ));
                         },
                         child: UserprofileItemWidget(

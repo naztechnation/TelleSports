@@ -54,7 +54,7 @@ class AllUsersPage extends StatelessWidget {
                           image: users[index].profilePic,
                           bio: users[index].bio,
                           username: users[index].name,
-                          isGroupAdmin: index == 0,
+                          isGroupAdmin: index == 0, memberId: users[index].uid,
                         ));
                   },
                   child: UserprofileItemWidget(

@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+
 
 import 'widgets/prediction_container.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +53,7 @@ class PredictionsPage extends StatelessWidget {
               height: 24.adaptSize,
               width: 24.adaptSize,
               onTap: () {
-                onTapImgArrowLeft(context);
+                 
               }),
           Padding(
               padding: EdgeInsets.only(top: 3.v),
@@ -84,7 +84,5 @@ class PredictionsPage extends StatelessWidget {
         });
   }
 
-  onTapImgArrowLeft(BuildContext context) {
-    // Navigator.pop(context);
-  }
+  
 }

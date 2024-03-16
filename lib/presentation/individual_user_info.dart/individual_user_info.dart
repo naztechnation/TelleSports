@@ -17,9 +17,11 @@ class IndividualUserInfo extends StatefulWidget {
   final String image;
   final String bio;
   final String username;
+  final String memberId;
   final bool isGroupAdmin;
   
-  const IndividualUserInfo({Key? key, required this.name, required this.image, required this.bio, required this.username, required this.isGroupAdmin,}) : super(key: key);
+  
+  const IndividualUserInfo({Key? key, required this.name, required this.image, required this.bio, required this.username, required this.isGroupAdmin, required this.memberId,}) : super(key: key);
 
   @override
   IndividualUserInfoState createState() =>
@@ -238,7 +240,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
     return Expanded(
         child: SizedBox(
             child: TabBarView(controller: tabviewController, children: [
-              UserInfoPage(),
+              UserInfoPage(isGroupAdmin: widget.isGroupAdmin, memberId: widget.memberId,),
               
             ])));
   }
