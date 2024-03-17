@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/landing_page/landing_page.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 import '../../../blocs/accounts/account.dart';
+import '../../../blocs/prediction/prediction.dart';
 import '../../../core/constants/enums.dart';
 import '../../../model/view_models/account_view_model.dart';
 import '../../../model/view_models/firebase_auth_view_model.dart';
+import '../../../model/view_models/user_view_model.dart';
 import '../../../requests/repositories/account_repo/account_repository_impl.dart';
+import '../../../requests/repositories/prediction_repo/predict_repository_impl.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 
@@ -64,39 +69,33 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: _buildAppBar(context),
-            body: BlocProvider<AccountCubit>(
+            body: BlocProvider<PredictionCubit>(
                 lazy: false,
-                create: (_) => AccountCubit(
-                    accountRepository: AccountRepositoryImpl(),
+                create: (_) => PredictionCubit(
+                    predictRepository: PredictRepositoryImpl(),
                     viewModel:
-                        Provider.of<AccountViewModel>(context, listen: false)),
-                child: BlocConsumer<AccountCubit, AccountStates>(
+                        Provider.of<UserViewModel>(context, listen: false)),
+                child: BlocConsumer<PredictionCubit, PredictStates>(
                   listener: (context, state) {
-                    if (state is ResetPasswordLoaded) {
-                      if (state.userData.success!) {
-                        Modals.showToast(state.userData.message ?? '');
+                    if (state is PredictLoaded) {
+                      if (state.predict.success ?? false) {
+                        Modals.showToast( 'Prediction added successfully');
 
-                        Future.delayed(
-                            Duration(
-                              seconds: 3,
-                            ), () {
-                          user.signOut(context);
-                          ;
-                        });
+                        AppNavigator.pushAndStackPage(context, page: LandingPage());
                       } else {
-                        Modals.showToast(state.userData.message ?? '',
+                        Modals.showToast( 'Opps could  not add prediction',
                             messageType: MessageType.error);
                       }
-                    } else if (state is AccountApiErr) {
-                      if (state.message != null) {
-                        Modals.showToast(state.message ?? '',
-                            messageType: MessageType.error);
-                      }
-                    } else if (state is AccountNetworkErr) {
-                      if (state.message != null) {
-                        Modals.showToast(state.message ?? '',
-                            messageType: MessageType.error);
-                      }
+                    } else if (state is PredictApiErr) {
+                      // if (state.message != null) {
+                      //   Modals.showToast(state.message ?? '',
+                      //       messageType: MessageType.error);
+                      // }
+                    } else if (state is PredictNetworkErr) {
+                      // if (state.message != null) {
+                      //   Modals.showToast(state.message ?? '',
+                      //       messageType: MessageType.error);
+                      // }
                     }
                   },
                   builder: (context, state) => Form(

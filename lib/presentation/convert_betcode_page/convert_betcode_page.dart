@@ -140,7 +140,6 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             StorageHandler.saveUserBalance(
                 state.user.tellacoinBalance.toString());
 
-
             StorageHandler.saveUserPhoto(state.user.profilePicture.toString());
             StorageHandler.saveUserAccountName(
                 state.user.userWallet?.accountName.toString());
@@ -179,18 +178,16 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
               page: ModalContentScreen(
                   title: 'Network Error',
                   body: Text(
-                                                                            'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-
-
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: appTheme.gray900,
+                      fontSize: 14.fSize,
+                      fontFamily: 'DM Sans',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   btnText: 'Cancel',
                   headerColorOne: Color.fromARGB(255, 208, 151, 151),
                   headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
@@ -199,19 +196,16 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
               page: ModalContentScreen(
                   title: 'Network Error',
                   body: Text(
-                                          'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-
-
-
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: appTheme.gray900,
+                      fontSize: 14.fSize,
+                      fontFamily: 'DM Sans',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   btnText: 'Cancel',
                   headerColorOne: Color.fromARGB(255, 208, 151, 151),
                   headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
@@ -220,20 +214,16 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
               page: ModalContentScreen(
                   title: 'Network Error',
                   body: Text(
-                                                         'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-
-
-
-
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: appTheme.gray900,
+                      fontSize: 14.fSize,
+                      fontFamily: 'DM Sans',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   btnText: 'Cancel',
                   headerColorOne: Color.fromARGB(255, 208, 151, 151),
                   headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
@@ -354,40 +344,35 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                                         },
                                         title: 'Insufficient Balance',
                                         body: Text(
-                                                                                                  ' You dont have a sufficient balance to convert your codes now. Get a top up from us to continue converting...',
-
-
-
-
-
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                                          ' You dont have a sufficient balance to convert your codes now. Get a top up from us to continue converting...',
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: appTheme.gray900,
+                                            fontSize: 14.fSize,
+                                            fontFamily: 'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                         btnText: 'Top Up',
                                         headerColorOne:
                                             Color.fromARGB(255, 208, 151, 151),
                                         headerColorTwo: Color.fromARGB(
                                             255, 234, 132, 132)));
                               } else {
-                                if(fromId == null || fromId == ''){
-                                  Modals.showToast('Please select origin bookie');
-
-                                }else if(toId == null || toId == ''){
-                                  Modals.showToast('Please select destination bookie');
-                                }else{
-                                   _accountCubit.convertBetCode(
-                                    from: fromId ?? '',
-                                    to: toId ?? '',
-                                    bookingCode: converterCodeController.text,
-                                    apiKey: '');
+                                if (fromId == null || fromId == '') {
+                                  Modals.showToast(
+                                      'Please select origin bookie');
+                                } else if (toId == null || toId == '') {
+                                  Modals.showToast(
+                                      'Please select destination bookie');
+                                } else {
+                                  _accountCubit.convertBetCode(
+                                      from: fromId ?? '',
+                                      to: toId ?? '',
+                                      bookingCode: converterCodeController.text,
+                                      apiKey: '');
                                 }
-                               
                               }
                             },
                           ),

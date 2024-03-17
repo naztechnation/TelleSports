@@ -29,8 +29,10 @@ class PredictMatchListData {
   int? userId;
   String? homeTeam;
   String? homeScore;
+  String? homeImage;
   String? awayTeam;
   String? awayScore;
+  String? awayImage;
   String? predictedWinner;
   String? odds;
   String? league;
@@ -43,8 +45,10 @@ class PredictMatchListData {
       this.userId,
       this.homeTeam,
       this.homeScore,
+      this.homeImage,
       this.awayTeam,
       this.awayScore,
+      this.awayImage,
       this.predictedWinner,
       this.odds,
       this.league,
@@ -57,8 +61,10 @@ class PredictMatchListData {
     userId = json['user_id'];
     homeTeam = json['home_team'];
     homeScore = json['home_score'];
+    homeImage = json['home_image'];
     awayTeam = json['away_team'];
     awayScore = json['away_score'];
+    awayImage = json['away_image'];
     predictedWinner = json['predicted_winner'];
     odds = json['odds'];
     league = json['league'];
@@ -73,8 +79,10 @@ class PredictMatchListData {
     data['user_id'] = this.userId;
     data['home_team'] = this.homeTeam;
     data['home_score'] = this.homeScore;
+    data['home_image'] = this.homeImage;
     data['away_team'] = this.awayTeam;
     data['away_score'] = this.awayScore;
+    data['away_image'] = this.awayImage;
     data['predicted_winner'] = this.predictedWinner;
     data['odds'] = this.odds;
     data['league'] = this.league;

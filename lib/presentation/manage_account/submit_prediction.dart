@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -14,6 +12,7 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 import '../../../core/constants/enums.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
+import '../../blocs/prediction/prediction.dart';
 import '../../blocs/user/user.dart';
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/user_repo/user_repository_impl.dart';
@@ -29,6 +28,8 @@ class SubmitPredictionScreen extends StatefulWidget {
 class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
   TextEditingController homeTeamController = TextEditingController();
   TextEditingController awayTeamController = TextEditingController();
+  TextEditingController awayScoreController = TextEditingController();
+  TextEditingController homeScoreController = TextEditingController();
   TextEditingController predictedWinnerController = TextEditingController();
   TextEditingController winnerController = TextEditingController();
   TextEditingController winnerOddController = TextEditingController();
@@ -40,6 +41,8 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
   String bankName = '';
   String accountNumber = '';
   String accountName = '';
+  String homeLogo = '';
+  String awayLogo = '';
 
   List<Map<String, String>>? filteredTeam;
 
@@ -130,7 +133,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
                                   CustomElevatedButton(
                                       text: "Submit",
                                       title: 'Submitting data...',
-                                      processing: state is TransferCoinLoading,
+                                      processing: state is PredictLoading,
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 4.h),
                                       onPressed: () {
@@ -213,7 +216,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
                   isScrollControlled: true,
                   heightFactor: 1,
                   isDissmissible: true,
-                  page: optionWidget2(filteredTeam, 'Leagues', homeTeamController));
+                  page: optionWidget2(filteredTeam, 'Leagues', homeTeamController, true));
                     }else{
                       Modals.showToast('Please select a league');
                     }
@@ -250,7 +253,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
                   isScrollControlled: true,
                   heightFactor: 1,
                   isDissmissible: true,
-                  page: optionWidget2(filteredTeam, 'Leagues', awayTeamController));
+                  page: optionWidget2(filteredTeam, 'Leagues', awayTeamController, false));
                     }else{
                       Modals.showToast('Please select a league');
                     }
@@ -308,7 +311,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
           Text("Home Score (Optional)", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
-              controller: winnerOddController,
+              controller: homeScoreController,
               hintText: 'Enter home score',
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputType: TextInputType.number,
@@ -327,7 +330,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
           Text("Away Score (Optional)", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
           CustomTextFormField(
-              controller: winnerOddController,
+              controller: awayScoreController,
               hintText: 'Enter away score',
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputType: TextInputType.number,
@@ -369,13 +372,19 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
         Modals.showToast('Predicted winner must be either home or away team');
         
       }else{
-  // context.read<UserCubit>().updateAccount(
-      //     bank: bankNameController.text,
-      //     accountName: accountNameController.text.trim(),
-      //     accountNumber: accountNumberController.text.trim());
+        if (_formKey.currentState!.validate()) {
+         context.read<PredictionCubit>().postPrediction(homeTeam: homeTeamController.text, 
+        awayTeam: awayTeamController.text, homeScore: homeScoreController.text, predictedWinner: predictedWinnerController.text, 
+        awayScore: awayScoreController.text, 
+        odds: winnerOddController.text, league: leagueController.text, homeLogo: homeLogo, awayLogo: awayLogo
+            );
+
+         
+        FocusScope.of(context).unfocus();
+      }
       }
 
-    //  Modals.showToast(predictedWinnner.toString());
+     
       
       FocusScope.of(context).unfocus();
     }
@@ -479,7 +488,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
     );
   }
 
-  optionWidget2(List<Map<String, String>>? options, String title, final controller) {
+  optionWidget2(List<Map<String, String>>? options, String title, final controller, bool isHome) {
     return Column(
       children: [
         SizedBox(
@@ -529,11 +538,17 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
 
                     controller.text = options[index]['name'] ?? '';
 
-                   
+                    if(isHome){
+                     setState(() {
+                        homeLogo = options[index]['url'] ?? '';
+                     });
+                    }else{
+                      setState(() {
+                        awayLogo = options[index]['url'] ?? '';
+                     });
+                    }
 
-                    // filteredTeam = filterClubsByLeague(
-                    //     leagueName: options[index]['name'],
-                    //     leaguesWithClubs: leaguesWithClubs);
+                    
                   },
                   child: Container(
                     color: Colors.white,
@@ -602,4 +617,6 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
   });    
   }
 
+
+  
 }

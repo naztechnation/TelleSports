@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/res/app_images.dart';
+import 'package:tellesports/utils/app_utils.dart';
 import 'package:tellesports/widgets/image_view.dart';
 
+import '../../../model/prediction_data/predicted_match_list.dart';
 import '../../../widgets/modal_content.dart';
 import '../../../widgets/modals.dart';
 
 // ignore: must_be_immutable
 class PredictionContainer extends StatelessWidget {
-  const PredictionContainer({Key? key})
+  final PredictMatchListData predictedInfo;
+
+  const PredictionContainer({Key? key, required this.predictedInfo})
       : super(
           key: key,
         );
@@ -38,7 +42,7 @@ class PredictionContainer extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal:30.0),
 
                       child: RatingBar.builder(
-                        initialRating: 1,
+                        initialRating: double.tryParse(predictedInfo.currentRating.toString()) ?? 0.0,
                         minRating: 1,
                         direction: Axis.horizontal,
                         allowHalfRating: true,
@@ -113,7 +117,7 @@ class PredictionContainer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Rated: 4.5/5",
+                      "Rated: ${predictedInfo.currentRating}/5",
                       style: CustomTextStyles.labelMediumBlack900,
                     ),
                     CustomImageView(
@@ -125,7 +129,7 @@ class PredictionContainer extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "14:00-15:30",
+                  AppUtils.formatComplexDate(dateTime: predictedInfo.createdAt.toString()),
                   style: CustomTextStyles.labelMediumBlack900,
                 ),
               ],
@@ -141,7 +145,7 @@ class PredictionContainer extends StatelessWidget {
                       Align(
                         alignment: Alignment.topCenter,
                         child: Text(
-                          "premier league".toUpperCase(),
+                          predictedInfo.league.toString().toUpperCase(),
                           style: CustomTextStyles.bodySmallBluegray900_1,
                         ),
                       ),
@@ -152,14 +156,24 @@ class PredictionContainer extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgIdezia,
+                              if(predictedInfo.homeImage == null || predictedInfo.homeImage == 'null' || predictedInfo.homeImage == '')...[
+                                CustomImageView(
+                                
+                                imagePath: AppImages.football,
                                 height: 24.adaptSize,
                                 width: 24.adaptSize,
                               ),
+                              ]else...[
+                                CustomImageView(
+                                imagePath: predictedInfo.homeImage ?? '',
+                                placeHolder: AppImages.football,
+                                height: 24.adaptSize,
+                                width: 24.adaptSize,
+                              ),
+                              ],
                               SizedBox(height: 2.v),
                               Text(
-                                "Liverpool",
+                                predictedInfo.homeTeam.toString(),
                                 style: CustomTextStyles.labelLargeBluegray900,
                               ),
                               SizedBox(height: 1.v),
@@ -171,23 +185,34 @@ class PredictionContainer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      CustomImageView(
-                        imagePath: ImageConstant.imgIdezia24x24,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                        alignment: Alignment.topRight,
-                        margin: EdgeInsets.only(
-                          top: 14.v,
-                          right: 17.h,
-                        ),
-                      ),
+                       
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 22.v),
-                          child: Text(
-                            "Aston Villa",
-                            style: CustomTextStyles.labelLargeBluegray900,
+                          child: Column(
+                            children: [
+                               if(predictedInfo.homeImage == null || predictedInfo.homeImage == 'null' || predictedInfo.homeImage == '')...[
+                                CustomImageView(
+                                
+                                imagePath: AppImages.football,
+                                height: 24.adaptSize,
+                                width: 24.adaptSize,
+                              ),
+                              ]else...[
+                                CustomImageView(
+                                imagePath: predictedInfo.homeImage ?? '',
+                                placeHolder: AppImages.football,
+                                height: 24.adaptSize,
+                                width: 24.adaptSize,
+                              ),
+                              ],
+                              Text(
+                                predictedInfo.awayTeam.toString(),
+                                style: CustomTextStyles.labelLargeBluegray900,
+                              ),
+
+                            ],
                           ),
                         ),
                       ),
@@ -203,7 +228,7 @@ class PredictionContainer extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 7.v),
                                 child: Text(
-                                  "3-0",
+                                  "${predictedInfo.homeScore.toString()}" "-" "${predictedInfo.awayScore.toString()}",
                                   style: theme.textTheme.titleSmall,
                                 ),
                               ),
@@ -248,7 +273,7 @@ class PredictionContainer extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              "Home",
+                              predictedInfo.predictedWinner.toString(),
                               style: theme.textTheme.labelLarge,
                             ),
                           ),
@@ -275,7 +300,7 @@ class PredictionContainer extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                "2.88",
+                                predictedInfo.odds.toString(),
                                 style: theme.textTheme.labelLarge,
                               ),
                             ),

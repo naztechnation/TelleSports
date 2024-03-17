@@ -15,7 +15,7 @@ class PredictRepositoryImpl implements PredictRepository {
 
   @override
   Future<PredictMatchList> getPrediction({required String selectedDate})  async {
-    final map = await Requests().post(AppStrings.getPredictionListUrl(selectedDate),);
+    final map = await Requests().get(AppStrings.getPredictionListUrl(selectedDate),);
     return PredictMatchList.fromJson(map);
   }
 
@@ -31,7 +31,9 @@ class PredictRepositoryImpl implements PredictRepository {
       "predicted_winner": predictedWinner,
       "odds": odds,
       "league": league,
-      "home_score": homeScore
+      "home_score": homeScore,
+      "home_image" : homeLogo,
+      "away_image": awayLogo
     });
     return PredictMatch.fromJson(map);
   }
