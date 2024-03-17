@@ -107,7 +107,8 @@ class _PredictionsState extends State<Predictions> {
                 );
               }
 
-              return (state is PredictListLoading || state is RatingPredictLoading)
+              return (state is PredictListLoading || 
+              state is RatingPredictLoading)
                   ? const LoadingPage()
                   : Container(
                       width: double.maxFinite,

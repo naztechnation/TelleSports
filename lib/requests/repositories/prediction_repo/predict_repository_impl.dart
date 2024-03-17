@@ -4,6 +4,7 @@ import 'package:tellesports/model/prediction_data/predict_match.dart';
 import 'package:tellesports/model/prediction_data/predicted_match_list.dart';
 
 import 'package:tellesports/model/prediction_data/prediction_rating.dart';
+import 'package:tellesports/model/report/complaint.dart';
 
 import '../../../res/app_strings.dart';
 import '../../setup/requests.dart';
@@ -46,6 +47,37 @@ class PredictRepositoryImpl implements PredictRepository {
     });
     return PredictRating.fromJson(map);
   }
+  
+  @override
+  Future<Complaint> sendComplaint({required String complaintType,
+   required String complaint, required String reportedUser,
+    String? groupName, String? groupId, String? groupLeaderName}) async {
+var body;
+      if(complaintType == 'user'){
+body = {
+      "complaint_type": complaintType,
+      "complaint": complaint,
+      "reported_username": reportedUser,
+       
+      
+    };
+      }else{
+
+         
+        body = {
+      "complaint_type": complaintType,
+      "complaint": complaint,
+      "reported_username": reportedUser,
+      "group_name": groupName,
+      "group_id": groupId,
+      "group_leader_name": groupLeaderName,
+      
+    };
+      }
+    final map = await Requests().post(AppStrings.reportUrl, body: body);
+    return Complaint.fromJson(map);
+  }
+  
 
  
 

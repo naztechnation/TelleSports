@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/base_button.dart';
 
 import 'progress_indicator.dart';
@@ -11,7 +10,8 @@ class CustomOutlinedButton extends BaseButton {
     this.leftIcon,
     this.processing = false,
     this.title = 'Loading...',
-
+    this.loadingColour = Colors.white,
+    
     this.rightIcon,
     this.label,
     VoidCallback? onPressed,
@@ -33,6 +33,7 @@ class CustomOutlinedButton extends BaseButton {
           alignment: alignment,
           width: width,
           margin: margin,
+          
         );
 
   final BoxDecoration? decoration;
@@ -40,7 +41,7 @@ class CustomOutlinedButton extends BaseButton {
   final Widget? leftIcon;
 
   final Widget? rightIcon;
-
+  final Color loadingColour;
   final Widget? label;
   final bool processing;
   final String title ;
@@ -75,7 +76,7 @@ class CustomOutlinedButton extends BaseButton {
                   SizedBox(
                       height: 15,
                       width: 15,
-                      child: ProgressIndicators.circularProgressBar()),
+                      child: ProgressIndicators.circularProgressBar(color: loadingColour)),
                       const SizedBox(width: 13,),
                   Text(title, style: TextStyle(color: Colors.red, fontSize: 14),)
                 ],

@@ -8,6 +8,7 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
+import '../../widgets/modals.dart';
 import '../community_screens/provider/auth_provider.dart' as pro;
 import 'package:provider/provider.dart' as provider;
 
@@ -47,6 +48,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+
     final groupInfo =
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
 
@@ -256,7 +258,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
             child: TabBarView(controller: tabviewController, children: [
       UserInfoPage(
         isGroupAdmin: widget.isGroupAdmin,
-        memberId: widget.memberId,
+        memberId: widget.memberId, memberName: widget.name,
       ),
     ])));
   }

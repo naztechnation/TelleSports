@@ -43,6 +43,7 @@ class AppStrings {
   static String getPredictionListUrl(String day) => '${_baseUrl}predictions?day=$day';
   static String postPredictionUrl = '${_baseUrl}predictions';
   static String predictionRatingUrl = '${_baseUrl}prediction_rating';
+  static String reportUrl = '${_baseUrl}report';
   
 
 

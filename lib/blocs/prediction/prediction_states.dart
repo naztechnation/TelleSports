@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:tellesports/model/prediction_data/predicted_match_list.dart';
+import 'package:tellesports/model/report/complaint.dart';
 
 import '../../model/prediction_data/predict_match.dart';
 import '../../model/prediction_data/prediction_rating.dart';
@@ -50,6 +51,18 @@ class RatingPredictLoaded extends PredictStates {
   const RatingPredictLoaded(this.predict);
   @override
   List<Object> get props => [predict];
+}
+
+class ReportUserLoading extends PredictStates {
+  @override
+  List<Object> get props => [];
+}
+
+class ReportUserLoaded extends PredictStates {
+  final Complaint complaint;
+  const ReportUserLoaded(this.complaint);
+  @override
+  List<Object> get props => [complaint];
 }
 
 class PredictNetworkErr extends PredictStates {

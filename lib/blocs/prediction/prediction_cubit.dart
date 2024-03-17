@@ -110,4 +110,31 @@ Future<void> postPrediction({
     }
   }
 
+    Future<void> sendReport({required String complaintType,
+   required String complaint, required String reportedUser,
+    String? groupName, String? groupId, String? groupLeaderName}) async {
+    try {
+      emit(ReportUserLoading());
+
+      final report = await predictRepository.sendComplaint(complaintType: complaintType, complaint: complaint, reportedUser: reportedUser, groupName: groupName ?? '', groupId: groupId ?? '', groupLeaderName: groupLeaderName ?? '');
+       
+        
+      
+
+      emit(ReportUserLoaded(report));
+    } on ApiException catch (e) {
+      emit(PredictApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(PredictNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
 }
