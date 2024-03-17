@@ -152,12 +152,12 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: (widget.isDelete)? Colors.red :Colors.blue,
                                 borderRadius: BorderRadius.circular(20)),
                             height: 40,
                             child: Align(
                                 child: Text(
-                              'Accept',
+                             (widget.isDelete)? 'Unblock' : 'Accept',
                               style: TextStyle(color: Colors.white),
                             )),
                           ),

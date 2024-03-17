@@ -27,12 +27,11 @@ class BlockedUsersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
 
-    final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
 
 
     return SafeArea(
       child: Scaffold(
-        appBar: _buildAppBar(context, groupInfo.blockedMembers.length.toString()),
+        appBar: _buildAppBar(context, item.length.toString()),
         body: Padding(
           padding: EdgeInsets.only(
             left: 28.h,
@@ -55,7 +54,7 @@ class BlockedUsersPage extends StatelessWidget {
               return GestureDetector(
                  onTap: (){
       },
-                child: RequestDeleteInfo(name: item[index].name, bio: item[index].bio, index: index, image: groupInfo.requestedMembers[index].profilePic, isDelete: true, userId: groupInfo.requestedMembers[index].uid,));
+                child: RequestDeleteInfo(name: item[index].name, bio: item[index].bio, index: index, image: item[index].profilePic, isDelete: true, userId: item[index].uid,));
             },
           ),
         ),

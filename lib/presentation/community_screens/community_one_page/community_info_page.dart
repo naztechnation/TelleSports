@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tellesports/common/widgets/loader.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
@@ -216,7 +217,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                             GestureDetector(
                               onTap: () {
                                 AppNavigator.pushAndStackPage(context,
-                                    page: BlockedUsersPage(item: requestItems));
+                                    page: BlockedUsersPage(item: blockedItems));
                               },
                               child: Card(
                                   elevation: 0.2,
@@ -276,7 +277,11 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                           SizedBox(height: 24.v),
                           _buildUserProfile(context, groupInfo.groupNumber,
                               groupMembers.length, groupInfo.groupAdminId),
-                          SizedBox(height: 24.v),
+                        if(isLoading)...[
+                          Center(child: Loader(),)
+                        ]else...[
+                           Column(children: [
+                           SizedBox(height: 30.v),
                           CustomElevatedButton(
                               text: "Leave community",
                               processing: isLoading,
@@ -306,11 +311,44 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                       page: LandingPage());
                                 }
                               }),
+                          if (groupInfo.groupAdminId == userId) SizedBox(height: 16.v),
+
+                             if (groupInfo.groupAdminId == userId) CustomElevatedButton(
+                              text: "Delete community",
+                              processing: isLoading,
+                              buttonStyle: CustomButtonStyles.fillRed,
+                              onPressed: () async {
+                                 
+
+                                Modals.showAlertOptionDialog(context,
+                                      title: 'Delete Community',
+                                      
+                                      message:
+                                          'Warning: Are you sure you want to Delete this community. As  this action cannot be reversed...',
+                                      onTap: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    await groupInfo
+                                        .deleteGroup(
+                                            groupInfo.groupId,context);
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                     AppNavigator.pushAndStackPage(context,
+                                      page: LandingPage());
+                                  });
+
+                                 
+                              }),
                           SizedBox(height: 16.v),
                           CustomOutlinedButton(
                             text: "Report community",
                             processing: isLoading,
-                          )
+                          ),
+                          SizedBox(height: 30.v)
+                         ],)
+                        ]
                         ])))));
   }
 

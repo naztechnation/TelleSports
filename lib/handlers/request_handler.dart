@@ -23,11 +23,11 @@ class RequestHandler{
       case 401:
        return response.body;
       case 403:
-        throw UnauthorisedException('handleApiError(map).first.msg');
+        throw UnauthorisedException('Error in network connection');
       case 404:
-        throw FileNotFoundException('handleApiError(map).first.msg');
+        throw FileNotFoundException('File not found');
       case 422:
-        throw AlreadyRegisteredException('handleApiError(map).first.msg');
+        throw AlreadyRegisteredException('Error in network connection');
       case 500:
         throw NetworkException(response.reasonPhrase ?? 'Network error');
       default:
@@ -55,11 +55,11 @@ class RequestHandler{
       case 401:
       return res.join('');
       case 403:
-      throw UnauthorisedException('handleApiError(map).first.msg');
+      throw UnauthorisedException('Error in network connection');
       case 404:
-     throw FileNotFoundException('handleApiError(map).first.msg');
+     throw FileNotFoundException('File not found');
       case 422:
-      throw AlreadyRegisteredException('handleApiError(map).first.msg');
+      throw AlreadyRegisteredException('Error in network connection');
       case 500:
         throw NetworkException(response.reasonPhrase ?? 'Network error');
       default:

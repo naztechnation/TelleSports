@@ -2,6 +2,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tellesports/core/constants/enums.dart';
 
 import '../../blocs/prediction/prediction.dart';
 import '../../model/prediction_data/predicted_match_list.dart';
@@ -9,6 +10,7 @@ import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/prediction_repo/predict_repository_impl.dart';
 import '../../widgets/empty_widget.dart';
 import '../../widgets/loading_page.dart';
+import '../../widgets/modals.dart';
 import 'widgets/prediction_container.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -78,6 +80,15 @@ class _PredictionsState extends State<Predictions> {
                   predictedMatch = state.predict.data ?? [];
                   setState(() {});
                 } else {}
+              }else if(state is  RatingPredictLoaded){
+                if (state.predict.success ?? false) {
+    _predictionCubit.getPrediction(day: day.toString());
+
+                   Modals.showToast('Rating submitted successfully', messageType: MessageType.success);
+                }else{
+                  Modals.showToast('Rating not  submitted');
+                }
+               
               }
             }, builder: (context, state) {
               if (state is PredictApiErr) {
@@ -96,7 +107,7 @@ class _PredictionsState extends State<Predictions> {
                 );
               }
 
-              return (state is PredictListLoading)
+              return (state is PredictListLoading || state is RatingPredictLoading)
                   ? const LoadingPage()
                   : Container(
                       width: double.maxFinite,
@@ -207,7 +218,11 @@ class _PredictionsState extends State<Predictions> {
                                 },
                                 itemCount: predictedMatch.length,
                                 itemBuilder: (context, index) {
-                                  return PredictionContainer(predictedInfo: predictedMatch[index],);
+                                  return PredictionContainer(
+                                    predictedInfo: predictedMatch[index], onTap: (value){
+                                      _predictionCubit.postPredictionRating(predictionId: predictedMatch[index].id.toString(), predictionRating: value.toString());
+                                    },
+                                  );
                                 }),
                           ] else ...[
                             Column(
@@ -241,7 +256,7 @@ class _PredictionsState extends State<Predictions> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        height: 73.v,
+        height: 53.v,
         centerTitle: true,
         title: AppbarSubtitleOne(
             text: "Predictions",
@@ -272,9 +287,5 @@ class _PredictionsState extends State<Predictions> {
         ]));
   }
 
-  void _scrollDown() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-    });
-  }
+   
 }

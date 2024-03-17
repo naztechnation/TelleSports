@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:read_more_text/read_more_text.dart';
 
 import '../../../../common/enums/message_enum.dart';
-import '../../../../common/utils/colors.dart';
 
 class DisplayTextImageGIF extends StatelessWidget {
   final String message;

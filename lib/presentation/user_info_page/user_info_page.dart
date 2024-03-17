@@ -8,6 +8,9 @@ import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:tellesports/widgets/modals.dart';
 
+import '../../utils/validator.dart';
+import '../../widgets/custom_text_form_field.dart';
+import '../../widgets/modal_content.dart';
 import '../community_screens/provider/auth_provider.dart' as pro;
 
 // ignore_for_file: must_be_immutable
@@ -26,6 +29,8 @@ class UserInfoPage extends StatefulWidget {
 class UserInfoPageState extends State<UserInfoPage>
     with AutomaticKeepAliveClientMixin<UserInfoPage> {
   TextEditingController notificationsvalueController = TextEditingController();
+
+  final compaintController = TextEditingController();
 
   @override
   bool get wantKeepAlive => true;
@@ -97,6 +102,21 @@ class UserInfoPageState extends State<UserInfoPage>
                     CustomOutlinedButton(
                       text: "Report user",
                         processing: isLoading,
+                        onPressed: () {
+                          
+                           Modals.showDialogModal(context,
+                            page: ModalContentScreen(
+                                title: 'Report this user',
+                                body: Column(
+                                  children: [_buildComplaintField(context)],
+                                ),
+                                btnText: 'Submit',
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                },
+                                headerColorOne: Color(0xFFFDF9ED),
+                                headerColorTwo: Color(0xFFFAF3DA)));
+                        },
 
                     ),
                   ],
@@ -107,5 +127,25 @@ class UserInfoPageState extends State<UserInfoPage>
         ),
       ),
     );
+  }
+
+  Widget _buildComplaintField(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(left: 8.h),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("Report *", style: theme.textTheme.titleSmall),
+          SizedBox(height: 3.v),
+          CustomTextFormField(
+              controller: compaintController,
+              hintText: "Enter your report here",
+              hintStyle: CustomTextStyles.titleSmallGray600,
+              maxLines: 5,
+              textInputType: TextInputType.name,
+              validator: (value) {
+                return Validator.validate(value, 'Report');
+              },
+              contentPadding:
+                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+        ]));
   }
 }

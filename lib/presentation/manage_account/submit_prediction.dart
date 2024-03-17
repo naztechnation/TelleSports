@@ -13,19 +13,34 @@ import '../../../core/constants/enums.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../blocs/prediction/prediction.dart';
-import '../../blocs/user/user.dart';
 import '../../model/view_models/user_view_model.dart';
-import '../../requests/repositories/user_repo/user_repository_impl.dart';
+import '../../requests/repositories/prediction_repo/predict_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
 
-class SubmitPredictionScreen extends StatefulWidget {
-  SubmitPredictionScreen({Key? key}) : super(key: key);
+
+class SubmitPredictionScreen extends StatelessWidget {
+  const SubmitPredictionScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<SubmitPredictionScreen> createState() => _SubmitPredictionScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<PredictionCubit>(
+      create: (BuildContext context) => PredictionCubit(
+          predictRepository: PredictRepositoryImpl(),
+          viewModel: Provider.of<UserViewModel>(context, listen: false)),
+      child: SubmitPrediction(),
+    );
+  }
+}
+class SubmitPrediction extends StatefulWidget {
+  SubmitPrediction({Key? key}) : super(key: key);
+
+  @override
+  State<SubmitPrediction> createState() => _SubmitPredictionState();
 }
 
-class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
+class _SubmitPredictionState extends State<SubmitPrediction> {
   TextEditingController homeTeamController = TextEditingController();
   TextEditingController awayTeamController = TextEditingController();
   TextEditingController awayScoreController = TextEditingController();
@@ -45,9 +60,18 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
   String awayLogo = '';
 
   List<Map<String, String>>? filteredTeam;
+  late PredictionCubit _predictionCubit;
+
+ getPredictions() async {
+    _predictionCubit = context.read<PredictionCubit>();
+     
+
+     
+  }
 
   @override
   void initState() {
+    getPredictions();
     super.initState();
   }
 
@@ -59,92 +83,86 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: _buildAppBar(context),
-            body: BlocProvider<UserCubit>(
-                lazy: false,
-                create: (_) => UserCubit(
-                    userRepository: UserRepositoryImpl(),
-                    viewModel:
-                        Provider.of<UserViewModel>(context, listen: false)),
-                child: BlocConsumer<UserCubit, UserStates>(
-                  listener: (context, state) {
-                    if (state is TransferCoinLoaded) {
-                      if (state.tellacoin.success!) {
-                        Modals.showToast(state.tellacoin.message ?? '',
-                            messageType: MessageType.success);
-
-                        Future.delayed(
-                            Duration(
-                              seconds: 3,
-                            ), () {
-                          AppNavigator.pushAndReplacePage(context,
-                              page: LandingPage());
-                          ;
-                        });
-                      } else {
-                        Modals.showToast(state.tellacoin.message ?? '',
-                            messageType: MessageType.error);
-                      }
-                    } else if (state is UserApiErr) {
-                      if (state.message != null) {
-                        Modals.showToast(state.message ?? '',
-                            messageType: MessageType.error);
-                      }
-                    } else if (state is UserNetworkErr) {
-                      if (state.message != null) {
-                        Modals.showToast(state.message ?? '',
-                            messageType: MessageType.error);
-                      }
-                    }
-                  },
-                  builder: (context, state) => Form(
-                      key: _formKey,
-                      child: Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(horizontal: 16.h),
-                          child: SingleChildScrollView(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Submit your Predictions",
-                                      style: theme.textTheme.headlineLarge),
-                                  SizedBox(height: 10.v),
-                                  Text("Please enter your predictions here.",
-                                      textAlign: TextAlign.justify,
-                                      style: TextStyle(
-                                          fontSize: 14, letterSpacing: 0.2)),
-                                  SizedBox(height: 29.v),
-                                  _buildLeagueField(context),
-                                  SizedBox(height: 11.v),
-                                  _buildHomeTeamField(context),
-                                  SizedBox(height: 11.v),
-                            
-                                   _buildHomeScoreField(context),
-                                  SizedBox(height: 11.v),
-                                  _buildAwayTeamField(context),
-                                  SizedBox(height: 11.v),
-                                 
-                                  _buildAwayScoreField(context),
-                                  SizedBox(height: 11.v),
-                            
-                                  _buildPredictedWinnerField(context),
-                                  SizedBox(height: 11.v),
-                                  _buildOddsField(context),
-                                  SizedBox(height: 32.v),
-                                  CustomElevatedButton(
-                                      text: "Submit",
-                                      title: 'Submitting data...',
-                                      processing: state is PredictLoading,
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 4.h),
-                                      onPressed: () {
-                                         predictedWinnner.clear();
-                                         addPredictedWinnnerList();
-                                        onTapSubmitPredictions(context);
-                                      }),
-                                  SizedBox(height: 35.v)
-                                ]),
-                          ))),
-                ))));
+            body: BlocConsumer<PredictionCubit, PredictStates>(
+              listener: (context, state) {
+                if (state is PredictLoaded) {
+                  if (state.predict.success ?? false) {
+                    Modals.showToast( 'Prediction submitted successfully',
+                        messageType: MessageType.success);
+            
+                    Future.delayed(
+                        Duration(
+                          seconds: 1,
+                        ), () {
+                      AppNavigator.pushAndReplacePage(context,
+                          page: LandingPage());
+                      ;
+                    });
+                  } else {
+                    Modals.showToast('Failed to submit prediction',
+                        messageType: MessageType.error);
+                  }
+                } else if (state is PredictApiErr) {
+                  if (state.message != null) {
+                    Modals.showToast(state.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                } else if (state is PredictNetworkErr) {
+                  if (state.message != null) {
+                    Modals.showToast(state.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                }
+              },
+              builder: (context, state) => Form(
+                  key: _formKey,
+                  child: Container(
+                      width: double.maxFinite,
+                      padding: EdgeInsets.symmetric(horizontal: 16.h),
+                      child: SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Submit your Predictions",
+                                  style: theme.textTheme.headlineLarge),
+                              SizedBox(height: 10.v),
+                              Text("Please enter your predictions here.",
+                                  textAlign: TextAlign.justify,
+                                  style: TextStyle(
+                                      fontSize: 14, letterSpacing: 0.2)),
+                              SizedBox(height: 29.v),
+                              _buildLeagueField(context),
+                              SizedBox(height: 11.v),
+                              _buildHomeTeamField(context),
+                              SizedBox(height: 11.v),
+                        
+                               _buildHomeScoreField(context),
+                              SizedBox(height: 11.v),
+                              _buildAwayTeamField(context),
+                              SizedBox(height: 11.v),
+                             
+                              _buildAwayScoreField(context),
+                              SizedBox(height: 11.v),
+                        
+                              _buildPredictedWinnerField(context),
+                              SizedBox(height: 11.v),
+                              _buildOddsField(context),
+                              SizedBox(height: 32.v),
+                              CustomElevatedButton(
+                                  text: "Submit",
+                                  title: 'Submitting data...',
+                                  processing: state is PredictLoading,
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 4.h),
+                                  onPressed: () {
+                                     predictedWinnner.clear();
+                                     addPredictedWinnnerList();
+                                    onTapSubmitPredictions(context);
+                                  }),
+                              SizedBox(height: 35.v)
+                            ]),
+                      ))),
+            )));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -199,7 +217,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
               controller: homeTeamController,
               hintText: 'Select home way',
               hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputType: TextInputType.number,
+              textInputType: TextInputType.name,
               readOnly: true,
                suffix: Icon(
               Icons.arrow_drop_down,
@@ -237,7 +255,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
               hintText: 'Select away way',
               readOnly: true,
               hintStyle: CustomTextStyles.titleSmallGray600,
-              textInputType: TextInputType.number,
+              textInputType: TextInputType.name,
               validator: (value) {
                 return Validator.validate(value, 'Away team');
               },
@@ -373,7 +391,7 @@ class _SubmitPredictionScreenState extends State<SubmitPredictionScreen> {
         
       }else{
         if (_formKey.currentState!.validate()) {
-         context.read<PredictionCubit>().postPrediction(homeTeam: homeTeamController.text, 
+         _predictionCubit.postPrediction(homeTeam: homeTeamController.text, 
         awayTeam: awayTeamController.text, homeScore: homeScoreController.text, predictedWinner: predictedWinnerController.text, 
         awayScore: awayScoreController.text, 
         odds: winnerOddController.text, league: leagueController.text, homeLogo: homeLogo, awayLogo: awayLogo

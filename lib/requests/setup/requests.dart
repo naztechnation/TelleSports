@@ -26,9 +26,9 @@ class Requests {
         
       });
     } on SocketException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on HandshakeException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on FormatException catch (e) {
       throw NetworkException(e.toString());
     } finally {
@@ -130,9 +130,9 @@ class Requests {
      
 
     } on SocketException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on HandshakeException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on FormatException catch (e) {
       throw NetworkException(e.toString());
     }
@@ -163,9 +163,9 @@ class Requests {
 
 
     } on SocketException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on HandshakeException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on FormatException catch (e) {
       throw NetworkException(e.toString());
     }
@@ -187,9 +187,9 @@ class Requests {
       
       });
     } on SocketException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on HandshakeException {
-      throw NetworkException('AppStrings.networkErrorMessage');
+      throw NetworkException(AppStrings.networkErrorMessage);
     } on FormatException catch (e) {
       throw NetworkException(e.toString());
     } finally {

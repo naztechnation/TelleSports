@@ -10,14 +10,24 @@ import '../../../widgets/modal_content.dart';
 import '../../../widgets/modals.dart';
 
 // ignore: must_be_immutable
-class PredictionContainer extends StatelessWidget {
+class PredictionContainer extends StatefulWidget {
   final PredictMatchListData predictedInfo;
+  final Function(double value)  onTap;
 
-  const PredictionContainer({Key? key, required this.predictedInfo})
+  const PredictionContainer({Key? key, required this.predictedInfo, required this.onTap})
       : super(
           key: key,
         );
 
+  @override
+  State<PredictionContainer> createState() => _PredictionContainerState();
+}
+
+class _PredictionContainerState extends State<PredictionContainer> {
+
+  double initialValue   = 1;
+
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -42,7 +52,7 @@ class PredictionContainer extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal:30.0),
 
                       child: RatingBar.builder(
-                        initialRating: double.tryParse(predictedInfo.currentRating.toString()) ?? 0.0,
+                        initialRating: double.tryParse(widget.predictedInfo.currentRating.toString()) ?? 0.0,
                         minRating: 1,
                         direction: Axis.horizontal,
                         allowHalfRating: true,
@@ -87,7 +97,7 @@ class PredictionContainer extends StatelessWidget {
                         ),
                       ),
                       onRatingUpdate: (rating) {
-                        print(rating);
+                       initialValue = rating;
                       },
                     ),
                   ],
@@ -95,6 +105,7 @@ class PredictionContainer extends StatelessWidget {
                 btnText: 'Submit',
                 onPressed: () async {
                   Navigator.pop(context);
+                  widget.onTap(initialValue);
                 },
                 headerColorOne: Color(0xFFFDF9ED),
                 headerColorTwo: Color(0xFFFAF3DA)));
@@ -117,7 +128,7 @@ class PredictionContainer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Rated: ${predictedInfo.currentRating}/5",
+                      "Rated: ${approximateToDecimalPlace(double.tryParse(widget.predictedInfo.currentRating ?? '0.0') ?? 0.0, 1)}/5",
                       style: CustomTextStyles.labelMediumBlack900,
                     ),
                     CustomImageView(
@@ -129,26 +140,31 @@ class PredictionContainer extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  AppUtils.formatComplexDate(dateTime: predictedInfo.createdAt.toString()),
+                  AppUtils.formatComplexDate(dateTime: widget.predictedInfo.createdAt.toString()),
                   style: CustomTextStyles.labelMediumBlack900,
                 ),
               ],
             ),
+            const SizedBox(height: 10,),
             Column(
               children: [
                 SizedBox(
-                  height: 78.v,
-                  width: 189.h,
+                  height: 95.v,
+                  width: MediaQuery.sizeOf(context).width * 0.73,
                   child: Stack(
                     alignment: Alignment.bottomLeft,
                     children: [
                       Align(
                         alignment: Alignment.topCenter,
-                        child: Text(
-                          predictedInfo.league.toString().toUpperCase(),
-                          style: CustomTextStyles.bodySmallBluegray900_1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Text(
+                            widget.predictedInfo.league.toString().toUpperCase(),
+                            style: CustomTextStyles.bodySmallBluegray900_1,
+                          ),
                         ),
                       ),
+                      
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Padding(
@@ -156,7 +172,9 @@ class PredictionContainer extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if(predictedInfo.homeImage == null || predictedInfo.homeImage == 'null' || predictedInfo.homeImage == '')...[
+                              if(widget.predictedInfo.homeImage == null || 
+                              widget.predictedInfo.homeImage == 'null' || 
+                              widget.predictedInfo.homeImage == '')...[
                                 CustomImageView(
                                 
                                 imagePath: AppImages.football,
@@ -165,16 +183,22 @@ class PredictionContainer extends StatelessWidget {
                               ),
                               ]else...[
                                 CustomImageView(
-                                imagePath: predictedInfo.homeImage ?? '',
+                                imagePath: widget.predictedInfo.homeImage ?? '',
                                 placeHolder: AppImages.football,
                                 height: 24.adaptSize,
                                 width: 24.adaptSize,
                               ),
                               ],
                               SizedBox(height: 2.v),
-                              Text(
-                                predictedInfo.homeTeam.toString(),
-                                style: CustomTextStyles.labelLargeBluegray900,
+                              SizedBox(
+                                width: 100,
+                                child: Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
+                                  widget.predictedInfo.homeTeam.toString(),
+                                  style: CustomTextStyles.labelLargeBluegray900,
+                                ),
                               ),
                               SizedBox(height: 1.v),
                               Text(
@@ -189,10 +213,13 @@ class PredictionContainer extends StatelessWidget {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: 22.v),
+                          padding: EdgeInsets.only(bottom: 8.v),
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                               if(predictedInfo.homeImage == null || predictedInfo.homeImage == 'null' || predictedInfo.homeImage == '')...[
+                               if(widget.predictedInfo.homeImage == null ||
+                                widget.predictedInfo.homeImage == 'null' 
+                               || widget.predictedInfo.homeImage == '')...[
                                 CustomImageView(
                                 
                                 imagePath: AppImages.football,
@@ -201,50 +228,51 @@ class PredictionContainer extends StatelessWidget {
                               ),
                               ]else...[
                                 CustomImageView(
-                                imagePath: predictedInfo.homeImage ?? '',
+                                imagePath: widget.predictedInfo.homeImage  ?? '',
                                 placeHolder: AppImages.football,
                                 height: 24.adaptSize,
                                 width: 24.adaptSize,
                               ),
                               ],
-                              Text(
-                                predictedInfo.awayTeam.toString(),
-                                style: CustomTextStyles.labelLargeBluegray900,
-                              ),
+                              SizedBox(height: 2.v),
 
+                              SizedBox(
+                                width:100,
+                                child: Center(
+                                  child: Text(
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    widget.predictedInfo.awayTeam.toString(),
+                                    style: CustomTextStyles.labelLargeBluegray900,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 1.v),
+
+                               Text(
+                              "(Away)".toUpperCase(),
+                              style: CustomTextStyles.bodySmallBluegray900,
+                            ),
                             ],
                           ),
                         ),
                       ),
                       Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 14.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 7.v),
-                                child: Text(
-                                  "${predictedInfo.homeScore.toString()}" "-" "${predictedInfo.awayScore.toString()}",
-                                  style: theme.textTheme.titleSmall,
-                                ),
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 7.v),
+                              child: Text(
+                                "${widget.predictedInfo.homeScore.toString()}" "-" "${widget.predictedInfo.awayScore.toString()}",
+                                style: theme.textTheme.titleSmall,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 38.h,
-                                  top: 6.v,
-                                  bottom: 7.v,
-                                ),
-                                child: Text(
-                                  "(Away)".toUpperCase(),
-                                  style: CustomTextStyles.bodySmallBluegray900,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                           
+                          ],
                         ),
                       ),
                     ],
@@ -273,7 +301,7 @@ class PredictionContainer extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              predictedInfo.predictedWinner.toString(),
+                              widget.predictedInfo.predictedWinner.toString(),
                               style: theme.textTheme.labelLarge,
                             ),
                           ),
@@ -300,7 +328,7 @@ class PredictionContainer extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                predictedInfo.odds.toString(),
+                                widget.predictedInfo.odds.toString(),
                                 style: theme.textTheme.labelLarge,
                               ),
                             ),
@@ -317,4 +345,8 @@ class PredictionContainer extends StatelessWidget {
       ),
     );
   }
+
+  String approximateToDecimalPlace(double number, int decimalPlaces) {
+  return number.toStringAsFixed(decimalPlaces);
+}
 }

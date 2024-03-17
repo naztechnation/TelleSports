@@ -11,7 +11,6 @@ import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../community_screens/provider/auth_provider.dart' as pro;
 import 'package:provider/provider.dart' as provider;
 
-
 class IndividualUserInfo extends StatefulWidget {
   final String name;
   final String image;
@@ -19,13 +18,19 @@ class IndividualUserInfo extends StatefulWidget {
   final String username;
   final String memberId;
   final bool isGroupAdmin;
-  
-  
-  const IndividualUserInfo({Key? key, required this.name, required this.image, required this.bio, required this.username, required this.isGroupAdmin, required this.memberId,}) : super(key: key);
+
+  const IndividualUserInfo({
+    Key? key,
+    required this.name,
+    required this.image,
+    required this.bio,
+    required this.username,
+    required this.isGroupAdmin,
+    required this.memberId,
+  }) : super(key: key);
 
   @override
-  IndividualUserInfoState createState() =>
-      IndividualUserInfoState();
+  IndividualUserInfoState createState() => IndividualUserInfoState();
 }
 
 // ignore_for_file: must_be_immutable
@@ -42,7 +47,8 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-    final groupInfo = provider.Provider.of<pro.AuthProviders>(context, listen: true);
+    final groupInfo =
+        provider.Provider.of<pro.AuthProviders>(context, listen: true);
 
     return SafeArea(
         child: Scaffold(
@@ -65,9 +71,14 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                       onPressed: () {
                         onTapGiftTellacoins(context, widget.username);
                       }),
-                 SizedBox(height: 24.v),
-                   _buildFrameColumn(context: context, groupName: groupInfo.groupName, groupPics: groupInfo.groupPics, groupNumber: groupInfo.groupNumber,),
-                   SizedBox(height: 24.v),
+                  SizedBox(height: 24.v),
+                  _buildFrameColumn(
+                    context: context,
+                    groupName: groupInfo.groupName,
+                    groupPics: groupInfo.groupPics,
+                    groupNumber: groupInfo.groupNumber,
+                  ),
+                  SizedBox(height: 24.v),
                   // _buildFrameColumn1(),
                   _buildTabBarView(context)
                 ]))));
@@ -78,7 +89,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
       height: 86.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
-        onTap: (){
+        onTap: () {
           Navigator.pop(context);
         },
         imagePath: ImageConstant.imgArrowBack,
@@ -97,7 +108,6 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
         ),
       ),
       styleType: Style.bgOutline,
-      
     );
   }
 
@@ -107,21 +117,21 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
         child: Padding(
             padding: EdgeInsets.only(left: 20.h, right: 45.h),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-             if(widget.image == "" || widget.image == "null")...[
- CustomImageView(
-                  imagePath: ImageConstant.imgAvatar,
-                  placeHolder: ImageConstant.imgAvatar64x64,
-                  height: 64.adaptSize,
-                  width: 64.adaptSize,
-                  radius: BorderRadius.circular(32.h)),
-             ]else...[
-               CustomImageView(
-                  imagePath: widget.image,
-                  placeHolder: ImageConstant.imgAvatar64x64,
-                  height: 64.adaptSize,
-                  width: 64.adaptSize,
-                  radius: BorderRadius.circular(32.h)),
-             ],
+              if (widget.image == "" || widget.image == "null") ...[
+                CustomImageView(
+                    imagePath: ImageConstant.imgAvatar,
+                    placeHolder: ImageConstant.imgAvatar64x64,
+                    height: 64.adaptSize,
+                    width: 64.adaptSize,
+                    radius: BorderRadius.circular(32.h)),
+              ] else ...[
+                CustomImageView(
+                    imagePath: widget.image,
+                    placeHolder: ImageConstant.imgAvatar64x64,
+                    height: 64.adaptSize,
+                    width: 64.adaptSize,
+                    radius: BorderRadius.circular(32.h)),
+              ],
               Expanded(
                   child: Padding(
                       padding: EdgeInsets.only(left: 10.h, bottom: 11.v),
@@ -134,17 +144,19 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                             SizedBox(height: 3.v),
                             SizedBox(
                                 width: 251.h,
-                                child: Text(
-                                    widget.bio,
-                                    maxLines: 2,
+                                child: Text(widget.bio,
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: theme.textTheme.labelMedium))
+                                    style: TextStyle(fontSize: 14)))
                           ])))
             ])));
   }
 
-  Widget _buildFrameColumn({required BuildContext context,required String groupName,
-  required String groupPics,required String groupNumber}) {
+  Widget _buildFrameColumn(
+      {required BuildContext context,
+      required String groupName,
+      required String groupPics,
+      required String groupNumber}) {
     return Container(
         width: 350.h,
         margin: EdgeInsets.symmetric(horizontal: 20.h),
@@ -155,14 +167,16 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text((widget.isGroupAdmin)? "Community created" : "Community Info",
+              Text(
+                  (widget.isGroupAdmin)
+                      ? "Community created"
+                      : "Community Info",
                   style: CustomTextStyles.titleMediumBluegray900),
               SizedBox(height: 14.v),
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 CustomImageView(
                     imagePath: groupPics,
-                  placeHolder: ImageConstant.imgAvatar64x64,
-
+                    placeHolder: ImageConstant.imgAvatar64x64,
                     height: 60.adaptSize,
                     width: 60.adaptSize,
                     radius: BorderRadius.circular(30.h)),
@@ -170,14 +184,14 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                     padding:
                         EdgeInsets.only(left: 10.h, top: 2.v, bottom: 15.v),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                      Text(groupName,
-                          style: CustomTextStyles.titleMediumBlack900_1),
-                      SizedBox(height: 2.v),
-                      Text("$groupNumber members",
-                          style: CustomTextStyles.titleSmallBluegray400)
-                    ]))
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(groupName,
+                              style: CustomTextStyles.titleMediumBlack900_1),
+                          SizedBox(height: 2.v),
+                          Text("$groupNumber members",
+                              style: CustomTextStyles.titleSmallBluegray400)
+                        ]))
               ]),
               SizedBox(height: 6.v)
             ]));
@@ -240,14 +254,15 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
     return Expanded(
         child: SizedBox(
             child: TabBarView(controller: tabviewController, children: [
-              UserInfoPage(isGroupAdmin: widget.isGroupAdmin, memberId: widget.memberId,),
-              
-            ])));
+      UserInfoPage(
+        isGroupAdmin: widget.isGroupAdmin,
+        memberId: widget.memberId,
+      ),
+    ])));
   }
 
   onTapGiftTellacoins(BuildContext context, String username) {
-
-
-    AppNavigator.pushAndStackPage(context, page: GiftTellacoinsScreen(desUserId: username));
+    AppNavigator.pushAndStackPage(context,
+        page: GiftTellacoinsScreen(desUserId: username));
   }
 }
