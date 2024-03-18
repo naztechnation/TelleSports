@@ -39,11 +39,12 @@ class PricingPageScreen extends StatelessWidget {
       create: (BuildContext context) => AccountCubit(
           accountRepository: AccountRepositoryImpl(),
           viewModel: Provider.of<AccountViewModel>(context, listen: false)),
-      child: BuyTellacoinsScreen(balance: balance,));
+      child: BuyTellacoinsScreen(
+        balance: balance,
+      ));
 }
 
 class BuyTellacoinsScreen extends StatefulWidget {
-
   final String balance;
 
   BuyTellacoinsScreen({Key? key, required this.balance})
@@ -176,7 +177,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
   }
 
   _handlePaymentInitialization({
-    required String info,
+    required String price,
   }) async {
     final Customer customer = Customer(email: email);
 
@@ -186,7 +187,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
         currency: selectedCurrency,
         redirectUrl: 'https://tellasport.com',
         txRef: transactionId,
-        amount: amount,
+        amount: price,
         customer: customer,
         paymentOptions:
             "ussd, card, barter, payattitude, account, banktransfer, mpesa, mobilemoneyghana, mobilemoneyfranco, mobilemoneyuganda, mobilemoneyrwanda, mobilemoneyzambia, nqr",
@@ -213,10 +214,8 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
                   //       info: info,
                   //     )),
 
-                  Modals.showToast(
-                    'Payment Processed Successfully.',
-                    messageType: MessageType.success
-                  )
+                  Modals.showToast('Payment Processed Successfully.',
+                      messageType: MessageType.success)
                 }
             });
       }
@@ -299,9 +298,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
           );
         } else if (state is SubscriptionLoaded) {
           _accountCubit.plansList();
-        }
-       
-        else if (state is AccountNetworkErr) {
+        } else if (state is AccountNetworkErr) {
           return EmptyWidget(
             title: 'Network error',
             description: state.message,
@@ -314,7 +311,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
             onRefresh: () => _accountCubit.plansList(),
           );
         } else if (state is PlansLoaded) {
-          plans = state.plansList.data ?? [];
+          plans = state.plansList.data!.reversed.toList() ?? [];
         }
         return (plans.isEmpty)
             ? Scaffold(body: const Center(child: Text('No Plans Available')))
@@ -337,30 +334,29 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
                     ],
                   ),
                 ),
-                bottomNavigationBar: (eventHasHappened )
-            ? SizedBox(
-                height: 100,
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: CustomElevatedButton(
-                          onPressed: () {
-                            reconfirmTransaction();
-                          },
-                          processing: isLoading,
-                       text:  'Reconfirm payment'
-                       ),
-                    )
-                  ],
-                ))
-            : const SizedBox.shrink(),
+                bottomNavigationBar: (eventHasHappened)
+                    ? SizedBox(
+                        height: 100,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: CustomElevatedButton(
+                                  buttonStyle: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                                  onPressed: () {
+                                    reconfirmTransaction();
+                                  },
+                                  processing: isLoading,
+                                  text: 'Reconfirm payment'),
+                            )
+                          ],
+                        ))
+                    : const SizedBox.shrink(),
               );
-
-              
       }),
     );
   }
@@ -395,9 +391,14 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
   Widget _buildStarterPlan(BuildContext context) {
     return CustomElevatedButton(
       height: 31.v,
-      width: (plan.toUpperCase() == 'community leader'.toUpperCase()) ? 150.h : 136.h,
+      width: (plan.toUpperCase() == 'community leader'.toUpperCase())
+          ? 150.h
+          : 136.h,
       text: plan.toUpperCase(),
-      margin: EdgeInsets.only(right: 12.h, left: 12.h,),
+      margin: EdgeInsets.only(
+        right: 12.h,
+        left: 12.h,
+      ),
       buttonStyle: CustomButtonStyles.fillTeal,
       buttonTextStyle: CustomTextStyles.labelLargeInter,
       alignment: Alignment.centerRight,
@@ -483,7 +484,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
           imagePath: ImageConstant.cash,
         ),
         onPressed: () =>
-            AppNavigator.pushAndStackPage(context, page: WithdrawTellaCoins()),
+            AppNavigator.pushAndStackPage(context, page: WithdrawTellaCoins(tellaCoinBalance: widget.balance,userSub: plan,)),
         text: "   Cash Tellacoins",
         margin: EdgeInsets.symmetric(horizontal: 20.h));
   }
@@ -505,116 +506,110 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
           },
           itemCount: plans.length,
           itemBuilder: (context, index) {
-           if(plans[index].name == 'Free Plan'){
-            return SizedBox.shrink();
-           }else{
-             return CommunityleaderItemWidget(
-              plans: plans[index],
-              onTap: () {
-               
-                setState(() {
-                  selectedPlan = plans[index].name ?? '';
-                  planId = plans[index].id.toString();
-                });
-                Modals.showBottomSheetModal(context,
-                    isScrollControlled: false,
-                    isDissmissible: true,
-                    heightFactor: 0.7,
-                    page: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14.0, vertical: 22.0),
-                            child: Text('To Purchase Tellacoins Pay With...',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color:
-                                        Colors.black)),
-                          ),
-                          const Divider(),
-                          const SizedBox(height: 10),
-                          GestureDetector(
-                            onTap: (() {
-                              Navigator.pop(context);
-                              
+            if (plans[index].name == 'Free Plan') {
+              return SizedBox.shrink();
+            } else {
+              return CommunityleaderItemWidget(
+                plans: plans[index],
+                onTap: () {
+                  setState(() {
+                    selectedPlan = plans[index].name ?? '';
+                    planId = plans[index].id.toString();
+                  });
+                  Modals.showBottomSheetModal(context,
+                      isScrollControlled: false,
+                      isDissmissible: true,
+                      heightFactor: 0.7,
+                      page: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14.0, vertical: 22.0),
+                              child: Text('To Purchase Tellacoins Pay With...',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black)),
+                            ),
+                            const Divider(),
+                            const SizedBox(height: 10),
+                            GestureDetector(
+                              onTap: (() {
+                                Navigator.pop(context);
 
-                              Modals.showDialogModal(context,
-                                      page: _getCurrency('flutterwave'))
-                                  .then((value) => {
-                                        if (selectedCurrency == '')
-                                          {}
-                                        else
-                                          {
-                                            if (selectedCurrency == 'NGN')
-                                              {
-                                                _handlePaymentInitialization(
-                                                    info: plans[index].price ??
-                                                        ''),
-                                              }
-                                            else
-                                              {
-                                                _handlePaymentInitialization(
-                                                    info: plans[index].price ??
-                                                        ''),
-                                              }
-                                          }
-                                      });
-                            }),
-                            child: Container(
-                             
-                              padding: const EdgeInsets.all(12.0),
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  
-                                  Text('Flutterwave',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black)),
-                                          Icon(Icons.arrow_forward_ios)
-                                ],
+                                Modals.showDialogModal(context,
+                                        page: _getCurrency('flutterwave'))
+                                    .then((value) => {
+                                          if (selectedCurrency == '')
+                                            {}
+                                          else
+                                            {
+                                              if (selectedCurrency == 'NGN')
+                                                {
+                                                  _handlePaymentInitialization(
+                                                      price:
+                                                          plans[index].price ??
+                                                              ''),
+                                                }
+                                              else
+                                                {
+                                                  _handlePaymentInitialization(
+                                                      price:
+                                                          plans[index].price ??
+                                                              ''),
+                                                }
+                                            }
+                                        });
+                              }),
+                              child: Container(
+                                padding: const EdgeInsets.all(12.0),
+                                width: MediaQuery.of(context).size.width,
+                                color: Colors.transparent,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Flutterwave',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black)),
+                                    Icon(Icons.arrow_forward_ios)
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-
-                          const SizedBox(height: 5),
-                          const Divider(),
-                                                         
-                          const SizedBox(height: 45),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.lock,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 13,
-                              ),
-                              Text('Secured Payment',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary)),
-                            ],
-                          ),
-                        ]));
-             
-              },
-            );
-           }
+                            const SizedBox(height: 5),
+                            const Divider(),
+                            const SizedBox(height: 45),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.lock,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  size: 13,
+                                ),
+                                Text('Secured Payment',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary)),
+                              ],
+                            ),
+                          ]));
+                },
+              );
+            }
           },
         ),
       ),
     );
-
-    
   }
 
   Future<void> markEventAsHappened(

@@ -24,9 +24,9 @@ class TransferTellacoin {
 
 class Data {
   int? id;
-  String? userId;
-  String? plansId;
-  String? tellaCoins;
+  int? userId;
+  int? plansId;
+  int? tellaCoins;
   String? createdAt;
   String? updatedAt;
   String? bank;

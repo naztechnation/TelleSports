@@ -586,6 +586,20 @@ class AuthProviders extends ChangeNotifier {
     });
   }
 
+  Stream<List<Group>> getUserGroups(String userId) {
+  return _firebaseStorage.collection('groups').snapshots().map((event) {
+    List<Group> groups = [];
+    for (var document in event.docs) {
+      var group = Group.fromMap(document.data());
+      
+      if (group.senderId == userId) {
+        groups.add(group);
+      }
+    }
+    return groups;
+  });
+}
+
   addGroupInfo(
       {required String groupNumber,
       required String groupLink,

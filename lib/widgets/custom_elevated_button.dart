@@ -12,9 +12,11 @@ class CustomElevatedButton extends BaseButton {
     this.rightIcon,
     this.processing = false,
     this.title = 'Loading...',
+    this.textColor = Colors.white,
     EdgeInsets? margin,
     VoidCallback? onPressed,
     ButtonStyle? buttonStyle,
+
     Alignment? alignment,
     TextStyle? buttonTextStyle,
     bool? isDisabled,
@@ -34,6 +36,7 @@ class CustomElevatedButton extends BaseButton {
         );
 
   final BoxDecoration? decoration;
+  final Color textColor;
 
   final Widget? leftIcon;
 
@@ -71,7 +74,7 @@ class CustomElevatedButton extends BaseButton {
                       width: 15,
                       child: ProgressIndicators.circularProgressBar()),
                       const SizedBox(width: 13,),
-                  Text(title, style: TextStyle(fontSize: 15, color: Colors.white),)
+                  Text(title, style: TextStyle(fontSize: 15, color: textColor),)
                 ],
               ),
             ),
@@ -93,7 +96,7 @@ class CustomElevatedButton extends BaseButton {
                 Text(
                   text,
                   style:
-                      TextStyle(fontSize: 17, color: Colors.white),
+                      TextStyle(fontSize: 17, color:  textColor),
                 ),
                 rightIcon ?? const SizedBox.shrink(),
               ],
