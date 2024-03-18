@@ -12,7 +12,9 @@ import 'package:tellesports/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
 import '../../handlers/secure_handler.dart';
+import '../../model/chat_model/group.dart';
 import '../../model/view_models/account_view_model.dart';
+import '../community_screens/provider/auth_provider.dart';
 import '../convert_betcode_page/convert_betcode_page.dart'; 
 
 
@@ -35,13 +37,14 @@ class HomePageState
   late TabController tabviewController;
 
   String username = '';
+  String userId = '';
   String photo = '';
    bool showDelayedWidget = false;
 
-  
 
   getUserName() async{
     username = await StorageHandler.getUserName() ?? '';
+    userId = await StorageHandler.getUserId() ?? '';
     photo = await StorageHandler.getUserPhoto() ?? '';
     Future.delayed(Duration(seconds: 0), (){
       setState(() {
@@ -72,34 +75,34 @@ class HomePageState
 
     final user = Provider.of<AccountViewModel>(context, listen: true);
 
-
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context, user, photo),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              SizedBox(height: 30.v),
-              _buildTabview(context),
-              Expanded(
-                child: SizedBox(
-                  height: 606.v,
-                  child: TabBarView(
-                    controller: tabviewController,
-                    children: [
-                      ConvertBetcodes(),
-                      ViewLivescoresPage(),
-                    ],
+        body:  
+              SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                children: [
+                  SizedBox(height: 30.v),
+                  _buildTabview(context),
+                  Expanded(
+                    child: SizedBox(
+                      child: TabBarView(
+                        controller: tabviewController,
+                        children: [
+                          ConvertBetcodes(),
+                          ViewLivescoresPage(),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+            )));
+          }
+         
+    
+  
 
  
   PreferredSizeWidget _buildAppBar(BuildContext context, var user, String photo) {
@@ -235,4 +238,7 @@ class HomePageState
       ),
     );
   }
+
+ 
+
 }

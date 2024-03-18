@@ -170,7 +170,10 @@ class _CreateACommunityOneScreenState
                           AppNavigator.pushAndStackPage(context,
                               page: LandingPage());
                         } else {
+                          Future.delayed(Duration(seconds: 3), (){
                           Modals.showToast('Failed  to create group');
+
+                          });
                         }
                       } else {
                         Modals.showToast(

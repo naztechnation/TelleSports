@@ -208,11 +208,10 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
         _accountCubit.confirmSubscriptionn(txId, url, planId).then((value) => {
               if (_accountCubit.viewModel.paymentStatus)
                 {
-                  // AppNavigator.pushAndReplacePage(context,
-                  //     page: PaymentSuccess(
-                  //       message: message,
-                  //       info: info,
-                  //     )),
+                  AppNavigator.pushAndReplacePage(context,
+                      page: LandingPage(
+                         
+                      )),
 
                   Modals.showToast('Payment Processed Successfully.',
                       messageType: MessageType.success)

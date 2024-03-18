@@ -14,6 +14,7 @@ import '../../../../common/providers/message_reply_provider.dart';
 import '../../../../core/app_export.dart';
 import '../../../../core/constants/enums.dart';
 import '../../../../handlers/secure_handler.dart';
+import '../../../../model/chat_model/group.dart';
 import '../../../../model/view_models/user_view_model.dart';
 import '../../../../requests/repositories/prediction_repo/predict_repository_impl.dart';
 import '../../../../utils/navigator/page_navigator.dart';
@@ -30,6 +31,7 @@ import '../../../../widgets/modals.dart';
 
 import '../../community_one_page/community_info_page.dart';
 import '../../provider/auth_provider.dart' as pro;
+import '../../provider/auth_provider.dart';
 import '../controller/chat_controller.dart';
 import '../widgets/bottom_chat_field.dart';
 
@@ -64,6 +66,9 @@ class MobileChatScreen extends ConsumerStatefulWidget {
 class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
   final _scrollController = ScrollController();
   final compaintController = TextEditingController();
+
+  List<Group> usersGroup = [];
+
 
   @override
   void dispose() {
@@ -100,6 +105,11 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
     final groupInfo =
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
 
+
+if(groupInfo.groupAdminId == userId){
+updateUserGroupNumber();
+
+}
     return WillPopScope(
       onWillPop: () async {
         groupInfo.isSelectedMessage(false);
@@ -601,5 +611,12 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
               contentPadding:
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
         ]));
+  }
+
+   updateUserGroupNumber()async{
+
+      usersGroup = await provider.Provider.of<AuthProviders>(context, listen: false).getUserGroups1(userId);
+       await provider.Provider.of<AuthProviders>(context, listen: false).UpdateGroupCount(userId: userId,groupNumber:  usersGroup.length );
+      print(usersGroup.length);
   }
 }

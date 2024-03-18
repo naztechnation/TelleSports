@@ -66,7 +66,6 @@ class AuthProviders extends ChangeNotifier {
   clearGroupInfo(){
     _users = [];
 
-    // Modals.showToast(_users.toString());
     notifyListeners();
   }
 
@@ -372,11 +371,7 @@ class AuthProviders extends ChangeNotifier {
 
     if (currentNumberOfGroups < 3) {
       await createGroup(context, name, groupDesc, profilePic, ref);
-      var newNumberOfGroups = currentNumberOfGroups + 1;
-
-      await _firebaseStorage.collection('users').doc(userId).update({
-        'numberOfGroups': newNumberOfGroups,
-      });
+     
 
       return true;
     } else {
@@ -384,6 +379,22 @@ class AuthProviders extends ChangeNotifier {
       return false;
     }
   }
+
+    UpdateGroupCount(
+      {required String userId,
+      required int groupNumber,
+       
+      }) async {
+     
+
+      await _firebaseStorage.collection('users').doc(userId).update({
+        'numberOfGroups': groupNumber,
+      });
+  }
+
+  
+
+   
 
   Future<void> updateUserBio(String userId, String currentBio) async {
     try {
@@ -589,17 +600,37 @@ class AuthProviders extends ChangeNotifier {
   Stream<List<Group>> getUserGroups(String userId) {
   return _firebaseStorage.collection('groups').snapshots().map((event) {
     List<Group> groups = [];
+
     for (var document in event.docs) {
       var group = Group.fromMap(document.data());
+
       
       if (group.senderId == userId) {
         groups.add(group);
+
+
       }
     }
+        
+
     return groups;
   });
 }
 
+    Future<List<Group>> getUserGroups1(String userId) async {
+  var querySnapshot = await _firebaseStorage.collection('groups').get();
+  List<Group> groups = [];
+
+  querySnapshot.docs.forEach((document) {
+    var group = Group.fromMap(document.data());
+    
+    if (group.senderId == userId) {
+      groups.add(group);
+    }
+  });
+
+  return groups;
+}
   addGroupInfo(
       {required String groupNumber,
       required String groupLink,
