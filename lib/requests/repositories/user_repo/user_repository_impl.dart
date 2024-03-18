@@ -1,4 +1,5 @@
  
+import 'package:tellesports/model/user_model/country_bank.dart';
 import 'package:tellesports/model/user_model/transfer_tellacoin.dart';
 
 import '../../../res/app_strings.dart';
@@ -39,6 +40,24 @@ class UserRepositoryImpl implements UserRepository {
 
     return TransferTellacoin.fromJson(map);
   }
+
+  @override
+  Future<BankCountryCode> getCountryBank({required String countryCode, 
+  }) async {
+
+    final map = await Requests().post(
+      
+      AppStrings.currencyUrl,
+       
+       body: {
+        'country_code': countryCode,
+         
+      }
+    );
+
+    return BankCountryCode.fromJson(map);
+  }
+
  
   
 

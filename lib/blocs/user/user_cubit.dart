@@ -1,4 +1,4 @@
-import 'dart:io';
+ 
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -61,6 +61,35 @@ class UserCubit extends Cubit<UserStates> {
       );
 
       emit(TransferCoinLoaded(agents));
+    } on ApiException catch (e) {
+      emit(UserApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(UserNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+   Future<void> getCountryBank({
+    required String countryCode,
+     
+    
+  }) async {
+    try {
+      emit(CurrencyLoading());
+
+      final banks = await userRepository.getCountryBank(countryCode: countryCode
+        
+        
+      );
+
+      emit(CurrencyLoaded(banks));
     } on ApiException catch (e) {
       emit(UserApiErr(e.message));
     } catch (e) {

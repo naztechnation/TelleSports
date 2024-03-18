@@ -77,6 +77,8 @@ class _PredictionsState extends State<Predictions> {
                 listener: (context, state) {
               if (state is PredictListLoaded) {
                 if (state.predict.success ?? false) {
+                predictedMatch.clear();
+
                   predictedMatch = state.predict.data ?? [];
                   setState(() {});
                 } else {}
@@ -137,7 +139,7 @@ class _PredictionsState extends State<Predictions> {
                                       _selectedDay = adjustedIndex;
 
                                       day = _selectedDay;
-
+                                      
                                       _predictionCubit.getPrediction(
                                           day: day.toString());
                                     });

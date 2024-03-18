@@ -39,8 +39,10 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
   late FocusNode _focusNode;
 
   String userId = '';
+  String plan = '';
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+    plan = await StorageHandler.getUserPlan() ?? '';
     setState(() {});
   }
 
@@ -73,10 +75,10 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
         child: Scaffold(
       body: Scaffold(
           resizeToAvoidBottomInset: false,
-          bottomNavigationBar: Padding(
+          bottomNavigationBar: (plan.toLowerCase() == 'Community Leader'.toLowerCase()) ?Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: buildBuyTellacoins(context),
-          ),
+          ): SizedBox.shrink(),
           // appBar: _buildAppBar(context,),
 
           body: SizedBox(

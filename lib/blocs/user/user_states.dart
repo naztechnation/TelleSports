@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../../model/user_model/country_bank.dart';
 import '../../model/user_model/transfer_tellacoin.dart'; 
 
 
@@ -23,6 +24,18 @@ class TransferCoinLoaded extends UserStates {
   const TransferCoinLoaded(this.tellacoin);
   @override
   List<Object> get props => [tellacoin];
+}
+
+class CurrencyLoading extends UserStates {
+  @override
+  List<Object> get props => [];
+}
+
+class CurrencyLoaded extends UserStates {
+  final BankCountryCode bank;
+  const CurrencyLoaded(this.bank);
+  @override
+  List<Object> get props => [bank];
 }
 
 class UserNetworkErr extends UserStates {

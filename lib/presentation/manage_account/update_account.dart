@@ -13,44 +13,70 @@ import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../blocs/user/user.dart';
 import '../../handlers/secure_handler.dart';
+import '../../model/user_model/country_bank.dart';
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/user_repo/user_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
 
-class UpdateAccountScreen extends StatefulWidget {
-  UpdateAccountScreen({Key? key}) : super(key: key);
+
+class UpdateAccountScreen extends StatelessWidget {
+  const UpdateAccountScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<UpdateAccountScreen> createState() => _UpdateAccountScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<UserCubit>(
+      create: (BuildContext context) => UserCubit(
+          userRepository: UserRepositoryImpl(),
+          viewModel: Provider.of<UserViewModel>(context, listen: false)),
+      child: UpdateAccount(),
+    );
+  }
+}
+class UpdateAccount  extends StatefulWidget {
+  UpdateAccount({Key? key}) : super(key: key);
+
+  @override
+  State<UpdateAccount> createState() => _UpdateAccountState();
 }
 
-class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
+class _UpdateAccountState extends State<UpdateAccount> {
   TextEditingController accountNameController = TextEditingController();
+  TextEditingController countryCodeController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
 
   TextEditingController accountNumberController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  late UserCubit _userCubit;
+
+
   String bankName = '';
   String accountNumber = '';
   String accountName = '';
+  String countryCode = '';
+
+  List<CountryData> banks = [];
+
   getUserData() async {
+    _userCubit = context.read<UserCubit>();
+
     bankName = await StorageHandler.getUserBank() ?? '';
     accountNumber = await StorageHandler.getUserAccountNumber() ?? '';
     accountName = await StorageHandler.getUserAccountName() ?? '';
 
     setState(() {
-      if(bankName == 'null'){
-         accountNameController.text = '';
-      bankNameController.text = '';
-      accountNumberController.text = '';
-      }else{
-         accountNameController.text = accountName;
-      bankNameController.text = bankName;
-      accountNumberController.text = accountNumber;
+      if (bankName == 'null') {
+        accountNameController.text = '';
+        bankNameController.text = '';
+        accountNumberController.text = '';
+      } else {
+        accountNameController.text = accountName;
+        bankNameController.text = bankName;
+        accountNumberController.text = accountNumber;
       }
-     
     });
   }
 
@@ -68,84 +94,88 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: _buildAppBar(context),
-            body: BlocProvider<UserCubit>(
-                lazy: false,
-                create: (_) => UserCubit(
-                    userRepository: UserRepositoryImpl(),
-                    viewModel:
-                        Provider.of<UserViewModel>(context, listen: false)),
-                child: BlocConsumer<UserCubit, UserStates>(
-                  listener: (context, state) {
-                    if (state is TransferCoinLoaded) {
-                      if (state.tellacoin.success!) {
-                        Modals.showToast(state.tellacoin.message ?? '',
-                            messageType: MessageType.success);
-
-                        Future.delayed(
-                            Duration(
-                              seconds: 3,
-                            ), () {
-                          AppNavigator.pushAndReplacePage(context,
-                              page: LandingPage());
-                          ;
-                        });
-                      } else {
-                        Modals.showToast(state.tellacoin.message ?? '',
-                            messageType: MessageType.error);
-                      }
-                    } else if (state is UserApiErr) {
-                      if (state.message != null) {
-                        Modals.showToast(state.message ?? '',
-                            messageType: MessageType.error);
-                      }
-                    } else if (state is UserNetworkErr) {
-                      if (state.message != null) {
-                        Modals.showToast(state.message ?? '',
-                            messageType: MessageType.error);
-                      }
-                    }
-                  },
-                  builder: (context, state) => Form(
-                      key: _formKey,
-                      child: Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(horizontal: 16.h),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Update Account Details",
-                                    style: theme.textTheme.headlineLarge),
-                                SizedBox(height: 14.v),
-                                Text(
-                                    "Please enter your prefered account details.",
-                                    textAlign: TextAlign.justify,
-
-                                    style: TextStyle(fontSize: 14, letterSpacing: 0.2)),
-                                    const SizedBox(height: 2,),
-                                Text(
-                                    "This would be used to recieve your tellacoin once you are eligible to do so.",
-                                    textAlign: TextAlign.justify,
-                                    
-                                    style: TextStyle(fontSize: 14,  letterSpacing: 0)),
-                                SizedBox(height: 29.v),
-                                _buildAccountNameField(context),
-                                SizedBox(height: 11.v),
-                                _buildAccountNumberField(context),
-                                SizedBox(height: 11.v),
-                                _buildBankField(context),
-                                SizedBox(height: 32.v),
-                                CustomElevatedButton(
-                                    text: "Update Account",
-                                    title: 'Updating payment details...',
-                                    processing: state is TransferCoinLoading,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h),
-                                    onPressed: () {
-                                      onTapCreatePassword(context);
-                                    }),
-                                SizedBox(height: 5.v)
-                              ]))),
-                ))));
+            body: BlocConsumer<UserCubit, UserStates>(
+              listener: (context, state) {
+                if (state is TransferCoinLoaded) {
+                  if (state.tellacoin.success!) {
+                    Modals.showToast(state.tellacoin.message ?? '',
+                        messageType: MessageType.success);
+            
+                    Future.delayed(
+                        Duration(
+                          seconds: 3,
+                        ), () {
+                      AppNavigator.pushAndReplacePage(context,
+                          page: LandingPage());
+                      ;
+                    });
+                  } else {
+                    Modals.showToast(state.tellacoin.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                }else if (state is CurrencyLoaded) {
+                  if (state.bank.success ?? false) {
+                    banks = state.bank.data?.data ?? [];
+            
+                      
+                  }
+                } else if (state is UserApiErr) {
+                  if (state.message != null) {
+                    Modals.showToast(state.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                } else if (state is UserNetworkErr) {
+                  if (state.message != null) {
+                    Modals.showToast(state.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                }
+              },
+              builder: (context, state) => Form(
+                  key: _formKey,
+                  child: Container(
+                      width: double.maxFinite,
+                      padding: EdgeInsets.symmetric(horizontal: 16.h),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Update Account Details",
+                                style: theme.textTheme.headlineLarge),
+                            SizedBox(height: 14.v),
+                            Text(
+                                "Please enter your prefered account details.",
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                    fontSize: 14, letterSpacing: 0.2)),
+                            const SizedBox(
+                              height: 2,
+                            ),
+                            Text(
+                                "This would be used to recieve your tellacoin once you are eligible to do so.",
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                    fontSize: 14, letterSpacing: 0)),
+                            SizedBox(height: 29.v),
+                            _buildCountryCodeField(context),
+                           if(banks.isNotEmpty) SizedBox(height: 11.v),
+                           if(banks.isNotEmpty) _buildBankField(context),
+                            SizedBox(height: 11.v),
+                            _buildAccountNumberField(context),
+                            SizedBox(height: 11.v),
+                            _buildAccountNameField(context),
+                            SizedBox(height: 32.v),
+                            CustomElevatedButton(
+                                text: "Update Account",
+                                title: 'Updating payment details...',
+                                processing: state is TransferCoinLoading,
+                                margin:
+                                    EdgeInsets.symmetric(horizontal: 4.h),
+                                onPressed: () {
+                                  onTapCreatePassword(context);
+                                }),
+                            SizedBox(height: 5.v)
+                          ]))),
+            )));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -197,6 +227,42 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
         ]));
   }
 
+  Widget _buildCountryCodeField(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(left: 8.h),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("Country Currency", style: theme.textTheme.titleSmall),
+          SizedBox(height: 3.v),
+          CustomTextFormField(
+              controller: countryCodeController,
+              hintText: "Select country currency",
+              hintStyle: CustomTextStyles.titleSmallGray600,
+              textInputAction: TextInputAction.done,
+              textInputType: TextInputType.name,
+              readOnly: true,
+              suffix: Icon(
+                Icons.arrow_drop_down,
+                size: 20,
+              ),
+              validator: (value) {
+                return Validator.validate(value, 'Country Currency');
+              },
+              onTap: () {
+                Modals.showBottomSheetModal(context,
+                    isScrollControlled: true,
+                    heightFactor: 1,
+                    isDissmissible: true,
+                    page: optionWidget(
+                        Provider.of<UserViewModel>(context, listen: false)
+                            .flutterWaveSupportedCurrency,
+                        'Select Country Currency',
+                        countryCodeController, context));
+              },
+              contentPadding:
+                  EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
+        ]));
+  }
+
   Widget _buildBankField(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 8.h),
@@ -206,11 +272,26 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
           CustomTextFormField(
               controller: bankNameController,
               hintText: "Enter bank name",
+              readOnly: true,
               hintStyle: CustomTextStyles.titleSmallGray600,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.name,
+              suffix: Icon(
+                Icons.arrow_drop_down,
+                size: 20,
+              ),
               validator: (value) {
                 return Validator.validate(value, 'Bank Name');
+              },
+               onTap: () {
+                Modals.showBottomSheetModal(context,
+                    isScrollControlled: true,
+                    heightFactor: 1,
+                    isDissmissible: true,
+                    page: optionWidget1(
+                        banks,
+                        'Select Bank',
+                        bankNameController,));
               },
               contentPadding:
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
@@ -226,5 +307,209 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
       FocusScope.of(context).unfocus();
     }
     ;
+  }
+
+ Widget optionWidget(List<Map<String, String>> options, String title, final controller, BuildContext context) {
+  return Column(
+    children: [
+      SizedBox(
+        height: 15,
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox.shrink(),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 19,
+                color: Colors.green[900],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.close,
+                size: 25,
+              ),
+            ),
+          ],
+        ),
+      ),
+      SizedBox(
+        height: 15,
+      ),
+      Divider(
+        height: 5,
+      ),
+      Expanded(
+        child: ListView.builder(
+          itemCount: options.length,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () async{
+                Navigator.pop(context);
+
+                controller.text = options[index]['currency'] ?? '';
+                countryCode =  options[index]['countryCode'] ?? '' ;
+                await  _userCubit.getCountryBank(countryCode: countryCode
+          );
+              },
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 15,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Text(
+                                  '${index + 1}.',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(
+                                  width: 13,
+                                ),
+                                Text(
+                                  options[index]['currency'] ?? '',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 15,
+                          )
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 5,
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+
+  optionWidget1(List<CountryData> options, String title, final controller) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 15,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox.shrink(),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 19,
+                  color: Colors.green[900],
+                ),
+              ),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.close,
+                    size: 25,
+                  )),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Divider(
+          height: 5,
+        ),
+        
+        Expanded(
+          child: ListView.builder(
+              itemCount: options.length,
+              shrinkWrap: true,
+              itemBuilder: ((context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+
+                    controller.text = options[index].name;
+
+                    // filteredTeam = filterClubsByLeague(
+                    //     leagueName: options[index],
+                    //     leaguesWithClubs: leaguesWithClubs);
+                  },
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Text('${index + 1}.',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 16)),
+                                    const SizedBox(
+                                      width: 13,
+                                    ),
+                                    Text(options[index].name ??  '',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.arrow_forward_ios, size: 15,)
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 5,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              })),
+        ),
+      ],
+    );
   }
 }

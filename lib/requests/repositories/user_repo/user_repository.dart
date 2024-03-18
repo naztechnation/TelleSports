@@ -1,6 +1,7 @@
 
 
 
+import '../../../model/user_model/country_bank.dart';
 import '../../../model/user_model/transfer_tellacoin.dart';
 
 abstract class UserRepository {
@@ -17,6 +18,12 @@ abstract class UserRepository {
     required String bank,
     required String accountName,
     required String accountNumber,
+    
+  });
+
+   Future<BankCountryCode> getCountryBank({
+    required String countryCode,
+     
     
   });
 
