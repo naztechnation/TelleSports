@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe_to/swipe_to.dart';
+import 'package:tellesports/widgets/modals.dart';
 
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/utils/colors.dart'; 
+import '../../../../widgets/image_view.dart';
 import '../../provider/auth_provider.dart';
 import 'display_text_image_gif.dart';
 
@@ -41,13 +43,21 @@ class MyMessageCard extends StatefulWidget {
 class _MyMessageCardState extends State<MyMessageCard> {
 
   int textIndex = -1;
+
+  double adjustedHeight = 0;
   
 
   @override
   Widget build(BuildContext context) {
     final isReplying = widget.repliedText.isNotEmpty;
     final groupInfo = Provider.of<AuthProviders>(context, listen: true);
+double screenHeight = MediaQuery.of(context).size.height;
+double statusBarHeight = MediaQuery.of(context).padding.top;
+double appBarHeight = Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight;
 
+// Calculate the available height excluding status bar and app bar
+double availableHeight = screenHeight - statusBarHeight - appBarHeight;
+ adjustedHeight = availableHeight * 0.57;
     return SwipeTo(
       onLeftSwipe: widget.onLeftSwipe,
       child: Container(
@@ -76,6 +86,14 @@ class _MyMessageCardState extends State<MyMessageCard> {
 
 
                 });
+
+                if(widget.type  ==  MessageEnum.image){
+
+                  Modals.showDialogModal(context,page: _showFullImage(context, widget.message))
+
+                  ;
+                }
+
               },
               onLongPress: () {
                 setState(() {
@@ -90,6 +108,7 @@ class _MyMessageCardState extends State<MyMessageCard> {
 
                 });
               },
+             
               child: Container(
                 decoration: BoxDecoration(
                     color: messageColor,
@@ -182,5 +201,29 @@ class _MyMessageCardState extends State<MyMessageCard> {
     );
   }
 
-  
+   _showFullImage(BuildContext context, String imageUrl) {
+ return  GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: adjustedHeight,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Center(
+                      child: ImageView.network(
+                        height: adjustedHeight,
+                        imageUrl,
+                         placeholder: 'assets/images/loading.gif',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+  }
 }

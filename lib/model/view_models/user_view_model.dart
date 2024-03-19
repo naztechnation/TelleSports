@@ -167,19 +167,11 @@ class UserViewModel extends BaseViewModel {
   List<Map<String, String>> flutterWaveSupportedCurrency = [
   {'countryCode': 'NG', 'currency': 'NGN'}, // Nigeria
   {'countryCode': 'US', 'currency': 'USD'}, // United States
-  {'countryCode': 'DE', 'currency': 'EUR'}, // Germany
-  {'countryCode': 'FR', 'currency': 'EUR'}, // France
-  {'countryCode': 'IT', 'currency': 'EUR'}, // Italy
-  {'countryCode': 'ES', 'currency': 'EUR'}, // Spain
-  {'countryCode': 'GB', 'currency': 'GBP'}, // United Kingdom
   {'countryCode': 'ZA', 'currency': 'ZAR'}, // South Africa
   {'countryCode': 'KE', 'currency': 'KES'}, // Kenya
   {'countryCode': 'GH', 'currency': 'GHS'}, // Ghana
   {'countryCode': 'UG', 'currency': 'UGX'}, // Uganda
-  {'countryCode': 'CA', 'currency': 'CAD'}, // Canada
-  {'countryCode': 'AU', 'currency': 'AUD'}, // Australia
   {'countryCode': 'TZ', 'currency': 'TZS'}, // Tanzania
-  {'countryCode': 'EU', 'currency': 'EUR'}, // Eurozone
   {'countryCode': 'RW', 'currency': 'RWF'}, // Rwanda
 ];
   File? get imgURl => imageURl;

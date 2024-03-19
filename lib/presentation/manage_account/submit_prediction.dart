@@ -81,88 +81,90 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
 
     return SafeArea(
         child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: _buildAppBar(context),
-            body: BlocConsumer<PredictionCubit, PredictStates>(
-              listener: (context, state) {
-                if (state is PredictLoaded) {
-                  if (state.predict.success ?? false) {
-                    Modals.showToast( 'Prediction submitted successfully',
-                        messageType: MessageType.success);
-            
-                    Future.delayed(
-                        Duration(
-                          seconds: 1,
-                        ), () {
-                      AppNavigator.pushAndReplacePage(context,
-                          page: LandingPage());
-                      ;
-                    });
-                  } else {
-                    Modals.showToast('Failed to submit prediction',
-                        messageType: MessageType.error);
+          body: Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: _buildAppBar(context),
+              body: BlocConsumer<PredictionCubit, PredictStates>(
+                listener: (context, state) {
+                  if (state is PredictLoaded) {
+                    if (state.predict.success ?? false) {
+                      Modals.showToast( 'Prediction submitted successfully',
+                          messageType: MessageType.success);
+              
+                      Future.delayed(
+                          Duration(
+                            seconds: 1,
+                          ), () {
+                        AppNavigator.pushAndReplacePage(context,
+                            page: LandingPage());
+                        ;
+                      });
+                    } else {
+                      Modals.showToast('Failed to submit prediction',
+                          messageType: MessageType.error);
+                    }
+                  } else if (state is PredictApiErr) {
+                    if (state.message != null) {
+                      Modals.showToast(state.message ?? '',
+                          messageType: MessageType.error);
+                    }
+                  } else if (state is PredictNetworkErr) {
+                    if (state.message != null) {
+                      Modals.showToast(state.message ?? '',
+                          messageType: MessageType.error);
+                    }
                   }
-                } else if (state is PredictApiErr) {
-                  if (state.message != null) {
-                    Modals.showToast(state.message ?? '',
-                        messageType: MessageType.error);
-                  }
-                } else if (state is PredictNetworkErr) {
-                  if (state.message != null) {
-                    Modals.showToast(state.message ?? '',
-                        messageType: MessageType.error);
-                  }
-                }
-              },
-              builder: (context, state) => Form(
-                  key: _formKey,
-                  child: Container(
-                      width: double.maxFinite,
-                      padding: EdgeInsets.symmetric(horizontal: 16.h),
-                      child: SingleChildScrollView(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Submit your Predictions",
-                                  style: theme.textTheme.headlineLarge),
-                              SizedBox(height: 10.v),
-                              Text("Please enter your predictions here.",
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                      fontSize: 14, letterSpacing: 0.2)),
-                              SizedBox(height: 29.v),
-                              _buildLeagueField(context),
-                              SizedBox(height: 11.v),
-                              _buildHomeTeamField(context),
-                              SizedBox(height: 11.v),
-                        
-                               _buildHomeScoreField(context),
-                              SizedBox(height: 11.v),
-                              _buildAwayTeamField(context),
-                              SizedBox(height: 11.v),
-                             
-                              _buildAwayScoreField(context),
-                              SizedBox(height: 11.v),
-                        
-                              _buildPredictedWinnerField(context),
-                              SizedBox(height: 11.v),
-                              _buildOddsField(context),
-                              SizedBox(height: 32.v),
-                              CustomElevatedButton(
-                                  text: "Submit",
-                                  title: 'Submitting data...',
-                                  processing: state is PredictLoading,
-                                  margin:
-                                      EdgeInsets.symmetric(horizontal: 4.h),
-                                  onPressed: () {
-                                     predictedWinnner.clear();
-                                     addPredictedWinnnerList();
-                                    onTapSubmitPredictions(context);
-                                  }),
-                              SizedBox(height: 35.v)
-                            ]),
-                      ))),
-            )));
+                },
+                builder: (context, state) => Form(
+                    key: _formKey,
+                    child: Container(
+                        width: double.maxFinite,
+                        padding: EdgeInsets.symmetric(horizontal: 16.h),
+                        child: SingleChildScrollView(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Submit your Predictions",
+                                    style: theme.textTheme.headlineLarge),
+                                SizedBox(height: 10.v),
+                                Text("Please enter your predictions here.",
+                                    textAlign: TextAlign.justify,
+                                    style: TextStyle(
+                                        fontSize: 14, letterSpacing: 0.2)),
+                                SizedBox(height: 29.v),
+                                _buildLeagueField(context),
+                                SizedBox(height: 11.v),
+                                _buildHomeTeamField(context),
+                                SizedBox(height: 11.v),
+                          
+                                 _buildHomeScoreField(context),
+                                SizedBox(height: 11.v),
+                                _buildAwayTeamField(context),
+                                SizedBox(height: 11.v),
+                               
+                                _buildAwayScoreField(context),
+                                SizedBox(height: 11.v),
+                          
+                                _buildPredictedWinnerField(context),
+                                SizedBox(height: 11.v),
+                                _buildOddsField(context),
+                                SizedBox(height: 32.v),
+                                CustomElevatedButton(
+                                    text: "Submit",
+                                    title: 'Submitting data...',
+                                    processing: state is PredictLoading,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 4.h),
+                                    onPressed: () {
+                                       predictedWinnner.clear();
+                                       addPredictedWinnnerList();
+                                      onTapSubmitPredictions(context);
+                                    }),
+                                SizedBox(height: 35.v)
+                              ]),
+                        ))),
+              )),
+        ));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {

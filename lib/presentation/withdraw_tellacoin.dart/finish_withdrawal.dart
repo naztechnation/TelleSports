@@ -111,8 +111,6 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-         
-
 
     return SafeArea(
         child: Scaffold(
@@ -154,7 +152,7 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
                       ;
                     });
                   } else {
-                    Modals.showToast( 'Failed to withdraw Telacoins',
+                    Modals.showToast('Failed to withdraw Telacoins',
                         messageType: MessageType.error);
                   }
                 } else if (state is CurrencyLoaded) {
@@ -216,19 +214,29 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
                                 processing: state is RequestPayoutLoading,
                                 margin: EdgeInsets.symmetric(horizontal: 4.h),
                                 onPressed: () {
-                                  if (_formKey.currentState!.validate()){
-                                 _userCubit.requestPayout(currency: 'NGN', bankName: bankNameController.text, accountNumber: accountNumberController.text, accountName: accountNameController.text, bankCode: '044', amount: nairaEquivalent.toString());
-
+                                  if (_formKey.currentState!.validate()) {
+                                    _userCubit.requestPayout(
+                                        currency: 'NGN',
+                                        bankName: bankNameController.text,
+                                        accountNumber:
+                                            accountNumberController.text,
+                                        accountName: accountNameController.text,
+                                        bankCode: '044',
+                                        amount: nairaEquivalent.toString());
                                   }
                                 }),
                             SizedBox(height: 25.v),
-          GestureDetector(
-            
-             onTap: () {
-                            AppNavigator.pushAndStackPage(context,
-                                page: UpdateAccountScreen());
-                          },child: Text("Change payout account", style: TextStyle(color: Colors.red, fontSize: 14, decoration: TextDecoration.underline,decorationColor: Colors.red))),
-
+                            GestureDetector(
+                                onTap: () {
+                                  AppNavigator.pushAndStackPage(context,
+                                      page: UpdateAccountScreen());
+                                },
+                                child: Text("Change payout account",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 14,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: Colors.red))),
                           ]))),
             )));
   }
@@ -315,7 +323,6 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.name,
               readOnly: true,
-               
               validator: (value) {
                 return Validator.validate(value, 'Country Currency');
               },
@@ -365,8 +372,6 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
         ]));
   }
-
-   
 
   Widget optionWidget(List<Map<String, String>> options, String title,
       final controller, BuildContext context) {

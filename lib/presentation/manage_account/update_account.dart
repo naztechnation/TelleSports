@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:tellesports/common/widgets/loader.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
@@ -158,7 +159,16 @@ class _UpdateAccountState extends State<UpdateAccount> {
                             SizedBox(height: 29.v),
                             _buildCountryCodeField(context),
                            if(banks.isNotEmpty) SizedBox(height: 11.v),
-                           if(banks.isNotEmpty) _buildBankField(context),
+                           if(banks.isNotEmpty)...[
+                            _buildBankField(context),
+                           ] else if(state is CurrencyLoading)...[
+                            Center(
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: Loader()),
+                            )
+                           ], 
                             SizedBox(height: 11.v),
                             _buildAccountNumberField(context),
                             SizedBox(height: 11.v),
@@ -191,7 +201,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
 
   Widget _buildAccountNameField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left:0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Account Name", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
@@ -210,7 +220,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
 
   Widget _buildAccountNumberField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Account Number", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
@@ -229,7 +239,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
 
   Widget _buildCountryCodeField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Country Currency", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
@@ -265,7 +275,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
 
   Widget _buildBankField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Bank Name", style: theme.textTheme.titleSmall),
           SizedBox(height: 3.v),
@@ -394,9 +404,11 @@ class _UpdateAccountState extends State<UpdateAccount> {
                               ],
                             ),
                           ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 15,
+                          Expanded(
+                            child: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 15,
+                            ),
                           )
                         ],
                       ),
@@ -489,10 +501,14 @@ class _UpdateAccountState extends State<UpdateAccount> {
                                     const SizedBox(
                                       width: 13,
                                     ),
-                                    Text(options[index].name ??  '',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 16)),
+                                    SizedBox(
+                                  width: MediaQuery.sizeOf(context).width * 0.70,
+
+                                      child: Text(options[index].name ??  '',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 16)),
+                                    ),
                                   ],
                                 ),
                               ),

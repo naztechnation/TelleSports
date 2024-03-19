@@ -27,6 +27,7 @@ import '../../../widgets/modals.dart';
 import '../../community_screens/provider/auth_provider.dart';
 import '../../landing_page/landing_page.dart';
 import '../sign_in_screen/sign_in_screen.dart';
+import '../widget/password_checker.dart';
 
 // ignore_for_file: must_be_immutable
 class SignUpScreen extends StatefulWidget {
@@ -50,6 +51,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController userNameGoogleController = TextEditingController();
 
   TextEditingController phoneNumberGoogleController = TextEditingController();
+
+   final _passwordController = TextEditingController();
+  bool _isStrong = false;
 
   String googleEmail = '';
   String code = '';
@@ -75,12 +79,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
   }
 
+   @override
+  void dispose() {
+    super.dispose();
+    _passwordController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
 
     final authUser = Provider.of<FirebaseAuthProvider>(context, listen: true);
     final user =  Provider.of<AuthProviders>(context, listen: true);
+    
 
 
     return SafeArea(
@@ -195,6 +206,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               _buildPhoneNumberTextField(context),
                               SizedBox(height: 5.v),
                               _buildPasswordTextField(context),
+                               const SizedBox(height: 10.0),
+            AnimatedBuilder(
+              animation: passwordController,
+              builder: (context, child) {
+                final password = passwordController.text;
+
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: PasswordStrengthChecker(
+                    onStrengthChanged: (bool value) {
+                      setState(() {
+                        _isStrong = value;
+                      });
+                    },
+                    password: password,
+                  ),
+                );
+              },
+            ),
+            
                               SizedBox(height: 40.v),
                               CustomElevatedButton(
                                   text: "Register",
@@ -203,10 +234,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       state is AccountLoading),
                                   margin: EdgeInsets.symmetric(horizontal: 4.h),
                                   title: 'Creating Account...',
-                                  onPressed: () {
+                                  onPressed:  _isStrong ? () {
                                     registerUser(
                                         context: context, isGoogle: false);
                                     // onTapRegister(context);
+                                  } : (){
+                                    Modals.showToast('Please enter a strong password');
                                   }),
                               SizedBox(height: 15.v),
                               RichText(
@@ -359,7 +392,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildUsernameTextField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Username", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
@@ -377,7 +410,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildEmailTextField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("E-mail ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
@@ -395,7 +428,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildPhoneNumberTextField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Phone number", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
@@ -467,7 +500,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildPhoneNumberGoogleTextField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Phone number", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
@@ -562,7 +595,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     BuildContext context,
   ) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Create a password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 2.v),
@@ -589,9 +622,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             suffixConstraints: BoxConstraints(maxHeight: 48.v),
             contentPadding: EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v),
-            validator: (value) {
-              return Validator.validatePassword(value,);
-            },
+            // validator: (value) {
+            //   return Validator.validatePassword(value,);
+            // },
           )
         ]));
   }

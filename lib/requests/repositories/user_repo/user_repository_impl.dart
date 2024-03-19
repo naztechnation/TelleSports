@@ -69,7 +69,7 @@ class UserRepositoryImpl implements UserRepository {
       AppStrings.payoutUrl,
        
        body: {
-        'account_bank_code': bankCode,
+        'country_code': bankCode,
         'account_number': accountNumber,
         'amount': amount,
         'currency': currency,
