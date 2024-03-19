@@ -45,6 +45,8 @@ class AppStrings {
   static String predictionRatingUrl = '${_baseUrl}prediction_rating';
   static String reportUrl = '${_baseUrl}report';
   static String currencyUrl = '${_baseUrl}flutterwave_banks';
+  static String payoutUrl = '${_baseUrl}request_payout';
+
   
 
 

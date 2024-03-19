@@ -1,5 +1,6 @@
  
 import 'package:tellesports/model/user_model/country_bank.dart';
+import 'package:tellesports/model/user_model/request_payout.dart';
 import 'package:tellesports/model/user_model/transfer_tellacoin.dart';
 
 import '../../../res/app_strings.dart';
@@ -58,8 +59,27 @@ class UserRepositoryImpl implements UserRepository {
     return BankCountryCode.fromJson(map);
   }
 
- 
-  
+  @override
+  Future<RequestPayout> requestPayout({required String currency,
+   required String bankName, required String accountNumber, 
+   required String accountName, required String bankCode , required String amount}) async {
+
+    final map = await Requests().post(
+      
+      AppStrings.payoutUrl,
+       
+       body: {
+        'account_bank_code': bankCode,
+        'account_number': accountNumber,
+        'amount': amount,
+        'currency': currency,
+        'bank': bankName,
+         
+      }
+    );
+
+    return RequestPayout.fromJson(map);
+  }
 
 
   // @override

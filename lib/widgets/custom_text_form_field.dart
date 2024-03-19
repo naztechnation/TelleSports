@@ -160,14 +160,14 @@ class CustomTextFormField extends StatelessWidget {
                 width: 1,
               ),
             ),
-        errorBorder: OutlineInputBorder(
+        errorBorder: borderDecoration ?? OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.h),
           borderSide: BorderSide(
             color: appTheme.red600,
             width: 1,
           ),
         ),
-        focusedErrorBorder: OutlineInputBorder(
+        focusedErrorBorder: borderDecoration ?? OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.h),
           borderSide: BorderSide(
             color: appTheme.red600,

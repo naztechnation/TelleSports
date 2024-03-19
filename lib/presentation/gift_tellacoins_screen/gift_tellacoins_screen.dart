@@ -163,18 +163,17 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                           Modals.showDialogModal(context,
                               page: ModalContentScreen(
                                   title: 'Continue With Transfer',
-                                  body:Text(
-                                                      'N.B: Are you sure you want to transfer ${amountController.text} Tellacoins to ${widget.desUserId}. As This action can\'t be reversed.',
-
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                                  body: Text(
+                                    'N.B: Are you sure you want to transfer ${amountController.text} Tellacoins to ${widget.desUserId}. As This action can\'t be reversed.',
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: appTheme.gray900,
+                                      fontSize: 14.fSize,
+                                      fontFamily: 'DM Sans',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                                   btnText: 'Proceed',
                                   onPressed: () {
                                     trasferTellaCoin();

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../model/user_model/country_bank.dart';
+import '../../model/user_model/request_payout.dart';
 import '../../model/user_model/transfer_tellacoin.dart'; 
 
 
@@ -36,6 +37,18 @@ class CurrencyLoaded extends UserStates {
   const CurrencyLoaded(this.bank);
   @override
   List<Object> get props => [bank];
+}
+
+class RequestPayoutLoading extends UserStates {
+  @override
+  List<Object> get props => [];
+}
+
+class RequestPayoutLoaded extends UserStates {
+  final RequestPayout payout;
+  const RequestPayoutLoaded(this.payout);
+  @override
+  List<Object> get props => [payout];
 }
 
 class UserNetworkErr extends UserStates {

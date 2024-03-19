@@ -1,6 +1,7 @@
  
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tellesports/blocs/user/user.dart';
 
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/user_repo/user_repository.dart';
@@ -90,6 +91,33 @@ class UserCubit extends Cubit<UserStates> {
       );
 
       emit(CurrencyLoaded(banks));
+    } on ApiException catch (e) {
+      emit(UserApiErr(e.message));
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
+        emit(UserNetworkErr(e.toString()));
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> requestPayout({required String currency,
+   required String bankName, required String accountNumber, 
+   required String accountName, required String bankCode , required String amount}) async {
+    try {
+      emit(RequestPayoutLoading());
+
+      final payout = await userRepository.requestPayout(currency: currency, bankName: bankName, accountNumber: accountNumber, accountName: accountName, amount: amount, bankCode: bankCode
+        
+        
+      );
+
+      emit(RequestPayoutLoaded(payout));
     } on ApiException catch (e) {
       emit(UserApiErr(e.message));
     } catch (e) {

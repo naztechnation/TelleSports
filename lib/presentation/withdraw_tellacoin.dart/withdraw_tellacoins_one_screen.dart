@@ -1,22 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
-import 'package:tellesports/presentation/buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import 'package:tellesports/presentation/manage_account/update_account.dart';
 
 import '../../model/chat_model/group.dart';
 import '../../utils/navigator/page_navigator.dart';
+import '../../utils/validator.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
-import '../../widgets/loading_page.dart';
 import '../../widgets/modals.dart';
+import '../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import '../community_screens/provider/auth_provider.dart';
-import 'transfer_coin.dart';
+import 'finish_withdrawal.dart';
 
 class WithdrawTellaCoins extends StatefulWidget {
   final String tellaCoinBalance;
@@ -36,11 +37,17 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
 
   TextEditingController amountController = TextEditingController();
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+
   String bank = "";
   String userId = "";
   int numberOfMembers = 0;
 
   bool isEligible = false;
+
+  Timer? _debounce;
+  bool isSufficient = false;
 
   List<Group> userGroups = [];
   List<int> membersUidLength = [];
@@ -48,33 +55,61 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
 
   bool isAnyLengthGreaterThanOrEqual = false;
 
+  String balance = '';
+
+  Color amountColor = Colors.black;
+
+  bool _dataAdded = false;
+
   getBankDetails() async {
     bank = await StorageHandler.getUserBank() ?? "";
     userId = await StorageHandler.getUserId() ?? "";
+
+    balance = widget.tellaCoinBalance;
+
+
     setState(() {});
   }
 
   @override
   void initState() {
+    amountController.addListener(updateTextColor);
+
     getBankDetails();
     super.initState();
   }
 
+  void updateTextColor() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        double enteredAmount = double.tryParse(amountController.text) ?? 0;
+        double staticAmount = double.tryParse(balance) ?? 0;
+
+        amountColor = enteredAmount > staticAmount ? Colors.red : Colors.black;
+        if (amountController.text.isNotEmpty) {
+          isSufficient = enteredAmount > staticAmount ? true : false;
+        } else {
+          isSufficient = false;
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<AuthProviders>(context, listen: false);
-checkEventStatus();
+    checkEventStatus();
+
+    
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: _buildAppBar(context),
         body: StreamBuilder<List<Group>>(
-            stream: user.getUserGroups(userId),
+            stream: Provider.of<AuthProviders>(context, listen: false)
+                .getUserGroups(userId),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const LoadingPage();
-              }
-
               userGroups = snapshot.data ?? [];
 
               membersUidLength.clear();
@@ -93,120 +128,126 @@ checkEventStatus();
               isAnyLengthGreaterThanOrEqual =
                   isAnyLengthGreaterThanOrEqualTo100(membersUidLength);
 
-              return Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.all(10.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomElevatedButton(
-                      textColor: isEligible ? Color(0xFF288763) : Colors.red,
-                      buttonStyle: ElevatedButton.styleFrom(
-                          backgroundColor: isEligible
-                              ? Color(0xFFEBF6F2)
-                              : Colors.red.shade50,
-                          foregroundColor: Color(0xFF288763)),
-                      decoration: BoxDecoration(
-                          color: Color(0xFFEBF6F2),
-                          borderRadius: BorderRadius.circular(20)),
-                      text: isEligible
-                          ? "You are eligible to  withdraw tellacoins"
-                          : "You are not eligible to  withdraw tellacoins",
-                      buttonTextStyle: TextStyle(color: Color(0xFF288763)),
-                      leftIcon: Container(
-                        margin: EdgeInsets.fromLTRB(10.h, 8.v, 8.h, 8.v),
-                        child: CustomImageView(
-                          color: isEligible ? Color(0xFF288763) : Colors.red,
-                          imagePath: ImageConstant.imgVideocameraGreen700,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16.v),
-                    _buildTelacoinsBalance(context),
-                    SizedBox(height: 15.v),
-                    _buildTextField(context),
-                    SizedBox(height: 23.v),
-                    Text(
-                      "1 Tellacoin = N20",
-                      style: TextStyle(
-                        color: appTheme.gray900,
-                        fontSize: 14.fSize,
-                        fontFamily: 'DM Sans',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 15.v),
-                    _buildEligibilityCont(),
-                    SizedBox(height: 50.v),
-                    if (bank == "" || bank == "null" || bank == null) ...[
-                      GestureDetector(
-                        onTap: () {
-                          AppNavigator.pushAndStackPage(context,
-                              page: UpdateAccountScreen());
-                        },
-                        child: Align(
-                          child: Text(
-                            'Please click to add bank details.'.toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 17,
-                                color: Colors.red,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Colors.red,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-                    ] else if (int.tryParse(widget.tellaCoinBalance)! <
-                        1000) ...[
-                      GestureDetector(
-                        onTap: () {
-                          AppNavigator.pushAndStackPage(context,
-                              page: PricingPageScreen(
-                                balance: widget.tellaCoinBalance,
-                              ));
-                        },
-                        child: Align(
-                          child: Text(
-                            'You dont\'t have sufficient balance click to add more Tellacoin.'
-                                .toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 17,
-                                color: Colors.red,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Colors.red,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-                    ] else if (!isAnyLengthGreaterThanOrEqual) ...[
-                      GestureDetector(
-                        onTap: () {},
-                        child: Align(
-                          child: Text(
-                            'You don\'t have Up to 100 members in any of the communities you are leading.'
-                                .toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 17,
-                                color: Colors.red,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Colors.red,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-                    ] else ...[
+              return Form(
+                key: _formKey,
+
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.all(10.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       CustomElevatedButton(
-                        text: "Continue",
-                        onPressed: () => onTapContinueBtn(context),
+                        textColor: isEligible ? Color(0xFF288763) : Colors.red,
+                        buttonStyle: ElevatedButton.styleFrom(
+                            backgroundColor: isEligible
+                                ? Color(0xFFEBF6F2)
+                                : Colors.red.shade50,
+                            foregroundColor: Color(0xFF288763)),
+                        decoration: BoxDecoration(
+                            color: Color(0xFFEBF6F2),
+                            borderRadius: BorderRadius.circular(20)),
+                        text: isEligible
+                            ? "You are eligible to  withdraw tellacoins"
+                            : "You are not eligible to  withdraw tellacoins",
+                        buttonTextStyle: TextStyle(color: Color(0xFF288763)),
+                        leftIcon: Container(
+                          margin: EdgeInsets.fromLTRB(10.h, 8.v, 8.h, 8.v),
+                          child: CustomImageView(
+                            color: isEligible ? Color(0xFF288763) : Colors.red,
+                            imagePath: ImageConstant.imgVideocameraGreen700,
+                            height: 24.adaptSize,
+                            width: 24.adaptSize,
+                          ),
+                        ),
                       ),
+                      SizedBox(height: 16.v),
+                      _buildTelacoinsBalance(context),
+                      SizedBox(height: 15.v),
+                      _buildTextField(context),
+                      SizedBox(height: 23.v),
+                      Text(
+                        "1 Tellacoin = N20",
+                        style: TextStyle(
+                          color: appTheme.gray900,
+                          fontSize: 14.fSize,
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 15.v),
+                      _buildEligibilityCont(),
+                      SizedBox(height: 50.v),
+                      if (bank == "" || bank == "null" || bank == null) ...[
+                        GestureDetector(
+                          onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: UpdateAccountScreen());
+                          },
+                          child: Align(
+                            child: Text(
+                              'Please click to add bank details.'.toUpperCase(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.red,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.red,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ]
+                       else if (int.tryParse(widget.tellaCoinBalance)! <
+                          1000) ...[
+                        GestureDetector(
+                          onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: PricingPageScreen(
+                                  balance: widget.tellaCoinBalance,
+                                ));
+                          },
+                          child: Align(
+                            child: Text(
+                              'You dont\'t have sufficient balance click to add more Tellacoin.'
+                                  .toUpperCase(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.red,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.red,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ] else if (!isAnyLengthGreaterThanOrEqual) ...[
+                        GestureDetector(
+                          onTap: () {},
+                          child: Align(
+                            child: Text(
+                              'You don\'t have Up to 100 members in any of the communities you are leading.'
+                                  .toUpperCase(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.red,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.red,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ]
+                     else if(isSufficient && amountController.text.isNotEmpty)...[] else ...[
+                        CustomElevatedButton(
+                          text: "Continue",
+                          onPressed: () => onTapContinueBtn(context),
+                        ),
+                      ],
+                      SizedBox(height: 5.v),
                     ],
-                    SizedBox(height: 5.v),
-                  ],
+                  ),
                 ),
               );
             }),
@@ -224,7 +265,6 @@ checkEventStatus();
       setState(() {
         isEligible = false;
       });
-      
     } else if (int.tryParse(widget.tellaCoinBalance)! < 1000) {
       setState(() {
         isEligible = false;
@@ -233,8 +273,12 @@ checkEventStatus();
       setState(() {
         isEligible = false;
       });
-    }else{
+    }else if(isSufficient && amountController.text.isNotEmpty){
        setState(() {
+        isEligible = false;
+      });
+    } else {
+      setState(() {
         isEligible = true;
       });
     }
@@ -427,7 +471,11 @@ checkEventStatus();
   }
 
   onTapContinueBtn(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: TransferCoin());
+
+    if( _formKey.currentState!.validate()){
+    AppNavigator.pushAndStackPage(context, page: FinishWithdrawalScreen(coinToWithdraw: amountController.text, nairaRate: '20',));
+
+    }
   }
 
   Widget _buildStarterPlan(BuildContext context) {
@@ -459,8 +507,38 @@ checkEventStatus();
         CustomTextFormField(
           controller: amountController,
           hintText: "Minimum 500",
+          readOnly: isEligible ? false : true,
           textInputAction: TextInputAction.done,
+          textInputType: TextInputType.number,
+          borderDecoration: isSufficient && amountController.text.isNotEmpty ? OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.h),
+          borderSide: BorderSide(
+            color: appTheme.red600,
+            width: 1,
+          ),
+        ): OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.h),
+              borderSide: BorderSide(
+                color: appTheme.blueGray100,
+                width: 1,
+              ),
+            ),
+           onChanged: (value) {
+          _formKey.currentState!.validate();
+        },
+         validator: (value) {
+          return Validator.validate(value, 'Amount');
+        },
         ),
+        Visibility(
+          visible: isSufficient && amountController.text.isNotEmpty,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: Text(
+              'Insufficient funds',
+              style: TextStyle(color: Colors.red, fontSize: 13),
+            ),
+          )),
       ],
     );
   }
