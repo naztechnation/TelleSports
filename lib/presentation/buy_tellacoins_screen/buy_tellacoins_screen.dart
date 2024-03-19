@@ -391,7 +391,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
     return CustomElevatedButton(
       height: 31.v,
       width: (plan.toUpperCase() == 'community leader'.toUpperCase())
-          ? 150.h
+          ? 180.h
           : 136.h,
       text: plan.toUpperCase(),
       margin: EdgeInsets.only(

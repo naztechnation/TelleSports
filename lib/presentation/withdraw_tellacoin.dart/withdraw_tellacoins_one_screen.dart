@@ -40,6 +40,8 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
   String userId = "";
   int numberOfMembers = 0;
 
+  bool isEligible = false;
+
   List<Group> userGroups = [];
   List<int> membersUidLength = [];
   List<String> membersUid = [];
@@ -61,7 +63,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthProviders>(context, listen: false);
-
+checkEventStatus();
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -88,9 +90,9 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                 membersUidLength.add(length);
               }
 
-                isAnyLengthGreaterThanOrEqual = isAnyLengthGreaterThanOrEqualTo100(membersUidLength);
+              isAnyLengthGreaterThanOrEqual =
+                  isAnyLengthGreaterThanOrEqualTo100(membersUidLength);
 
-              print(isAnyLengthGreaterThanOrEqual);
               return Container(
                 width: double.maxFinite,
                 padding: EdgeInsets.all(10.h),
@@ -98,19 +100,23 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomElevatedButton(
-                      textColor: Color(0xFF288763),
+                      textColor: isEligible ? Color(0xFF288763) : Colors.red,
                       buttonStyle: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFEBF6F2),
+                          backgroundColor: isEligible
+                              ? Color(0xFFEBF6F2)
+                              : Colors.red.shade50,
                           foregroundColor: Color(0xFF288763)),
                       decoration: BoxDecoration(
                           color: Color(0xFFEBF6F2),
                           borderRadius: BorderRadius.circular(20)),
-                      text: "You are eligible to  withdraw tellacoins",
+                      text: isEligible
+                          ? "You are eligible to  withdraw tellacoins"
+                          : "You are not eligible to  withdraw tellacoins",
                       buttonTextStyle: TextStyle(color: Color(0xFF288763)),
                       leftIcon: Container(
                         margin: EdgeInsets.fromLTRB(10.h, 8.v, 8.h, 8.v),
                         child: CustomImageView(
-                          color: Color(0xFF288763),
+                          color: isEligible ? Color(0xFF288763) : Colors.red,
                           imagePath: ImageConstant.imgVideocameraGreen700,
                           height: 24.adaptSize,
                           width: 24.adaptSize,
@@ -146,15 +152,14 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 17,
-                                color: Colors.red.shade800,
+                                color: Colors.red,
                                 decoration: TextDecoration.underline,
-                                decorationColor: Colors.red.shade800,
+                                decorationColor: Colors.red,
                                 fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
-                    ]
-                     else if (int.tryParse(widget.tellaCoinBalance)! <
+                    ] else if (int.tryParse(widget.tellaCoinBalance)! <
                         1000) ...[
                       GestureDetector(
                         onTap: () {
@@ -170,19 +175,16 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 17,
-                                color: Colors.red.shade800,
+                                color: Colors.red,
                                 decoration: TextDecoration.underline,
-                                decorationColor: Colors.red.shade800,
+                                decorationColor: Colors.red,
                                 fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
-                    ]
-                    else if (!isAnyLengthGreaterThanOrEqual) ...[
+                    ] else if (!isAnyLengthGreaterThanOrEqual) ...[
                       GestureDetector(
-                        onTap: () {
-                         
-                        },
+                        onTap: () {},
                         child: Align(
                           child: Text(
                             'You don\'t have Up to 100 members in any of the communities you are leading.'
@@ -190,16 +192,14 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 17,
-                                color: Colors.red.shade800,
+                                color: Colors.red,
                                 decoration: TextDecoration.underline,
-                                decorationColor: Colors.red.shade800,
+                                decorationColor: Colors.red,
                                 fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
-                    ]
-                    
-                     else ...[
+                    ] else ...[
                       CustomElevatedButton(
                         text: "Continue",
                         onPressed: () => onTapContinueBtn(context),
@@ -217,6 +217,27 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
   List<String> removeDuplicates(List<String> items) {
     Set<String> uniqueItems = items.toSet();
     return uniqueItems.toList();
+  }
+
+  checkEventStatus() {
+    if (bank == "" || bank == "null" || bank == null) {
+      setState(() {
+        isEligible = false;
+      });
+      
+    } else if (int.tryParse(widget.tellaCoinBalance)! < 1000) {
+      setState(() {
+        isEligible = false;
+      });
+    } else if (!isAnyLengthGreaterThanOrEqual) {
+      setState(() {
+        isEligible = false;
+      });
+    }else{
+       setState(() {
+        isEligible = true;
+      });
+    }
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -444,12 +465,12 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
     );
   }
 
-bool isAnyLengthGreaterThanOrEqualTo100(List<int> lengths) {
-  for (var length in lengths) {
-    if (length >= 100) {
-      return true;
+  bool isAnyLengthGreaterThanOrEqualTo100(List<int> lengths) {
+    for (var length in lengths) {
+      if (length >= 100) {
+        return true;
+      }
     }
+    return false;
   }
-  return false;
-}
 }
