@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -20,6 +21,7 @@ import '../../requests/repositories/user_repo/user_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/modal_content.dart';
+import '../manage_account/update_account.dart';
 
 class FinishWithdrawalScreen extends StatelessWidget {
   final String coinToWithdraw;
@@ -219,7 +221,14 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
 
                                   }
                                 }),
-                            SizedBox(height: 5.v)
+                            SizedBox(height: 25.v),
+          GestureDetector(
+            
+             onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: UpdateAccountScreen());
+                          },child: Text("Change payout account", style: TextStyle(color: Colors.red, fontSize: 14, decoration: TextDecoration.underline,decorationColor: Colors.red))),
+
                           ]))),
             )));
   }

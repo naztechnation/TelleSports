@@ -14,8 +14,6 @@ import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
-import '../../widgets/modals.dart';
-import '../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import '../community_screens/provider/auth_provider.dart';
 import 'finish_withdrawal.dart';
 
@@ -100,7 +98,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
   Widget build(BuildContext context) {
     checkEventStatus();
 
-    
+ 
 
     return SafeArea(
       child: Scaffold(
@@ -189,7 +187,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                               'Please click to add bank details.'.toUpperCase(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 16,
                                   color: Colors.red,
                                   decoration: TextDecoration.underline,
                                   decorationColor: Colors.red,
@@ -198,47 +196,47 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                           ),
                         ),
                       ]
-                       else if (int.tryParse(widget.tellaCoinBalance)! <
-                          1000) ...[
-                        GestureDetector(
-                          onTap: () {
-                            AppNavigator.pushAndStackPage(context,
-                                page: PricingPageScreen(
-                                  balance: widget.tellaCoinBalance,
-                                ));
-                          },
-                          child: Align(
-                            child: Text(
-                              'You dont\'t have sufficient balance click to add more Tellacoin.'
-                                  .toUpperCase(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.red,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.red,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ] else if (!isAnyLengthGreaterThanOrEqual) ...[
-                        GestureDetector(
-                          onTap: () {},
-                          child: Align(
-                            child: Text(
-                              'You don\'t have Up to 100 members in any of the communities you are leading.'
-                                  .toUpperCase(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.red,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.red,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ]
+                      //  else if (int.tryParse(widget.tellaCoinBalance)! <
+                      //     1000) ...[
+                      //   GestureDetector(
+                      //     onTap: () {
+                      //       AppNavigator.pushAndStackPage(context,
+                      //           page: PricingPageScreen(
+                      //             balance: widget.tellaCoinBalance, 
+                      //           ));
+                      //     },
+                      //     child: Align(
+                      //       child: Text(
+                      //         'You dont\'t have sufficient balance click to add more Tellacoin.'
+                      //             .toUpperCase(),
+                      //         textAlign: TextAlign.center,
+                      //         style: TextStyle(
+                      //             fontSize: 16,
+                      //             color: Colors.red,
+                      //             decoration: TextDecoration.underline,
+                      //             decorationColor: Colors.red,
+                      //             fontWeight: FontWeight.w600),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ] else if (!isAnyLengthGreaterThanOrEqual) ...[
+                      //   GestureDetector(
+                      //     onTap: () {},
+                      //     child: Align(
+                      //       child: Text(
+                      //         'You don\'t have Up to 100 members in any of the communities you are leading.'
+                      //             .toUpperCase(),
+                      //         textAlign: TextAlign.center,
+                      //         style: TextStyle(
+                      //             fontSize: 17,
+                      //             color: Colors.red,
+                      //             decoration: TextDecoration.underline,
+                      //             decorationColor: Colors.red,
+                      //             fontWeight: FontWeight.w600),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ]
                      else if(isSufficient && amountController.text.isNotEmpty)...[] else ...[
                         CustomElevatedButton(
                           text: "Continue",
