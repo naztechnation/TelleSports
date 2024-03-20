@@ -340,6 +340,17 @@ class _PredictionContainerState extends State<PredictionContainer> {
                 ),
               ],
             ),
+            const SizedBox(height: 12,),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left:4.0),
+                child: Text(
+                                  'By: ${widget.predictedInfo.user?.username.toString()}',
+                                  style: theme.textTheme.labelLarge,
+                                ),
+              ),
+            ),
           ],
         ),
       ),

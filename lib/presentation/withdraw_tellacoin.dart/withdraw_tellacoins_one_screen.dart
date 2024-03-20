@@ -240,7 +240,9 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                           ),
                         ),
                       ]
-                     else if(!isSufficient || amountController.text.isEmpty)...[] else ...[
+                     else if(!isSufficient || amountController.text.isEmpty)...[]
+                     
+                      else ...[
                         CustomElevatedButton(
                           text: "Continue",
                           onPressed: () => onTapContinueBtn(context),

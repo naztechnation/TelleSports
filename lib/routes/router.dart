@@ -8,7 +8,6 @@ import '../presentation/community_screens/auth/screens/user_information_screen.d
 import '../presentation/community_screens/chat/screens/group_info.dart';
 import '../presentation/community_screens/chat/screens/mobile_chat_screen.dart';
 import '../presentation/community_screens/group/screens/create_group_screen.dart';
-import '../presentation/community_screens/select_contacts/screens/select_contacts_screen.dart';
 
  
 
@@ -25,10 +24,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => const UserInformationScreen(),
       );
      
-    case SelectContactsScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const SelectContactsScreen(),
-      );
+     
     case MobileChatScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final name = arguments['name'];

@@ -38,7 +38,7 @@ dependencies:
   swipe_to: ^1.0.2
   flutter_riverpod: ^2.4.10
   page_route_animator: ^1.0.3
-  flutter_contacts: ^1.1.7+1
+  
   read_more_text: ^0.0.5
 dev_dependencies: 
   flutter_test: 

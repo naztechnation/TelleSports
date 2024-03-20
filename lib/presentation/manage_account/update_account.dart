@@ -407,11 +407,9 @@ class _UpdateAccountState extends State<UpdateAccount> {
                               ],
                             ),
                           ),
-                          Expanded(
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 15,
-                            ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 15,
                           )
                         ],
                       ),

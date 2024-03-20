@@ -27,18 +27,18 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
   }
 
   void createGroup() {
-    if (groupNameController.text.trim().isNotEmpty && image != null) {
-      ref.read(groupControllerProvider).createGroup(
-            context,
-            groupNameController.text.trim(),
-            image!,
-            '',
-            ref.read(selectedGroupContacts),
-          );
-      ref.read(selectedGroupContacts.state).update((state) => []);
-      Navigator.pop(context);
-    }
-  }
+  //   if (groupNameController.text.trim().isNotEmpty && image != null) {
+  //     ref.read(groupControllerProvider).createGroup(
+  //           context,
+  //           groupNameController.text.trim(),
+  //           image!,
+  //           '',
+  //           ref.read(selectedGroupContacts),
+  //         );
+  //     ref.read(selectedGroupContacts.state).update((state) => []);
+  //     Navigator.pop(context);
+  //   }
+   }
 
   @override
   void dispose() {
@@ -118,4 +118,4 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
       ),
     );
   }
-}
+  }
