@@ -64,6 +64,8 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  
+
   late UserCubit _userCubit;
   num nairaEquivalent = 0.0;
 
@@ -78,6 +80,8 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
   String accountNumber = '';
   String accountName = '';
   String countryCode = '';
+  String countryCurrency= "";
+  String bankCode = '';
 
   List<CountryData> banks = [];
 
@@ -87,16 +91,20 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
     bankName = await StorageHandler.getUserBank() ?? '';
     accountNumber = await StorageHandler.getUserAccountNumber() ?? '';
     accountName = await StorageHandler.getUserAccountName() ?? '';
+    countryCurrency = await StorageHandler.getCurrency() ?? "";
+    bankCode = await StorageHandler.getBankCode() ?? '';
 
     setState(() {
       if (bankName == 'null') {
         accountNameController.text = '';
         bankNameController.text = '';
         accountNumberController.text = '';
+        countryCodeController.text = '';
       } else {
         accountNameController.text = accountName;
         bankNameController.text = bankName;
         accountNumberController.text = accountNumber;
+        countryCodeController.text = countryCurrency;
       }
     });
   }
@@ -327,15 +335,7 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
                 return Validator.validate(value, 'Country Currency');
               },
               onTap: () {
-                // Modals.showBottomSheetModal(context,
-                //     isScrollControlled: true,
-                //     heightFactor: 1,
-                //     isDissmissible: true,
-                //     page: optionWidget(
-                //         Provider.of<UserViewModel>(context, listen: false)
-                //             .flutterWaveSupportedCurrency,
-                //         'Select Country Currency',
-                //         countryCodeController, context));
+                 
               },
               contentPadding:
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
@@ -359,222 +359,13 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
                 return Validator.validate(value, 'Bank Name');
               },
               onTap: () {
-                // Modals.showBottomSheetModal(context,
-                //     isScrollControlled: true,
-                //     heightFactor: 1,
-                //     isDissmissible: true,
-                //     page: optionWidget1(
-                //         banks,
-                //         'Select Bank',
-                //         bankNameController,));
+                
               },
               contentPadding:
                   EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v))
         ]));
   }
+ 
 
-  Widget optionWidget(List<Map<String, String>> options, String title,
-      final controller, BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 15,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox.shrink(),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 19,
-                  color: Colors.green[900],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.close,
-                  size: 25,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Divider(
-          height: 5,
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: options.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () async {
-                  Navigator.pop(context);
-
-                  controller.text = options[index]['currency'] ?? '';
-                  countryCode = options[index]['countryCode'] ?? '';
-                  await _userCubit.getCountryBank(countryCode: countryCode);
-                },
-                child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 15,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '${index + 1}.',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(
-                                    width: 13,
-                                  ),
-                                  Text(
-                                    options[index]['currency'] ?? '',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 15,
-                            )
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        height: 5,
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  optionWidget1(List<CountryData> options, String title, final controller) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 15,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox.shrink(),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 19,
-                  color: Colors.green[900],
-                ),
-              ),
-              GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.close,
-                    size: 25,
-                  )),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Divider(
-          height: 5,
-        ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: options.length,
-              shrinkWrap: true,
-              itemBuilder: ((context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-
-                    controller.text = options[index].name;
-
-                    // filteredTeam = filterClubsByLeague(
-                    //     leagueName: options[index],
-                    //     leaguesWithClubs: leaguesWithClubs);
-                  },
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Text('${index + 1}.',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 16)),
-                                    const SizedBox(
-                                      width: 13,
-                                    ),
-                                    Text(options[index].name ?? '',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 16)),
-                                  ],
-                                ),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 15,
-                              )
-                            ],
-                          ),
-                        ),
-                        Divider(
-                          height: 5,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              })),
-        ),
-      ],
-    );
-  }
+  
 }

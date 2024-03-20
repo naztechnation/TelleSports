@@ -35,10 +35,29 @@ class ShowAllImageView extends StatelessWidget {
                 },
                 child: Hero(
                   tag: groupInfo.groupImageList[index], // Unique tag for each image
-                  child: Image.network(
-                    groupInfo.groupImageList[index],
-                    fit: BoxFit.cover,
+                  child:  
+
+                  CachedNetworkImage(
+              imageUrl: groupInfo.groupImageList[index],
+                
+               placeholder: (context, url) => Container(
+                  color:  Colors.transparent,
+                   width: 40,
+                  height: 40,
+                  child: CircularProgressIndicator(
+                    color: Colors.grey,
+                    
                   ),
+                ),
+            
+                errorWidget: (context, url, error) => Image.asset(
+                   'assets/images/image_not_found.png',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                ),
+              fit: BoxFit.cover,
+            ),
                 ),
               );
             },
@@ -55,30 +74,25 @@ class ShowAllImageView extends StatelessWidget {
         builder: (context) => Scaffold(
           body: GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Center(
-              child: Hero(
-                tag: imageUrl, 
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
-                   placeholder: (context, url) => Container(
-      color:  Colors.transparent,
-      height: 100,
-      width: 100,
-      child: CircularProgressIndicator(
-        color: Colors.grey,
-        
-      ),
-    ),
-
-    errorWidget: (context, url, error) => Image.asset(
-       '',
-      width: 100,
-      height: 100,
-      fit: BoxFit.cover,
-    ),
-                  fit: BoxFit.contain,
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+               placeholder: (context, url) => Container(
+                  color:  Colors.transparent,
+                  height: 100,
+                  width: 100,
+                  child: CircularProgressIndicator(
+                    color: Colors.grey,
+                    
+                  ),
                 ),
-              ),
+            
+                errorWidget: (context, url, error) => Image.asset(
+                   'assets/images/image_not_found.png',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                ),
+              fit: BoxFit.contain,
             ),
           ),
         ),

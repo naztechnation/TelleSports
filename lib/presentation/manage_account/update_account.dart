@@ -59,7 +59,6 @@ class _UpdateAccountState extends State<UpdateAccount> {
   String accountName = '';
   String countryCode = '';
   String countryCurrency = '';
-  String bankCode = '';
 
   List<CountryData> banks = [];
 
@@ -70,7 +69,6 @@ class _UpdateAccountState extends State<UpdateAccount> {
     accountNumber = await StorageHandler.getUserAccountNumber() ?? '';
     accountName = await StorageHandler.getUserAccountName() ?? '';
     countryCurrency = await StorageHandler.getCurrency() ?? '';
-    bankCode = await StorageHandler.getBankCode() ?? '';
 
     setState(() {
       if (bankName == 'null') {
