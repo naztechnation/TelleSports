@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tellesports/common/widgets/loader.dart';
 import 'package:tellesports/core/utils/size_utils.dart';
 
 import '../../../../core/app_export.dart';
@@ -55,9 +57,25 @@ class ShowAllImageView extends StatelessWidget {
             onTap: () => Navigator.pop(context),
             child: Center(
               child: Hero(
-                tag: imageUrl, // Matching tag for the image
-                child: Image.network(
-                  imageUrl,
+                tag: imageUrl, 
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                   placeholder: (context, url) => Container(
+      color:  Colors.transparent,
+      height: 100,
+      width: 100,
+      child: CircularProgressIndicator(
+        color: Colors.grey,
+        
+      ),
+    ),
+
+    errorWidget: (context, url, error) => Image.asset(
+       '',
+      width: 100,
+      height: 100,
+      fit: BoxFit.cover,
+    ),
                   fit: BoxFit.contain,
                 ),
               ),

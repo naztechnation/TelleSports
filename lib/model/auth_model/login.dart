@@ -187,6 +187,8 @@ class UserWallet {
   String? bank;
   String? accountName;
   String? accountNumber;
+  String? countryCode;
+  String? currency;
   Plan? plan;
 
   UserWallet(
@@ -196,6 +198,8 @@ class UserWallet {
       this.tellaCoins,
       this.createdAt,
       this.updatedAt,
+        this.countryCode,
+      this.currency,
       this.bank,
       this.accountName,
       this.accountNumber,
@@ -208,6 +212,8 @@ class UserWallet {
     tellaCoins = json['tella_coins'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    countryCode = json['country_code'];
+    currency = json['currency'];
     bank = json['bank'];
     accountName = json['account_name'];
     accountNumber = json['account_number'];
@@ -222,6 +228,8 @@ class UserWallet {
     data['tella_coins'] = this.tellaCoins;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['country_code'] = this.countryCode;
+    data['currency'] = this.currency;
     data['bank'] = this.bank;
     data['account_name'] = this.accountName;
     data['account_number'] = this.accountNumber;

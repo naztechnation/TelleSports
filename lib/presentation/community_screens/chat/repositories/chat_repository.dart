@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +22,28 @@ final chatRepositoryProvider = Provider(
   ),
 );
 
-class ChatRepository {
+class ChatRepository extends ChangeNotifier{
   final FirebaseFirestore firestore;
+ 
+
+  bool _isMessageSaved = false;
+ 
+
+   bool get isMessageSaved => _isMessageSaved;
+
+  
+    setMessage(bool value) {
+    _isMessageSaved = value;
+    notifyListeners();  
+  }
+
   
   ChatRepository({
     required this.firestore,
      
   });
+
+
 
   Stream<List<ChatContact>> getChatContacts(String userId) {
     return firestore
@@ -58,10 +74,6 @@ class ChatRepository {
       return contacts;
     });
   }
-
- 
-
-   
 
   Stream<List<Message>> getChatStream(String recieverUserId, String userId) {
 
@@ -181,7 +193,8 @@ class ChatRepository {
           messageReply == null ? MessageEnum.text : messageReply.messageEnum, username: senderUsername,
     );
     if (isGroupChat) {
-      // groups -> group id -> chat -> message
+     
+      
       await firestore
           .collection('groups')
           .doc(recieverUserId)
@@ -190,8 +203,10 @@ class ChatRepository {
           .set(
             message.toMap(),
           );
+           setMessage(false);
+
+
     } else {
-      // users -> sender id -> reciever id -> messages -> message id -> store message
       await firestore
           .collection('users')
           .doc(userId)
@@ -215,10 +230,6 @@ class ChatRepository {
           );
     }
   }
-
-
-  
-  
 
   void sendTextMessage({
     required BuildContext context,
@@ -283,6 +294,9 @@ class ChatRepository {
       var timeSent = DateTime.now();
       var messageId = const Uuid().v1();
 
+   
+setMessage(true);
+
       String imageUrl = await ref
           .read(commonFirebaseStorageRepositoryProvider)
           .storeFileToFirebase(
@@ -345,6 +359,36 @@ class ChatRepository {
     }
   }
 
+  void setChatMessageSeen(
+    BuildContext context,
+    String recieverUserId,
+    String userId,
+    String messageId,
+  ) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(userId)
+          .collection('chats')
+          .doc(recieverUserId)
+          .collection('messages')
+          .doc(messageId)
+          .update({'isSeen': true});
+
+      await firestore
+          .collection('users')
+          .doc(recieverUserId)
+          .collection('chats')
+          .doc(userId)
+          .collection('messages')
+          .doc(messageId)
+          .update({'isSeen': true});
+    } catch (e) {
+           Modals.showToast(e.toString());
+
+    }
+  }
+
   void sendGIFMessage({
     required BuildContext context,
     required String gifUrl,
@@ -394,33 +438,4 @@ class ChatRepository {
     }
   }
 
-  void setChatMessageSeen(
-    BuildContext context,
-    String recieverUserId,
-    String userId,
-    String messageId,
-  ) async {
-    try {
-      await firestore
-          .collection('users')
-          .doc(userId)
-          .collection('chats')
-          .doc(recieverUserId)
-          .collection('messages')
-          .doc(messageId)
-          .update({'isSeen': true});
-
-      await firestore
-          .collection('users')
-          .doc(recieverUserId)
-          .collection('chats')
-          .doc(userId)
-          .collection('messages')
-          .doc(messageId)
-          .update({'isSeen': true});
-    } catch (e) {
-           Modals.showToast(e.toString());
-
-    }
-  }
 }

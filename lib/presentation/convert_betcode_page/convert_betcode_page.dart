@@ -146,7 +146,10 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             StorageHandler.saveUserAccountNumber(
                 state.user.userWallet?.accountNumber.toString());
             StorageHandler.saveUserBank(state.user.userWallet?.bank.toString());
-            
+            StorageHandler.saveCurrency(
+                state.user.userWallet?.currency.toString());
+            StorageHandler.saveBankCode(
+                state.user.userWallet?.countryCode.toString());
 
             StorageHandler.saveUserPassword(password);
 

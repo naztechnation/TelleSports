@@ -75,6 +75,20 @@ class StorageHandler {
     }
   }
 
+
+  static Future<void> saveCurrency([String? currency]) async {
+    if (currency != null) {
+      await storage.write(key: 'CURRENCY', value: currency);
+    }
+  }
+
+static Future<void> saveBankCode([String? code]) async {
+    if (code != null) {
+      await storage.write(key: 'BANKCODE', value: code);
+    }
+  }
+  
+
   static Future<void> saveUserPhoto([String? photo]) async {
     if (photo != null) {
       await storage.write(key: 'PHOTO', value: photo);
@@ -139,6 +153,26 @@ class StorageHandler {
     Map<String, String> value = await storage.readAll();
     String? user;
     String? data = value['ID'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+  static Future<String?> getBankCode() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['BANKCODE'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+  static Future<String?> getCurrency() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['CURRENCY'];
     if (data != null) {
       user = data;
     }

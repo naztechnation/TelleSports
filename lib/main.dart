@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:tellesports/routes/app_routes.dart';
 import 'model/view_models/account_view_model.dart';
 import 'model/view_models/firebase_auth_view_model.dart';
 import 'model/view_models/user_view_model.dart';
+import 'presentation/community_screens/chat/repositories/chat_repository.dart';
 import 'presentation/community_screens/provider/auth_provider.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -31,6 +33,7 @@ void main() async{
          pro.ChangeNotifierProvider(create: (_) => UserViewModel(), lazy: false),
          pro.ChangeNotifierProvider(create: (_) => FirebaseAuthProvider(), lazy: false),
          pro.ChangeNotifierProvider(create: (_) => AuthProviders(), lazy: false),
+         pro.ChangeNotifierProvider(create: (_) => ChatRepository(firestore: FirebaseFirestore.instance), lazy: false),
       ], 
       child:   TellaSports(),
     ),

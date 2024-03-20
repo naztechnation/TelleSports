@@ -93,6 +93,10 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                           state.user.userWallet?.accountNumber.toString());
                       StorageHandler.saveUserBank(
                           state.user.userWallet?.bank.toString());
+                      StorageHandler.saveCurrency(
+                          state.user.userWallet?.currency.toString());
+                      StorageHandler.saveBankCode(
+                          state.user.userWallet?.countryCode.toString());
 
                       StorageHandler.saveUserPassword(passwordController.text);
 

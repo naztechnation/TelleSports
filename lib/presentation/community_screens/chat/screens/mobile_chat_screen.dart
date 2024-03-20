@@ -88,10 +88,13 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
     setState(() {});
   }
 
+   
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollDown();
+      Future.delayed(Duration(seconds: 1), (){
+        _scrollDown();
+      });
     });
     getUserId();
 
@@ -123,6 +126,7 @@ updateUserGroupNumber();
         return false;
       },
       child: Scaffold(
+        
         body: BlocProvider<PredictionCubit>(
           lazy: false,
           create: (_) => PredictionCubit(
@@ -163,6 +167,22 @@ updateUserGroupNumber();
                     child: Scaffold(
                       backgroundColor: appTheme.lime50,
                       resizeToAvoidBottomInset: false,
+                      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 50),
+        child: FloatingActionButton(
+          backgroundColor:
+              Colors.blue.withOpacity(0.5),
+          mini: false,
+          elevation: 0.0,
+          onPressed: () {
+            _scrollDown();
+          },
+          child: const Icon(
+            Icons.arrow_downward,
+            color: Colors.white,
+          ),
+        ),
+      ),
                       appBar: CustomAppBar(
                         leadingWidth: 44.h,
                         leading: AppbarLeadingImage(
@@ -386,27 +406,28 @@ updateUserGroupNumber();
                                     : SizedBox.shrink();
                               },
                             ),
-                            Expanded(
-                              child: StreamBuilder<List<dynamic>>(
-                                  stream: widget.isGroupChat
-                                      ? ref
-                                          .read(chatControllerProvider)
-                                          .groupChatStream(widget.uid)
-                                      : ref
-                                          .read(chatControllerProvider)
-                                          .chatStream(widget.uid, userId),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {}
-
-                                    groupInfo.clearGroupImageList();
-                                    return ListView.builder(
+                            StreamBuilder<List<dynamic>>(
+                                stream: widget.isGroupChat
+                                    ? ref
+                                        .read(chatControllerProvider)
+                                        .groupChatStream(widget.uid)
+                                    : ref
+                                        .read(chatControllerProvider)
+                                        .chatStream(widget.uid, userId),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {}
+                            
+                                  groupInfo.clearGroupImageList();
+                                  return Expanded(
+                                    child: ListView.builder(
                                       controller: _scrollController,
+                                      shrinkWrap: true,
                                       itemCount: snapshot.data?.length ?? 0,
                                       itemBuilder: (context, index) {
                                         final messageData =
                                             snapshot.data?[index];
-
+                                                                
                                         if (messageData.type ==
                                             MessageEnum.image) {
                                           groupInfo.updateGroupImageList(
@@ -415,7 +436,7 @@ updateUserGroupNumber();
                                         var timeSent = DateFormat('hh:mm a')
                                             .format(
                                                 messageData.timeSent.toLocal());
-
+                                                                
                                         if (!messageData.isSeen &&
                                             messageData.recieverid == userId) {
                                           ref
@@ -428,30 +449,26 @@ updateUserGroupNumber();
                                               );
                                         }
                                         if (messageData.senderId == userId) {
-                                          return Stack(
-                                            children: [
-                                              MyMessageCard(
-                                                message: messageData.text,
-                                                name: messageData.username,
-                                                index: index,
-                                                date: timeSent,
-                                                type: messageData.type,
-                                                repliedText:
-                                                    messageData.repliedMessage,
-                                                username: messageData.repliedTo,
-                                                repliedMessageType: messageData
-                                                    .repliedMessageType,
-                                                onLeftSwipe: (value) =>
-                                                    onMessageSwipe(
-                                                  messageData.text,
-                                                  true,
-                                                  messageData.type,
-                                                ),
-                                                isSeen: messageData.isSeen,
-                                                messageId:
-                                                    messageData.messageId,
-                                              ),
-                                            ],
+                                          return MyMessageCard(
+                                            message: messageData.text,
+                                            name: messageData.username,
+                                            index: index,
+                                            date: timeSent,
+                                            type: messageData.type,
+                                            repliedText:
+                                                messageData.repliedMessage,
+                                            username: messageData.repliedTo,
+                                            repliedMessageType: messageData
+                                                .repliedMessageType,
+                                            onLeftSwipe: (value) =>
+                                                onMessageSwipe(
+                                              messageData.text,
+                                              true,
+                                              messageData.type,
+                                            ),
+                                            isSeen: messageData.isSeen,
+                                            messageId:
+                                                messageData.messageId,
                                           );
                                         }
                                         return SenderMessageCard(
@@ -473,74 +490,78 @@ updateUserGroupNumber();
                                                 messageData.repliedMessage,
                                             messageId: messageData.messageId);
                                       },
-                                    );
-                                  }),
-                            ),
+                                    ),
+                                  );
+                                }),
                             const SizedBox(
                               height: 20,
                             ),
-                            StreamBuilder<DocumentSnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('groups')
-                                  .doc(groupInfo.groupId)
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                final isGroupLocked =
-                                    snapshot.data?.get('isGroupLocked') ??
-                                        false;
-
-                                return (isGroupLocked)
-                                    ? (groupInfo.groupAdminId == userId)
-                                        ? BottomChatField(
-                                            onTap: () {
-                                              _scrollDown();
-                                            },
-                                            recieverUserId: widget.uid,
-                                            isGroupChat: widget.isGroupChat,
-                                          )
-                                        : Container(
-                                            height: 45,
-                                            color: Colors.grey.shade300,
-                                            child: const Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 0.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    Icons.lock,
-                                                    color: Colors.blue,
-                                                    size: 14,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    'only admins can send messages here',
-                                                    style: TextStyle(
-                                                        color: Colors.blue),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                    : BottomChatField(
-                                        onTap: () {
-                                          _scrollDown();
-                                        },
-                                        recieverUserId: widget.uid,
-                                        isGroupChat: widget.isGroupChat,
-                                      );
-                              },
-                            ),
+                           
                           ],
                         ),
                       ),
                     ),
                   ),
           ),
+        ),
+        bottomNavigationBar:  Container(
+          height: 100,
+          child: StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('groups')
+                                    .doc(groupInfo.groupId)
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                  final isGroupLocked =
+                                      snapshot.data?.get('isGroupLocked') ??
+                                          false;
+          
+                                  return (isGroupLocked)
+                                      ? (groupInfo.groupAdminId == userId)
+                                          ? BottomChatField(
+                                              onTap: () {
+                                                _scrollDown();
+                                              },
+                                              recieverUserId: widget.uid,
+                                              isGroupChat: widget.isGroupChat,
+                                            )
+                                          : Container(
+                                              height: 45,
+                                              color: Colors.grey.shade300,
+                                              child: const Padding(
+                                                padding:
+                                                    EdgeInsets.only(bottom: 0.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.lock,
+                                                      color: Colors.blue,
+                                                      size: 14,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      'only admins can send messages here',
+                                                      style: TextStyle(
+                                                          color: Colors.blue),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                      : BottomChatField(
+                                          onTap: () {
+                                            _scrollDown();
+                                          },
+                                          recieverUserId: widget.uid,
+                                          isGroupChat: widget.isGroupChat,
+                                        );
+                                },
+                              ),
         ),
       ),
     );
@@ -587,9 +608,10 @@ updateUserGroupNumber();
   }
 
   void _scrollDown() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-    });
+    _scrollController.jumpTo(
+      _scrollController.position.maxScrollExtent * 2,
+      
+    );
   }
 
   Widget _buildComplaintField(BuildContext context) {

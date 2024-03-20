@@ -58,6 +58,8 @@ class _UpdateAccountState extends State<UpdateAccount> {
   String accountNumber = '';
   String accountName = '';
   String countryCode = '';
+  String countryCurrency = '';
+  String bankCode = '';
 
   List<CountryData> banks = [];
 
@@ -67,6 +69,8 @@ class _UpdateAccountState extends State<UpdateAccount> {
     bankName = await StorageHandler.getUserBank() ?? '';
     accountNumber = await StorageHandler.getUserAccountNumber() ?? '';
     accountName = await StorageHandler.getUserAccountName() ?? '';
+    countryCurrency = await StorageHandler.getCurrency() ?? '';
+    bankCode = await StorageHandler.getBankCode() ?? '';
 
     setState(() {
       if (bankName == 'null') {
@@ -77,6 +81,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
         accountNameController.text = accountName;
         bankNameController.text = bankName;
         accountNumberController.text = accountNumber;
+        countryCodeController.text = countryCurrency;
       }
     });
   }
@@ -159,7 +164,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
                             SizedBox(height: 29.v),
                             _buildCountryCodeField(context),
                            if(banks.isNotEmpty) SizedBox(height: 11.v),
-                           if(banks.isNotEmpty)...[
+                           if(banks.isNotEmpty || bankName != 'null')...[
                             _buildBankField(context),
                            ] else if(state is CurrencyLoading)...[
                             Center(

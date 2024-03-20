@@ -4,7 +4,7 @@ import 'package:swipe_to/swipe_to.dart';
 import 'package:tellesports/widgets/modals.dart';
 
 import '../../../../common/enums/message_enum.dart';
-import '../../../../common/utils/colors.dart'; 
+import '../../../../common/utils/colors.dart';
 import '../../../../widgets/image_view.dart';
 import '../../provider/auth_provider.dart';
 import 'display_text_image_gif.dart';
@@ -33,7 +33,8 @@ class MyMessageCard extends StatefulWidget {
     required this.repliedText,
     required this.username,
     required this.repliedMessageType,
-    required this.isSeen, required this.name,
+    required this.isSeen,
+    required this.name,
   }) : super(key: key);
 
   @override
@@ -41,30 +42,37 @@ class MyMessageCard extends StatefulWidget {
 }
 
 class _MyMessageCardState extends State<MyMessageCard> {
-
   int textIndex = -1;
 
   double adjustedHeight = 0;
-  
 
   @override
   Widget build(BuildContext context) {
     final isReplying = widget.repliedText.isNotEmpty;
     final groupInfo = Provider.of<AuthProviders>(context, listen: true);
-double screenHeight = MediaQuery.of(context).size.height;
-double statusBarHeight = MediaQuery.of(context).padding.top;
-double appBarHeight = Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    double appBarHeight =
+        Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight;
 
-// Calculate the available height excluding status bar and app bar
-double availableHeight = screenHeight - statusBarHeight - appBarHeight;
- adjustedHeight = availableHeight * 0.57;
+    double availableHeight = screenHeight - statusBarHeight - appBarHeight;
+    adjustedHeight = availableHeight * 0.57;
     return SwipeTo(
       onLeftSwipe: widget.onLeftSwipe,
       child: Container(
-        margin: EdgeInsets.only(top: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? 12 : 8),
-        padding: EdgeInsets.only(bottom: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? 3 : 0),
+        margin: EdgeInsets.only(
+            top: (groupInfo.isSelected && widget.index == groupInfo.textIndex)
+                ? 12
+                : 8),
+        padding: EdgeInsets.only(
+            bottom:
+                (groupInfo.isSelected && widget.index == groupInfo.textIndex)
+                    ? 3
+                    : 0),
         decoration: BoxDecoration(
-          color: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? Colors.blue.shade100 : Colors.transparent,
+          color: (groupInfo.isSelected && widget.index == groupInfo.textIndex)
+              ? Colors.blue.shade100
+              : Colors.transparent,
         ),
         width: MediaQuery.sizeOf(context).width,
         child: Align(
@@ -78,45 +86,32 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
                 setState(() {
                   groupInfo.isSelectedMessage(false);
                   groupInfo.setSelectedMessage('');
-                    
-                   groupInfo.setTextIndex(-1) ;
-                     groupInfo.setMessageId('') ;
-                     groupInfo.setMessageType(MessageEnum.none) ;
 
-
-
+                  groupInfo.setTextIndex(-1);
+                  groupInfo.setMessageId('');
+                  groupInfo.setMessageType(MessageEnum.none);
                 });
 
-                if(widget.type  ==  MessageEnum.image){
-
-                  Modals.showDialogModal(context,page: _showFullImage(context, widget.message))
-
-                  ;
+                if (widget.type == MessageEnum.image) {
+                  Modals.showDialogModal(context,
+                      page: _showFullImage(context, widget.message));
                 }
-
               },
               onLongPress: () {
                 setState(() {
                   groupInfo.isSelectedMessage(true);
 
                   groupInfo.setSelectedMessage(widget.message);
-                   groupInfo.setTextIndex(widget.index) ;
-                     groupInfo.setMessageId(widget.messageId) ;
-                     groupInfo.setMessageType(widget.type) ;
-
-
-
+                  groupInfo.setTextIndex(widget.index);
+                  groupInfo.setMessageId(widget.messageId);
+                  groupInfo.setMessageType(widget.type);
                 });
               },
-             
               child: Container(
                 decoration: BoxDecoration(
                     color: messageColor,
                     borderRadius: BorderRadius.circular(12)),
-                margin: EdgeInsets.only(
-                    right: 10,
-                    left: 0,
-                    top: 3),
+                margin: EdgeInsets.only(right: 10, left: 0, top: 3),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                 child: Column(
@@ -134,17 +129,15 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
                               left: 5,
                               top: 5,
                               right: 5,
-                              bottom: 25,
+                              bottom: 10,
                             ),
                       child: Column(
                         children: [
                           if (isReplying) ...[
-                           
-                             
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color:                                  Colors.grey.shade200,
+                                color: Colors.grey.shade200,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(
                                     12,
@@ -161,11 +154,9 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
                             const SizedBox(height: 8),
                           ],
                           DisplayTextImageGIF(
-                                isMe: true,
-                                username: widget.name,
-
+                            isMe: true,
+                            username: widget.name,
                             message: widget.message,
-                            
                             type: widget.type,
                           ),
                         ],
@@ -201,29 +192,29 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
     );
   }
 
-   _showFullImage(BuildContext context, String imageUrl) {
- return  GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
+  _showFullImage(BuildContext context, String imageUrl) {
+    return GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: adjustedHeight,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Center(
+                child: ImageView.network(
                   height: adjustedHeight,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Center(
-                      child: ImageView.network(
-                        height: adjustedHeight,
-                        imageUrl,
-                         placeholder: 'assets/images/loading.gif',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  imageUrl,
+                  placeholder: 'assets/images/loading.gif',
+                  fit: BoxFit.cover,
                 ),
-              ],
+              ),
             ),
-          );
+          ),
+        ],
+      ),
+    );
   }
 }

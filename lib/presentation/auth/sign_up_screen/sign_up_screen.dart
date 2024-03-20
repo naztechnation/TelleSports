@@ -161,6 +161,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             state.user.userWallet?.accountNumber.toString());
                         StorageHandler.saveUserBank(
                             state.user.userWallet?.bank.toString());
+                         StorageHandler.saveCurrency(
+                          state.user.userWallet?.currency.toString());
+                      StorageHandler.saveBankCode(
+                          state.user.userWallet?.countryCode.toString());
 
                         StorageHandler.saveUserPassword(state.user.user?.email);
 

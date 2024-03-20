@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tellesports/handlers/secure_handler.dart';
 
  
 import '../../../../common/enums/message_enum.dart';
@@ -39,6 +39,7 @@ class ChatController {
   //   return chatRepository.checkUserExists();
   // }
 
+   
   Stream<List<dynamic>> chatStream(String recieverUserId, String userId)  {
     // String userId = await StorageHandler.getUserId() ?? '';
     return chatRepository.getChatStream(recieverUserId, userId);
@@ -69,16 +70,17 @@ class ChatController {
     ref.read(messageReplyProvider.state).update((state) => null);
   }
 
-  void sendFileMessage(
+  Future<void> sendFileMessage(
     BuildContext context,
     File file,
     String recieverUserId,
     String userId,
     MessageEnum messageEnum,
     bool isGroupChat,
-  ) {
+  ) async {
     final messageReply = ref.read(messageReplyProvider);
-    ref.read(userDataAuthProvider).whenData(
+
+   await ref.read(userDataAuthProvider).whenData(
           (value) => chatRepository.sendFileMessage(
             context: context,
             file: file,
@@ -90,6 +92,8 @@ class ChatController {
             isGroupChat: isGroupChat, userId: userId,
           ),
         );
+
+
     ref.read(messageReplyProvider.state).update((state) => null);
   }
 

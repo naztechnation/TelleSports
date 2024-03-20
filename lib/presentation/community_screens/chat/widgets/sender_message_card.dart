@@ -4,6 +4,8 @@ import 'package:swipe_to/swipe_to.dart';
 
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/utils/colors.dart';
+import '../../../../widgets/image_view.dart';
+import '../../../../widgets/modals.dart';
 import '../../provider/auth_provider.dart';
 import 'display_text_image_gif.dart';
 
@@ -41,13 +43,21 @@ class SenderMessageCard extends StatefulWidget {
 
 class _SenderMessageCardState extends State<SenderMessageCard> {
   int textIndex = -1;
+
+  double adjustedHeight = 0;
+
   @override
   Widget build(BuildContext context) {
     final isReplying = widget.repliedText.isNotEmpty;
 
     final groupInfo = Provider.of<AuthProviders>(context, listen: true);
 
+    double screenHeight = MediaQuery.of(context).size.height;
+double statusBarHeight = MediaQuery.of(context).padding.top;
+double appBarHeight = Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight;
 
+double availableHeight = screenHeight - statusBarHeight - appBarHeight;
+ adjustedHeight = availableHeight * 0.57;
     return SwipeTo(
       onRightSwipe: widget.onRightSwipe,
       child: Container(
@@ -74,6 +84,13 @@ class _SenderMessageCardState extends State<SenderMessageCard> {
                      groupInfo.setMessageType(MessageEnum.none) ;
         
                   });
+
+                   if(widget.type  ==  MessageEnum.image){
+
+                  Modals.showDialogModal(context,page: _showFullImage(context, widget.message))
+
+                  ;
+                }
                 },
                 onLongPress: () {
                   setState(() {
@@ -110,7 +127,7 @@ class _SenderMessageCardState extends State<SenderMessageCard> {
                               left: 5,
                               top: 5,
                               right: 5,
-                              bottom: 25,
+                              bottom: 10,
                             ),
                       child: Column(
                         children: [
@@ -170,5 +187,32 @@ class _SenderMessageCardState extends State<SenderMessageCard> {
         ),
       ),
     );
+  }
+
+  _showFullImage(BuildContext context, String imageUrl) {
+ return  GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: adjustedHeight,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Center(
+                      child: ImageView.network(
+                        width: MediaQuery.sizeOf(context).width,
+                        height: adjustedHeight,
+                        imageUrl,
+                         placeholder: 'assets/images/loading.gif',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }
