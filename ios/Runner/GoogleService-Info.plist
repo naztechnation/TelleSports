@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>126493581952-junkt46t9puh2b2qgp355gec5gpshhtg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.126493581952-junkt46t9puh2b2qgp355gec5gpshhtg</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>126493581952-6s0bb95on2j17ksksb2lgpnkts8rr35d.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBi5MGWcjPKKIU6IJweJGo38ZXydq9vqUE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>126493581952</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.tellasport.tellasport</string>
+	<key>PROJECT_ID</key>
+	<string>tellasport</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tellasport.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:126493581952:ios:d5739b4cd65877043abc65</string>
+</dict>
+</plist>
