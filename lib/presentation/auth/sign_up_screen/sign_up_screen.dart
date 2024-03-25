@@ -63,6 +63,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isShowPassword1 = false;
   bool isGoogles = false;
 
+  bool isAppleAuth = false;
+
   showPassword1() {
     setState(() {
       isShowPassword1 = !isShowPassword1;
@@ -303,33 +305,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 },
                               ),
                               SizedBox(height: 13.v),
-                              if (Platform.isIOS)
-                                CustomOutlinedButton(
-                                    text: "Sign in with Apple",
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h),
-                                    leftIcon: Container(
-                                        margin: EdgeInsets.only(right: 10.h),
-                                        child: CustomImageView(
-                                            imagePath: ImageConstant
-                                                .imgSocialMediaIconsOnprimary,
-                                            height: 24.adaptSize,
-                                            width: 24.adaptSize)),
-                                    onPressed: () async {
-                                      await FirebaseAuth.instance.signOut();
-                                      final GoogleSignIn googleSignIn =
-                                          GoogleSignIn();
-                                      await googleSignIn.signOut();
-                                      UserCredential? user =
-                                          await authUser.signInWithApple();
-                                      if (user != null) {
-                                        Modals.showToast(
-                                            authUser.successMessage);
-                                      } else {
-                                        Modals.showToast(
-                                            authUser.successMessage);
-                                      }
-                                    }),
+                              // if (Platform.isIOS)
+                              //   CustomOutlinedButton(
+                              //       text: "Sign in with Apple",
+                              //       margin:
+                              //           EdgeInsets.symmetric(horizontal: 4.h),
+                              //       leftIcon: Container(
+                              //           margin: EdgeInsets.only(right: 10.h),
+                              //           child: CustomImageView(
+                              //               imagePath: ImageConstant
+                              //                   .imgSocialMediaIconsOnprimary,
+                              //               height: 24.adaptSize,
+                              //               width: 24.adaptSize)),
+                              //       onPressed: () async {
+                              //         await FirebaseAuth.instance.signOut();
+                              //         final GoogleSignIn googleSignIn =
+                              //             GoogleSignIn();
+                              //         await googleSignIn.signOut();
+                              //         UserCredential? user =
+                              //             await authUser.signInWithApple();
+                              //         if (user != null) {
+                              //           Modals.showToast(
+                              //               authUser.successMessage);
+                              //         } else {
+                              //           Modals.showToast(
+                              //               authUser.successMessage);
+                              //         }
+                              //       }),
                               SizedBox(height: 13.v),
                               Container(
                                   width: 342.h,
@@ -577,22 +579,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildUserNameGoogleTextField(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(left: 8.h),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Username", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-          SizedBox(height: 3.v),
-          CustomTextFormField(
-            controller: userNameGoogleController,
-            hintText: "Enter username",
-            hintStyle: CustomTextStyles.titleSmallGray600,
-            textInputType: TextInputType.name,
-            inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
-            validator: (value) {
-              return Validator.validate(value, 'Username');
-            },
-          )
-        ]));
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text("Username", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+      SizedBox(height: 3.v),
+      CustomTextFormField(
+        controller: userNameGoogleController,
+        hintText: "Enter username",
+        hintStyle: CustomTextStyles.titleSmallGray600,
+        textInputType: TextInputType.name,
+        inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
+        validator: (value) {
+          return Validator.validate(value, 'Username');
+        },
+      )
+    ]);
   }
 
   Widget _buildPasswordTextField(
@@ -693,6 +693,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
            padding:
             MediaQuery.of(context).viewInsets,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
@@ -709,11 +710,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ],
               ),
               SizedBox(height: 24.v),
-              Text("Please enter the following details to continue",
-                  style: theme.textTheme.titleSmall),
-              SizedBox(height: 10.v),
-              _buildUserNameGoogleTextField(context),
+              Text("Please enter the following details to continue.".toUpperCase(),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               SizedBox(height: 20.v),
+              _buildUserNameGoogleTextField(context),
+              SizedBox(height: 15.v),
               _buildPhoneNumberGoogleTextField(context),
               SizedBox(height: 24.v),
               CustomElevatedButton(
@@ -726,8 +727,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Navigator.pop(context);
                       User? user = await authUser.signInWithGoogle();
                       if (user != null) {
-                        //  Modals.showToast(authUser.successMessage);
-          
+                        
                         registerUser(
                             context: ctxt,
                             isGoogle: true,

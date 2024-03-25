@@ -26,7 +26,6 @@ import '../../community_screens/provider/auth_provider.dart';
 import '../../landing_page/landing_page.dart';
 import '../../manage_account/verify_account_screen/verify_account_screen.dart';
 
-// ignore_for_file: must_be_immutable
 class SigninScreen extends ConsumerStatefulWidget {
   SigninScreen({Key? key}) : super(key: key);
 
@@ -249,10 +248,10 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                                       width: 24.adaptSize,
                                     )),
                                 onPressed: () async {
-                                  //    await FirebaseAuth.instance.signOut();
-                                  // final GoogleSignIn googleSignIn =
-                                  //     GoogleSignIn();
-                                  // await googleSignIn.signOut();
+                                     await FirebaseAuth.instance.signOut();
+                                  final GoogleSignIn googleSignIn =
+                                      GoogleSignIn();
+                                  await googleSignIn.signOut();
                                   User? user =
                                       await authUser.signInWithGoogle();
                                   if (user != null) {
@@ -264,33 +263,33 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                                 },
                               ),
                               SizedBox(height: 13.v),
-                              if (Platform.isIOS)
-                                CustomOutlinedButton(
-                                    text: "Sign in with Apple",
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h),
-                                    leftIcon: Container(
-                                        margin: EdgeInsets.only(right: 10.h),
-                                        child: CustomImageView(
-                                            imagePath: ImageConstant
-                                                .imgSocialMediaIconsOnprimary,
-                                            height: 24.adaptSize,
-                                            width: 24.adaptSize)),
-                                    onPressed: () async {
-                                      await FirebaseAuth.instance.signOut();
-                                      final GoogleSignIn googleSignIn =
-                                          GoogleSignIn();
-                                      await googleSignIn.signOut();
-                                      UserCredential? user =
-                                          await authUser.signInWithApple();
-                                      if (user != null) {
-                                        Modals.showToast(
-                                            authUser.successMessage);
-                                      } else {
-                                        Modals.showToast(
-                                            authUser.successMessage);
-                                      }
-                                    }),
+                              // if (Platform.isIOS)
+                              //   CustomOutlinedButton(
+                              //       text: "Sign in with Apple",
+                              //       margin:
+                              //           EdgeInsets.symmetric(horizontal: 4.h),
+                              //       leftIcon: Container(
+                              //           margin: EdgeInsets.only(right: 10.h),
+                              //           child: CustomImageView(
+                              //               imagePath: ImageConstant
+                              //                   .imgSocialMediaIconsOnprimary,
+                              //               height: 24.adaptSize,
+                              //               width: 24.adaptSize)),
+                              //       onPressed: () async {
+                              //         await FirebaseAuth.instance.signOut();
+                              //         final GoogleSignIn googleSignIn =
+                              //             GoogleSignIn();
+                              //         await googleSignIn.signOut();
+                              //         UserCredential? user =
+                              //             await authUser.signInWithApple();
+                              //         if (user != null) {
+                              //           Modals.showToast(
+                              //               authUser.successMessage);
+                              //         } else {
+                              //           Modals.showToast(
+                              //               authUser.successMessage);
+                              //         }
+                              //       }),
                               SizedBox(height: 10.v)
                             ]))),
               ))),
