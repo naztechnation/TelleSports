@@ -30,15 +30,17 @@ class OnboardingThreeScreen extends StatelessWidget {
                             children: [
                               Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            "Be in the know! Livescores and match predictions at your finger tips...",
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style:
-                                CustomTextStyles.headlineLargeRed400.copyWith(
-                              height: 1.10,
-                              fontSize: 27.0,
+                          child: Align(
+                            child: Text(
+                              "Be in the know! Livescores and match predictions at your finger tips...",
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style:
+                                  CustomTextStyles.headlineLargeRed400.copyWith(
+                                height: 1.10,
+                                fontSize: 37.0,
+                              ),
                             ),
                           ),
                         ),
@@ -65,6 +67,8 @@ class OnboardingThreeScreen extends StatelessWidget {
                     SizedBox(height: 12.v),
                     CustomElevatedButton(
                         text: "Create an account",
+                textSize: 22,
+
                         buttonStyle: CustomButtonStyles.fillRed,
                         onPressed: () {
                           onTapCreateAnAccount(context);

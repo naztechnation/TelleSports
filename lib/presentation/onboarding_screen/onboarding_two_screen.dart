@@ -37,15 +37,17 @@ class OnboardingTwoScreen extends StatelessWidget {
 
                      Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            "Connect with a Vibrant Community of Sports Enthusiasts...",
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style:
-                                CustomTextStyles.headlineLargeBlue400.copyWith(
-                              height: 1.10,
-                              fontSize: 27.0,
+                          child: Align(
+                            child: Text(
+                              "Connect with a Vibrant Community of Sports Enthusiasts...",
+                              maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style:
+                                  CustomTextStyles.headlineLargeBlue400.copyWith(
+                                height: 1.10,
+                                fontSize: 27.0,
+                              ),
                             ),
                           ),
                         ),

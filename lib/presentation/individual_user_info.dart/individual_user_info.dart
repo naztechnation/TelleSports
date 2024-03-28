@@ -191,7 +191,9 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                           Text(groupName,
                               style: CustomTextStyles.titleMediumBlack900_1),
                           SizedBox(height: 2.v),
-                          Text("$groupNumber members",
+                          Text( (groupNumber == '1')
+                                          ? "${groupNumber}   Member"
+                                          : "${groupNumber}   Members",
                               style: CustomTextStyles.titleSmallBluegray400)
                         ]))
               ]),

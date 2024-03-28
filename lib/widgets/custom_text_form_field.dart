@@ -22,6 +22,8 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.hintStyle,
     this.prefix,
+      this.autofillHints,
+
     this.prefixConstraints,
     this.suffix,
     this.suffixConstraints,
@@ -43,6 +45,7 @@ class CustomTextFormField extends StatelessWidget {
   final double? width;
 
   
+  final Iterable<String>? autofillHints;
 
   final TextEditingController? controller;
 
@@ -109,6 +112,8 @@ class CustomTextFormField extends StatelessWidget {
           obscureText: obscureText!,
           textInputAction: textInputAction,
           keyboardType: textInputType,
+        autofillHints: autofillHints,
+
           maxLines: maxLines ?? 1,
           maxLength: maxLength,
           decoration: decoration,

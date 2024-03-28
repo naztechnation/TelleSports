@@ -12,14 +12,11 @@ import 'package:tellesports/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
 import '../../handlers/secure_handler.dart';
-import '../../model/chat_model/group.dart';
 import '../../model/view_models/account_view_model.dart';
-import '../community_screens/provider/auth_provider.dart';
 import '../convert_betcode_page/convert_betcode_page.dart'; 
 
 
 
-// ignore_for_file: must_be_immutable
 class HomePage extends StatefulWidget {
   const HomePage({Key? key})
       : super(
@@ -141,7 +138,7 @@ class HomePageState
               margin: EdgeInsets.only(right: 59.h),
             ),
             AppbarTitle(
-              text: "$username. ".capitalizeFirstOfEach,
+              text: "$username".capitalizeFirstOfEach,
             ),
           ],
         ),

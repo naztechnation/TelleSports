@@ -172,7 +172,9 @@ late PredictionCubit _predictionCubit;
                                                     fontWeight: FontWeight.w700)),
                                             SizedBox(height: 2.v),
                                             Text(
-                                                "${groupInfo.groupNumber} member(s)",
+                                               (groupInfo.groupNumber == '1')
+                                          ? "${groupInfo.groupNumber}   Member"
+                                          : "${groupInfo.groupNumber}   Members",
                                                 style: TextStyle(
                                                     color: theme.colorScheme
                                                         .onPrimaryContainer,
@@ -617,7 +619,9 @@ late PredictionCubit _predictionCubit;
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("$groupNumber Members(s)",
+                Text( (groupNumber == '1')
+                                          ? "${groupNumber} Member"
+                                          : "${groupNumber} Members",
                     style: TextStyle(
                         fontSize: 16.fSize,
                         fontFamily: 'DM Sans',

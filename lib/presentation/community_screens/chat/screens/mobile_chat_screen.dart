@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -69,7 +68,6 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
 
   List<Group> usersGroup = [];
 
-
   @override
   void dispose() {
     super.dispose();
@@ -88,11 +86,10 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
     setState(() {});
   }
 
-   
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 1), (){
+      Future.delayed(Duration(seconds: 1), () {
         _scrollDown();
       });
     });
@@ -108,11 +105,9 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
     final groupInfo =
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
 
-
-if(groupInfo.groupAdminId == userId){
-updateUserGroupNumber();
-
-}
+    if (groupInfo.groupAdminId == userId) {
+      updateUserGroupNumber();
+    }
     return WillPopScope(
       onWillPop: () async {
         groupInfo.isSelectedMessage(false);
@@ -126,7 +121,6 @@ updateUserGroupNumber();
         return false;
       },
       child: Scaffold(
-        
         body: BlocProvider<PredictionCubit>(
           lazy: false,
           create: (_) => PredictionCubit(
@@ -168,21 +162,20 @@ updateUserGroupNumber();
                       backgroundColor: appTheme.lime50,
                       resizeToAvoidBottomInset: false,
                       floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 50),
-        child: FloatingActionButton(
-          backgroundColor:
-              Colors.blue.withOpacity(0.5),
-          mini: false,
-          elevation: 0.0,
-          onPressed: () {
-            _scrollDown();
-          },
-          child: const Icon(
-            Icons.arrow_downward,
-            color: Colors.white,
-          ),
-        ),
-      ),
+                        margin: const EdgeInsets.only(bottom: 50),
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.blue.withOpacity(0.5),
+                          mini: false,
+                          elevation: 0.0,
+                          onPressed: () {
+                            _scrollDown();
+                          },
+                          child: const Icon(
+                            Icons.arrow_downward,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                       appBar: CustomAppBar(
                         leadingWidth: 44.h,
                         leading: AppbarLeadingImage(
@@ -234,7 +227,9 @@ updateUserGroupNumber();
                                         onTapGroup(context, widget.profilePic,
                                             widget.name, widget.membersUid);
                                       },
-                                      text: "${widget.groupNumber}   member(s)",
+                                      text: (widget.groupNumber == '1')
+                                          ? "${widget.groupNumber}   Member"
+                                          : "${widget.groupNumber}   Members",
                                       margin: EdgeInsets.only(right: 28.h),
                                     ),
                                   ],
@@ -417,7 +412,7 @@ updateUserGroupNumber();
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {}
-                            
+
                                   groupInfo.clearGroupImageList();
                                   return Expanded(
                                     child: ListView.builder(
@@ -427,7 +422,7 @@ updateUserGroupNumber();
                                       itemBuilder: (context, index) {
                                         final messageData =
                                             snapshot.data?[index];
-                                                                
+
                                         if (messageData.type ==
                                             MessageEnum.image) {
                                           groupInfo.updateGroupImageList(
@@ -436,7 +431,7 @@ updateUserGroupNumber();
                                         var timeSent = DateFormat('hh:mm a')
                                             .format(
                                                 messageData.timeSent.toLocal());
-                                                                
+
                                         if (!messageData.isSeen &&
                                             messageData.recieverid == userId) {
                                           ref
@@ -458,8 +453,8 @@ updateUserGroupNumber();
                                             repliedText:
                                                 messageData.repliedMessage,
                                             username: messageData.repliedTo,
-                                            repliedMessageType: messageData
-                                                .repliedMessageType,
+                                            repliedMessageType:
+                                                messageData.repliedMessageType,
                                             onLeftSwipe: (value) =>
                                                 onMessageSwipe(
                                               messageData.text,
@@ -467,8 +462,7 @@ updateUserGroupNumber();
                                               messageData.type,
                                             ),
                                             isSeen: messageData.isSeen,
-                                            messageId:
-                                                messageData.messageId,
+                                            messageId: messageData.messageId,
                                           );
                                         }
                                         return SenderMessageCard(
@@ -496,7 +490,60 @@ updateUserGroupNumber();
                             const SizedBox(
                               height: 20,
                             ),
-                           
+                            Container(
+          child: StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('groups')
+                .doc(groupInfo.groupId)
+                .snapshots(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              final isGroupLocked =
+                  snapshot.data?.get('isGroupLocked') ?? false;
+
+              return (isGroupLocked)
+                  ? (groupInfo.groupAdminId == userId)
+                      ? BottomChatField(
+                          onTap: () {
+                            _scrollDown();
+                          },
+                          recieverUserId: widget.uid,
+                          isGroupChat: widget.isGroupChat,
+                        )
+                      : Container(
+                          height: 45,
+                          color: Colors.grey.shade300,
+                          child: const Padding(
+                            padding: EdgeInsets.only(bottom: 0.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.lock,
+                                  color: Colors.blue,
+                                  size: 14,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  'only admins can send messages here',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                  : BottomChatField(
+                      onTap: () {
+                        _scrollDown();
+                      },
+                      recieverUserId: widget.uid,
+                      isGroupChat: widget.isGroupChat,
+                    );
+            },
+          ),
+        ),
                           ],
                         ),
                       ),
@@ -504,65 +551,7 @@ updateUserGroupNumber();
                   ),
           ),
         ),
-        bottomNavigationBar:  Container(
-          height: 100,
-          child: StreamBuilder<DocumentSnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('groups')
-                                    .doc(groupInfo.groupId)
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                  final isGroupLocked =
-                                      snapshot.data?.get('isGroupLocked') ??
-                                          false;
           
-                                  return (isGroupLocked)
-                                      ? (groupInfo.groupAdminId == userId)
-                                          ? BottomChatField(
-                                              onTap: () {
-                                                _scrollDown();
-                                              },
-                                              recieverUserId: widget.uid,
-                                              isGroupChat: widget.isGroupChat,
-                                            )
-                                          : Container(
-                                              height: 45,
-                                              color: Colors.grey.shade300,
-                                              child: const Padding(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 0.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.lock,
-                                                      color: Colors.blue,
-                                                      size: 14,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(
-                                                      'only admins can send messages here',
-                                                      style: TextStyle(
-                                                          color: Colors.blue),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                      : BottomChatField(
-                                          onTap: () {
-                                            _scrollDown();
-                                          },
-                                          recieverUserId: widget.uid,
-                                          isGroupChat: widget.isGroupChat,
-                                        );
-                                },
-                              ),
-        ),
       ),
     );
   }
@@ -610,7 +599,6 @@ updateUserGroupNumber();
   void _scrollDown() {
     _scrollController.jumpTo(
       _scrollController.position.maxScrollExtent * 2,
-      
     );
   }
 
@@ -635,10 +623,12 @@ updateUserGroupNumber();
         ]));
   }
 
-   updateUserGroupNumber()async{
-
-      usersGroup = await provider.Provider.of<AuthProviders>(context, listen: false).getUserGroups1(userId);
-       await provider.Provider.of<AuthProviders>(context, listen: false).UpdateGroupCount(userId: userId,groupNumber:  usersGroup.length );
-      print(usersGroup.length);
+  updateUserGroupNumber() async {
+    usersGroup =
+        await provider.Provider.of<AuthProviders>(context, listen: false)
+            .getUserGroups1(userId);
+    await provider.Provider.of<AuthProviders>(context, listen: false)
+        .UpdateGroupCount(userId: userId, groupNumber: usersGroup.length);
+    print(usersGroup.length);
   }
 }

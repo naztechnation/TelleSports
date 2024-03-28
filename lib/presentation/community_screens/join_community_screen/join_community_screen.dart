@@ -90,7 +90,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                           style: CustomTextStyles
                                               .titleMediumOnPrimaryBold18),
                                       SizedBox(height: 2.v),
-                                      Text('${widget.groupNumber} Member(s)',
+                                      Text((widget.groupNumber == '1') ?'${widget.groupNumber} Member' :  '${widget.groupNumber} Members',
                                           style: CustomTextStyles
                                               .titleSmallBluegray900)
                                     ]))

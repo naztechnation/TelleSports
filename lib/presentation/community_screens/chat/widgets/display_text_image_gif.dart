@@ -2,12 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:read_more_text/read_more_text.dart';
-import 'package:provider/provider.dart' as provider;
-import 'package:tellesports/utils/loader.dart';
-import 'package:tellesports/widgets/modals.dart';
+ 
 
 import '../../../../common/enums/message_enum.dart';
-import '../repositories/chat_repository.dart';
 
 class DisplayTextImageGIF extends ConsumerStatefulWidget {
   final String message;
@@ -27,21 +24,7 @@ class DisplayTextImageGIF extends ConsumerStatefulWidget {
 }
 
 class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
-  bool _isMessageSaved = true;
-
-   
-   
-    
-
-  @override
-  void initState() {
  
- 
-    super.initState();
-
-
-     
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +33,6 @@ class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
 
  
        
-      // Modals.showToast(user.isMessageSaved.toString());
 
     return widget.type == MessageEnum.text
         ? Align(
@@ -83,32 +65,7 @@ class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
               ],
             ),
           )
-        : widget.type == MessageEnum.audio
-            ? StatefulBuilder(builder: (context, setState) {
-                return SizedBox(
-                  // height: 20,
-                  child: IconButton(
-                    constraints: const BoxConstraints(
-                      minWidth: 100,
-                    ),
-                    onPressed: () async {
-                      if (isPlaying) {
-                        setState(() {
-                          isPlaying = false;
-                        });
-                      } else {
-                        setState(() {
-                          isPlaying = true;
-                        });
-                      }
-                    },
-                    icon: Icon(
-                      isPlaying ? Icons.pause_circle : Icons.play_circle,
-                    ),
-                  ),
-                );
-              })
-            : widget.type == MessageEnum.image
+        : widget.type == MessageEnum.image
                 ?  
                   
                    SizedBox(

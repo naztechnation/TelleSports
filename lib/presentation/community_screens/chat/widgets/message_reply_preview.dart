@@ -16,7 +16,7 @@ class MessageReplyPreview extends ConsumerWidget {
     final messageReply = ref.watch(messageReplyProvider);
 
     return Container(
-      width: 350,
+      width: MediaQuery.of(context).size.width - 45,
       padding: const EdgeInsets.all(8),
       decoration: const BoxDecoration(
         color: Colors.transparent,
@@ -26,6 +26,7 @@ class MessageReplyPreview extends ConsumerWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Row(
             children: [

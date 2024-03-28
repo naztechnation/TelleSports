@@ -46,7 +46,6 @@ class ConvertBetcodesPage extends StatefulWidget {
   ConvertBetcodesPageState createState() => ConvertBetcodesPageState();
 }
 
-// ignore_for_file: must_be_immutable
 class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
     with AutomaticKeepAliveClientMixin<ConvertBetcodesPage> {
   TextEditingController converterCodeController = TextEditingController();

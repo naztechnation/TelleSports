@@ -428,6 +428,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             validator: (value) {
               return Validator.validateEmail(value, 'Email');
             },
+            onChanged: (value) {
+              emailController.value = emailController.value.copyWith(
+            text: value.toLowerCase(),
+            selection: TextSelection.collapsed(offset: value.length),
+          );
+            },
           )
         ]));
   }

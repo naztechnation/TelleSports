@@ -68,7 +68,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   listener: (context, state) {
                     if (state is ResetPasswordLoaded) {
                       if (state.userData.success!) {
-                        Modals.showToast(state.userData.message ?? '');
+                        Modals.showToast(state.userData.message ?? '', messageType: MessageType.success);
 
                         Future.delayed(
                             Duration(
@@ -130,6 +130,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 SizedBox(height: 32.v),
                                 CustomElevatedButton(
                                     text: "Create Password",
+                                    processing: state is ResetPasswordLoading,
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 4.h),
                                     onPressed: () {

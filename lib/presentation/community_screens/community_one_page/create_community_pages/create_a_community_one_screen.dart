@@ -15,6 +15,7 @@ import 'package:tellesports/widgets/modals.dart';
 import '../../../../common/utils/utils.dart';
 import '../../../../utils/navigator/page_navigator.dart';
 import '../../../../widgets/app_bar/appbar_subtitle.dart';
+import '../../../../widgets/image_view.dart';
 import '../../provider/auth_provider.dart';
 
 class CreateACommunityOneScreen extends ConsumerStatefulWidget {
@@ -40,6 +41,8 @@ class _CreateACommunityOneScreenState
     image = await pickImageFromGallery(context);
     setState(() {});
   }
+
+
 
   bool isLoading = false;
 
@@ -68,6 +71,8 @@ class _CreateACommunityOneScreenState
   Widget build(BuildContext context) {
     final groupData = pro.Provider.of<AuthProviders>(context, listen: true);
 
+
+   
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -104,12 +109,18 @@ class _CreateACommunityOneScreenState
                             alignment: Alignment.center,
                           ),
                         )
-                      : CircleAvatar(
-                          backgroundImage: FileImage(
-                            image!,
+                      : GestureDetector(
+                        onTap: () {
+                          Modals.showDialogModal(context, page:  _showFullImage(context, image!));
+                           
+                        },
+                        child: CircleAvatar(
+                            backgroundImage: FileImage(
+                              image!,
+                            ),
+                            radius: 64,
                           ),
-                          radius: 64,
-                        ),
+                      ),
                   SizedBox(height: 10.v),
                   GestureDetector(
                     onTap: () {
@@ -119,18 +130,20 @@ class _CreateACommunityOneScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Add community photo",
+                          "Add community photo".toUpperCase(),
                           style: TextStyle(
-                            color: theme.colorScheme.onPrimaryContainer,
+                            color: Colors.red,
                             fontSize: 14.fSize,
                             fontFamily: 'DM Sans',
                             fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.red
                           ),
                         ),
                         CustomImageView(
                           imagePath: ImageConstant.imgEdit,
-                          height: 16.adaptSize,
-                          width: 16.adaptSize,
+                          height: 22.adaptSize,
+                          width: 22.adaptSize,
                           margin: EdgeInsets.only(
                             left: 2.h,
                             bottom: 2.v,
@@ -208,7 +221,7 @@ class _CreateACommunityOneScreenState
       ),
       centerTitle: true,
       title: AppbarSubtitle(
-        text: "Create a community",
+        text: "Create a community".toUpperCase(),
         margin: EdgeInsets.only(
           top: 49.v,
           bottom: 9.v,
@@ -255,5 +268,43 @@ class _CreateACommunityOneScreenState
         ),
       ],
     );
+  }
+    
+
+   _showFullImage(BuildContext context, File imageUrl) {
+ return  GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      height: MediaQuery.sizeOf(context).height * 0.65,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Center(
+                          child: ImageView.file(
+                            width: MediaQuery.sizeOf(context).width,
+                            height: MediaQuery.sizeOf(context).height * 0.65,
+                            imageUrl,
+                            
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:12.0, right: 20),
+                    child: Icon(Icons.close, color: Colors.red, size: 39,),
+                  ))
+                  ],
+                ),
+              ],
+            ),
+          );
   }
 }

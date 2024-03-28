@@ -49,7 +49,7 @@ class OnboardingOneScreen extends StatelessWidget {
                               style:
                                   CustomTextStyles.headlineLargePrimary.copyWith(
                                 height: 1.12,
-                                fontSize: 27.0,
+                                fontSize: 37.0,
                               ),
                             ),
                           ),

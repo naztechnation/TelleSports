@@ -7,7 +7,6 @@ import '../presentation/community_screens/auth/screens/login_screen.dart';
 import '../presentation/community_screens/auth/screens/user_information_screen.dart';
 import '../presentation/community_screens/chat/screens/group_info.dart';
 import '../presentation/community_screens/chat/screens/mobile_chat_screen.dart';
-import '../presentation/community_screens/group/screens/create_group_screen.dart';
 
  
 
@@ -51,14 +50,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
       );
     
-    case CreateGroupScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const CreateGroupScreen(),
-      );
-      // case UpdateUserProfileScreen.routeName:
-      // return MaterialPageRoute(
-      //   builder: (context) => const UpdateUserProfileScreen(),
-      // );
+    
     default:
       return MaterialPageRoute(
         builder: (context) => const Scaffold(

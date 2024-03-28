@@ -9,7 +9,6 @@ import '../../../model/chat_model/user_model.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../individual_user_info.dart/individual_user_info.dart';
 import 'widgets/userprofile_item_widget.dart';
- 
 
 class AllUsersPage extends StatelessWidget {
   final String adminId;
@@ -22,7 +21,6 @@ class AllUsersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-
 
     return SafeArea(
       child: Scaffold(
@@ -54,7 +52,8 @@ class AllUsersPage extends StatelessWidget {
                           image: users[index].profilePic,
                           bio: users[index].bio,
                           username: users[index].name,
-                          isGroupAdmin: index == 0, memberId: users[index].uid,
+                          isGroupAdmin: index == 0,
+                          memberId: users[index].uid,
                         ));
                   },
                   child: UserprofileItemWidget(
@@ -86,8 +85,9 @@ class AllUsersPage extends StatelessWidget {
       ),
       centerTitle: true,
       title: AppbarSubtitleTwo(
-        
-        text: "$groupNumber Member",
+        text: (groupNumber == '1')
+            ? "${groupNumber} Member"
+            : "${groupNumber} Members",
       ),
       styleType: Style.bgOutline_3,
     );

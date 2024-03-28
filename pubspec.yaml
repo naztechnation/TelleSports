@@ -38,6 +38,7 @@ dependencies:
   page_route_animator: ^1.0.3
   
   read_more_text: ^0.0.5
+  flutter_image_compress: ^2.2.0
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

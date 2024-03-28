@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tellesports/core/utils/size_utils.dart';
 
 import '../../core/app_export.dart';
 import '../../handlers/secure_handler.dart';
@@ -44,7 +43,8 @@ class _LoadingScreenState extends State<SplashScreen> with SingleTickerProviderS
       AppNavigator.pushAndReplacePage(context,
           page: SplashScreenOnboardingScreen());
     } else if (userLoggedIn == '') {
-      AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+       AppNavigator.pushAndReplacePage(context,
+          page: SplashScreenOnboardingScreen());
     } else {
       AppNavigator.pushAndStackPage(context, page: LandingPage());
     }

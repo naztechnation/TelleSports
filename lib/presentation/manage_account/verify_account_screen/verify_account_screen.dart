@@ -16,7 +16,7 @@ import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/modals.dart';
 import '../../../widgets/progress_indicator.dart';
 import '../../auth/sign_in_screen/sign_in_screen.dart';
-import '../create_new_password_screen/create_new_password_screen.dart';
+import '../change_password/change_password.dart';
 
 // ignore_for_file: must_be_immutable
 class VerifyAccountScreen extends StatefulWidget {
@@ -178,15 +178,17 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                               const SizedBox(
                                 width: 13,
                               ),
-                              Text(
-                                'Loading...',
-                                style: TextStyle(color: Colors.white),
+                              Center(
+                                child: Text(
+                                  'Loading...',
+                                  style: TextStyle(color: Colors.green.shade500),
+                                ),
                               )
                             ],
                           ),
                         ] else ...[
                           CustomElevatedButton(
-                              processing: state is AccountLoading,
+                              processing: state is AccountLoading || state is AccountProcessing,
                               text: "Verify Account",
                               title: 'Verifying Code...',
                               margin: EdgeInsets.symmetric(horizontal: 4.h),
@@ -228,7 +230,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
   }
 
   onTapVerifyAccount(BuildContext context) {
-    AppNavigator.pushAndStackPage(context, page: CreateNewPasswordScreen());
+    AppNavigator.pushAndStackPage(context, page: ChangePasswordScreen(email: widget.email));
   }
 
   onTapLogin(BuildContext context) {
