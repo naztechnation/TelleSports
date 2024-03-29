@@ -106,7 +106,7 @@ class AuthProviders extends ChangeNotifier {
 
                   final image = await ImagePicker().pickImage(
                       source: ImageSource.gallery,
-                      imageQuality: 80,
+                      imageQuality: 5,
                       maxHeight: 1000,
                       maxWidth: 1000);
                   _image = File(image!.path);
@@ -124,7 +124,7 @@ class AuthProviders extends ChangeNotifier {
                   Navigator.pop(context);
                   final image = await ImagePicker().pickImage(
                       source: ImageSource.gallery,
-                      imageQuality: 80,
+                      imageQuality: 5,
                       maxHeight: 1000,
                       maxWidth: 1000);
                   _image = File(image!.path);
@@ -588,6 +588,55 @@ class AuthProviders extends ChangeNotifier {
       _setStatus(AuthState.error);
       _updateMessage(e.toString());
     }
+
+     
+  }
+
+  Future<void> updateGroupProfile(String groupId, File? images, String? bio) async {
+        final userDocRef = FirebaseFirestore.instance.collection('groups').doc(groupId);
+   
+    
+    try {
+      if (images != null && bio != null) {
+        _setStatus(AuthState.loading);
+
+        final storageRef = FirebaseStorage.instance.ref().child('group');
+
+        await storageRef.putFile(images);
+
+        final imageUrl = await storageRef.getDownloadURL();
+
+
+        await userDocRef.update({
+          'groupPic': imageUrl,
+        });
+        await userDocRef.update({
+          'groupDesc': bio,
+        });
+        _setStatus(AuthState.success);
+        _updateMessage('Update Successful');
+      }else if(images != null && bio == null){
+         _setStatus(AuthState.loading);
+
+        final storageRef = FirebaseStorage.instance.ref().child('group');
+
+        await storageRef.putFile(images);
+
+        final imageUrl = await storageRef.getDownloadURL();
+
+
+        await userDocRef.update({
+          'groupPic': imageUrl,
+        });
+      }else if(bio != null && images == null){
+         await userDocRef.update({
+          'groupDesc': bio,
+        });
+      }
+    } catch (e) {
+      _setStatus(AuthState.error);
+      _updateMessage(e.toString());
+    }
   }
 
   Stream<List<Group>> getChatGroups() {
@@ -854,11 +903,10 @@ class AuthProviders extends ChangeNotifier {
       final DocumentReference groupDocRef =
           FirebaseFirestore.instance.collection('groups').doc(groupId);
 
-      // Delete the document
+      
       await groupDocRef.delete();
       if (context.mounted) {
-        // Navigator.of(context).push(MaterialPageRoute(
-        //     builder: (context) => const MobileLayoutScreen()));
+         
       }
     } catch (error) {
       print('Error deleting group: $error');
@@ -1111,7 +1159,6 @@ void _saveDataToContactsSubcollection(
 
   
   
-
   void sendTextMessage({
     required BuildContext context,
     required String text,

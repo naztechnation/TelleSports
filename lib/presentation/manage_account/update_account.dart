@@ -51,7 +51,6 @@ class _UpdateAccountState extends State<UpdateAccount> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late UserCubit _userCubit;
 
 
   String bankName = '';
@@ -61,6 +60,8 @@ class _UpdateAccountState extends State<UpdateAccount> {
   String countryCurrency = '';
 
   List<CountryData> banks = [];
+
+  late UserCubit _userCubit;
 
   getUserData() async {
     _userCubit = context.read<UserCubit>();

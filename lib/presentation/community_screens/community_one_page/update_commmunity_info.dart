@@ -1,3 +1,5 @@
+
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pro;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
-import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
@@ -13,24 +14,26 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 import 'package:tellesports/widgets/modals.dart';
 
 import '../../../../common/utils/utils.dart';
-import '../../../../utils/navigator/page_navigator.dart';
 import '../../../../widgets/app_bar/appbar_subtitle.dart';
-import '../../../../widgets/image_view.dart';
-import '../../provider/auth_provider.dart';
+import '../../../utils/navigator/page_navigator.dart';
+import '../../landing_page/landing_page.dart';
+import '../provider/auth_provider.dart';
 
-class CreateACommunityOneScreen extends ConsumerStatefulWidget {
-  CreateACommunityOneScreen({Key? key})
+class UpdateCommunityInfoScreen extends ConsumerStatefulWidget {
+  final String currentImage;
+  final String groupId;
+  UpdateCommunityInfoScreen(this.currentImage, this.groupId, {Key? key})
       : super(
           key: key,
         );
 
   @override
-  ConsumerState<CreateACommunityOneScreen> createState() =>
-      _CreateACommunityOneScreenState();
+  ConsumerState<UpdateCommunityInfoScreen> createState() =>
+      _UpdateCommunityInfoScreenState();
 }
 
-class _CreateACommunityOneScreenState
-    extends ConsumerState<CreateACommunityOneScreen> {
+class _UpdateCommunityInfoScreenState
+    extends ConsumerState<UpdateCommunityInfoScreen> {
   final TextEditingController groupNameController = TextEditingController();
   final TextEditingController groupDescriptionController =
       TextEditingController();
@@ -69,6 +72,7 @@ class _CreateACommunityOneScreenState
 
   @override
   Widget build(BuildContext context) {
+
     final groupData = pro.Provider.of<AuthProviders>(context, listen: true);
 
 
@@ -87,36 +91,38 @@ class _CreateACommunityOneScreenState
               width: double.maxFinite,
               padding: EdgeInsets.symmetric(
                 horizontal: 20.h,
-                vertical: 40.v,
+                vertical: 30.v,
               ),
               child: Column(
                 children: [
                   image == null
                       ? GestureDetector(
                         onTap: () {
-                           selectImage();
+                          Modals.showDialogModal(context, page:  _showFullImage(context, widget.currentImage));
+                          
                         },
                         child: Container(
-                            height: 120.adaptSize,
-                            width: 120.adaptSize,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.h,
-                              vertical: 19.v,
-                            ),
-                        
-                            decoration: BoxDecoration(border: Border.all(color: Colors.blue,width: 2 ),
-                            borderRadius: BorderRadius.circular(70)),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgLock,
-                              height: 50.v,
-                              width: 50.h,
-                              alignment: Alignment.center,
+                            height: 150.adaptSize,
+                            width: 150.adaptSize,
+                            
+                            // decoration: AppDecoration.outlineBlue200.copyWith(
+                            //   borderRadius: BorderRadiusStyle.circleBorder50,
+                            // ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(80),
+                              child: CustomImageView(
+                                imagePath: widget.currentImage,
+                                 height: 150.adaptSize,
+                              width: 150.adaptSize,
+                                alignment: Alignment.center,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                       )
                       : GestureDetector(
                         onTap: () {
-                          Modals.showDialogModal(context, page:  _showFullImage(context, image!));
+                          Modals.showDialogModal(context, page:  _showFullImage(context, image!.path));
                            
                         },
                         child: CircleAvatar(
@@ -135,7 +141,7 @@ class _CreateACommunityOneScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Add community photo".toUpperCase(),
+                          "Update community photo".toUpperCase(),
                           style: TextStyle(
                             color: Colors.red,
                             fontSize: 14.fSize,
@@ -161,41 +167,36 @@ class _CreateACommunityOneScreenState
                   _buildTextField(context),
                   SizedBox(height: 24.v),
                   CustomElevatedButton(
-                    text: "Save and continue",
-                    title: "Creating community...",
+                    text: "Update Info",
+                    title: "Updating info...",
                     buttonStyle: CustomButtonStyles.fillBlue,
                     processing: isLoading,
                     onPressed: () async {
-                      if (groupNameController.text.trim().isNotEmpty &&
-                          groupDescriptionController.text.trim().isNotEmpty &&
-                          image != null) {
+                     
+                      if(image == null && groupDescriptionController.text.isEmpty){
+                        Modals.showToast('Opps select either an image or group Descrption to update.');
+                      }else{
                         setState(() {
                           isLoading = true;
                         });
 
-                        var isTrue = await groupData.checkUserGroupLimit(
-                            userId: userId,
-                            context: context,
-                            name: groupNameController.text.trim(),
-                            groupDesc: groupDescriptionController.text.trim(),
-                            profilePic: image!,
-                            ref: ref);
-                        setState(() {
+                          if(image != null && groupDescriptionController.text.isEmpty){
+                          await groupData.updateGroupProfile(widget.groupId, image, 
+                          null);
+
+                          }else if(groupDescriptionController.text.isNotEmpty && image == null){
+                             await groupData.updateGroupProfile(widget.groupId, null, 
+                          groupDescriptionController.text);
+                          }else if(image != null && groupDescriptionController.text.isNotEmpty){
+                             await groupData.updateGroupProfile(widget.groupId, image, 
+                          groupDescriptionController.text);
+                          }
+                         setState(() {
                           isLoading = false;
                         });
 
-                        if (isTrue) {
-                          AppNavigator.pushAndStackPage(context,
+                        AppNavigator.pushAndStackPage(context,
                               page: LandingPage());
-                        } else {
-                          Future.delayed(Duration(seconds: 3), (){
-                          Modals.showToast('Failed  to create group');
-
-                          });
-                        }
-                      } else {
-                        Modals.showToast(
-                            'Please input all fields and an image');
                       }
                     },
                   ),
@@ -220,15 +221,15 @@ class _CreateACommunityOneScreenState
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
-          top: 50.v,
+          top: 30.v,
           bottom: 12.v,
         ),
       ),
       centerTitle: true,
       title: AppbarSubtitle(
-        text: "Create a community".toUpperCase(),
+        text: "Update Community Info".toUpperCase(),
         margin: EdgeInsets.only(
-          top: 49.v,
+          top: 25.v,
           bottom: 9.v,
         ),
       ),
@@ -240,21 +241,21 @@ class _CreateACommunityOneScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Community name",
-          style: TextStyle(
-            color: appTheme.gray900,
-            fontSize: 14.fSize,
-            fontFamily: 'DM Sans',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 2.v),
-        CustomTextFormField(
-          controller: groupNameController,
-          hintText: "Name your community",
-          textInputAction: TextInputAction.next,
-        ),
+        // Text(
+        //   "Community name",
+        //   style: TextStyle(
+        //     color: appTheme.gray900,
+        //     fontSize: 14.fSize,
+        //     fontFamily: 'DM Sans',
+        //     fontWeight: FontWeight.w500,
+        //   ),
+        // ),
+        // SizedBox(height: 2.v),
+        // CustomTextFormField(
+        //   controller: groupNameController,
+        //   hintText: "Name your community",
+        //   textInputAction: TextInputAction.next,
+        // ),
         Text(
           "Enter description",
           style: TextStyle(
@@ -276,7 +277,7 @@ class _CreateACommunityOneScreenState
   }
     
 
-   _showFullImage(BuildContext context, File imageUrl) {
+   _showFullImage(BuildContext context, String imageUrl) {
  return  GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Column(
@@ -290,10 +291,10 @@ class _CreateACommunityOneScreenState
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Center(
-                          child: ImageView.file(
+                          child: CustomImageView(
                             width: MediaQuery.sizeOf(context).width,
                             height: MediaQuery.sizeOf(context).height * 0.65,
-                            imageUrl,
+                            imagePath:imageUrl,
                             
                             fit: BoxFit.cover,
                           ),

@@ -20,15 +20,31 @@ import '../../../requests/repositories/prediction_repo/predict_repository_impl.d
 import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 
-class CreateNewPasswordScreen extends StatefulWidget {
-  CreateNewPasswordScreen({Key? key}) : super(key: key);
+
+class UpdatePasswordScreen extends StatelessWidget {
+  const UpdatePasswordScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<CreateNewPasswordScreen> createState() =>
-      _CreateNewPasswordScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<AccountCubit>(
+      create: (BuildContext context) => AccountCubit(
+          accountRepository: AccountRepositoryImpl(),
+          viewModel: Provider.of<AccountViewModel>(context, listen: false)),
+      child: UpdatePassword(),
+    );
+  }
+}
+class UpdatePassword extends StatefulWidget {
+  UpdatePassword({Key? key}) : super(key: key);
+
+  @override
+  State<UpdatePassword> createState() =>
+      _CreateNewPasswordState();
 }
 
-class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
+class _CreateNewPasswordState extends State<UpdatePassword> {
   TextEditingController oldPasswordController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -60,6 +76,17 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     });
   }
 
+  late AccountCubit _accountCubit;
+
+  getUserData() async {
+    _accountCubit = context.read<AccountCubit>();}
+
+
+  @override
+  void initState() {
+    getUserData();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
@@ -69,77 +96,72 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: _buildAppBar(context),
-            body: BlocProvider<PredictionCubit>(
-                lazy: false,
-                create: (_) => PredictionCubit(
-                    predictRepository: PredictRepositoryImpl(),
-                    viewModel:
-                        Provider.of<UserViewModel>(context, listen: false)),
-                child: BlocConsumer<PredictionCubit, PredictStates>(
-                  listener: (context, state) {
-                    if (state is PredictLoaded) {
-                      if (state.predict.success ?? false) {
-                        Modals.showToast( 'Prediction added successfully');
-
-                        AppNavigator.pushAndStackPage(context, page: LandingPage());
-                      } else {
-                        Modals.showToast( 'Opps could  not add prediction',
-                            messageType: MessageType.error);
-                      }
-                    } else if (state is PredictApiErr) {
-                      // if (state.message != null) {
-                      //   Modals.showToast(state.message ?? '',
-                      //       messageType: MessageType.error);
-                      // }
-                    } else if (state is PredictNetworkErr) {
-                      // if (state.message != null) {
-                      //   Modals.showToast(state.message ?? '',
-                      //       messageType: MessageType.error);
-                      // }
-                    }
-                  },
-                  builder: (context, state) => Form(
-                      key: _formKey,
-                      child: Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(horizontal: 16.h),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Create New Password",
-                                    style: theme.textTheme.headlineLarge),
-                                SizedBox(height: 14.v),
-                                Text(
-                                    "Please enter and confirm your new password.",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black)),
-                                SizedBox(height: 5.v),
-
-                                Text("You will need to login after you reset.",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black)),
-                                SizedBox(height: 29.v),
-                                _buildOldPasswordTextField(context),
-                                SizedBox(height: 11.v),
-                                _buildPasswordTextField(context),
-                                SizedBox(height: 11.v),
-                                _buildConfirmPasswordTextField(context),
-                                SizedBox(height: 32.v),
-                                CustomElevatedButton(
-                                    text: "Create Password",
-                                    processing: state is ResetPasswordLoading,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h),
-                                    onPressed: () {
-                                      onTapCreatePassword(context);
-                                    }),
-                                SizedBox(height: 5.v)
-                              ]))),
-                ))));
+            body: BlocConsumer<AccountCubit, AccountStates>(
+              listener: (context, state) {
+                if (state is ResetPasswordLoaded) {
+                  if (state.userData.success ?? false) {
+                    Modals.showToast( state.userData.message ?? '');
+            
+                    AppNavigator.pushAndStackPage(context, page: LandingPage());
+                  } else {
+                    Modals.showToast( state.userData.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                } else if (state is AccountApiErr) {
+                  if (state.message != null) {
+                    Modals.showToast(state.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                } else if (state is AccountNetworkErr) {
+                  if (state.message != null) {
+                    Modals.showToast(state.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                }
+              },
+              builder: (context, state) => Form(
+                  key: _formKey,
+                  child: Container(
+                      width: double.maxFinite,
+                      padding: EdgeInsets.symmetric(horizontal: 16.h),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Update Password",
+                                style: theme.textTheme.headlineLarge),
+                            SizedBox(height: 14.v),
+                            Text(
+                                "Please enter and confirm your new password.",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black)),
+                            SizedBox(height: 5.v),
+            
+                            Text("You will need to login after you reset.",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black)),
+                            SizedBox(height: 29.v),
+                            _buildOldPasswordTextField(context),
+                            SizedBox(height: 11.v),
+                            _buildPasswordTextField(context),
+                            SizedBox(height: 11.v),
+                            _buildConfirmPasswordTextField(context),
+                            SizedBox(height: 32.v),
+                            CustomElevatedButton(
+                                text: "Update Password",
+                                title: 'Updating Password...',
+                                processing: state is ResetPasswordLoading,
+                                margin:
+                                    EdgeInsets.symmetric(horizontal: 4.h),
+                                onPressed: () {
+                                  onTapCreatePassword(context);
+                                }),
+                            SizedBox(height: 5.v)
+                          ]))),
+            )));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -155,7 +177,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
 
   Widget _buildOldPasswordTextField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
@@ -190,7 +212,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
 
   Widget _buildPasswordTextField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
@@ -225,7 +247,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
 
   Widget _buildConfirmPasswordTextField(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 8.h),
+        padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Confirm Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
@@ -263,8 +285,10 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     // AppNavigator.pushAndReplacePage(context, page: SigninScreen());
 
     if (_formKey.currentState!.validate()) {
-      context.read<AccountCubit>().changePassword(
-          oldPassword: oldPasswordController.text,
+
+     
+      _accountCubit.changePassword(
+          oldPassword: oldPasswordController.text.trim(),
           password: passwordController.text.trim(),
           confirmPassword: confirmpasswordController.text.trim());
       FocusScope.of(context).unfocus();

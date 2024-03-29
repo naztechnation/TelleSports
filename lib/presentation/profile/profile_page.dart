@@ -21,7 +21,9 @@ import '../../widgets/custom_outlined_button.dart';
 import '../../widgets/modal_content.dart';
 import '../chats_settings_screen/chats_settings_screen.dart';
 import '../live_chat/live_chat.dart';
-import '../manage_account/create_new_password_screen/create_new_password_screen.dart';
+import '../manage_account/faq/faq_page.dart';
+import '../manage_account/privacy_page/privacy_policy.dart';
+import '../manage_account/update_password_screen/update_password_screen.dart';
 import '../manage_account/submit_prediction.dart';
 import '../manage_account/update_bio.dart';
 import '../notification_settings_screen/notification_settings_screen.dart';
@@ -41,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String phone = '';
   String photo = '';
   String userId = '';
-   bool showDelayedWidget = false;
+  bool showDelayedWidget = false;
 
   getUserData() async {
     username = await StorageHandler.getUserName() ?? '';
@@ -56,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     getUserData();
-     Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 3), () {
       setState(() {
         showDelayedWidget = true;
       });
@@ -72,146 +74,165 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return SafeArea(
         child: BlocProvider<AccountCubit>(
-      lazy: false,
-      create: (_) => AccountCubit(
-          accountRepository: AccountRepositoryImpl(),
-          viewModel: Provider.of<AccountViewModel>(context, listen: false)),
-      child: BlocConsumer<AccountCubit, AccountStates>(
-        listener: (context, state) {
-          if (state is DeletingUserLoaded) {
-            if (state.userData.success == true) {
-               Modals.showToast( 'image upload successful',
-                  messageType: MessageType.success);
-                  AppNavigator.pushAndReplacePage(context, page: SigninScreen());
-            } else {
-              Modals.showToast(state.userData.message ?? '',
-                  messageType: MessageType.error);
-            }
-          } else if (state is AccountApiErr) {
-            if (state.message != null) {
-              Modals.showToast(state.message!, messageType: MessageType.error);
-            }
-          } else if (state is AccountNetworkErr) {
-            if (state.message != null) {
-              Modals.showToast(state.message!, messageType: MessageType.error);
-            }
-          }
-        },
-        builder: (context, state) => Scaffold(
-              appBar: _buildAppBar(context),
-              body: Container(
-                  width: double.maxFinite,
-                  padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 24.v),
-                  child: SingleChildScrollView(
-                    child: Column(children: [
-                      _buildAvatarFrame(context),
-                      // SizedBox(height: 24.v),
-                      // _buildSettingsFrame(context),
-                      SizedBox(height: 24.v),
-                      _buildShareFrame(context,
-                          text: "Contact Support",
-                          image: ImageConstant.imgHelpCenter, onTap: () {
-                        AppNavigator.pushAndStackPage(context,
-                            page: LiveChat(
-                              username: username,
-                              email: email,
-                            ));
-                      }),
-                      SizedBox(height: 24.v),
-                      _buildShareFrame(context,
-                          text: "Change Password",
-                          image: ImageConstant.imgHelpCenter, onTap: () {
-                        AppNavigator.pushAndStackPage(context,
-                            page: CreateNewPasswordScreen());
-                      }),
-                       SizedBox(height: 24.v),
-                      _buildShareFrame(context,
-                          text: "Update Account",
-                          image: ImageConstant.imgHelpCenter, onTap: () {
-                        AppNavigator.pushAndStackPage(context,
-                            page: UpdateAccountScreen());
-                      }),
-                        SizedBox(height: 24.v),
-                      _buildShareFrame(context,
-                          text: "Submit Prediction",
-                          image: ImageConstant.imgHelpCenter, onTap: () {
-                        AppNavigator.pushAndStackPage(context,
-                            page: SubmitPredictionScreen());
-                      }),
-                      SizedBox(height: 24.v),
-
-                       _buildShareFrame(context,
-                          text: "Update Bio",
-                          image: ImageConstant.imgHelpCenter, onTap: () {
-                        AppNavigator.pushAndStackPage(context,
-                            page: UpdateChatBioScreen());
-                      }),
-                      SizedBox(height: 24.v),
-                      _buildShareFrame(context,
-                          text: "Share Tellasport",
-                          image: ImageConstant.imgShareGray700, onTap: () async {
-                        final result = await Share.shareWithResult(
-                            'check out our mobile app on app store: , and play store:');
-          
-                        if (result.status == ShareResultStatus.success) {
-                          Modals.showToast('Thank you for sharing our platform',
-                              messageType: MessageType.success);
-                        }
-                      }),
-                      SizedBox(height: 24.v),
-                    if(state is DeletingUserLoading)...[
-
-                    ]else...[
-                       CustomElevatedButton(
-                          text: "Log out",
-                          buttonStyle: CustomButtonStyles.fillRedTL8,
-                          onPressed: () {
-                            user.signOut(context);
+            lazy: false,
+            create: (_) => AccountCubit(
+                accountRepository: AccountRepositoryImpl(),
+                viewModel:
+                    Provider.of<AccountViewModel>(context, listen: false)),
+            child: BlocConsumer<AccountCubit, AccountStates>(
+              listener: (context, state) {
+                if (state is DeletingUserLoaded) {
+                  if (state.userData.success == true) {
+                    Modals.showToast('image upload successful',
+                        messageType: MessageType.success);
+                    AppNavigator.pushAndReplacePage(context,
+                        page: SigninScreen());
+                  } else {
+                    Modals.showToast(state.userData.message ?? '',
+                        messageType: MessageType.error);
+                  }
+                } else if (state is AccountApiErr) {
+                  if (state.message != null) {
+                    Modals.showToast(state.message!,
+                        messageType: MessageType.error);
+                  }
+                } else if (state is AccountNetworkErr) {
+                  if (state.message != null) {
+                    Modals.showToast(state.message!,
+                        messageType: MessageType.error);
+                  }
+                }
+              },
+              builder: (context, state) => Scaffold(
+                  appBar: _buildAppBar(context),
+                  body: Container(
+                      width: double.maxFinite,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.h, vertical: 24.v),
+                      child: SingleChildScrollView(
+                        child: Column(children: [
+                          _buildAvatarFrame(context),
+                          // SizedBox(height: 24.v),
+                          // _buildSettingsFrame(context),
+                          SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Contact Support",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: LiveChat(
+                                  username: username,
+                                  email: email,
+                                ));
                           }),
-                    ] ,
-                      SizedBox(height: 24.v),
-                      CustomOutlinedButton(
-                          text: "Delete your account",
-                          processing: state is DeletingUserLoading,
-                          title: 'Deleting account...',
-                          buttonTextStyle: TextStyle(color: Colors.red, fontSize: 15),
-                          buttonStyle: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.red,
-                            
-                            side: BorderSide(
-                              color: Colors.red,
-                            ),
-                          ),
-                          onPressed: () {
-                            Modals.showDialogModal(context,
-                                page: ModalContentScreen(
-                                    title: 'Delete your Account!!!',
-                                    body: Text(
-                 'N.B: Are you sure you want to delete your account. This action can\'t be reversed.',
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-                                       
-                                    btnText: 'Delete',
-                                    
-                                    onPressed: () {
-                                      deleteUserAccount(context);
-                                      Navigator.pop(context);
-                                    },
-                                    headerColorOne:
-                                        Color.fromARGB(255, 208, 151, 151),
-                                    headerColorTwo:
-                                        Color.fromARGB(255, 234, 132, 132)));
+                          SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Update Password",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: UpdatePasswordScreen());
                           }),
-                    ]),
-                  ))),
-        )));
+                          SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Update Account",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: UpdateAccountScreen());
+                          }),
+                          SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Submit Prediction",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: SubmitPredictionScreen());
+                          }),
+                          SizedBox(height: 24.v),
+
+                          _buildShareFrame(context,
+                              text: "Update Bio",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: UpdateChatBioScreen());
+                          }),
+                          SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Legal",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: TermsOfUsePage());
+                          }),
+                          SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Faq",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: FaqPage());
+                          }),
+                          SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Share Tellasport",
+                              image: ImageConstant.imgShareGray700,
+                              onTap: () async {
+                            final result = await Share.shareWithResult(
+                                'check out our mobile app on app store: , and play store:');
+
+                            if (result.status == ShareResultStatus.success) {
+                              Modals.showToast(
+                                  'Thank you for sharing our platform',
+                                  messageType: MessageType.success);
+                            }
+                          }),
+                          SizedBox(height: 24.v),
+                          if (state is DeletingUserLoading)
+                            ...[]
+                          else ...[
+                            CustomElevatedButton(
+                                text: "Log out",
+                                buttonStyle: CustomButtonStyles.fillRedTL8,
+                                onPressed: () {
+                                  user.signOut(context);
+                                }),
+                          ],
+                          SizedBox(height: 24.v),
+                          CustomOutlinedButton(
+                              text: "Delete your account",
+                              processing: state is DeletingUserLoading,
+                              title: 'Deleting account...',
+                              buttonTextStyle:
+                                  TextStyle(color: Colors.red, fontSize: 15),
+                              buttonStyle: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.red,
+                                side: BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              onPressed: () {
+                                Modals.showDialogModal(context,
+                                    page: ModalContentScreen(
+                                        title: 'Delete your Account!!!',
+                                        body: Text(
+                                          'N.B: Are you sure you want to delete your account. This action can\'t be reversed.',
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: appTheme.gray900,
+                                            fontSize: 14.fSize,
+                                            fontFamily: 'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        btnText: 'Delete',
+                                        onPressed: () {
+                                          deleteUserAccount(context);
+                                          Navigator.pop(context);
+                                        },
+                                        headerColorOne:
+                                            Color.fromARGB(255, 208, 151, 151),
+                                        headerColorTwo: Color.fromARGB(
+                                            255, 234, 132, 132)));
+                              }),
+                        ]),
+                      ))),
+            )));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -219,7 +240,6 @@ class _ProfilePageState extends State<ProfilePage> {
         height: 50.v,
         centerTitle: true,
         title: AppbarSubtitleOne(
-         
             text: "Settings", margin: EdgeInsets.only(top: 0.v, bottom: 1.v)),
         styleType: Style.bgOutline_4);
   }
@@ -230,30 +250,30 @@ class _ProfilePageState extends State<ProfilePage> {
           onTapAvatarFrame(context);
         },
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-       if(photo == 'null')...[
-          CustomImageView(
-              imagePath: ImageConstant.imgNavProfilePrimary,
-              height: 64.adaptSize,
-              width: 64.adaptSize,
-              radius: BorderRadius.circular(32.h)),
-       ]else...[
-      if(showDelayedWidget)...[
-        CustomImageView(
-              imagePath: photo,
-              height: 64.adaptSize,
-              width: 64.adaptSize,
-              radius: BorderRadius.circular(32.h)),
-      ]else...[
-        SizedBox(
-          height: 14,
-          width: 14,
-          child: CircularProgressIndicator(
-          strokeWidth: 3.5,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          backgroundColor: (Colors.grey)),
-        )
-      ]  
-       ],   
+          if (photo == 'null') ...[
+            CustomImageView(
+                imagePath: ImageConstant.imgNavProfilePrimary,
+                height: 64.adaptSize,
+                width: 64.adaptSize,
+                radius: BorderRadius.circular(32.h)),
+          ] else ...[
+            if (showDelayedWidget) ...[
+              CustomImageView(
+                  imagePath: photo,
+                  height: 64.adaptSize,
+                  width: 64.adaptSize,
+                  radius: BorderRadius.circular(32.h)),
+            ] else ...[
+              SizedBox(
+                height: 14,
+                width: 14,
+                child: CircularProgressIndicator(
+                    strokeWidth: 3.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    backgroundColor: (Colors.grey)),
+              )
+            ]
+          ],
           Expanded(
             child: Padding(
                 padding: EdgeInsets.only(left: 10.h, top: 11.v, bottom: 11.v),
@@ -263,10 +283,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       Text(username,
                           style: CustomTextStyles.titleMediumOnPrimaryBold18),
                       SizedBox(height: 3.v),
-                      Text(email, 
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 14, color: Colors.black))
+                      Text(email,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 14, color: Colors.black))
                     ])),
           ),
           // Spacer(),
@@ -361,7 +381,9 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-   deleteUserAccount(BuildContext ctx, ) {
+  deleteUserAccount(
+    BuildContext ctx,
+  ) {
     ctx.read<AccountCubit>().deleteUserProfile(
           userId: userId,
         );

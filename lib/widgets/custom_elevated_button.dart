@@ -10,7 +10,7 @@ class CustomElevatedButton extends BaseButton {
     this.decoration,
     this.leftIcon,
     this.rightIcon,
-    this.textSize = 15,
+    this.textSize = 18,
     this.processing = false,
     this.title = 'Loading...',
     this.textColor = Colors.white,

@@ -4,11 +4,11 @@ import 'package:tellesports/presentation/onboarding_screen/onboarding_two_screen
 import 'package:tellesports/presentation/onboarding_screen/onboarding_three_screen.dart';
 import 'package:tellesports/presentation/auth/sign_up_screen/sign_up_screen.dart';
 import 'package:tellesports/presentation/auth/sign_in_screen/sign_in_screen.dart';
-import 'package:tellesports/presentation/manage_account/forgot_password_screen/forgot_password_screen.dart';
-import 'package:tellesports/presentation/manage_account/create_new_password_screen/create_new_password_screen.dart';
+import 'package:tellesports/presentation/manage_account/forgot_password_screen/forgot_password_screen.dart'; 
 
 
 import '../presentation/community_screens/community_one_page/community_info_page.dart';
+import '../presentation/manage_account/update_password_screen/update_password_screen.dart';
 import '../presentation/splash_screen_onboarding_screen/splash_screen.dart';
 
 class AppRoutes {
@@ -106,7 +106,7 @@ class AppRoutes {
      
     signinScreen: (context) => SigninScreen(),
     forgotPasswordScreen: (context) => ForgotPasswordScreen(),
-    createNewPasswordScreen: (context) => CreateNewPasswordScreen(),
+    createNewPasswordScreen: (context) => UpdatePasswordScreen(),
     
     
     

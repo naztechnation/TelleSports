@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:tellesports/widgets/modals.dart';
 
 void showSnackBar({required BuildContext context, required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -25,25 +26,21 @@ Future<File?> pickImageFromGallery(BuildContext context) async {
 
       Uint8List uint8List = Uint8List.fromList(imageBytes);
 
-      int compressedFileSize = (originalFileSize / 1024).round(); // in kilobytes
+      int compressedFileSize = (originalFileSize / 1024).round();  
 
-      if (compressedFileSize > 500) {
+      if (compressedFileSize > 150) {
         List<int> compressedBytes = await FlutterImageCompress.compressWithList(
           uint8List,
           minHeight: 1920,
           minWidth: 1080,
-          quality: 80,
+          quality: 4,
         );
         compressedImage = File(pickedImage.path)
           ..writeAsBytesSync(compressedBytes);
 
-        int compressedSize = (compressedBytes.length / 1024).round(); // Compressed file size in KB
-        // print('Original Size: ${originalFileSize} bytes (${(originalFileSize / 1024).toStringAsFixed(2)} KB)');
-        // print('Compressed Size: ${compressedSize} bytes (${(compressedSize / 1024).toStringAsFixed(2)} KB)');
-      } else {
+       } else {
         compressedImage = File(pickedImage.path);
-        // print('Original Size: ${originalFileSize} bytes (${(originalFileSize / 1024).toStringAsFixed(2)} KB)');
-        // print('No compression needed. Using original image.');
+       
       }
     }
   } catch (e) {
