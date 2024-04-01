@@ -66,7 +66,7 @@ class _PredictionContainerState extends State<PredictionContainer> {
                           ),
                         ),
                         onRatingUpdate: (rating) {
-                          print(rating);
+                          
                         },
                       ),
                     ),
@@ -217,9 +217,9 @@ class _PredictionContainerState extends State<PredictionContainer> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                               if(widget.predictedInfo.homeImage == null ||
-                                widget.predictedInfo.homeImage == 'null' 
-                               || widget.predictedInfo.homeImage == '')...[
+                               if(widget.predictedInfo.awayImage == null ||
+                                widget.predictedInfo.awayImage == 'null' 
+                               || widget.predictedInfo.awayImage == '')...[
                                 CustomImageView(
                                 
                                 imagePath: AppImages.football,
@@ -228,7 +228,7 @@ class _PredictionContainerState extends State<PredictionContainer> {
                               ),
                               ]else...[
                                 CustomImageView(
-                                imagePath: widget.predictedInfo.homeImage  ?? '',
+                                imagePath: widget.predictedInfo.awayImage  ?? '',
                                 placeHolder: AppImages.football,
                                 height: 24.adaptSize,
                                 width: 24.adaptSize,

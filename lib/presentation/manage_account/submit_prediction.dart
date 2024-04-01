@@ -229,7 +229,7 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
                     heightFactor: 1,
                     isDissmissible: true,
                     page: optionWidget2(
-                        filteredTeam, 'Leagues', homeTeamController, true));
+                        filteredTeam, 'Home Teams', homeTeamController, true));
               } else {
                 Modals.showToast('Please select a league');
               }
@@ -265,7 +265,7 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
                     heightFactor: 1,
                     isDissmissible: true,
                     page: optionWidget2(
-                        filteredTeam, 'Leagues', awayTeamController, false));
+                        filteredTeam, 'Away Team', awayTeamController, false));
               } else {
                 Modals.showToast('Please select a league');
               }
@@ -287,28 +287,28 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
             textInputAction: TextInputAction.done,
             textInputType: TextInputType.name,
             readOnly: true,
-            suffix: Icon(
-              Icons.arrow_drop_down,
-              size: 20,
-            ),
+            // suffix: Icon(
+            //   Icons.arrow_drop_down,
+            //   size: 20,
+            // ),
             validator: (value) {
               return Validator.validate(value, 'Select Predicted winner');
             },
             contentPadding: EdgeInsets.only(left: 8.h, top: 14.v, bottom: 14.v),
             onTap: () {
-              if (awayTeamController.text.isNotEmpty &&
-                  homeTeamController.text.isNotEmpty) {
-                predictedWinnner.clear();
-                addPredictedWinnnerList();
-                Modals.showBottomSheetModal(context,
-                    isScrollControlled: true,
-                    heightFactor: 1,
-                    isDissmissible: true,
-                    page: optionWidget(predictedWinnner, 'Predicted',
-                        predictedWinnerController));
-              } else {
-                Modals.showToast('please select both home and away teams');
-              }
+              // if (awayTeamController.text.isNotEmpty &&
+              //     homeTeamController.text.isNotEmpty) {
+              //   predictedWinnner.clear();
+              //   addPredictedWinnnerList();
+              //   Modals.showBottomSheetModal(context,
+              //       isScrollControlled: true,
+              //       heightFactor: 1,
+              //       isDissmissible: true,
+              //       page: optionWidget(predictedWinnner, 'Predicted',
+              //           predictedWinnerController));
+              // } else {
+              //   Modals.showToast('please select both home and away teams');
+              // }
             },
           )
         ]));
@@ -591,10 +591,13 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
                     if (isHome) {
                       setState(() {
                         homeLogo = options[index]['url'] ?? '';
+                         
                       });
                     } else {
                       setState(() {
                         awayLogo = options[index]['url'] ?? '';
+                   
+
                       });
                     }
                   },

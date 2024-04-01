@@ -10,6 +10,7 @@ import 'package:tellesports/routes/app_routes.dart';
 
 import 'model/view_models/account_view_model.dart';
 import 'model/view_models/firebase_auth_view_model.dart';
+import 'model/view_models/match_viewmodel.dart';
 import 'model/view_models/user_view_model.dart';
 import 'presentation/community_screens/chat/repositories/chat_repository.dart';
 import 'presentation/community_screens/provider/auth_provider.dart';
@@ -29,7 +30,7 @@ void main() async{
     child: pro.MultiProvider(
       providers: [
         pro.ChangeNotifierProvider(create: (_) => AccountViewModel(), lazy: false),
-        // ChangeNotifierProvider(create: (_) => ServiceProviderViewModel(), lazy: false),
+         pro.ChangeNotifierProvider(create: (_) => MatchViewModel(), lazy: false),
          pro.ChangeNotifierProvider(create: (_) => UserViewModel(), lazy: false),
          pro.ChangeNotifierProvider(create: (_) => FirebaseAuthProvider(), lazy: false),
          pro.ChangeNotifierProvider(create: (_) => AuthProviders(), lazy: false),

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 
+import '../../../model/matches_data/match_fixtures.dart' as fixture;
+
 // ignore: must_be_immutable
 class MatchcardItemWidget extends StatelessWidget {
+ final fixture.Response match ;
+
   MatchcardItemWidget({
     Key? key,
-    this.onTapCardMatch,
+    this.onTapCardMatch, required this.match,
   }) : super(
           key: key,
         );
@@ -14,57 +18,60 @@ class MatchcardItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var homeGoal = match.goals?.home;
+  var awayGoal = match.goals?.away;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            CustomImageView(
-              imagePath: ImageConstant.imgLeaguePremierLeague,
-              height: 24.adaptSize,
-              width: 24.adaptSize,
-              radius: BorderRadius.circular(
-                4.h,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 12.h,
-                top: 3.v,
-              ),
-              child: Text(
-                "Premier League",
-                style: CustomTextStyles.titleMediumOnPrimaryBold,
-              ),
-            ),
-            Container(
-              // width: 65.h,
-              margin: EdgeInsets.only(
-                left: 8.h,
-                top: 4.v,
-                bottom: 3.v,
-              ),
-              child: Row(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgIcon,
-                    height: 16.adaptSize,
-                    width: 16.adaptSize,
-                    margin: EdgeInsets.only(bottom: 1.v),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 4.h),
-                    child: Text(
-                      "England",
-                      style: theme.textTheme.labelLarge,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10.v),
+        // Row(
+        //   children: [
+        //     CustomImageView(
+        //       imagePath: ImageConstant.imgLeaguePremierLeague,
+        //       height: 24.adaptSize,
+        //       width: 24.adaptSize,
+        //       radius: BorderRadius.circular(
+        //         4.h,
+        //       ),
+        //     ),
+        //     Padding(
+        //       padding: EdgeInsets.only(
+        //         left: 12.h,
+        //         top: 3.v,
+        //       ),
+        //       child: Text(
+        //         "Premier League",
+        //         style: CustomTextStyles.titleMediumOnPrimaryBold,
+        //       ),
+        //     ),
+        //     Container(
+        //       // width: 65.h,
+        //       margin: EdgeInsets.only(
+        //         left: 8.h,
+        //         top: 4.v,
+        //         bottom: 3.v,
+        //       ),
+        //       child: Row(
+        //         children: [
+        //           CustomImageView(
+        //             imagePath: ImageConstant.imgIcon,
+        //             height: 16.adaptSize,
+        //             width: 16.adaptSize,
+        //             margin: EdgeInsets.only(bottom: 1.v),
+        //           ),
+        //           Padding(
+        //             padding: EdgeInsets.only(left: 4.h),
+        //             child: Text(
+        //               "England",
+        //               style: theme.textTheme.labelLarge,
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        // ),
+       // SizedBox(height: 10.v),
         GestureDetector(
           onTap:  onTapCardMatch,
           child: Column(
@@ -85,7 +92,7 @@ class MatchcardItemWidget extends StatelessWidget {
                             child: Row(
                               children: [
                                 SizedBox(
-                                  height: 40.v,
+                                  height: 0.v,
                                   child: VerticalDivider(
                                     width: 3.h,
                                     thickness: 3.v,
@@ -101,13 +108,13 @@ class MatchcardItemWidget extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Text(
-                                        "4’",
+                                    ( match.fixture?.status?.short.toString() == 'NS' || match.fixture?.status?.short.toString() == 'CANC') ? '0':    ( match.fixture?.status?.elapsed != null ) ?  match.fixture?.status?.elapsed.toString() ?? '':  "${match.fixture?.status?.elapsed.toString()}’" ,
                                         style:
                                             CustomTextStyles.labelLargeRed400,
                                       ),
                                       SizedBox(height: 1.v),
                                       Text(
-                                        "FT",
+                                        match.fixture?.status?.short.toString() ?? '',
                                         style: theme.textTheme.labelMedium,
                                       ),
                                     ],
@@ -128,14 +135,15 @@ class MatchcardItemWidget extends StatelessWidget {
                                 Row(
                                   children: [
                                     CustomImageView(
-                                      imagePath: ImageConstant.imgThumbsUp,
+                                      imagePath: match.teams?.home?.logo ?? '',
+                                      //placeHolder: 'assets/images/others/ball.png',
                                       height: 16.adaptSize,
                                       width: 16.adaptSize,
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(left: 4.h),
                                       child: Text( 
-                                        "Liverpool",
+                                        match.teams?.home?.name ?? '',
                                         style: theme.textTheme.labelLarge,
                                       ),
                                     ),
@@ -145,12 +153,14 @@ class MatchcardItemWidget extends StatelessWidget {
                                 Row(
                                   children: [
                                     CustomImageView(
-                                      imagePath: ImageConstant.imgThumbsUp,
+                                      imagePath: match.teams?.away?.logo ?? '',
                                       height: 16.adaptSize,
                                       width: 16.adaptSize,
                                     ),
+                                      SizedBox(width: 5.v),
+
                                     Text(
-                                      "Aston",
+                                      match.teams?.away?.name ?? '',
                                       style: theme.textTheme.labelLarge,
                                     ),
                                   ],
@@ -167,7 +177,7 @@ class MatchcardItemWidget extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "3",
+                                  (homeGoal == null) ? 'NS':homeGoal.toString() ,
                                     style: theme.textTheme.labelLarge,
                                   ),
                                 ),
@@ -175,7 +185,7 @@ class MatchcardItemWidget extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(left: 1.h),
                                   child: Text(
-                                    "1",
+                                   (awayGoal == null) ? 'NS': awayGoal.toString(),
                                     style: theme.textTheme.labelLarge,
                                   ),
                                 ),
@@ -185,209 +195,22 @@ class MatchcardItemWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    CustomImageView(
-                      imagePath: ImageConstant.imgSignal,
-                      height: 16.adaptSize,
-                      width: 16.adaptSize,
-                      margin: EdgeInsets.only(
-                        left: 29.h,
-                        top: 18.v,
-                        bottom: 18.v,
-                      ),
-                    ),
+
+                     SizedBox(width: 15.v),
+                    // CustomImageView(
+                    //   imagePath: ImageConstant.imgSignal,
+                    //   height: 16.adaptSize,
+                    //   width: 16.adaptSize,
+                    //   margin: EdgeInsets.only(
+                    //     left: 29.h,
+                    //     top: 18.v,
+                    //     bottom: 18.v,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
-              SizedBox(height: 8.v),
-              Container(
-                decoration: AppDecoration.fillRed.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder8,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.h,
-                        vertical: 10.v,
-                      ),
-                      decoration: AppDecoration.fillDeepOrange,
-                      child: Column(
-                        children: [
-                          Text(
-                            "21:00",
-                            style: theme.textTheme.labelLarge,
-                          ),
-                          SizedBox(height: 1.v),
-                          Text(
-                            "FT",
-                            style: theme.textTheme.labelMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      // width: 79.h,
-                      margin: EdgeInsets.only(
-                        left: 8.h,
-                        top: 8.v,
-                        bottom: 8.v,
-                      ),
-                      child: Row(
-                        children: [
-                          Column(
-                            children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgThumbsUp,
-                                height: 16.adaptSize,
-                                width: 16.adaptSize,
-                              ),
-                              SizedBox(height: 4.v),
-                              CustomImageView(
-                                imagePath: ImageConstant.imgThumbsUp,
-                                height: 16.adaptSize,
-                                width: 16.adaptSize,
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 4.h),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Liverpool",
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                                SizedBox(height: 2.v),
-                                Text(
-                                  "Aston Villa ",
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Spacer(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.v),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "3",
-                              style: theme.textTheme.labelLarge,
-                            ),
-                          ),
-                          SizedBox(height: 4.v),
-                          Padding(
-                            padding: EdgeInsets.only(left: 1.h),
-                            child: Text(
-                              "1",
-                              style: theme.textTheme.labelLarge,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    CustomImageView(
-                      imagePath: ImageConstant.imgSignal,
-                      height: 16.adaptSize,
-                      width: 16.adaptSize,
-                      margin: EdgeInsets.fromLTRB(28.h, 18.v, 12.h, 18.v),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 8.v),
-              Container(
-                decoration: AppDecoration.fillRed.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder8,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.h,
-                        vertical: 10.v,
-                      ),
-                      decoration: AppDecoration.fillDeepOrange,
-                      child: Column(
-                        children: [
-                          Text(
-                            "21:00",
-                            style: theme.textTheme.labelLarge,
-                          ),
-                          SizedBox(height: 1.v),
-                          Text(
-                            "FT",
-                            style: theme.textTheme.labelMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 8.h,
-                        top: 8.v,
-                        bottom: 8.v,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgThumbsUp,
-                                height: 16.adaptSize,
-                                width: 16.adaptSize,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 4.h),
-                                child: Text(
-                                  "Liverpool",
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 3.v),
-                          Row(
-                            children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgThumbsUp,
-                                height: 16.adaptSize,
-                                width: 16.adaptSize,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 4.h),
-                                child: Text(
-                                  "Aston Villa ",
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Spacer(),
-                    CustomImageView(
-                      imagePath: ImageConstant.imgSignalGray400,
-                      height: 16.adaptSize,
-                      width: 16.adaptSize,
-                      margin: EdgeInsets.only(
-                        top: 18.v,
-                        right: 12.h,
-                        bottom: 18.v,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              
             ],
           ),
         ),

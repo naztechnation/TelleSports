@@ -39,6 +39,7 @@ dependencies:
   
   read_more_text: ^0.0.5
   flutter_image_compress: ^2.2.0
+  url_launcher: ^6.2.5
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
 
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
@@ -7,153 +9,334 @@ import 'package:tellesports/widgets/app_bar/appbar_subtitle_three.dart';
 import 'package:tellesports/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
+import '../../blocs/matches/match.dart';
+import '../../model/matches_data/fixtues_stats.dart';
+import '../../model/view_models/match_viewmodel.dart';
+import '../../requests/repositories/matches_repository/match_repository_impl.dart';
+import '../../utils/app_utils.dart';
+import '../../widgets/empty_widget.dart';
+import '../../widgets/loading_page.dart';
+
+
 class ViewLivescoresDetailsScreen extends StatelessWidget {
-  ViewLivescoresDetailsScreen({Key? key})
+  final String leagueId;
+  final String homeTeamId;
+  final String awayTeamId;
+  const ViewLivescoresDetailsScreen(
+      {Key? key,
+      required this.leagueId,
+      required this.homeTeamId,
+      required this.awayTeamId})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<MatchCubit>(
+      create: (BuildContext context) => MatchCubit(
+          matchRepository: MatchRepositoryImpl(),
+          viewModel: Provider.of<MatchViewModel>(context, listen: false)),
+      child: ViewLivescoresDetails(
+          leagueId: leagueId, homeTeamId: homeTeamId, awayTeamId: awayTeamId),
+    );
+  }
+}
+class ViewLivescoresDetails extends StatefulWidget {
+
+   final String leagueId;
+  final String homeTeamId;
+  final String awayTeamId;
+  ViewLivescoresDetails({Key? key,
+  required this.leagueId,
+      required this.homeTeamId,
+      required this.awayTeamId
+  })
       : super(
           key: key,
         );
 
   @override
+  State<ViewLivescoresDetails> createState() => _ViewLivescoresDetailsState();
+}
+
+class _ViewLivescoresDetailsState extends State<ViewLivescoresDetails> {
+
+   late MatchCubit _matchCubit;
+  late Size size;
+  List<Response> fixturesLists = [];
+  @override
+  void didChangeDependencies() {
+    size = MediaQuery.of(context).size;
+
+    super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    _asyncInitMethod();
+    super.initState();
+  }
+
+  void _asyncInitMethod() {
+    _matchCubit = context.read<MatchCubit>();
+    _matchCubit.getFixturesById(searchParameter: widget.leagueId);
+  }
+  @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
 
+    final event =
+        Provider.of<MatchViewModel>(context, listen: false).fixtureEvents;
+
+
     return SafeArea(
       child: Scaffold(
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              SizedBox(height: 20.v),
-              _buildTopnavMatchDetails(context),
-              SizedBox(height: 16.v),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 5.v),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.h,
-                            vertical: 6.v,
-                          ),
-                          decoration: AppDecoration.fillWhiteA.copyWith(
-                            borderRadius: BorderRadiusStyle.roundedBorder4,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgUser,
-                                height: 24.adaptSize,
-                                width: 24.adaptSize,
-                                alignment: Alignment.center,
-                              ),
-                              SizedBox(height: 6.v),
-                              _buildContent(context),
-                              CustomImageView(
-                                imagePath: ImageConstant.imgTail,
-                                height: 16.v,
-                                width: 24.h,
-                                alignment: Alignment.center,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 55.h),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(bottom: 19.v),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "In: Pable Rosario",
-                                              style: theme.textTheme.labelLarge,
-                                            ),
-                                          ),
-                                          SizedBox(height: 1.v),
-                                          Text(
-                                            "Out: Hicham Boudaoui",
-                                            style: CustomTextStyles
-                                                .labelMediumGray700,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 18.h,
-                                        top: 2.v,
-                                      ),
-                                      child: _buildTail(
-                                        context,
-                                        leftIcon: ImageConstant.imgLeftIcon,
-                                        description: "86’",
-                                      ),
-                                    ),
-                                  ],
+        body: BlocConsumer<MatchCubit, MatchStates>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is MatchLoading) {
+              return Container(
+                  color: Colors.white,
+                  height: AppUtils.deviceScreenSize(context).height,
+                  width: AppUtils.deviceScreenSize(context).width,
+                  child: const LoadingPage(length: 20));
+            } else if (state is MatchNetworkErr) {
+              return EmptyWidget(
+                title: 'Network error',
+                description: state.message,
+                onRefresh: () => _matchCubit.getFixturesById(
+                    searchParameter: widget.leagueId),
+              );
+            } else if (state is MatchApiErr) {
+              return EmptyWidget(
+                title: 'Network error',
+                description: state.message,
+                onRefresh: () => _matchCubit.getFixturesById(
+                    searchParameter: widget.leagueId),
+              );
+            }
+            fixturesLists = _matchCubit.viewModel.fixtureStatistics;
+              
+           return SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              children: [
+                SizedBox(height: 20.v),
+                _buildTopnavMatchDetails(context),
+                SizedBox(height: 16.v),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 5.v),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.h,
+                              vertical: 6.v,
+                            ),
+                            decoration: AppDecoration.fillWhiteA.copyWith(
+                              borderRadius: BorderRadiusStyle.roundedBorder4,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomImageView(
+                                  imagePath: ImageConstant.imgUser,
+                                  height: 24.adaptSize,
+                                  width: 24.adaptSize,
+                                  alignment: Alignment.center,
                                 ),
-                              ),
-                              SizedBox(height: 3.v),
-                              Padding(
-                                padding: EdgeInsets.only(left: 51.h),
-                                child: _buildTimeline(
-                                  context,
-                                  title: "In: Evann Guessand",
-                                  description: "Out: Gaetan Laborde",
-                                  televisionImage: ImageConstant.imgLeftIcon,
-                                  description1: "86’",
+                                SizedBox(height: 6.v),
+                                _buildContent(context),
+                                CustomImageView(
+                                  imagePath: ImageConstant.imgTail,
+                                  height: 16.v,
+                                  width: 24.h,
+                                  alignment: Alignment.center,
                                 ),
-                              ),
-                              SizedBox(height: 4.v),
-                              Padding(
-                                padding: EdgeInsets.only(right: 31.h),
-                                child: _buildTimeline2(
-                                  context,
-                                  description: "84’",
-                                  title: "In: Marvin Sanaya",
-                                  description1: "Out: Loubadhe Abakar Sylla",
-                                ),
-                              ),
-                              SizedBox(height: 3.v),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 65.h),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 55.h),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(top: 2.v),
-                                        child: _buildTail(
-                                          context,
-                                          leftIcon: ImageConstant.imgTelevision,
-                                          description: "84’",
+                                        padding: EdgeInsets.only(bottom: 19.v),
+                                        child: Column(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "In: Pable Rosario",
+                                                style: theme.textTheme.labelLarge,
+                                              ),
+                                            ),
+                                            SizedBox(height: 1.v),
+                                            Text(
+                                              "Out: Hicham Boudaoui",
+                                              style: CustomTextStyles
+                                                  .labelMediumGray700,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
                                           left: 18.h,
-                                          bottom: 19.v,
+                                          top: 2.v,
+                                        ),
+                                        child: _buildTail(
+                                          context,
+                                          leftIcon: ImageConstant.imgLeftIcon,
+                                          description: "86’",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 3.v),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 51.h),
+                                  child: _buildTimeline(
+                                    context,
+                                    title: "In: Evann Guessand",
+                                    description: "Out: Gaetan Laborde",
+                                    televisionImage: ImageConstant.imgLeftIcon,
+                                    description1: "86’",
+                                  ),
+                                ),
+                                SizedBox(height: 4.v),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 31.h),
+                                  child: _buildTimeline2(
+                                    context,
+                                    description: "84’",
+                                    title: "In: Marvin Sanaya",
+                                    description1: "Out: Loubadhe Abakar Sylla",
+                                  ),
+                                ),
+                                SizedBox(height: 3.v),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(right: 65.h),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 2.v),
+                                          child: _buildTail(
+                                            context,
+                                            leftIcon: ImageConstant.imgTelevision,
+                                            description: "84’",
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 18.h,
+                                            bottom: 19.v,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Ibrahima Sissoko",
+                                                style: theme.textTheme.labelLarge,
+                                              ),
+                                              SizedBox(height: 1.v),
+                                              Text(
+                                                "Foul",
+                                                style: CustomTextStyles
+                                                    .labelMediumGray700,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 3.v),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 51.h),
+                                  child: _buildTimeline(
+                                    context,
+                                    title: "In: Evann Guessand",
+                                    description: "Out: Gaetan Laborde",
+                                    televisionImage:
+                                        ImageConstant.imgTelevisionRed400,
+                                    description1: "83’",
+                                  ),
+                                ),
+                                SizedBox(height: 3.v),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 51.h),
+                                  child: _buildTimeline(
+                                    context,
+                                    title: "In: Evann Guessand",
+                                    description: "Out: Gaetan Laborde",
+                                    televisionImage: ImageConstant.imgLeftIcon,
+                                    description1: "82’",
+                                  ),
+                                ),
+                                SizedBox(height: 3.v),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 51.h),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 39.v),
+                                        child: _buildTimeline1(
+                                          context,
+                                          titleText: "In: Evann Guessand",
+                                          descriptionText: "Out: Gaetan Laborde",
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 11.h,
+                                          top: 2.v,
                                         ),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              "Ibrahima Sissoko",
-                                              style: theme.textTheme.labelLarge,
+                                            CustomImageView(
+                                              imagePath: ImageConstant
+                                                  .imgLeftIconWhiteA700,
+                                              height: 16.adaptSize,
+                                              width: 16.adaptSize,
                                             ),
-                                            SizedBox(height: 1.v),
+                                            SizedBox(height: 5.v),
                                             Text(
-                                              "Foul",
-                                              style: CustomTextStyles
-                                                  .labelMediumGray700,
+                                              "77’",
+                                              style: theme.textTheme.labelMedium,
+                                            ),
+                                            SizedBox(height: 3.v),
+                                            Container(
+                                              width: 29.h,
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 6.h,
+                                                vertical: 1.v,
+                                              ),
+                                              decoration:
+                                                  AppDecoration.fillRed.copyWith(
+                                                borderRadius: BorderRadiusStyle
+                                                    .roundedBorder8,
+                                              ),
+                                              child: Text(
+                                                "2-0",
+                                                style: CustomTextStyles
+                                                    .bodySmallInterOnPrimaryContainer,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4.v),
+                                            CustomImageView(
+                                              imagePath: ImageConstant.imgTail,
+                                              height: 10.v,
+                                              width: 1.h,
                                             ),
                                           ],
                                         ),
@@ -161,219 +344,133 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: 3.v),
-                              Padding(
-                                padding: EdgeInsets.only(left: 51.h),
-                                child: _buildTimeline(
-                                  context,
-                                  title: "In: Evann Guessand",
-                                  description: "Out: Gaetan Laborde",
-                                  televisionImage:
-                                      ImageConstant.imgTelevisionRed400,
-                                  description1: "83’",
+                                SizedBox(height: 3.v),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 51.h),
+                                  child: _buildTimeline(
+                                    context,
+                                    title: "In: Evann Guessand",
+                                    description: "Out: Gaetan Laborde",
+                                    televisionImage: ImageConstant.imgLeftIcon,
+                                    description1: "68’",
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 3.v),
-                              Padding(
-                                padding: EdgeInsets.only(left: 51.h),
-                                child: _buildTimeline(
-                                  context,
-                                  title: "In: Evann Guessand",
-                                  description: "Out: Gaetan Laborde",
-                                  televisionImage: ImageConstant.imgLeftIcon,
-                                  description1: "82’",
+                                SizedBox(height: 4.v),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 31.h),
+                                  child: _buildTimeline2(
+                                    context,
+                                    description: "64’",
+                                    title: "In: Marvin Sanaya",
+                                    description1: "Out: Loubadhe Abakar Sylla",
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 3.v),
-                              Padding(
-                                padding: EdgeInsets.only(left: 51.h),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(bottom: 39.v),
-                                      child: _buildTimeline1(
-                                        context,
-                                        titleText: "In: Evann Guessand",
-                                        descriptionText: "Out: Gaetan Laborde",
+                                SizedBox(height: 4.v),
+                                _buildContent1(context),
+                                CustomImageView(
+                                  imagePath: ImageConstant.imgTail,
+                                  height: 16.v,
+                                  width: 24.h,
+                                  alignment: Alignment.center,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 51.h),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 39.v),
+                                        child: _buildTimeline1(
+                                          context,
+                                          titleText: "In: Evann Guessand",
+                                          descriptionText: "Out: Gaetan Laborde",
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 11.h,
-                                        top: 2.v,
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 12.h,
+                                          top: 2.v,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            CustomImageView(
+                                              imagePath: ImageConstant
+                                                  .imgLeftIconWhiteA700,
+                                              height: 16.adaptSize,
+                                              width: 16.adaptSize,
+                                            ),
+                                            SizedBox(height: 5.v),
+                                            Text(
+                                              "45+2’",
+                                              style: theme.textTheme.labelMedium,
+                                            ),
+                                            SizedBox(height: 3.v),
+                                            Container(
+                                              width: 28.h,
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 6.h,
+                                                vertical: 1.v,
+                                              ),
+                                              decoration:
+                                                  AppDecoration.fillRed.copyWith(
+                                                borderRadius: BorderRadiusStyle
+                                                    .roundedBorder8,
+                                              ),
+                                              child: Text(
+                                                "1-0",
+                                                style: CustomTextStyles
+                                                    .bodySmallInterOnPrimaryContainer,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4.v),
+                                            CustomImageView(
+                                              imagePath: ImageConstant.imgTail,
+                                              height: 10.v,
+                                              width: 1.h,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      child: Column(
-                                        children: [
-                                          CustomImageView(
-                                            imagePath: ImageConstant
-                                                .imgLeftIconWhiteA700,
-                                            height: 16.adaptSize,
-                                            width: 16.adaptSize,
-                                          ),
-                                          SizedBox(height: 5.v),
-                                          Text(
-                                            "77’",
-                                            style: theme.textTheme.labelMedium,
-                                          ),
-                                          SizedBox(height: 3.v),
-                                          Container(
-                                            width: 29.h,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 6.h,
-                                              vertical: 1.v,
-                                            ),
-                                            decoration:
-                                                AppDecoration.fillRed.copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .roundedBorder8,
-                                            ),
-                                            child: Text(
-                                              "2-0",
-                                              style: CustomTextStyles
-                                                  .bodySmallInterOnPrimaryContainer,
-                                            ),
-                                          ),
-                                          SizedBox(height: 4.v),
-                                          CustomImageView(
-                                            imagePath: ImageConstant.imgTail,
-                                            height: 10.v,
-                                            width: 1.h,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 3.v),
-                              Padding(
-                                padding: EdgeInsets.only(left: 51.h),
-                                child: _buildTimeline(
-                                  context,
-                                  title: "In: Evann Guessand",
-                                  description: "Out: Gaetan Laborde",
-                                  televisionImage: ImageConstant.imgLeftIcon,
-                                  description1: "68’",
+                                SizedBox(height: 3.v),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 51.h),
+                                  child: _buildTimeline(
+                                    context,
+                                    title: "In: Evann Guessand",
+                                    description: "Out: Gaetan Laborde",
+                                    televisionImage: ImageConstant.imgTelevision,
+                                    description1: "6’",
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 4.v),
-                              Padding(
-                                padding: EdgeInsets.only(right: 31.h),
-                                child: _buildTimeline2(
-                                  context,
-                                  description: "64’",
-                                  title: "In: Marvin Sanaya",
-                                  description1: "Out: Loubadhe Abakar Sylla",
+                                SizedBox(height: 10.v),
+                                CustomImageView(
+                                  imagePath: ImageConstant.imgUser,
+                                  height: 24.adaptSize,
+                                  width: 24.adaptSize,
+                                  alignment: Alignment.center,
                                 ),
-                              ),
-                              SizedBox(height: 4.v),
-                              _buildContent1(context),
-                              CustomImageView(
-                                imagePath: ImageConstant.imgTail,
-                                height: 16.v,
-                                width: 24.h,
-                                alignment: Alignment.center,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 51.h),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(bottom: 39.v),
-                                      child: _buildTimeline1(
-                                        context,
-                                        titleText: "In: Evann Guessand",
-                                        descriptionText: "Out: Gaetan Laborde",
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 12.h,
-                                        top: 2.v,
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          CustomImageView(
-                                            imagePath: ImageConstant
-                                                .imgLeftIconWhiteA700,
-                                            height: 16.adaptSize,
-                                            width: 16.adaptSize,
-                                          ),
-                                          SizedBox(height: 5.v),
-                                          Text(
-                                            "45+2’",
-                                            style: theme.textTheme.labelMedium,
-                                          ),
-                                          SizedBox(height: 3.v),
-                                          Container(
-                                            width: 28.h,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 6.h,
-                                              vertical: 1.v,
-                                            ),
-                                            decoration:
-                                                AppDecoration.fillRed.copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .roundedBorder8,
-                                            ),
-                                            child: Text(
-                                              "1-0",
-                                              style: CustomTextStyles
-                                                  .bodySmallInterOnPrimaryContainer,
-                                            ),
-                                          ),
-                                          SizedBox(height: 4.v),
-                                          CustomImageView(
-                                            imagePath: ImageConstant.imgTail,
-                                            height: 10.v,
-                                            width: 1.h,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 3.v),
-                              Padding(
-                                padding: EdgeInsets.only(left: 51.h),
-                                child: _buildTimeline(
-                                  context,
-                                  title: "In: Evann Guessand",
-                                  description: "Out: Gaetan Laborde",
-                                  televisionImage: ImageConstant.imgTelevision,
-                                  description1: "6’",
-                                ),
-                              ),
-                              SizedBox(height: 10.v),
-                              CustomImageView(
-                                imagePath: ImageConstant.imgUser,
-                                height: 24.adaptSize,
-                                width: 24.adaptSize,
-                                alignment: Alignment.center,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 16.v),
-                        _buildLegend(context),
-                      ],
+                          SizedBox(height: 16.v),
+                          _buildLegend(context),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+  }),
         // bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
 
-   
   Widget _buildTopnavMatchDetails(BuildContext context) {
     return Container(
       decoration: AppDecoration.fillWhiteA,
@@ -400,33 +497,34 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
             title: Column(
               children: [
                 AppbarSubtitleThree(
-                  text: "English Premier League",
+                  text: fixturesLists.first.league?.name ?? '',
                 ),
                 AppbarSubtitleSix(
-                  text: "Sunday, 3 September 2023 at 20:00",
+                  text: AppUtils.formatComplexDate(dateTime: fixturesLists.first.fixture?.date ?? ''),
                   margin: EdgeInsets.symmetric(horizontal: 5.h),
                 ),
               ],
             ),
             actions: [
-              AppbarTrailingImage(
-                imagePath: ImageConstant.imgShare,
-                margin: EdgeInsets.fromLTRB(20.h, 3.v, 20.h, 5.v),
-              ),
+              // AppbarTrailingImage(
+              //   imagePath: ImageConstant.imgShare,
+              //   margin: EdgeInsets.fromLTRB(20.h, 3.v, 20.h, 5.v),
+              // ),
             ],
           ),
           SizedBox(height: 3.v),
           Container(
-            width: double.maxFinite,
+            width: double.infinity,
             decoration: AppDecoration.fillDeeporange50,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildColumn(
                   context,
-                  screenNameText: "Liverpool",
-                  signalImage: ImageConstant.imgSignal,
+                  screenNameText: fixturesLists.first.teams?.home?.name ?? '',
+                  signalImage: fixturesLists.first.teams?.home?.logo ?? '',
                 ),
+                const SizedBox(width: 12,),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 24.v),
                   child: Column(
@@ -436,20 +534,22 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
                         style: CustomTextStyles.labelMediumGray700,
                       ),
                       Text(
-                        "3-0",
+                       (fixturesLists.first.score?.fulltime?.home == null) ? "NS": "${fixturesLists.first.score?.fulltime?.home.toString() ?? ''} : ${fixturesLists.first.score?.fulltime?.away.toString() ?? ''}",
                         style: CustomTextStyles.titleMediumGray800,
                       ),
                       Text(
-                        "HT 2-0",
+                      (fixturesLists.first.score?.halftime?.home == null) ? "":  "HT ${fixturesLists.first.score?.halftime?.home.toString() ?? ''} : ${fixturesLists.first.score?.halftime?.away.toString() ?? ''}",
                         style: CustomTextStyles.labelMediumGray700,
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(width: 12,),
+
                 _buildColumn(
                   context,
-                  screenNameText: "Aston Villa",
-                  signalImage: ImageConstant.imgSignalGray50001,
+                  screenNameText: fixturesLists.first.teams?.away?.name ?? '',
+                  signalImage: fixturesLists.first.teams?.away?.logo ?? '',
                 ),
               ],
             ),
@@ -459,7 +559,6 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-   
   Widget _buildContent(BuildContext context) {
     return Container(
       width: 374.h,
@@ -477,7 +576,6 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-   
   Widget _buildContent1(BuildContext context) {
     return Container(
       width: 374.h,
@@ -495,7 +593,6 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-   
   Widget _buildLegend(BuildContext context) {
     return Container(
       width: double.maxFinite,
@@ -617,49 +714,43 @@ class ViewLivescoresDetailsScreen extends StatelessWidget {
     );
   }
 
-   
-  // Widget _buildBottomBar(BuildContext context) {
-  //   return CustomBottomBar(
-  //     onChanged: (BottomBarEnum type) {
-  //       // Navigator.pushNamed(
-  //       //     navigatorKey.currentContext!, getCurrentRoute(type));
-  //     },
-  //   );
-  // }
-
   /// Common widget
   Widget _buildColumn(
     BuildContext context, {
     required String screenNameText,
     required String signalImage,
   }) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 43.h,
-        vertical: 8.v,
-      ),
-      decoration: AppDecoration.fillRed,
-      child: Column(
-        children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgThumbsUp,
-            height: 40.adaptSize,
-            width: 40.adaptSize,
-          ),
-          SizedBox(height: 3.v),
-          Text(
-            screenNameText,
-            style: CustomTextStyles.titleSmallBluegray900.copyWith(
-              color: appTheme.blueGray900,
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.h,
+          vertical: 8.v,
+        ),
+        decoration: AppDecoration.fillRed,
+        child: Column(
+          children: [
+            CustomImageView(
+              imagePath: signalImage,
+              height: 40.adaptSize,
+              width: 40.adaptSize,
             ),
-          ),
-          SizedBox(height: 3.v),
-          CustomImageView(
-            imagePath: signalImage,
-            height: 16.adaptSize,
-            width: 16.adaptSize,
-          ),
-        ],
+            SizedBox(height: 3.v),
+            Text(
+              screenNameText,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: CustomTextStyles.titleSmallBluegray900.copyWith(
+                color: appTheme.blueGray900,
+              ),
+            ),
+            SizedBox(height: 3.v),
+            // CustomImageView(
+            //   imagePath: signalImage,
+            //   height: 16.adaptSize,
+            //   width: 16.adaptSize,
+            // ),
+          ],
+        ),
       ),
     );
   }

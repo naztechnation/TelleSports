@@ -13,6 +13,7 @@ import 'package:tellesports/presentation/manage_account/verify_account_screen/ve
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_outlined_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../blocs/accounts/account.dart';
 import '../../../core/constants/enums.dart';
@@ -52,11 +53,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   TextEditingController phoneNumberGoogleController = TextEditingController();
 
-   final _passwordController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _isStrong = false;
 
   String googleEmail = '';
   String code = '';
+
+  final Uri _url = Uri.parse('https://tellasport.com/terms');
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -81,28 +84,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
   }
 
-   @override
+  @override
   void dispose() {
     super.dispose();
     _passwordController.dispose();
   }
+
+  Future<void> _launchUrl() async {
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
 
     final authUser = Provider.of<FirebaseAuthProvider>(context, listen: true);
-    final user =  Provider.of<AuthProviders>(context, listen: true);
-    
-
+    final user = Provider.of<AuthProviders>(context, listen: true);
 
     return SafeArea(
-        child: GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: 
-         Scaffold(
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
             resizeToAvoidBottomInset: true,
             body: BlocProvider<AccountCubit>(
                 lazy: false,
@@ -163,18 +169,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             state.user.userWallet?.accountNumber.toString());
                         StorageHandler.saveUserBank(
                             state.user.userWallet?.bank.toString());
-                         StorageHandler.saveCurrency(
-                          state.user.userWallet?.currency.toString());
-                      StorageHandler.saveBankCode(
-                          state.user.userWallet?.countryCode.toString());
+                        StorageHandler.saveCurrency(
+                            state.user.userWallet?.currency.toString());
+                        StorageHandler.saveBankCode(
+                            state.user.userWallet?.countryCode.toString());
 
                         StorageHandler.saveUserPassword(state.user.user?.email);
 
-                        updateUser(context: context, user: user, username: state.user.user?.username ?? '', userId: state.user.user?.id.toString() ?? '', image: (state.user.profilePicture.toString()  != 'null' ||
-                         state.user.profilePicture.toString()  != ''  || 
-                         state.user.profilePicture.toString()  != null) ? 
-                          state.user.profilePicture.toString() :
-                          AppStrings.degaultImage, email: state.user.user?.email ?? '', );
+                        updateUser(
+                          context: context,
+                          user: user,
+                          username: state.user.user?.username ?? '',
+                          userId: state.user.user?.id.toString() ?? '',
+                          image: (state.user.profilePicture.toString() !=
+                                      'null' ||
+                                  state.user.profilePicture.toString() != '' ||
+                                  state.user.profilePicture.toString() != null)
+                              ? state.user.profilePicture.toString()
+                              : AppStrings.degaultImage,
+                          email: state.user.user?.email ?? '',
+                        );
                       }
                     } else if (state is AccountApiErr) {
                       if (state.message != null) {
@@ -212,26 +226,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               _buildPhoneNumberTextField(context),
                               SizedBox(height: 5.v),
                               _buildPasswordTextField(context),
-                               const SizedBox(height: 10.0),
-            AnimatedBuilder(
-              animation: passwordController,
-              builder: (context, child) {
-                final password = passwordController.text;
+                              const SizedBox(height: 10.0),
+                              AnimatedBuilder(
+                                animation: passwordController,
+                                builder: (context, child) {
+                                  final password = passwordController.text;
 
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: PasswordStrengthChecker(
-                    onStrengthChanged: (bool value) {
-                      setState(() {
-                        _isStrong = value;
-                      });
-                    },
-                    password: password,
-                  ),
-                );
-              },
-            ),
-            
+                                  return Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: PasswordStrengthChecker(
+                                      onStrengthChanged: (bool value) {
+                                        setState(() {
+                                          _isStrong = value;
+                                        });
+                                      },
+                                      password: password,
+                                    ),
+                                  );
+                                },
+                              ),
+
                               SizedBox(height: 40.v),
                               CustomElevatedButton(
                                   text: "Register",
@@ -240,13 +254,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       state is AccountLoading),
                                   margin: EdgeInsets.symmetric(horizontal: 4.h),
                                   title: 'Creating Account...',
-                                  onPressed:  _isStrong ? () {
-                                    registerUser(
-                                        context: context, isGoogle: false);
-                                    // onTapRegister(context);
-                                  } : (){
-                                    Modals.showToast('Please enter a strong password');
-                                  }),
+                                  onPressed: _isStrong
+                                      ? () {
+                                          registerUser(
+                                              context: context,
+                                              isGoogle: false);
+                                          // onTapRegister(context);
+                                        }
+                                      : () {
+                                          Modals.showToast(
+                                              'Please enter a strong password');
+                                        }),
                               SizedBox(height: 15.v),
                               RichText(
                                 text: TextSpan(
@@ -297,7 +315,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   Modals.showBottomSheetModal(
                                     context,
                                     isDissmissible: true,
-                                     isScrollControlled: true,
+                                    isScrollControlled: true,
                                     heightFactor: 0.9,
                                     page: registerUserWithGoogle(
                                         authUser, context),
@@ -339,54 +357,66 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   child: RichText(
                                       text: TextSpan(children: [
                                         TextSpan(
-                                            text: "By ",
-                                            style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          wordSpacing: 3),),
+                                          text: "By ",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              wordSpacing: 3),
+                                        ),
                                         TextSpan(
-                                            text: "signing up",
-                                            style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          wordSpacing: 3),),
+                                          text: "signing up",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              wordSpacing: 3),
+                                        ),
                                         TextSpan(
-                                            text: ", you agree to ",
-                                            style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          wordSpacing: 3),),
+                                          text: ", you agree to ",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              wordSpacing: 3),
+                                        ),
                                         TextSpan(
-                                            text: "our",
-                                            style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          wordSpacing: 3),),
+                                          text: "our",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              wordSpacing: 3),
+                                        ),
                                         TextSpan(text: " "),
                                         TextSpan(
-                                            text: "Terms of Service",
-                                            style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.blue.shade800,
-                                          wordSpacing: 3),),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              _launchUrl();
+                                            },
+                                          text: "Terms of Service",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.green.shade900,
+                                              wordSpacing: 3),
+                                        ),
                                         TextSpan(
-                                            text: " and ",
-                                            style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          wordSpacing: 3),),
+                                          text: " and ",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              wordSpacing: 3),
+                                        ),
                                         TextSpan(
-                                            text: "Privacy Policy",
-                                            style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          wordSpacing: 3),),
+                                          text: "Privacy Policy",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              wordSpacing: 3),
+                                        ),
                                         TextSpan(
-                                            text: ".",
-                                            style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.blue.shade800,
-                                          wordSpacing: 3),)
+                                          text: ".",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.blue.shade800,
+                                              wordSpacing: 3),
+                                        )
                                       ]),
                                       textAlign: TextAlign.center))
                             ]))),
@@ -400,7 +430,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Username", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          Text("Username",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
             controller: userNameController,
@@ -418,7 +449,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("E-mail ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          Text("E-mail ",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
             controller: emailController,
@@ -430,9 +462,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
             onChanged: (value) {
               emailController.value = emailController.value.copyWith(
-            text: value.toLowerCase(),
-            selection: TextSelection.collapsed(offset: value.length),
-          );
+                text: value.toLowerCase(),
+                selection: TextSelection.collapsed(offset: value.length),
+              );
             },
           )
         ]));
@@ -442,67 +474,83 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Phone number", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          Text("Phone number",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
-            prefix:   (country != null) ?  GestureDetector(
-              onTap: () {
-                pickCountry();
-              },
-              child: SizedBox(
-                  width: 85,
-              
-                child: Padding(
-                  padding: const EdgeInsets.only(left:6.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Icon(Icons.arrow_drop_down, color: Colors.green.shade800,size: 25,),
-                        Text('+${country!.phoneCode}', style: TextStyle(fontSize: 16, color: Colors.green),),
-                      ],
-                    )),
-                ),
-              ),
-            ) : GestureDetector(
-              onTap: () {
-                pickCountry();
-                
-              },
-              child: SizedBox(
-                  width: 85,
-              
-                child: Padding(
-                  padding: const EdgeInsets.only(left:6.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Icon(Icons.arrow_drop_down, color: Colors.green.shade800,size: 25,),
-
-                        Text('+234', style: TextStyle(fontSize: 16, color: Colors.green),),
-                      ],
-                    )),
-                ),
-              ),
-            ),
+            prefix: (country != null)
+                ? GestureDetector(
+                    onTap: () {
+                      pickCountry();
+                    },
+                    child: SizedBox(
+                      width: 85,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6.0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Colors.green.shade800,
+                                  size: 25,
+                                ),
+                                Text(
+                                  '+${country!.phoneCode}',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.green),
+                                ),
+                              ],
+                            )),
+                      ),
+                    ),
+                  )
+                : GestureDetector(
+                    onTap: () {
+                      pickCountry();
+                    },
+                    child: SizedBox(
+                      width: 85,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6.0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Colors.green.shade800,
+                                  size: 25,
+                                ),
+                                Text(
+                                  '+234',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.green),
+                                ),
+                              ],
+                            )),
+                      ),
+                    ),
+                  ),
             controller: phoneNumberController,
             hintText: "Enter your phone number",
             hintStyle: CustomTextStyles.titleSmallGray600,
             textInputType: TextInputType.phone,
-            maxLength: 10, 
-        onChanged: (text) {
-          if (text.isNotEmpty && text[0] == '0') {
-            phoneNumberController.value = phoneNumberController.value.copyWith(
-              text: text.substring(1), // Consume the leading zero
-              selection: TextSelection(
-                baseOffset: text.length - 1,
-                extentOffset: text.length - 1,
-              ),
-              composing: TextRange.empty,
-            );
-          }
-        },
+            maxLength: 10,
+            onChanged: (text) {
+              if (text.isNotEmpty && text[0] == '0') {
+                phoneNumberController.value =
+                    phoneNumberController.value.copyWith(
+                  text: text.substring(1), // Consume the leading zero
+                  selection: TextSelection(
+                    baseOffset: text.length - 1,
+                    extentOffset: text.length - 1,
+                  ),
+                  composing: TextRange.empty,
+                );
+              }
+            },
             validator: (value) {
               return Validator.validate(value, 'Contact');
             },
@@ -514,69 +562,84 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Phone number", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          Text("Phone number",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 3.v),
           CustomTextFormField(
-             prefix:   (country != null) ?  GestureDetector(
-              onTap: () {
-                pickCountry();
-              },
-              child: SizedBox(
-                  width: 85,
-              
-                child: Padding(
-                  padding: const EdgeInsets.only(left:6.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Icon(Icons.arrow_drop_down, color: Colors.green.shade800,size: 25,),
-                        Text('+${country!.phoneCode}', style: TextStyle(fontSize: 16, color: Colors.green),),
-                      ],
-                    )),
-                ),
-              ),
-            ) : GestureDetector(
-              onTap: () {
-                pickCountry();
-                
-              },
-              child: SizedBox(
-                  width: 85,
-              
-                child: Padding(
-                  padding: const EdgeInsets.only(left:6.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Icon(Icons.arrow_drop_down, color: Colors.green.shade800,size: 25,),
-
-                        Text('+234', style: TextStyle(fontSize: 16, color: Colors.green),),
-                      ],
-                    )),
-                ),
-              ),
-            ),
-             onChanged: (text) {
-          if (text.isNotEmpty && text[0] == '0') {
-            phoneNumberGoogleController.value = phoneNumberGoogleController.value.copyWith(
-              text: text.substring(1), 
-              selection: TextSelection(
-                baseOffset: text.length - 1,
-                extentOffset: text.length - 1,
-              ),
-              composing: TextRange.empty,
-            );
-          }
-        },
+            prefix: (country != null)
+                ? GestureDetector(
+                    onTap: () {
+                      pickCountry();
+                    },
+                    child: SizedBox(
+                      width: 85,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6.0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Colors.green.shade800,
+                                  size: 25,
+                                ),
+                                Text(
+                                  '+${country!.phoneCode}',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.green),
+                                ),
+                              ],
+                            )),
+                      ),
+                    ),
+                  )
+                : GestureDetector(
+                    onTap: () {
+                      pickCountry();
+                    },
+                    child: SizedBox(
+                      width: 85,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6.0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Colors.green.shade800,
+                                  size: 25,
+                                ),
+                                Text(
+                                  '+234',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.green),
+                                ),
+                              ],
+                            )),
+                      ),
+                    ),
+                  ),
+            onChanged: (text) {
+              if (text.isNotEmpty && text[0] == '0') {
+                phoneNumberGoogleController.value =
+                    phoneNumberGoogleController.value.copyWith(
+                  text: text.substring(1),
+                  selection: TextSelection(
+                    baseOffset: text.length - 1,
+                    extentOffset: text.length - 1,
+                  ),
+                  composing: TextRange.empty,
+                );
+              }
+            },
             controller: phoneNumberGoogleController,
             hintText: "Enter your phone number",
             maxLength: 10,
             hintStyle: CustomTextStyles.titleSmallGray600,
             textInputType: TextInputType.phone,
             textInputAction: TextInputAction.done,
-            
             validator: (value) {
               return Validator.validate(value, 'Contact');
             },
@@ -586,7 +649,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildUserNameGoogleTextField(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text("Username", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+      Text("Username",
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
       SizedBox(height: 3.v),
       CustomTextFormField(
         controller: userNameGoogleController,
@@ -607,7 +671,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Create a password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          Text("Create a password",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           SizedBox(height: 2.v),
           CustomTextFormField(
             controller: passwordController,
@@ -696,8 +761,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       padding: const EdgeInsets.all(20.0),
       child: SingleChildScrollView(
         child: Container(
-           padding:
-            MediaQuery.of(context).viewInsets,
+          padding: MediaQuery.of(context).viewInsets,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -716,7 +780,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ],
               ),
               SizedBox(height: 24.v),
-              Text("Please enter the following details to continue.".toUpperCase(),
+              Text(
+                  "Please enter the following details to continue."
+                      .toUpperCase(),
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               SizedBox(height: 20.v),
               _buildUserNameGoogleTextField(context),
@@ -733,7 +799,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Navigator.pop(context);
                       User? user = await authUser.signInWithGoogle();
                       if (user != null) {
-                        
                         registerUser(
                             context: ctxt,
                             isGoogle: true,
@@ -766,15 +831,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     FocusScope.of(ctx).unfocus();
   }
 
+  updateUser(
+      {required BuildContext context,
+      required var user,
+      required String username,
+      required String userId,
+      required String image,
+      required String email}) async {
+    await user.uploadUserDetails(
+        username: username, userId: userId, imageUrl: image, email: email);
 
- updateUser({required BuildContext context, required  var user, required  String username,
-  required  String userId, required  String image, required  String email})async{
-
-  await  user.uploadUserDetails(username:username,userId:  userId,
-                        imageUrl: image, email:email);
-
-                          onTapSignIn(context);
-              
+    onTapSignIn(context);
   }
-   
 }

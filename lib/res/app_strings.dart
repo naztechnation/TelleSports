@@ -4,6 +4,48 @@ class AppStrings {
   static const String networkErrorMessage = "Network error, try again later";
 
 
+ static const rapidHeaders = {
+    'x-rapidapi-host': "api-football-v1.p.rapidapi.com",
+    'x-rapidapi-key': "104a201b57msh6b3ffdcac137f1ap129daejsnc0051ba3b1a0",
+  };
+
+  static const String bookieBaseUrl = 'https://convertbetcodes.com/api/';
+  static const String rapidApiBaseUrl =
+      'https://api-football-v1.p.rapidapi.com/v3/';
+
+  static const String currentSeason = '2023';
+
+
+static String rapidFixtureUrl({required String searchParameter}) =>
+      '${rapidApiBaseUrl}fixtures?$searchParameter';
+
+static String teamInfoUrl({required String teamId}) =>
+      '${rapidApiBaseUrl}teams?id=$teamId';
+  static String teamTransferUrl({required String teamId}) =>
+      '${rapidApiBaseUrl}transfers?team=$teamId';
+  static String coachInfoUrl({required String teamId}) =>
+      '${rapidApiBaseUrl}coachs?team=$teamId';
+  static String searchTeamsUrl({required String searchParameter}) =>
+      '${rapidApiBaseUrl}teams?search=$searchParameter';
+  static String teamsStandingsUrl({required String teamId}) =>
+      '${rapidApiBaseUrl}standings?season=$currentSeason&team=$teamId';
+  static String teamsSquadUrl({required String teamId}) =>
+      '${rapidApiBaseUrl}players?season=$currentSeason&team=$teamId';
+  static String trophiesUrl({required String id}) =>
+      '${rapidApiBaseUrl}trophies?coach=$id';
+  static String leagueTableUrl({required String leagueId}) =>
+      '${rapidApiBaseUrl}standings?season=$currentSeason&league=$leagueId';
+
+  static String teamStatsUrl({
+    required String teamId,
+    required String leagueId,
+  }) =>
+      '${rapidApiBaseUrl}teams/statistics?team=$teamId&league=$leagueId&season=$currentSeason';
+
+  static String league =
+      '${rapidApiBaseUrl}leagues?season=$currentSeason&current=true';
+
+
   ///flutterwave api
   static const String flutterwaveApiKey =
       "FLWPUBK_TEST-800484dab3ab798a88b3e7063141afac-X";
