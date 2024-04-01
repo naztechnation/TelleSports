@@ -167,7 +167,7 @@ class ViewLivescoresState extends State<ViewLivescores>
 
                 if (widget.leagueId != '') {
                   fixtures =
-                      _matchCubit.viewModel.matchFixturesList.reversed.toList();
+                      _matchCubit.viewModel.matchFixturesList;
                 } else {
                   fixtures = _matchCubit.viewModel.matchFixturesList;
                 }

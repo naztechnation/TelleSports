@@ -108,7 +108,7 @@ class MatchcardItemWidget extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Text(
-                                    ( match.fixture?.status?.short.toString() == 'NS' || match.fixture?.status?.short.toString() == 'CANC') ? '0':    ( match.fixture?.status?.elapsed != null ) ?  match.fixture?.status?.elapsed.toString() ?? '':  "${match.fixture?.status?.elapsed.toString()}’" ,
+                                    ( match.fixture?.status?.short.toString() == 'NS' || match.fixture?.status?.short.toString() == 'CANC' || match.fixture?.status?.elapsed.toString() == 'null') ? '0':    ( match.fixture?.status?.short == 'FT' || match.fixture?.status?.short == 'PEN' || match.fixture?.status?.short == 'HT' || match.fixture?.status?.elapsed == null) ?  match.fixture?.status?.elapsed.toString() ?? '':  "${match.fixture?.status?.elapsed.toString()}’" ,
                                         style:
                                             CustomTextStyles.labelLargeRed400,
                                       ),
