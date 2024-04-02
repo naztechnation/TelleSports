@@ -83,9 +83,10 @@ class AccountRepositoryImpl implements AccountRepository {
       required String confirmPassword}) async {
     final map = await Requests().post(AppStrings.resetPasswordUrl, body: {
       "email": email,
-      "password": email,
-      "password_confirmation": email,
+      "password": password,
+      "password_confirmation": confirmPassword,
     });
+    
     return RegisterUser.fromJson(map);
   }
 
@@ -97,7 +98,7 @@ class AccountRepositoryImpl implements AccountRepository {
     final map = await Requests().post(AppStrings.changePasswordPasswordUrl, body: {
       "old_password": oldPassword,
       "password": password,
-      "password_confirmation": oldPassword,
+      "password_confirmation": confirmPassword,
     });
     return RegisterUser.fromJson(map);
   }

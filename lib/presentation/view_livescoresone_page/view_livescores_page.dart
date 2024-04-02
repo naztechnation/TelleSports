@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
+import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 import '../../blocs/matches/match.dart';
 import '../../model/matches_data/match_fixtures.dart' as fixture;
@@ -10,10 +11,10 @@ import '../../requests/repositories/matches_repository/match_repository_impl.dar
 import '../../utils/app_utils.dart';
 import '../../widgets/empty_widget.dart';
 import '../../widgets/loading_page.dart';
+import '../community_screens/provider/auth_provider.dart';
 import '../view_livescoresone_page/widgets/matchcard_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/widgets/custom_elevated_button.dart';
 
 import 'view_livescores_details_screen.dart';
 
@@ -32,6 +33,8 @@ class ViewLivescoresPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final checkUserExist = Provider.of<AuthProviders>(context, listen: false);
+
     return BlocProvider<MatchCubit>(
       create: (BuildContext context) => MatchCubit(
           matchRepository: MatchRepositoryImpl(),
@@ -68,6 +71,8 @@ class ViewLivescoresState extends State<ViewLivescores>
   @override
   bool get wantKeepAlive => true;
 
+  TextEditingController searchController = TextEditingController();
+
   late MatchCubit _matchCubit;
   String searchParameter = '';
   String todaysDate = '';
@@ -77,24 +82,26 @@ class ViewLivescoresState extends State<ViewLivescores>
 
   List<fixture.Response> fixtures = [];
 
+  bool _dataAdded = false;
+
   @override
   void initState() {
     todaysDate = DateFormat('yyyy-MM-dd').format(now);
 
-    searchParameter = todaysDate;
+    searchParameter = 'date=$todaysDate';
     _asyncInitMethod();
     super.initState();
   }
 
   void _asyncInitMethod() {
     _matchCubit = context.read<MatchCubit>();
-    checkLeagueStatus(widget.leagueId!);
+    checkLeagueStatus(leagueId: widget.leagueId!);
   }
 
-  checkLeagueStatus(String leagueId) {
+  checkLeagueStatus({
+    String leagueId = '',
+  }) {
     if (leagueId == '') {
-      searchParameter = 'date=$todaysDate';
-
       _matchCubit.getMatchFixtures(searchParameter: searchParameter);
     } else {
       _matchCubit.getMatchFixtures(
@@ -122,9 +129,11 @@ class ViewLivescoresState extends State<ViewLivescores>
   void toggleColor() {
     setState(() {
       if (selectedIndex == 0) {
-        checkLeagueStatus(widget.leagueId!);
+        searchParameter = liveAll;
+        checkLeagueStatus(leagueId: widget.leagueId!);
       } else {
-        checkLeagueStatus(widget.leagueId!);
+        searchParameter = 'date=$todaysDate';
+        checkLeagueStatus(leagueId: widget.leagueId!);
       }
       Color tempColor = _color1;
       _color1 = _color2;
@@ -135,6 +144,8 @@ class ViewLivescoresState extends State<ViewLivescores>
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+    final checkUserExist = Provider.of<AuthProviders>(context, listen: false);
+
     return SafeArea(
         child: RefreshIndicator(
       onRefresh: () =>
@@ -166,10 +177,19 @@ class ViewLivescoresState extends State<ViewLivescores>
                 }
 
                 if (widget.leagueId != '') {
-                  fixtures =
-                      _matchCubit.viewModel.matchFixturesList;
+                  fixtures = _matchCubit.viewModel.matchFixturesList;
                 } else {
                   fixtures = _matchCubit.viewModel.matchFixturesList;
+                }
+
+                if (!_dataAdded) {
+                  Provider.of<AuthProviders>(context, listen: true)
+                      .clearliveScoreSearchList();
+                  Provider.of<AuthProviders>(context, listen: true)
+                      .updateLiveScoreSearchList(
+                    fixtures,
+                  );
+                  _dataAdded = true;
                 }
 
                 return SizedBox(
@@ -181,110 +201,125 @@ class ViewLivescoresState extends State<ViewLivescores>
                           padding: EdgeInsets.symmetric(horizontal: 20.h),
                           child: Column(children: [
                             SizedBox(height: 20.v),
-                            _buildTopNavLivescores(context),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      padding: EdgeInsets.only(
+                                        right: 0.v,
+                                      ),
+                                      decoration: AppDecoration.outlineBlack900
+                                          .copyWith(
+                                              borderRadius: BorderRadiusStyle
+                                                  .roundedBorder8),
+                                      child: Row(children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            selectedIndex = 0;
+                                            toggleColor();
+                                          },
+                                          child: Container(
+                                            height: 32.v,
+                                            width: 65.h,
+                                            child: Center(
+                                              child: Text(
+                                                "ALL",
+                                                style: TextStyle(
+                                                    color: selectedIndex == 0
+                                                        ? Colors.white
+                                                        : Colors.black),
+                                              ),
+                                            ),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                color: selectedIndex == 0
+                                                    ? Colors.red
+                                                    : Colors.white),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            selectedIndex = 1;
+                                            toggleColor();
+                                          },
+                                          child: Container(
+                                            height: 32.v,
+                                            width: 65.h,
+                                            child: Center(
+                                              child: Text(
+                                                "LIVE",
+                                                style: TextStyle(
+                                                    color: selectedIndex == 1
+                                                        ? Colors.white
+                                                        : Colors.black),
+                                              ),
+                                            ),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                color: selectedIndex == 1
+                                                    ? Colors.red
+                                                    : Colors.white),
+                                          ),
+                                        ),
+                                      ])),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.only(top: 6.0),
+                                      height: 55,
+                                      child: CustomTextFormField(
+                                        controller: searchController,
+                                        hintText: "Search",
+                                        maxLines: 1,
+                                        onChanged: (value) {
+                                          checkUserExist
+                                              .searchLiveScoreResults(value);
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                ]),
                             SizedBox(height: 30.v),
-                            _buildMatchCard(context)
+                            ListView.separated(
+                                physics: BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(height: 8.v);
+                                },
+                                itemCount:
+                                    checkUserExist.liveScoreResult.length,
+                                itemBuilder: (context, index) {
+                                  return MatchcardItemWidget(
+                                    onTapCardMatch: () {
+                                      AppNavigator.pushAndStackPage(context,
+                                          page: ViewLivescoresDetailsScreen(
+                                            leagueId:
+                                                'id=${checkUserExist.liveScoreResult[index].fixture?.id.toString() ?? ''}',
+                                            awayTeamId: checkUserExist
+                                                .liveScoreResult[0]
+                                                .teams!
+                                                .away!
+                                                .id
+                                                .toString(),
+                                            homeTeamId: checkUserExist
+                                                .liveScoreResult[0]
+                                                .teams!
+                                                .home!
+                                                .id
+                                                .toString(),
+                                          ));
+                                    },
+                                    match:
+                                        checkUserExist.liveScoreResult[index],
+                                  );
+                                })
                           ]))
                     ])));
               })),
     ));
-  }
-
-  Widget _buildTopNavLivescores(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      Container(
-          padding: EdgeInsets.only(
-            right: 0.v,
-          ),
-          decoration: AppDecoration.outlineBlack900
-              .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
-          child: Row(children: [
-            CustomElevatedButton(
-                onPressed: () {
-                  selectedIndex = 0;
-                  toggleColor();
-                },
-                height: 32.v,
-                width: 65.h,
-                text: "ALL",
-                buttonStyle: selectedIndex == 0
-                    ? CustomButtonStyles.fillRedTL12
-                    : ElevatedButton.styleFrom(backgroundColor: Colors.white),
-                buttonTextStyle: selectedIndex == 0
-                    ? CustomTextStyles.labelMediumWhiteA700
-                    : theme.textTheme.labelMedium),
-            CustomElevatedButton(
-                onPressed: () {
-                  selectedIndex = 1;
-                  toggleColor();
-                },
-                height: 32.v,
-                width: 65.h,
-                text: "LIVE",
-                buttonStyle: selectedIndex == 1
-                    ? CustomButtonStyles.fillRedTL12
-                    : ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent),
-                buttonTextStyle: selectedIndex == 1
-                    ? CustomTextStyles.labelMediumWhiteA700
-                    : theme.textTheme.labelMedium),
-            // Padding(
-            //     padding: EdgeInsets.only(left: 22.h, top: 9.v, bottom: 9.v),
-            //     child: Text("LIVE", style: theme.textTheme.labelMedium)),
-            // Spacer(),
-            // Padding(
-            //     padding: EdgeInsets.only(top: 10.v, bottom: 7.v),
-            //     child:
-            //         Text("Upcoming", style: theme.textTheme.labelMedium)),
-            // Padding(
-            //     padding: EdgeInsets.fromLTRB(27.h, 8.v, 18.h, 9.v),
-            //     child: Text("Result", style: theme.textTheme.labelMedium))
-          ])),
-      // CustomElevatedButton(
-      //     height: 32.v,
-      //     width: 80.h,
-      //     text: "Search",
-      //     margin: EdgeInsets.only(left: 8.h),
-      //     rightIcon: Container(
-      //         margin: EdgeInsets.only(left: 4.h),
-      //         child: CustomImageView(
-      //             imagePath: ImageConstant.imgSearch,
-      //             height: 20.adaptSize,
-      //             width: 20.adaptSize)),
-      //     buttonStyle: CustomButtonStyles.outlineBlack,
-      //     buttonTextStyle: CustomTextStyles.labelLargeInterGray500)
-    ]);
-  }
-
-  Widget _buildMatchCard(BuildContext context) {
-    return ListView.separated(
-        physics: BouncingScrollPhysics(),
-        shrinkWrap: true,
-        separatorBuilder: (context, index) {
-          return SizedBox(height: 8.v);
-        },
-        itemCount: fixtures.length,
-        itemBuilder: (context, index) {
-          return MatchcardItemWidget(onTapCardMatch: () {
-            AppNavigator.pushAndStackPage(context, page: ViewLivescoresDetailsScreen(
-      leagueId:
-                                        'id=${fixtures[index].fixture?.id.toString() ?? ''}',
-                                    awayTeamId: fixtures[0]
-                                        .teams!
-                                        .away!
-                                        .id
-                                        .toString(),
-                                    homeTeamId: fixtures[0]
-                                        .teams!
-                                        .home!
-                                        .id
-                                        .toString(),
-    ));
-          },  match: fixtures[index],);
-        });
-  }
-
-  onTapCardMatch(BuildContext context) {
-    
   }
 }

@@ -100,7 +100,7 @@ class _CreateNewPasswordState extends State<UpdatePassword> {
               listener: (context, state) {
                 if (state is ResetPasswordLoaded) {
                   if (state.userData.success ?? false) {
-                    Modals.showToast( state.userData.message ?? '');
+                    Modals.showToast( state.userData.message ?? '', messageType: MessageType.success);
             
                     AppNavigator.pushAndStackPage(context, page: LandingPage());
                   } else {
@@ -282,7 +282,6 @@ class _CreateNewPasswordState extends State<UpdatePassword> {
   }
 
   onTapCreatePassword(BuildContext context) {
-    // AppNavigator.pushAndReplacePage(context, page: SigninScreen());
 
     if (_formKey.currentState!.validate()) {
 

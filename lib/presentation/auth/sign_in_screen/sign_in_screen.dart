@@ -225,7 +225,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                               ),
                               SizedBox(height: 29.v),
                               CustomElevatedButton(
-                                  processing: state is AccountLoading,
+                                  processing: state is AccountLoading || isLoading,
                                   title: 'Authenticating...',
                                   onPressed: (() =>
                                       loginUser(ctx: context, isGoo: false)),
@@ -369,7 +369,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
             email: emailController.text.trim(),
           );
       FocusScope.of(ctx).unfocus();
-    }
+    } 
   }
 
   loginUser(
@@ -397,6 +397,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
     }
   }
 
+  bool isLoading = false;
+
   updateUser(
       {required BuildContext context,
       required var user,
@@ -404,9 +406,14 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
       required String userId,
       required String image,
       required String email}) async {
+        setState(() {
+          isLoading = true;
+        });
     await user.uploadUserDetails(
         username: username, userId: userId, imageUrl: image, email: email);
-
+ setState(() {
+          isLoading = false;
+        });
     onTapSignIn(context);
   }
 }

@@ -19,6 +19,7 @@ import '../../../model/chat_model/group.dart';
 import '../../../model/chat_model/group.dart' as model;
 import '../../../model/chat_model/message.dart';
 import '../../../model/chat_model/user_model.dart';
+import '../../../model/matches_data/match_fixtures.dart';
 import '../../../widgets/modals.dart';
 
 enum AuthState { loading, initial, error, success }
@@ -63,11 +64,15 @@ class AuthProviders extends ChangeNotifier {
 
   List<Group> _dummyData = [];
 
+  List<Response> _liveMatchResult = [];
+
+  List<Response> _liveDummyData = [];
+
   List<Group> _searchResult1 = [];
 
   List<Group> _dummyData1 = [];
 
-  clearGroupInfo(){
+  clearGroupInfo() {
     _users = [];
 
     notifyListeners();
@@ -210,6 +215,35 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
+  void searchLiveScoreResults(String query) {
+    List<Response> dummySearchList = [];
+    dummySearchList.addAll(_liveDummyData);
+    if (query.isNotEmpty) {
+      List<Response> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (item.teams!.home!.name!
+            .toLowerCase()
+            .contains(query.toLowerCase()) || item.teams!.away!.name!
+            .toLowerCase()
+            .contains(query.toLowerCase())) {
+          dummyListData.add(item);
+        }
+      });
+      
+
+      _liveMatchResult.clear();
+      _liveMatchResult.addAll(dummyListData);
+
+      notifyListeners();
+
+      return;
+    } else {
+      _liveMatchResult.clear();
+      _liveMatchResult.addAll(_liveDummyData);
+      notifyListeners();
+    }
+  }
+
   void filterSearchResults1(String query) {
     List<Group> dummySearchList = [];
     dummySearchList.addAll(_dummyData1);
@@ -243,15 +277,31 @@ class AuthProviders extends ChangeNotifier {
     notifyListeners();
   }
 
-  clearSearchList(){
-     _searchResult.clear();
+  updateLiveScoreSearchList(
+    List<Response> searchList,
+  ) {
+    _liveMatchResult.addAll(searchList);
+    _liveDummyData.addAll(searchList);
+
+    notifyListeners();
+  }
+
+  clearliveScoreSearchList() {
+    _liveMatchResult.clear();
+    _liveDummyData.clear();
+
+    notifyListeners();
+  }
+
+  clearSearchList() {
+    _searchResult.clear();
     _dummyData.clear();
 
     notifyListeners();
   }
-  
-  clearSearchList1(){
-     _searchResult1.clear();
+
+  clearSearchList1() {
+    _searchResult1.clear();
     _dummyData1.clear();
 
     notifyListeners();
@@ -300,6 +350,8 @@ class AuthProviders extends ChangeNotifier {
       await storageRef.putFile(image!);
 
       final imageUrl = await storageRef.getDownloadURL();
+
+      
 
       await uploadUserDetails(
           userId: userId, username: username, email: email, imageUrl: imageUrl);
@@ -375,7 +427,6 @@ class AuthProviders extends ChangeNotifier {
 
     if (currentNumberOfGroups < 3) {
       await createGroup(context, name, groupDesc, profilePic, ref);
-     
 
       return true;
     } else {
@@ -384,21 +435,14 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-    UpdateGroupCount(
-      {required String userId,
-      required int groupNumber,
-       
-      }) async {
-     
-
-      await _firebaseStorage.collection('users').doc(userId).update({
-        'numberOfGroups': groupNumber,
-      });
+  UpdateGroupCount({
+    required String userId,
+    required int groupNumber,
+  }) async {
+    await _firebaseStorage.collection('users').doc(userId).update({
+      'numberOfGroups': groupNumber,
+    });
   }
-
-  
-
-   
 
   Future<void> updateUserBio(String userId, String currentBio) async {
     try {
@@ -588,14 +632,13 @@ class AuthProviders extends ChangeNotifier {
       _setStatus(AuthState.error);
       _updateMessage(e.toString());
     }
-
-     
   }
 
-  Future<void> updateGroupProfile(String groupId, File? images, String? bio) async {
-        final userDocRef = FirebaseFirestore.instance.collection('groups').doc(groupId);
-   
-    
+  Future<void> updateGroupProfile(
+      String groupId, File? images, String? bio) async {
+    final userDocRef =
+        FirebaseFirestore.instance.collection('groups').doc(groupId);
+
     try {
       if (images != null && bio != null) {
         _setStatus(AuthState.loading);
@@ -606,7 +649,6 @@ class AuthProviders extends ChangeNotifier {
 
         final imageUrl = await storageRef.getDownloadURL();
 
-
         await userDocRef.update({
           'groupPic': imageUrl,
         });
@@ -615,8 +657,8 @@ class AuthProviders extends ChangeNotifier {
         });
         _setStatus(AuthState.success);
         _updateMessage('Update Successful');
-      }else if(images != null && bio == null){
-         _setStatus(AuthState.loading);
+      } else if (images != null && bio == null) {
+        _setStatus(AuthState.loading);
 
         final storageRef = FirebaseStorage.instance.ref().child('group');
 
@@ -624,12 +666,11 @@ class AuthProviders extends ChangeNotifier {
 
         final imageUrl = await storageRef.getDownloadURL();
 
-
         await userDocRef.update({
           'groupPic': imageUrl,
         });
-      }else if(bio != null && images == null){
-         await userDocRef.update({
+      } else if (bio != null && images == null) {
+        await userDocRef.update({
           'groupDesc': bio,
         });
       }
@@ -651,39 +692,36 @@ class AuthProviders extends ChangeNotifier {
   }
 
   Stream<List<Group>> getUserGroups(String userId) {
-  return _firebaseStorage.collection('groups').snapshots().map((event) {
+    return _firebaseStorage.collection('groups').snapshots().map((event) {
+      List<Group> groups = [];
+
+      for (var document in event.docs) {
+        var group = Group.fromMap(document.data());
+
+        if (group.senderId == userId) {
+          groups.add(group);
+        }
+      }
+
+      return groups;
+    });
+  }
+
+  Future<List<Group>> getUserGroups1(String userId) async {
+    var querySnapshot = await _firebaseStorage.collection('groups').get();
     List<Group> groups = [];
 
-    for (var document in event.docs) {
+    querySnapshot.docs.forEach((document) {
       var group = Group.fromMap(document.data());
 
-      
       if (group.senderId == userId) {
         groups.add(group);
-
-
       }
-    }
-        
+    });
 
     return groups;
-  });
-}
+  }
 
-    Future<List<Group>> getUserGroups1(String userId) async {
-  var querySnapshot = await _firebaseStorage.collection('groups').get();
-  List<Group> groups = [];
-
-  querySnapshot.docs.forEach((document) {
-    var group = Group.fromMap(document.data());
-    
-    if (group.senderId == userId) {
-      groups.add(group);
-    }
-  });
-
-  return groups;
-}
   addGroupInfo(
       {required String groupNumber,
       required String groupLink,
@@ -903,11 +941,8 @@ class AuthProviders extends ChangeNotifier {
       final DocumentReference groupDocRef =
           FirebaseFirestore.instance.collection('groups').doc(groupId);
 
-      
       await groupDocRef.delete();
-      if (context.mounted) {
-         
-      }
+      if (context.mounted) {}
     } catch (error) {
       print('Error deleting group: $error');
     }
@@ -1034,8 +1069,7 @@ class AuthProviders extends ChangeNotifier {
     return null;
   }
 
-
-void _saveDataToContactsSubcollection(
+  void _saveDataToContactsSubcollection(
     UserModel senderUserData,
     UserModel? recieverUserData,
     String text,
@@ -1113,13 +1147,14 @@ void _saveDataToContactsSubcollection(
               ? senderUsername
               : recieverUserName ?? '',
       repliedMessageType:
-          messageReply == null ? MessageEnum.text : messageReply.messageEnum, username: senderUsername,
+          messageReply == null ? MessageEnum.text : messageReply.messageEnum,
+      username: senderUsername,
     );
     if (isGroupChat) {
       // groups -> group id -> chat -> message
 
-   print('listening');
-      
+      print('listening');
+
       await _firebaseStorage
           .collection('groups')
           .doc(recieverUserId)
@@ -1128,8 +1163,7 @@ void _saveDataToContactsSubcollection(
           .set(
             message.toMap(),
           );
-    print('listening');
-
+      print('listening');
     } else {
       // users -> sender id -> reciever id -> messages -> message id -> store message
       await _firebaseStorage
@@ -1156,9 +1190,6 @@ void _saveDataToContactsSubcollection(
     }
   }
 
-
-  
-  
   void sendTextMessage({
     required BuildContext context,
     required String text,
@@ -1173,8 +1204,10 @@ void _saveDataToContactsSubcollection(
       UserModel? recieverUserData;
 
       if (!isGroupChat) {
-        var userDataMap =
-            await _firebaseStorage.collection('users').doc(recieverUserId).get();
+        var userDataMap = await _firebaseStorage
+            .collection('users')
+            .doc(recieverUserId)
+            .get();
         recieverUserData = UserModel.fromMap(userDataMap.data()!);
       }
 
@@ -1200,14 +1233,15 @@ void _saveDataToContactsSubcollection(
         messageReply: messageReply,
         recieverUserName: recieverUserData?.name,
         senderUsername: senderUser.name,
-        isGroupChat: isGroupChat, userId: userId,
+        isGroupChat: isGroupChat,
+        userId: userId,
       );
     } catch (e) {
       Modals.showToast(e.toString());
     }
   }
 
-  void sendFileMessage( {
+  void sendFileMessage({
     required BuildContext context,
     required File file,
     required String recieverUserId,
@@ -1222,8 +1256,6 @@ void _saveDataToContactsSubcollection(
       var timeSent = DateTime.now();
       var messageId = const Uuid().v1();
 
-    
-
       String imageUrl = await ref
           .read(commonFirebaseStorageRepositoryProvider)
           .storeFileToFirebase(
@@ -1233,8 +1265,10 @@ void _saveDataToContactsSubcollection(
 
       UserModel? recieverUserData;
       if (!isGroupChat) {
-        var userDataMap =
-            await _firebaseStorage.collection('users').doc(recieverUserId).get();
+        var userDataMap = await _firebaseStorage
+            .collection('users')
+            .doc(recieverUserId)
+            .get();
         recieverUserData = UserModel.fromMap(userDataMap.data()!);
       }
 
@@ -1280,9 +1314,7 @@ void _saveDataToContactsSubcollection(
         isGroupChat: isGroupChat,
       );
     } catch (e) {
-      
-          Modals.showToast(e.toString());
-
+      Modals.showToast(e.toString());
     }
   }
 
@@ -1311,6 +1343,7 @@ void _saveDataToContactsSubcollection(
   List<UserModel> get blockedMembers => _blockedUsers;
   List<UserModel> get requestedMembers => _requestedUsers;
   List<Group> get searchResult => _searchResult;
+  List<Response> get liveScoreResult => _liveMatchResult;
   List<Group> get dummyData => _dummyData;
   List<Group> get searchResult1 => _searchResult1;
   List<Group> get dummyData1 => _dummyData1;

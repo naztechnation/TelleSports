@@ -16,7 +16,7 @@ class FixtureEvents extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final event =
-        Provider.of<MatchViewModel>(context, listen: true).fixtureEvents;
+        Provider.of<MatchViewModel>(context, listen: true).fixtureEvents.reversed.toList();
 
     return (event.isEmpty)
         ? Align(
@@ -47,6 +47,7 @@ class FixtureEvents extends StatelessWidget {
       child: ListView.builder(
         itemCount: events.length,
         shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,7 +58,7 @@ class FixtureEvents extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8, top: 8),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.9,
-                  padding: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -149,19 +150,7 @@ class FixtureEvents extends StatelessWidget {
                   ),
                 ),
       
-                 Text(
-                  homeTeams,
-                  style: theme.textTheme.labelLarge!.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                  ),
-                ),
                 
-                Text(
-                  (homeTeam == homeTeams).toString(),
-                  style: theme.textTheme.labelLarge!.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                  ),
-                ),
               ],
             ),
           ),

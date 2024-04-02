@@ -413,10 +413,7 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
     if (_formKey.currentState!.validate()) {
       if (homeTeamController.text == awayTeamController.text) {
         Modals.showToast('Away Team and Home Team cannot be same');
-      } else if (!predictedWinnner
-          .contains(predictedWinnerController.text.trim())) {
-        Modals.showToast('Predicted winner must be either home or away team');
-      } else {
+      }  else {
         if (_formKey.currentState!.validate()) {
           _predictionCubit.postPrediction(
               homeTeam: homeTeamController.text,
