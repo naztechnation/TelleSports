@@ -32,7 +32,7 @@ class CommunityTwoPageState extends State<EmptyCommunityPage>
           SizedBox(height: 12.v),
           CustomTextFormField(
             controller: searchController,
-            hintText: "Search for communities or users",
+            hintText: "Search for communities",
             hintStyle: CustomTextStyles.titleSmallGray400,
             textInputAction: TextInputAction.done,
             prefix: Container(

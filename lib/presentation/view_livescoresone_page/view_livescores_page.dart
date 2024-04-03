@@ -276,8 +276,9 @@ class ViewLivescoresState extends State<ViewLivescores>
                                         hintText: "Search",
                                         maxLines: 1,
                                         onChanged: (value) {
-                                          checkUserExist
-                                              .searchLiveScoreResults(value);
+                                          Provider.of<AuthProviders>(context,
+                                              listen: false)
+                                            .searchLiveScoreResults(value);
                                         },
                                       ),
                                     ),
@@ -290,31 +291,39 @@ class ViewLivescoresState extends State<ViewLivescores>
                                 separatorBuilder: (context, index) {
                                   return SizedBox(height: 8.v);
                                 },
-                                itemCount:
-                                    checkUserExist.liveScoreResult.length,
+                                itemCount: checkUserExist
+                                    .liveScoreResult
+                                    .length,
                                 itemBuilder: (context, index) {
                                   return MatchcardItemWidget(
                                     onTapCardMatch: () {
                                       AppNavigator.pushAndStackPage(context,
                                           page: ViewLivescoresDetailsScreen(
                                             leagueId:
-                                                'id=${checkUserExist.liveScoreResult[index].fixture?.id.toString() ?? ''}',
-                                            awayTeamId: checkUserExist
-                                                .liveScoreResult[0]
-                                                .teams!
-                                                .away!
-                                                .id
-                                                .toString(),
-                                            homeTeamId: checkUserExist
-                                                .liveScoreResult[0]
-                                                .teams!
-                                                .home!
-                                                .id
-                                                .toString(),
+                                                'id=${Provider.of<AuthProviders>(context, listen: false).liveScoreResult[index].fixture?.id.toString() ?? ''}',
+                                            awayTeamId:
+                                                Provider.of<AuthProviders>(
+                                                        context,
+                                                        listen: false)
+                                                    .liveScoreResult[0]
+                                                    .teams!
+                                                    .away!
+                                                    .id
+                                                    .toString(),
+                                            homeTeamId:
+                                                Provider.of<AuthProviders>(
+                                                        context,
+                                                        listen: false)
+                                                    .liveScoreResult[0]
+                                                    .teams!
+                                                    .home!
+                                                    .id
+                                                    .toString(),
                                           ));
                                     },
-                                    match:
-                                        checkUserExist.liveScoreResult[index],
+                                    match: Provider.of<AuthProviders>(context,
+                                            listen: false)
+                                        .liveScoreResult[index],
                                   );
                                 })
                           ]))

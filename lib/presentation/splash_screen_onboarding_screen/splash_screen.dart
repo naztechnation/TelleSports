@@ -34,8 +34,8 @@ class _LoadingScreenState extends State<SplashScreen> with SingleTickerProviderS
   String isonBoarding = '';
 
   getUserDetails() async {
-    userLoggedIn = await StorageHandler.getLoggedInState();
-    isonBoarding = await StorageHandler.getOnBoardState();
+    userLoggedIn = await StorageHandler.getLoggedInState() ?? '';
+    isonBoarding = await StorageHandler.getOnBoardState() ?? '';
   }
 
   Future<void> changeScreen() async {

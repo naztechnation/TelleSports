@@ -119,7 +119,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                     onChanged: (value) {
                                       checkUserExist.filterSearchResults(value);
                                     },
-                                    hintText: "Search for communities or users",
+                                    hintText: "Search for communities",
                                     hintStyle:
                                         CustomTextStyles.titleSmallGray400,
                                     textInputAction: TextInputAction.done,
@@ -149,17 +149,21 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                           return SizedBox(height: 1.v);
                                         },
                                         itemCount:
-                                            checkUserExist.searchResult.length,
+                                            provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true).searchResult.length,
                                         itemBuilder: (context, index) {
-                                          Group groupData = checkUserExist
+                                          Group groupData = provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true)
                                               .searchResult[index];
 
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:
                                                 () async {
-                                              checkUserExist.requestedUsers(
+                                              provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true).requestedUsers(
                                                   groupData.requestsMembers);
-                                              checkUserExist.blockedUsers(
+                                              provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true).blockedUsers(
                                                   groupData.blockedMembers);
 
                                               List<String> userItem =
@@ -168,7 +172,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                
                                               if (userItem.contains(userId)) {
                                                 if (context.mounted) {
-                                                  checkUserExist.addGroupInfo(
+                                                  provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true).addGroupInfo(
                                                       groupNumber: userItem
                                                           .length
                                                           .toString(),

@@ -59,7 +59,7 @@ Conversions will not occur if
           """,
     },
     {
-      'question': 'Can BetSlipSwitch convert on my behalf?',
+      'question': 'Can TellaSport convert on my behalf?',
       'answer':
           'No, we do not do conversions for users but we have made our platform novice friendly and have a support chat 💬 so it is easy to navigate without stress.',
     },
@@ -72,7 +72,7 @@ Conversions will not occur if
       'question':
           ' Why don’t my free conversions or community work on the website?',
       'answer':
-          'Not to worry, every new user is entitled to this. If you experience difficulty using the website. You can download the Betslipswitch mobile app to access the 5 free conversions and free community anytime.',
+          'Not to worry, every new user is entitled to this. If you experience difficulty using the website. You can download the TellaSport mobile app to access the 5 free conversions and free community anytime.',
     },
     {
       'question': 'Can anyone regardless of location use this platform?',
@@ -87,7 +87,7 @@ Conversions will not occur if
     {
       'question': 'Are betting tips here guaranteed?',
       'answer':
-          'Betslipswitch will never predict games for you. You may, however, get betting tips from punters in our communities.No be us go tell you wetin you go do, but remember to bet responsibly.',
+          'TellaSport will never predict games for you. You may, however, get betting tips from punters in our communities.No be us go tell you wetin you go do, but remember to bet responsibly.',
     },
     {
       'question': 'Can a novice use this platform?',
@@ -97,7 +97,7 @@ Conversions will not occur if
     {
       'question': 'Do I need to login to check scores?',
       'answer':
-          'No. you can follow your favourite teams or games on Betslipswitch, anytime, anywhere.',
+          'No. you can follow your favourite teams or games on TellaSport, anytime, anywhere.',
     },
     {
       'question': 'My conversion units are finished. How do I get more Units?',

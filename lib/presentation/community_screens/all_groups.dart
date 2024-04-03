@@ -110,7 +110,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                       checkUserExist
                                           .filterSearchResults1(value);
                                     },
-                                    hintText: "Search for communities or users",
+                                    hintText: "Search for communities",
                                     hintStyle:
                                         CustomTextStyles.titleSmallGray400,
                                     textInputAction: TextInputAction.done,
@@ -140,9 +140,11 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                           return SizedBox(height: 1.v);
                                         },
                                         itemCount:
-                                            checkUserExist.searchResult1.length,
+                                            provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true).searchResult1.length,
                                         itemBuilder: (context, index) {
-                                          Group groupData = checkUserExist
+                                          Group groupData = provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true)
                                               .searchResult1[index];
 
                                           userItem = removeDuplicates(
@@ -150,14 +152,17 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:
                                                 () async {
-                                              checkUserExist.requestedUsers(
+                                              provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true).requestedUsers(
                                                   groupData.requestsMembers);
-                                              checkUserExist.blockedUsers(
+                                              provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true).blockedUsers(
                                                   groupData.blockedMembers);
 
                                               if (userItem.contains(userId)) {
                                                 if (context.mounted) {
-                                                  checkUserExist.addGroupInfo(
+                                                  provider.Provider.of<pro.AuthProviders>(context,
+                                  listen: true).addGroupInfo(
                                                       groupNumber: userItem
                                                           .length
                                                           .toString(),

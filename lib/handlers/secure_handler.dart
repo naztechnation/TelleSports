@@ -4,7 +4,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class StorageHandler {
   static const String lastLoginTimeKey = 'lastLoginTime';
 
-  static FlutterSecureStorage storage = const FlutterSecureStorage();
+  static FlutterSecureStorage storage = const FlutterSecureStorage(
+    
+  );
 
 
   static Future<bool> isLoggedIn() async {

@@ -12,7 +12,7 @@ Future<Map<String, String>> rawDataHeader([String? token]) async {
 
 Future<Map<String, String>> formDataHeader([String? token]) async {
 
-  final accessToken = await StorageHandler.getUserToken();
+  final accessToken = await StorageHandler.getUserToken() ?? '';
    
   return 
   
