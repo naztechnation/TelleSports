@@ -173,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               image: ImageConstant.imgShareGray700,
                               onTap: () async {
                             final result = await Share.shareWithResult(
-                                'check out our mobile app on app store: , and play store:');
+                                'check out our mobile app on app store: coming soon..., and play store: https://play.google.com/store/apps/details?id=com.tellasport.tellasport&pli=1');
 
                             if (result.status == ShareResultStatus.success) {
                               Modals.showToast(

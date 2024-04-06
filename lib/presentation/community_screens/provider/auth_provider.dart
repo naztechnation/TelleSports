@@ -215,34 +215,7 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-  void searchLiveScoreResults(String query) {
-    List<Response> dummySearchList = [];
-    dummySearchList.addAll(_liveDummyData);
-    if (query.isNotEmpty) {
-      List<Response> dummyListData = [];
-      dummySearchList.forEach((item) {
-        if (item.teams!.home!.name!
-            .toLowerCase()
-            .contains(query.toLowerCase()) || item.teams!.away!.name!
-            .toLowerCase()
-            .contains(query.toLowerCase())) {
-          dummyListData.add(item);
-        }
-      });
-      
-
-      _liveMatchResult.clear();
-      _liveMatchResult.addAll(dummyListData);
-
-      notifyListeners();
-
-      return;
-    } else {
-      _liveMatchResult.clear();
-      _liveMatchResult.addAll(_liveDummyData);
-      notifyListeners();
-    }
-  }
+  
 
   void filterSearchResults1(String query) {
     List<Group> dummySearchList = [];

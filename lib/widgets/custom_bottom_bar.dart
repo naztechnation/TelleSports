@@ -1,21 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/widgets/modals.dart';
+import 'package:flutter/material.dart'; 
+import 'package:provider/provider.dart';
+import 'package:tellesports/core/app_export.dart'; 
 
 import '../handlers/secure_handler.dart';
+import '../model/view_models/account_view_model.dart';
 
 class CustomBottomBar extends StatefulWidget {
-  CustomBottomBar({this.onChanged});
+  CustomBottomBar({this.onChanged, this.selectedIndex = 0});
 
   Function(int)? onChanged;
+  int selectedIndex;
 
   @override
   CustomBottomBarState createState() => CustomBottomBarState();
 }
 
 class CustomBottomBarState extends State<CustomBottomBar> {
-  int selectedIndex = 0;
 
   List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
@@ -59,6 +59,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AccountViewModel>(context, listen: true);
+    
     return SizedBox(
       
       child: BottomNavigationBar(
@@ -67,7 +69,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
         showUnselectedLabels: false,
         selectedFontSize: 0,
         elevation: 0,
-        currentIndex: selectedIndex,
+        currentIndex: widget.selectedIndex,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
@@ -259,7 +261,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           ),
         ],
         onTap: (index) {
-          selectedIndex = index;
+                      user.updateIndex(index);
+;
             widget.onChanged?.call(index);
           setState(() {});
 

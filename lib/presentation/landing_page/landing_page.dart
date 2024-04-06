@@ -1,7 +1,9 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../model/view_models/account_view_model.dart';
 import '../../widgets/custom_bottom_bar.dart'; 
 import '../community_screens/community_one_page/community_tab_page.dart';
 import '../home_page/home_page.dart';
@@ -17,20 +19,24 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
 
-   int _currentIndex = 0;
+   
   @override
   Widget build(BuildContext context) {
+
+    final user = Provider.of<AccountViewModel>(context, listen: true);
+
     return   Scaffold(
 
 
-      body: _buildPage(_currentIndex),
+      body: _buildPage(user.currentPage),
       bottomNavigationBar: CustomBottomBar(
 
         onChanged: (index) {
           setState(() {
-            _currentIndex = index;
+            user.updateIndex(index);
           });
         },
+       selectedIndex: user.currentPage
        ),
     );
   }

@@ -13,6 +13,8 @@ class AccountViewModel extends BaseViewModel {
 
   int _unreadMessageLength = 0;
 
+  int _currentIndex = 0;
+
   List<NotificationsListData> _notifications = [];
 
   AccountViewModel() {
@@ -44,6 +46,12 @@ class AccountViewModel extends BaseViewModel {
     _token = token;
 
     StorageHandler.saveUserToken(_token);
+    setViewState(ViewState.success);
+  }
+
+   updateIndex(int index) async {
+    _currentIndex = index;
+
     setViewState(ViewState.success);
   }
 
@@ -111,4 +119,5 @@ class AccountViewModel extends BaseViewModel {
   bool get paymentStatus => _confirmSubscription?.success ?? false;
 
   int get unReadMessages => _unreadMessageLength;
+  int get currentPage => _currentIndex;
 }

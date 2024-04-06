@@ -13,7 +13,8 @@ import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
 import '../../handlers/secure_handler.dart';
 import '../../model/view_models/account_view_model.dart';
-import '../convert_betcode_page/convert_betcode_page.dart'; 
+import '../convert_betcode_page/convert_betcode_page.dart';
+import '../profile/profile_page.dart'; 
 
 
 
@@ -106,6 +107,9 @@ class HomePageState
     return CustomAppBar(
       leadingWidth: 60.h,
       leading: (photo == 'null') ?  AppbarLeadingCircleimage(
+        onTap: (){
+           user.updateIndex(3);
+        },
         imagePath: ImageConstant.imgNavIcons,
         margin: EdgeInsets.only(
           left: 20.h,
@@ -113,6 +117,10 @@ class HomePageState
           bottom: 10.v,
         ),
       ) : (showDelayedWidget) ? AppbarLeadingCircleimage(
+        
+         onTap: (){
+           user.updateIndex(3);
+        },
         imagePath: photo,
         
         margin: EdgeInsets.only(

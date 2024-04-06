@@ -75,6 +75,7 @@ class MatchcardItemWidget extends StatelessWidget {
         GestureDetector(
           onTap:  onTapCardMatch,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 decoration: AppDecoration.fillRed.copyWith(
@@ -86,7 +87,7 @@ class MatchcardItemWidget extends StatelessWidget {
                       child: Row(
                         children: [
                           Container(
-                            width: 48.h,
+                            width: 55.h,
                             padding: EdgeInsets.symmetric(vertical: 6.v),
                             decoration: AppDecoration.fillDeepOrange,
                             child: Row(
@@ -101,23 +102,35 @@ class MatchcardItemWidget extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                    left: 15.h,
+                                    left: 6,
                                     top: 4.v,
                                     bottom: 4.v,
                                   ),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                    ( match.fixture?.status?.short.toString() == 'NS' || match.fixture?.status?.short.toString() == 'CANC' || match.fixture?.status?.elapsed.toString() == 'null') ? '0':    ( match.fixture?.status?.short == 'FT' || match.fixture?.status?.short == 'PEN' || match.fixture?.status?.short == 'HT' || match.fixture?.status?.elapsed == null) ?  match.fixture?.status?.elapsed.toString() ?? '':  "${match.fixture?.status?.elapsed.toString()}’" ,
-                                        style:
-                                            CustomTextStyles.labelLargeRed400,
-                                      ),
-                                      SizedBox(height: 1.v),
-                                      Text(
-                                        match.fixture?.status?.short.toString() ?? '',
-                                        style: theme.textTheme.labelMedium,
-                                      ),
-                                    ],
+                                  child: Align(
+                                    child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                    
+                                      children: [
+                                        Align(
+                                          child: Text(
+                                            
+                                                                                ( match.fixture?.status?.short.toString() == 'NS' || match.fixture?.status?.short.toString() == 'CANC' || match.fixture?.status?.elapsed.toString() == 'null') ? '0':    ( match.fixture?.status?.short == 'FT' || match.fixture?.status?.short == 'PEN' || match.fixture?.status?.short == 'HT' || match.fixture?.status?.elapsed == null) ?  match.fixture?.status?.elapsed.toString() ?? '':  "${match.fixture?.status?.elapsed.toString()}’" ,
+                                           textAlign: TextAlign.center,
+                                            style:
+                                                CustomTextStyles.labelLargeRed400,
+                                          ),
+                                        ),
+                                        SizedBox(height: 1.v),
+                                        Align(
+                                          child: Text(
+                                            match.fixture?.status?.short.toString() ?? '',
+                                           textAlign: TextAlign.center,
+                                                                              
+                                            style: theme.textTheme.labelMedium,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],

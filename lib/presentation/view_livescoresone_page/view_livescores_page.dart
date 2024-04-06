@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 import '../../blocs/matches/match.dart';
 import '../../model/matches_data/match_fixtures.dart' as fixture;
+import '../../model/matches_data/match_fixtures.dart';
 import '../../model/view_models/match_viewmodel.dart';
 import '../../requests/repositories/matches_repository/match_repository_impl.dart';
 import '../../utils/app_utils.dart';
@@ -141,10 +143,43 @@ class ViewLivescoresState extends State<ViewLivescores>
     });
   }
 
+  List<Response> _liveMatchResult = [];
+
+  List<Response> _liveDummyData = [];
+
+  void searchLiveScoreResults(String query) {
+    List<Response> dummySearchList = [];
+    dummySearchList.addAll(_liveDummyData);
+    if (query.isNotEmpty) {
+      List<Response> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (item.teams!.home!.name!
+                .toLowerCase()
+                .contains(query.toLowerCase()) ||
+            item.teams!.away!.name!
+                .toLowerCase()
+                .contains(query.toLowerCase())) {
+          dummyListData.add(item);
+        }
+      });
+
+    
+        _liveMatchResult.clear();
+        _liveMatchResult.addAll(dummyListData);
+      
+
+      return;
+    } else {
+       
+        _liveMatchResult.clear();
+        _liveMatchResult.addAll(_liveDummyData);
+      
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-    final checkUserExist = Provider.of<AuthProviders>(context, listen: false);
 
     return SafeArea(
         child: RefreshIndicator(
@@ -183,12 +218,10 @@ class ViewLivescoresState extends State<ViewLivescores>
                 }
 
                 if (!_dataAdded) {
-                  Provider.of<AuthProviders>(context, listen: true)
-                      .clearliveScoreSearchList();
-                  Provider.of<AuthProviders>(context, listen: true)
-                      .updateLiveScoreSearchList(
-                    fixtures,
-                  );
+                  _liveMatchResult.clear();
+                  _liveDummyData.clear();
+                  _liveMatchResult.addAll(fixtures);
+                  _liveDummyData.addAll(fixtures);
                   _dataAdded = true;
                 }
 
@@ -196,7 +229,7 @@ class ViewLivescoresState extends State<ViewLivescores>
                     width: mediaQueryData.size.width,
                     child: SingleChildScrollView(
                         child: Column(children: [
-                      SizedBox(height: 16.v),
+                      SizedBox(height: 10.v),
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.h),
                           child: Column(children: [
@@ -219,7 +252,7 @@ class ViewLivescoresState extends State<ViewLivescores>
                                             toggleColor();
                                           },
                                           child: Container(
-                                            height: 32.v,
+                                            height: 50.v,
                                             width: 65.h,
                                             child: Center(
                                               child: Text(
@@ -244,7 +277,7 @@ class ViewLivescoresState extends State<ViewLivescores>
                                             toggleColor();
                                           },
                                           child: Container(
-                                            height: 32.v,
+                                            height: 50.v,
                                             width: 65.h,
                                             child: Center(
                                               child: Text(
@@ -270,62 +303,75 @@ class ViewLivescoresState extends State<ViewLivescores>
                                   Expanded(
                                     child: Container(
                                       padding: const EdgeInsets.only(top: 6.0),
-                                      height: 55,
+                                      height: 60,
                                       child: CustomTextFormField(
                                         controller: searchController,
                                         hintText: "Search",
                                         maxLines: 1,
+                                        suffix: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                            
+                                          });
+                                          } ,
+                                          child: Container(
+                                            height: 46,
+                                            width: 60,
+                                            margin: const EdgeInsets.symmetric(vertical: 4),
+                                            decoration: BoxDecoration(color: Color(0XFF288763),
+                                             borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8))),
+                                            child: Icon(Icons.search, color: Colors.white, size: 28,)),
+                                        ),
                                         onChanged: (value) {
-                                          Provider.of<AuthProviders>(context,
-                                              listen: false)
-                                            .searchLiveScoreResults(value);
+                                          searchLiveScoreResults(value);
+
+                                          if(searchController.text.isEmpty){
+                                            setState(() {
+                                              
+                                            });
+                                          }
                                         },
                                       ),
                                     ),
                                   )
                                 ]),
                             SizedBox(height: 30.v),
+                          if(_liveMatchResult.isNotEmpty)...[
                             ListView.separated(
                                 physics: BouncingScrollPhysics(),
                                 shrinkWrap: true,
                                 separatorBuilder: (context, index) {
                                   return SizedBox(height: 8.v);
                                 },
-                                itemCount: checkUserExist
-                                    .liveScoreResult
-                                    .length,
+                                itemCount: _liveMatchResult.length,
                                 itemBuilder: (context, index) {
                                   return MatchcardItemWidget(
                                     onTapCardMatch: () {
                                       AppNavigator.pushAndStackPage(context,
                                           page: ViewLivescoresDetailsScreen(
                                             leagueId:
-                                                'id=${Provider.of<AuthProviders>(context, listen: false).liveScoreResult[index].fixture?.id.toString() ?? ''}',
-                                            awayTeamId:
-                                                Provider.of<AuthProviders>(
-                                                        context,
-                                                        listen: false)
-                                                    .liveScoreResult[0]
-                                                    .teams!
-                                                    .away!
-                                                    .id
-                                                    .toString(),
-                                            homeTeamId:
-                                                Provider.of<AuthProviders>(
-                                                        context,
-                                                        listen: false)
-                                                    .liveScoreResult[0]
-                                                    .teams!
-                                                    .home!
-                                                    .id
-                                                    .toString(),
+                                                'id=${_liveMatchResult[index].fixture?.id.toString() ?? ''}',
+                                            awayTeamId: _liveMatchResult[0]
+                                                .teams!
+                                                .away!
+                                                .id
+                                                .toString(),
+                                            homeTeamId: _liveMatchResult[0]
+                                                .teams!
+                                                .home!
+                                                .id
+                                                .toString(),
                                           ));
                                     },
-                                    match: Provider.of<AuthProviders>(context,
-                                            listen: false)
-                                        .liveScoreResult[index],
+                                    match: _liveMatchResult[index],
                                   );
                                 })
+                          ]else...[
+                            SizedBox(
+                              height: MediaQuery.sizeOf(context).height * 0.47,
+                              child: Align(child: Text('Opps No results found!!!', 
+                              style: TextStyle(color: Colors.green.shade600),)))
+                          ]  
                           ]))
                     ])));
               })),

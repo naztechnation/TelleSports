@@ -3,9 +3,7 @@ import 'package:tellesports/core/app_export.dart';
 
 import '../all_groups.dart';
 import 'community_list_page.dart';
-import 'empty_comunity_page.dart';
 
-// ignore_for_file: must_be_immutable
 class CommunityTabPage extends StatefulWidget {
   const CommunityTabPage({Key? key})
       : super(
@@ -35,7 +33,6 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
       child: Scaffold(
         body: Container(
           width: double.maxFinite,
-         // decoration: AppDecoration.fillWhiteA,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
