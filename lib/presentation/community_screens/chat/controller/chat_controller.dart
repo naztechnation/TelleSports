@@ -67,7 +67,7 @@ class ChatController {
             isGroupChat: isGroupChat, userId: userId,
           ),
         );
-    ref.read(messageReplyProvider.state).update((state) => null);
+    // ref.read(messageReplyProvider.state).update((state) => null);
   }
 
   Future<void> sendFileMessage(

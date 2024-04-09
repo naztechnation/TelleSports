@@ -20,6 +20,7 @@ import '../../../blocs/prediction/prediction.dart';
 import '../../../core/constants/enums.dart';
 import '../../../handlers/secure_handler.dart';
 import '../../../model/chat_model/user_model.dart';
+import '../../../model/view_models/account_view_model.dart';
 import '../../../model/view_models/user_view_model.dart';
 import '../../../requests/repositories/prediction_repo/predict_repository_impl.dart';
 import '../../../utils/navigator/page_navigator.dart';
@@ -111,6 +112,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
   @override
   Widget build(BuildContext context) {
     final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
+    final user = Provider.of<AccountViewModel>(context, listen: true);
 
     if (!_dataAdded) {
       // groupInfo.clearGroupInfo();
@@ -405,6 +407,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
 
                                           AppNavigator.pushAndStackPage(context,
                                               page: LandingPage());
+                                          user.updateIndex(0);
                                         }
                                       }),
                                   if (groupInfo.groupAdminId == userId)
@@ -428,6 +431,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                             setState(() {
                                               isLoading = false;
                                             });
+                                            user.updateIndex(0);
                                             AppNavigator.pushAndStackPage(
                                                 context,
                                                 page: LandingPage());
@@ -509,7 +513,8 @@ class _CommunityInfoState extends State<CommunityInfo> {
     );
   }
 
-  Widget _buildCommunityDescription(BuildContext context, String desc, var group) {
+  Widget _buildCommunityDescription(
+      BuildContext context, String desc, var group) {
     return Card(
       elevation: 0.4,
       child: Container(
@@ -544,13 +549,15 @@ class _CommunityInfoState extends State<CommunityInfo> {
                 const SizedBox(
                   height: 20,
                 ),
-                CustomElevatedButton(
-                  text: 'Edit Info',
-                  onPressed: () {
-                    AppNavigator.pushAndStackPage(context,
-                        page: UpdateCommunityInfoScreen(widget.profilePic, group.groupId));
-                  },
-                )
+                if (group.groupAdminId == userId)
+                  CustomElevatedButton(
+                    text: 'Edit Info',
+                    onPressed: () {
+                      AppNavigator.pushAndStackPage(context,
+                          page: UpdateCommunityInfoScreen(
+                              widget.profilePic, group.groupId));
+                    },
+                  )
               ])),
     );
   }
@@ -625,10 +632,10 @@ class _CommunityInfoState extends State<CommunityInfo> {
                             return GestureDetector(
                               onTap: () {
                                 Modals.showDialogModal(
-                                          borderRadius: 12,
-                                          context,
-                                          page: _showFullImage(
-                                              context, images[index]));
+                                    borderRadius: 12,
+                                    context,
+                                    page:
+                                        _showFullImage(context, images[index]));
                               },
                               child: CustomImageView(
                                   imagePath: images[index],
@@ -738,8 +745,9 @@ class _CommunityInfoState extends State<CommunityInfo> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          decoration: BoxDecoration(        borderRadius: BorderRadius.circular(12),
-),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+          ),
           height: MediaQuery.sizeOf(context).height * 0.60,
           child: Center(
             child: ImageView.network(

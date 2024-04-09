@@ -12,6 +12,7 @@ import 'package:tellesports/widgets/modals.dart';
 
 import '../../blocs/prediction/prediction.dart';
 import '../../core/constants/enums.dart';
+import '../../model/view_models/account_view_model.dart';
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/prediction_repo/predict_repository_impl.dart';
 import '../../utils/validator.dart';
@@ -93,7 +94,8 @@ late PredictionCubit _predictionCubit;
 
     final groupData =
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
-
+final user = provider.Provider.of<AccountViewModel>(context, listen: true);
+         
 
     return SafeArea(
       child: Scaffold(
@@ -156,7 +158,7 @@ late PredictionCubit _predictionCubit;
                               setState(() {
                                 isLoading = false;
                               });
-          
+           user.updateIndex(0);
                               AppNavigator.pushAndStackPage(context, page: LandingPage());
                             }
                           },

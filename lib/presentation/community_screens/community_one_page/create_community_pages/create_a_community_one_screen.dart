@@ -13,6 +13,7 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 import 'package:tellesports/widgets/modals.dart';
 
 import '../../../../common/utils/utils.dart';
+import '../../../../model/view_models/account_view_model.dart';
 import '../../../../utils/navigator/page_navigator.dart';
 import '../../../../widgets/app_bar/appbar_subtitle.dart';
 import '../../../../widgets/image_view.dart';
@@ -71,6 +72,7 @@ class _CreateACommunityOneScreenState
   Widget build(BuildContext context) {
     final groupData = pro.Provider.of<AuthProviders>(context, listen: true);
 
+    final user = pro.Provider.of<AccountViewModel>(context, listen: true);
 
    
     return SafeArea(
@@ -185,6 +187,7 @@ class _CreateACommunityOneScreenState
                         });
 
                         if (isTrue) {
+                          user.updateIndex(0);
                           AppNavigator.pushAndStackPage(context,
                               page: LandingPage());
                         } else {

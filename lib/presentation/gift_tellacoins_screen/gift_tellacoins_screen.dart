@@ -15,6 +15,7 @@ import 'package:tellesports/widgets/modal_content.dart';
 
 import '../../blocs/user/user.dart';
 import '../../core/constants/enums.dart';
+import '../../model/view_models/account_view_model.dart';
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/user_repo/user_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
@@ -118,6 +119,8 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                         Duration(
                           seconds: 2,
                         ), () {
+                          final user = Provider.of<AccountViewModel>(context, listen: true);
+          user.updateIndex(0);
                       AppNavigator.pushAndReplacePage(context,
                           page: LandingPage());
                     });

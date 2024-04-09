@@ -7,6 +7,7 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/modals.dart';
 
 import '../../../handlers/secure_handler.dart';
+import '../../../model/view_models/account_view_model.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +59,7 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
     final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
+    final user = Provider.of<AccountViewModel>(context, listen: true);
 
     checkUserExists(groupInfo);
 
@@ -124,9 +126,10 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                             Modals.showToast(
                                 'Request has been sent to community admin for approval',
                                 messageType: MessageType.success);
-
+user.updateIndex(0);
                             AppNavigator.pushAndStackPage(context,
                                 page: LandingPage());
+                                 
                           }
                         }),
                   ],

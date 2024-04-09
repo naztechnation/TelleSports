@@ -8,8 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
+import 'package:tellesports/model/view_models/account_view_model.dart';
 import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:uuid/uuid.dart';
+import 'package:provider/provider.dart' as pro;
 
 import '../../../common/enums/message_enum.dart';
 import '../../../common/providers/message_reply_provider.dart';
@@ -786,6 +788,8 @@ class AuthProviders extends ChangeNotifier {
           await addCurrentUserFromMembers(groupId, currentUserId, context);
 
           if (context.mounted) {
+    final user = pro.Provider.of<AccountViewModel>(context, listen: false);
+          user.updateIndex(0);
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const LandingPage()));
           }
@@ -818,6 +822,8 @@ class AuthProviders extends ChangeNotifier {
 
           if (context.mounted) {
             if (context.mounted) {
+              final user = pro.Provider.of<AccountViewModel>(context, listen: false);
+          user.updateIndex(0);
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const LandingPage()));
             }

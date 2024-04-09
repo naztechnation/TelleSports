@@ -85,13 +85,9 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                         }
 
                         if (!_dataAdded) {
-                          provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true)
-                              .clearSearchList1();
+                          checkUserExist.clearSearchList1();
 
-                          provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true)
-                              .updateSearchList1(
+                          checkUserExist.updateSearchList1(
                             snapshot.data!,
                           );
 
@@ -104,28 +100,49 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                               padding: EdgeInsets.symmetric(horizontal: 20.h),
                               child: Column(children: [
                                 const SizedBox(height: 15),
-                                CustomTextFormField(
+                                 CustomTextFormField(
                                     controller: searchController,
+                                    
                                     onChanged: (value) {
-                                      checkUserExist
-                                          .filterSearchResults1(value);
+                                      checkUserExist.filterSearchResults1(value);
+
+                                      if(searchController.text.isEmpty){
+                                        setState(() {
+                                          
+                                        });
+                                      }
                                     },
                                     hintText: "Search for communities",
                                     hintStyle:
                                         CustomTextStyles.titleSmallGray400,
                                     textInputAction: TextInputAction.done,
-                                    prefix: Container(
-                                        margin: EdgeInsets.fromLTRB(
-                                            20.h, 5.v, 9.h, 5.v),
-                                        child: CustomImageView(
-                                            imagePath:
-                                                ImageConstant.imgSearchGray400,
-                                            height: 24.adaptSize,
-                                            width: 24.adaptSize)),
+                                    prefix: SizedBox(width: 15,),
+                                    suffix: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          
+                                        });
+                                      },
+                                      child: Container(
+                                       
+                                         decoration: BoxDecoration(
+                                           color: Colors.blue,
+                                           borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8))
+                                         ),
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                            child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.imgSearchGray400,
+                                                
+                                                color: Colors.white,
+                                                ),
+                                          )),
+                                    ),
                                     prefixConstraints:
                                         BoxConstraints(maxHeight: 34.v),
                                     contentPadding: EdgeInsets.only(
-                                        top: 17.v, right: 30.h, bottom: 7.v),
+                                        top: 1.v, right: 30.h, bottom: 7.v),
                                     borderDecoration:
                                         TextFormFieldStyleHelper.fillGray,
                                     filled: true,
@@ -140,29 +157,23 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                           return SizedBox(height: 1.v);
                                         },
                                         itemCount:
-                                            provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true).searchResult1.length,
+                                            checkUserExist.searchResult1.length,
                                         itemBuilder: (context, index) {
-                                          Group groupData = provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true)
-                                              .searchResult1[index];
+                                          Group groupData = checkUserExist.searchResult1[index];
 
                                           userItem = removeDuplicates(
                                               groupData.membersUid);
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:
                                                 () async {
-                                              provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true).requestedUsers(
+                                              checkUserExist.requestedUsers(
                                                   groupData.requestsMembers);
-                                              provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true).blockedUsers(
+                                              checkUserExist.blockedUsers(
                                                   groupData.blockedMembers);
 
                                               if (userItem.contains(userId)) {
                                                 if (context.mounted) {
-                                                  provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true).addGroupInfo(
+                                                  checkUserExist.addGroupInfo(
                                                       groupNumber: userItem
                                                           .length
                                                           .toString(),

@@ -15,6 +15,7 @@ import 'package:tellesports/widgets/modals.dart';
 
 import '../../../../common/utils/utils.dart';
 import '../../../../widgets/app_bar/appbar_subtitle.dart';
+import '../../../model/view_models/account_view_model.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../landing_page/landing_page.dart';
 import '../provider/auth_provider.dart';
@@ -75,6 +76,7 @@ class _UpdateCommunityInfoScreenState
 
     final groupData = pro.Provider.of<AuthProviders>(context, listen: true);
 
+    final user = pro.Provider.of<AccountViewModel>(context, listen: true);
 
    
     return SafeArea(
@@ -197,6 +199,7 @@ class _UpdateCommunityInfoScreenState
 
                         AppNavigator.pushAndStackPage(context,
                               page: LandingPage());
+                              user.updateIndex(0);
                       }
                     },
                   ),

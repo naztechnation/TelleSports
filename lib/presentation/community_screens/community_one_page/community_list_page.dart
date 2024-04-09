@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../handlers/secure_handler.dart';
-import '../../../model/chat_model/group.dart';
-import '../../../model/chat_model/user_model.dart';
+import '../../../model/chat_model/group.dart'; 
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_subtitle_two.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
@@ -43,7 +44,9 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
     plan = await StorageHandler.getUserPlan() ?? '';
-    setState(() {});
+   Future.delayed(Duration(seconds: 1), (() {
+      setState(() {});
+   }));
   }
 
   bool _dataAdded = false;
@@ -96,12 +99,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
 
                         if (!_dataAdded) {
                           checkUserExist.clearGroupInfo();
-                          provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true)
-                              .clearSearchList();
-                          provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true)
-                              .updateSearchList(
+                          checkUserExist.clearSearchList();
+                          checkUserExist.updateSearchList(
                             snapshot.data!,
                           );
                           _dataAdded = true;
@@ -118,23 +117,44 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                     
                                     onChanged: (value) {
                                       checkUserExist.filterSearchResults(value);
+
+                                      if(searchController.text.isEmpty){
+                                        setState(() {
+                                          
+                                        });
+                                      }
                                     },
                                     hintText: "Search for communities",
                                     hintStyle:
                                         CustomTextStyles.titleSmallGray400,
                                     textInputAction: TextInputAction.done,
-                                    prefix: Container(
-                                        margin: EdgeInsets.fromLTRB(
-                                            5.h, 5.v, 9.h, 5.v),
-                                        child: CustomImageView(
-                                            imagePath:
-                                                ImageConstant.imgSearchGray400,
-                                            height: 24.adaptSize,
-                                            width: 24.adaptSize)),
+                                    prefix: SizedBox(width: 15,),
+                                    suffix: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          
+                                        });
+                                      },
+                                      child: Container(
+                                       
+                                         decoration: BoxDecoration(
+                                           color: Colors.blue,
+                                           borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8))
+                                         ),
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                            child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.imgSearchGray400,
+                                                
+                                                color: Colors.white,
+                                                ),
+                                          )),
+                                    ),
                                     prefixConstraints:
                                         BoxConstraints(maxHeight: 34.v),
                                     contentPadding: EdgeInsets.only(
-                                        top: 17.v, right: 30.h, bottom: 7.v),
+                                        top: 1.v, right: 30.h, bottom: 7.v),
                                     borderDecoration:
                                         TextFormFieldStyleHelper.fillGray,
                                     filled: true,
@@ -149,31 +169,25 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                           return SizedBox(height: 1.v);
                                         },
                                         itemCount:
-                                            provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true).searchResult.length,
+                                            checkUserExist.searchResult.length,
                                         itemBuilder: (context, index) {
-                                          Group groupData = provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true)
-                                              .searchResult[index];
-
+                                          Group groupData = checkUserExist.searchResult[index];
+                                    
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:
                                                 () async {
-                                              provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true).requestedUsers(
+                                              checkUserExist.requestedUsers(
                                                   groupData.requestsMembers);
-                                              provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true).blockedUsers(
+                                              checkUserExist.blockedUsers(
                                                   groupData.blockedMembers);
-
+                                    
                                               List<String> userItem =
                                                   removeDuplicates(
                                                       groupData.membersUid);
                                                
                                               if (userItem.contains(userId)) {
                                                 if (context.mounted) {
-                                                  provider.Provider.of<pro.AuthProviders>(context,
-                                  listen: true).addGroupInfo(
+                                                  checkUserExist.addGroupInfo(
                                                       groupNumber: userItem
                                                           .length
                                                           .toString(),
@@ -191,7 +205,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                       groupName: groupData.name,
                                                       groupPics:
                                                           groupData.groupPic);
-
+                                    
                                                   AppNavigator.pushAndStackPage(
                                                       context,
                                                       page: MobileChatScreen(
@@ -215,7 +229,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                     removeDuplicates(
                                                         groupData.membersUid);
                                                  
-
+                                    
                                                 onTapCommunityPageComponent(
                                                   context: context,
                                                   groupImage:
