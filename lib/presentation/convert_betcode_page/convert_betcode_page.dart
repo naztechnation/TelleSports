@@ -10,6 +10,7 @@ import '../../model/auth_model/bookies_details.dart';
 import '../../model/auth_model/converter_history.dart';
 import '../../model/view_models/account_view_model.dart';
 import '../../requests/repositories/account_repo/account_repository_impl.dart';
+import '../../res/app_strings.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/custom_outlined_button.dart';
 import '../../widgets/modal_content.dart';
@@ -23,6 +24,7 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_icon_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
+import '../community_screens/provider/auth_provider.dart';
 import 'converted_code.dart';
 import 'widgets/singleconversion_history.dart';
 
@@ -117,6 +119,9 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
   Widget build(BuildContext context) {
     super.build(context);
     mediaQueryData = MediaQuery.of(context);
+
+    final users =Provider.of<AuthProviders>(context, listen: true);
+
     return SafeArea(
         child: BlocConsumer<AccountCubit, AccountStates>(
       listener: (context, state) {
@@ -153,6 +158,20 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             StorageHandler.saveUserPassword(password);
 
             balance = state.user.tellacoinBalance.toString();
+
+              updateUser(
+                        context: context,
+                        user: users,
+                        username: state.user.user?.username ?? '',
+                        userId: state.user.user?.id.toString() ?? '',
+                        image: (state.user.profilePicture.toString() !=
+                                    'null' ||
+                                state.user.profilePicture.toString() != '' ||
+                                state.user.profilePicture.toString() != null)
+                            ? state.user.profilePicture.toString()
+                            : AppStrings.degaultImage,
+                        email: state.user.user?.email ?? '',
+                      );
           }
           if (user?.isActive == '0') {
             Modals.showToast('Your account is not active',
@@ -179,10 +198,24 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         } else if (state is BookingsError) {
           Modals.showDialogModal(context,
               page: ModalContentScreen(
-                  title: 'Network Error',
+                  title: 'Conversion Error',
                   body: Text(
-                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-                    maxLines: 3,
+                    """
+This may have occurred due to one of the following reasons bellow.
+          
+1. We convert only football/soccer games. Please ensure your code only has football games.
+          
+2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
+          
+3. Make sure you have units, if you do not, check any of our available subscription packages.
+          
+4. Make sure you have a good network connection.
+          
+5. Check our FAQ section for more details. 
+          
+6. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+          """,
+                    maxLines: 30,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: appTheme.gray900,
@@ -197,10 +230,24 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         } else if (state is BookingsNetworkErr) {
           Modals.showDialogModal(context,
               page: ModalContentScreen(
-                  title: 'Network Error',
+                  title: 'Conversion Error',
                   body: Text(
-                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-                    maxLines: 3,
+                    """
+This may have occurred due to one of the following reasons bellow.
+          
+1. We convert only football/soccer games. Please ensure your code only has football games.
+          
+2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
+          
+3. Make sure you have units, if you do not, check any of our available subscription packages.
+          
+4. Make sure you have a good network connection.
+          
+5. Check our FAQ section for more details. 
+          
+6. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+          """,
+                    maxLines: 30,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: appTheme.gray900,
@@ -213,12 +260,26 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                   headerColorOne: Color.fromARGB(255, 208, 151, 151),
                   headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
         } else if (state is BookingsApiErr) {
-          Modals.showDialogModal(context,
+           Modals.showDialogModal(context,
               page: ModalContentScreen(
-                  title: 'Network Error',
+                  title: 'Conversion Error',
                   body: Text(
-                    'Your conversion could not be completed because we could not reach our servers. Reset your internet connection and try again.',
-                    maxLines: 3,
+                    """
+This may have occurred due to one of the following reasons bellow.
+          
+1. We convert only football/soccer games. Please ensure your code only has football games.
+          
+2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
+          
+3. Make sure you have units, if you do not, check any of our available subscription packages.
+          
+4. Make sure you have a good network connection.
+          
+5.  Check our FAQ section for more details. 
+          
+6. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+          """,
+                    maxLines: 30,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: appTheme.gray900,
@@ -654,5 +715,18 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         page: PricingPageScreen(
           balance: balance,
         ));
+  }
+
+   updateUser(
+      {required BuildContext context,
+      required var user,
+      required String username,
+      required String userId,
+      required String image,
+      required String email}) async {
+        
+    await user.uploadUserDetails(
+        username: username, userId: userId, imageUrl: image, email: email);
+  
   }
 }

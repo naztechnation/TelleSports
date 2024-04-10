@@ -31,6 +31,7 @@ class UpdateProfileImageScreen extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
 
     final user = Provider.of<UserViewModel>(context, listen: true);
+    final update = Provider.of<AccountViewModel>(context, listen: true);
 
     return SafeArea(
         child: BlocProvider<AccountCubit>(
@@ -45,7 +46,7 @@ class UpdateProfileImageScreen extends StatelessWidget {
                Modals.showToast( 'image upload successful',
                   messageType: MessageType.success);
                   AppNavigator.pushAndReplacePage(context, page: LandingPage());
-
+                  update.updateIndex(0);
             } else {
               Modals.showToast(state.userData.message ?? '',
                   messageType: MessageType.error);

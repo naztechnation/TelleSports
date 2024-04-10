@@ -15,8 +15,6 @@ import '../../handlers/secure_handler.dart';
 import '../../model/view_models/account_view_model.dart';
 import '../convert_betcode_page/convert_betcode_page.dart';
 
-
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key})
       : super(
@@ -24,29 +22,23 @@ class HomePage extends StatefulWidget {
         );
 
   @override
-  HomePageState createState() =>
-      HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class HomePageState
-    extends State<HomePage>
-    with TickerProviderStateMixin {
+class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController tabviewController;
 
   String username = '';
   String userId = '';
   String photo = '';
-   bool showDelayedWidget = false;
+  bool showDelayedWidget = false;
 
-
-  getUserName() async{
+  getUserName() async {
     username = await StorageHandler.getUserName() ?? '';
     userId = await StorageHandler.getUserId() ?? '';
     photo = await StorageHandler.getUserPhoto() ?? '';
-    Future.delayed(Duration(seconds: 0), (){
-      setState(() {
-      
-    });
+    Future.delayed(Duration(seconds: 0), () {
+      setState(() {});
     });
   }
 
@@ -55,15 +47,13 @@ class HomePageState
     super.initState();
 
     getUserName();
-    
-    
+
     tabviewController = TabController(length: 2, vsync: this);
-  Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 3), () {
       setState(() {
         showDelayedWidget = true;
       });
     });
-    
   }
 
   @override
@@ -73,10 +63,9 @@ class HomePageState
     final user = Provider.of<AccountViewModel>(context, listen: true);
 
     return SafeArea(
-      child: Scaffold(
-        appBar: _buildAppBar(context, user, photo),
-        body:  
-              SizedBox(
+        child: Scaffold(
+            appBar: _buildAppBar(context, user, photo),
+            body: SizedBox(
               width: double.maxFinite,
               child: Column(
                 children: [
@@ -96,50 +85,54 @@ class HomePageState
                 ],
               ),
             )));
-          }
-         
-    
-  
+  }
 
- 
-  PreferredSizeWidget _buildAppBar(BuildContext context, var user, String photo) {
+  PreferredSizeWidget _buildAppBar(
+      BuildContext context, var user, String photo) {
     return CustomAppBar(
-      leadingWidth: 60.h,
-      leading: (photo == 'null') ?  AppbarLeadingCircleimage(
-        onTap: (){
-           user.updateIndex(3);
-        },
-        imagePath: ImageConstant.imgNavIcons,
-        margin: EdgeInsets.only(
-          left: 20.h,
-          top: 5.v,
-          bottom: 10.v,
-        ),
-      ) : (showDelayedWidget) ? AppbarLeadingCircleimage(
-        
-         onTap: (){
-           user.updateIndex(3);
-        },
-        imagePath: photo,
-        
-        margin: EdgeInsets.only(
-          left: 20.h,
-          top: 5.v,
-          bottom: 10.v,
-        ),
-      ) :  Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: CircularProgressIndicator(
-        strokeWidth: 3,
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        backgroundColor: (Colors.grey)),
-      ),
+      leadingWidth: 75.h,
+      height: 70,
+      leading: (photo == 'null')
+          ? AppbarLeadingCircleimage(
+              onTap: () {
+                user.updateIndex(3);
+              },
+              imagePath: ImageConstant.imgNavIcons,
+              margin: EdgeInsets.only(
+                left: 20.h,
+                top: 5.v,
+                bottom: 10.v,
+              ),
+            )
+          : (showDelayedWidget)
+              ? AppbarLeadingCircleimage(
+                  onTap: () {
+                    user.updateIndex(3);
+                  },
+                  imagePath: photo,
+                  margin: EdgeInsets.only(
+                    left: 20.h,
+                    top: 5.v,
+                    bottom: 10.v,
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      backgroundColor: (Colors.grey)),
+                ),
       title: Padding(
-        padding: EdgeInsets.only(left: 8.h,),
+        padding: EdgeInsets.only(
+          left: 8.h,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 15,
+            ),
             AppbarSubtitleFive(
               text: "welcome,".toUpperCase(),
               margin: EdgeInsets.only(right: 59.h),
@@ -153,27 +146,32 @@ class HomePageState
       actions: [
         Stack(
           children: [
-           if(user.unReadMessages != 0)...[
-             
-             Positioned(
-              top: 7,
-              right: 12,
-              child: Container(
-                height: 22,
-                width: 22,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                child: Center(child: Text(user.unReadMessages.toString(), style: TextStyle(color: Colors.white),)),),
-            ),
-           ],
+            if (user.unReadMessages != 0) ...[
+              Positioned(
+                top: 7,
+                right: 12,
+                child: Container(
+                  height: 22,
+                  width: 22,
+                  decoration:
+                      BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                  child: Center(
+                      child: Text(
+                    user.unReadMessages.toString(),
+                    style: TextStyle(color: Colors.white),
+                  )),
+                ),
+              ),
+            ],
             AppbarTrailingImage(
               imagePath: ImageConstant.imgNotificationsNone,
-              
               margin: EdgeInsets.symmetric(
                 horizontal: 20.h,
                 vertical: 16.v,
               ),
-              onTap: (){
-                AppNavigator.pushAndStackPage(context, page: NotificationsScreen());
+              onTap: () {
+                AppNavigator.pushAndStackPage(context,
+                    page: NotificationsScreen());
               },
             ),
           ],
@@ -183,46 +181,44 @@ class HomePageState
   }
 
   Widget _buildTabview(BuildContext context) {
-    return   Container(
-            height: 32.v,
-            width: 350.h,
-            decoration: BoxDecoration(
-              color: appTheme.whiteA700,
-              borderRadius: BorderRadius.circular(
-                16.h,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: appTheme.black900.withOpacity(0.06),
-                  spreadRadius: 2.h,
-                  blurRadius: 2.h,
-                  offset: Offset(
-                    0,
-                    0,
-                  ),
-                ),
-              ],
+    return Container(
+      height: 32.v,
+      width: 350.h,
+      decoration: BoxDecoration(
+        color: appTheme.whiteA700,
+        borderRadius: BorderRadius.circular(
+          16.h,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: appTheme.black900.withOpacity(0.06),
+            spreadRadius: 2.h,
+            blurRadius: 2.h,
+            offset: Offset(
+              0,
+              0,
             ),
+          ),
+        ],
+      ),
       child: TabBar(
-              controller: tabviewController,
-              labelPadding: EdgeInsets.zero,
-              labelColor: Colors.white,
-              labelStyle: TextStyle(
-                fontSize: 14,
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w500,
-              ),
-              unselectedLabelColor: Colors.black,
-              unselectedLabelStyle: TextStyle(
-                fontSize: 14,
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w500,
-              ),
-  indicatorSize: TabBarIndicatorSize.tab,  
-
+        controller: tabviewController,
+        labelPadding: EdgeInsets.zero,
+        labelColor: Colors.white,
+        labelStyle: TextStyle(
+          fontSize: 14,
+          fontFamily: 'DM Sans',
+          fontWeight: FontWeight.w500,
+        ),
+        unselectedLabelColor: Colors.black,
+        unselectedLabelStyle: TextStyle(
+          fontSize: 14,
+          fontFamily: 'DM Sans',
+          fontWeight: FontWeight.w500,
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
         indicator: BoxDecoration(
           color: Color(0XFF288763),
-           
           borderRadius: BorderRadius.circular(
             16.h,
           ),
@@ -242,7 +238,4 @@ class HomePageState
       ),
     );
   }
-
- 
-
 }

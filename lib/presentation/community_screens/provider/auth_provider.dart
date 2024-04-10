@@ -373,7 +373,7 @@ class AuthProviders extends ChangeNotifier {
         email: email,
         numberOfGroups: 0,
         groupId: [],
-        bio: 'Hi, am new here at Tellasport 🤗🤗',
+        bio: '',
       );
 
       await _firebaseStorage.collection('users').doc(userId).set(user.toMap());
@@ -732,7 +732,11 @@ class AuthProviders extends ChangeNotifier {
         } else {
           _isUserExisting = false;
         }
+
+
       }
+
+       _setStatus(AuthState.success);
       return groups;
     });
   }

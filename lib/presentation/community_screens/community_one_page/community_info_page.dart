@@ -403,11 +403,11 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                             setState(() {
                                               isLoading = false;
                                             });
+                                            AppNavigator.pushAndStackPage(
+                                                context,
+                                                page: LandingPage());
+                                            user.updateIndex(0);
                                           });
-
-                                          AppNavigator.pushAndStackPage(context,
-                                              page: LandingPage());
-                                          user.updateIndex(0);
                                         }
                                       }),
                                   if (groupInfo.groupAdminId == userId)
@@ -455,19 +455,85 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                 Navigator.pop(context);
                                                 if (compaintController
                                                     .text.isNotEmpty) {
-                                                  _predictionCubit.sendReport(
-                                                      complaintType: 'group',
-                                                      complaint:
-                                                          compaintController
-                                                              .text,
-                                                      reportedUser:
-                                                          groupInfo.groupName,
-                                                      groupId:
+                                                  await _predictionCubit
+                                                      .sendReport(
+                                                          complaintType:
+                                                              'group',
+                                                          complaint:
+                                                              compaintController
+                                                                  .text,
+                                                          reportedUser:
+                                                              groupInfo
+                                                                  .groupName,
+                                                          groupId:
+                                                              groupInfo.groupId,
+                                                          groupLeaderName:
+                                                              groupMembers[0]
+                                                                  .name,
+                                                          groupName: groupInfo
+                                                              .groupName);
+
+                                                  setState(() {
+                                                    isLoading = true;
+                                                  });
+
+                                                  await groupInfo
+                                                      .removeCurrentUserFromMembers(
                                                           groupInfo.groupId,
-                                                      groupLeaderName:
-                                                          groupMembers[0].name,
-                                                      groupName:
-                                                          groupInfo.groupName);
+                                                          userId,
+                                                          context);
+                                                  setState(() {
+                                                    isLoading = false;
+                                                  });
+
+                                                  Modals.showDialogModal(
+                                                      context,
+                                                      page: ModalContentScreen(
+                                                          title:
+                                                              'Thanks for your feedback!!!!'
+                                                                  .toUpperCase(),
+                                                          body: Text(
+                                                            'We have recieved your feedback and we would look into it shortly we are sorry for any inconvenience this has caused you.',
+                                                            maxLines: 4,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              color: appTheme
+                                                                  .gray900,
+                                                              fontSize:
+                                                                  18.fSize,
+                                                              fontFamily:
+                                                                  'DM Sans',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                          ),
+                                                          btnText: 'Close',
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          headerColorOne:
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  192,
+                                                                  234,
+                                                                  206),
+                                                          headerColorTwo:
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  65,
+                                                                  210,
+                                                                  101)));
+
+                                                 Future.delayed(Duration(seconds: 10), (){
+                                                   AppNavigator.pushAndStackPage(
+                                                      context,
+                                                      page: LandingPage());
+                                                  user.updateIndex(0);
+                                                 });
                                                 } else {
                                                   Modals.showToast(
                                                       'Please fill in your complaints');

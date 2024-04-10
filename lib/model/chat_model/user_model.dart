@@ -35,7 +35,7 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       uid: map['uid'] ?? '',
-      bio: map['bio'] ?? 'Hi, am new here at Tellasport 🤗🤗',
+      bio: map['bio'] ?? '',
       profilePic: map['profilePic'] ?? '',
       isOnline: map['isOnline'] ?? false,
       email: map['email'] ?? '',

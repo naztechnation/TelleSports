@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+ 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/loading_page.dart';
@@ -14,7 +13,6 @@ import '../chat/screens/mobile_chat_screen.dart';
 import '../join_community_screen/join_community_screen.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'empty_comunity_page.dart';
-import 'search_group.dart';
 import 'widgets/community_item_widget.dart';
 import 'package:provider/provider.dart' as provider;
 
@@ -24,16 +22,16 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 
 import 'widgets/create_community.dart';
 
-class CommunityListPage extends ConsumerStatefulWidget {
-  const CommunityListPage({Key? key}) : super(key: key);
+class SearchGroupPage extends ConsumerStatefulWidget {
+  const SearchGroupPage({Key? key}) : super(key: key);
 
   @override
-  CommunityOnePageState createState() => CommunityOnePageState();
+  SearchGroupPageState createState() => SearchGroupPageState();
 }
 
 // ignore_for_file: must_be_immutable
-class CommunityOnePageState extends ConsumerState<CommunityListPage>
-    with AutomaticKeepAliveClientMixin<CommunityListPage> {
+class SearchGroupPageState extends ConsumerState<SearchGroupPage>
+    with AutomaticKeepAliveClientMixin<SearchGroupPage> {
   TextEditingController searchController = TextEditingController();
 
   List<String> userItem = [];
@@ -79,10 +77,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
         child: Scaffold(
       body: Scaffold(
           resizeToAvoidBottomInset: false,
-          bottomNavigationBar: (plan.toLowerCase() == 'Community Leader'.toLowerCase()) ?Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: buildBuyTellacoins(context),
-          ): SizedBox.shrink(),
+          
           // appBar: _buildAppBar(context,),
 
           body: SizedBox(
@@ -115,18 +110,30 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                 const SizedBox(height: 15),
                                 CustomTextFormField(
                                     controller: searchController,
-                                    readOnly: true,
-                                    onTap: () {
-                                      AppNavigator.pushAndStackPage(context, page: SearchGroupPage());
-                                    }, 
-                                    onChanged: (value) {
+
                                     
+                                    onChanged: (value) {
+                                      checkUserExist.filterSearchResults(value);
+
+                                      if(searchController.text.isEmpty){
+                                        setState(() {
+                                          
+                                        });
+                                      }
                                     },
                                     hintText: "Search for communities",
                                     hintStyle:
                                         CustomTextStyles.titleSmallGray400,
                                     textInputAction: TextInputAction.done,
-                                    prefix: SizedBox(width: 15,),
+                                    prefix: GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 10.0, right: 12),
+                                        child: Icon(Icons.arrow_back, size: 25,),
+                                      ),
+                                    ),
                                     suffix: GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -167,9 +174,10 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                           return SizedBox(height: 1.v);
                                         },
                                         itemCount:
-                                            snapshot.data?.length ?? 0,
+                                            checkUserExist.searchResult.length,
                                         itemBuilder: (context, index) {
-                                          Group groupData = snapshot.data![index];
+                                           
+                                            Group groupData = checkUserExist.searchResult[index];
                                     
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:
