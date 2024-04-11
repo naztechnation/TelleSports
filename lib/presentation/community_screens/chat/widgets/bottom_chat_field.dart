@@ -50,6 +50,8 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   @override
   void initState() {
     super.initState();
+
+    sendTextMessage1();
     getUserId();
      
   }
@@ -62,6 +64,23 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
    
      
       ref.read(chatControllerProvider).sendTextMessage(
+            context,
+            _messageController.text.trim(),
+            widget.recieverUserId,
+            userId,
+            widget.isGroupChat,
+          );
+      setState(() {
+        _messageController.text = '';
+      });
+      widget.onTap();
+     
+  }
+
+   void sendTextMessage1() async {
+   
+     
+      ref.read(chatControllerProvider).sendTextMessage1(
             context,
             _messageController.text.trim(),
             widget.recieverUserId,

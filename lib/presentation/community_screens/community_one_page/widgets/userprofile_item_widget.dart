@@ -22,7 +22,7 @@ class UserprofileItemWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (image != null || image != "null" || image != "") ...[
+        if (image == null || image == "null" || image == "") ...[
           CustomImageView(
             imagePath: ImageConstant.imgAvatar,
             height: 50.adaptSize,
@@ -39,7 +39,7 @@ class UserprofileItemWidget extends StatelessWidget {
             height: 50.adaptSize,
             width: 50.adaptSize,
             radius: BorderRadius.circular(
-              18.h,
+              28.h,
             ),
             margin: EdgeInsets.symmetric(vertical: 4.v),
           ),

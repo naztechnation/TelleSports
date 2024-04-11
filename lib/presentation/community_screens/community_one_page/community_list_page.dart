@@ -170,6 +170,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                             snapshot.data?.length ?? 0,
                                         itemBuilder: (context, index) {
                                           Group groupData = snapshot.data![index];
+
                                     
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:

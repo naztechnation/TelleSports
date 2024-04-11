@@ -279,6 +279,22 @@ class ChatRepository extends ChangeNotifier{
     }
   }
 
+  void sendTextMessage1({
+    required BuildContext context,
+    required String text,
+    required String recieverUserId,
+    required String userId,
+    required UserModel senderUser,
+    required MessageReply? messageReply,
+    required bool isGroupChat,
+  }) async {
+    try {
+       
+    } catch (e) {
+      Modals.showToast(e.toString());
+    }
+  }
+
   void sendFileMessage({
     required BuildContext context,
     required File file,

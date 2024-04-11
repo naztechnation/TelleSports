@@ -471,7 +471,7 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-  Future<List<UserModel>> fetchUsers(List<String> membersUid) async {
+  Future<List<UserModel>> fetchUsers(List<dynamic> membersUid) async {
     try {
       final List<UserModel> users = [];
 
@@ -507,7 +507,7 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-  Future<List<UserModel>> requestedUsers(List<String> membersUid) async {
+  Future<List<UserModel>> requestedUsers(List<dynamic> membersUid) async {
     try {
       final List<UserModel> users = [];
 
@@ -544,7 +544,7 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-  Future<List<UserModel>> blockedUsers(List<String> membersUid) async {
+  Future<List<UserModel>> blockedUsers(List<dynamic> membersUid) async {
     try {
       final List<UserModel> users = [];
 
@@ -742,102 +742,106 @@ class AuthProviders extends ChangeNotifier {
   }
 
   Future<void> removeCurrentUserFromMembers(
-      String groupId, String currentUserId, BuildContext context) async {
-    try {
-      final DocumentReference groupDocRef =
-          FirebaseFirestore.instance.collection('groups').doc(groupId);
+  String groupId, String currentUserId, BuildContext context) async {
+  try {
+    final DocumentReference groupDocRef =
+        FirebaseFirestore.instance.collection('groups').doc(groupId);
 
-      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+    final DocumentSnapshot groupSnapshot = await groupDocRef.get();
 
-      if (groupSnapshot.exists) {
-        final Map<String, dynamic> groupData =
-            groupSnapshot.data() as Map<String, dynamic>;
+    if (groupSnapshot.exists) {
+      final Map<String, dynamic> groupData =
+          groupSnapshot.data() as Map<String, dynamic>;
 
-        if (groupData.containsKey('membersUid') &&
-            groupData['membersUid'] is List) {
-          final List<dynamic> membersUid = groupData['membersUid'];
-          membersUid.remove(currentUserId);
+      if (groupData.containsKey('membersUid') &&
+          groupData['membersUid'] is List) {
+        List<dynamic> membersUid = List.from(groupData['membersUid']);
+        
+        
+        membersUid.removeWhere((userId) => userId == currentUserId);
 
-          await groupDocRef.update({'membersUid': membersUid});
-
-          if (context.mounted) {
-            // Navigator.of(context).push(MaterialPageRoute(
-            //     builder: (context) => const MobileLayoutScreen()));
-          }
-        }
+        await groupDocRef.update({'membersUid': membersUid});
+ 
       }
-    } catch (error) {
-      print('Error removing user from members: $error');
     }
+  } catch (error) {
+    print('Error removing user from members: $error');
   }
+}
+
 
   Future<void> removeCurrentUserFromRequestsMembers(
-      String groupId, String currentUserId, BuildContext context) async {
-    try {
-      final DocumentReference groupDocRef =
-          FirebaseFirestore.instance.collection('groups').doc(groupId);
+  String groupId, String currentUserId, BuildContext context) async {
+  try {
+    final DocumentReference groupDocRef =
+        FirebaseFirestore.instance.collection('groups').doc(groupId);
 
-      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+    final DocumentSnapshot groupSnapshot = await groupDocRef.get();
 
-      if (groupSnapshot.exists) {
-        final Map<String, dynamic> groupData =
-            groupSnapshot.data() as Map<String, dynamic>;
+    if (groupSnapshot.exists) {
+      final Map<String, dynamic> groupData =
+          groupSnapshot.data() as Map<String, dynamic>;
 
-        if (groupData.containsKey('requestsMembers') &&
-            groupData['requestsMembers'] is List) {
-          final List<dynamic> membersUid = groupData['requestsMembers'];
-          membersUid.remove(currentUserId);
+      if (groupData.containsKey('requestsMembers') &&
+          groupData['requestsMembers'] is List) {
+        List<dynamic> requestsMembers = List.from(groupData['requestsMembers']);
+        
+        
+        
+        requestsMembers.removeWhere((userId) => userId == currentUserId);
 
-          await groupDocRef.update({'requestsMembers': membersUid});
-          await addCurrentUserFromMembers(groupId, currentUserId, context);
+        await groupDocRef.update({'requestsMembers': requestsMembers});
+        await addCurrentUserFromMembers(groupId, currentUserId, context);
 
-          if (context.mounted) {
-    final user = pro.Provider.of<AccountViewModel>(context, listen: false);
+        if (context.mounted) {
+          final user = pro.Provider.of<AccountViewModel>(context, listen: false);
           user.updateIndex(0);
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const LandingPage()));
-          }
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const LandingPage()));
         }
       }
-    } catch (error) {
-      print('Error removing user from members: $error');
     }
+  } catch (error) {
+    print('Error removing user from request members: $error');
   }
+}
+
 
   Future<void> removeCurrentUserFromBlockedMembers(
-      String groupId, String currentUserId, BuildContext context) async {
-    try {
-      final DocumentReference groupDocRef =
-          FirebaseFirestore.instance.collection('groups').doc(groupId);
+  String groupId, String currentUserId, BuildContext context) async {
+  try {
+    final DocumentReference groupDocRef =
+        FirebaseFirestore.instance.collection('groups').doc(groupId);
 
-      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+    final DocumentSnapshot groupSnapshot = await groupDocRef.get();
 
-      if (groupSnapshot.exists) {
-        final Map<String, dynamic> groupData =
-            groupSnapshot.data() as Map<String, dynamic>;
+    if (groupSnapshot.exists) {
+      final Map<String, dynamic> groupData =
+          groupSnapshot.data() as Map<String, dynamic>;
 
-        if (groupData.containsKey('blockedMembers') &&
-            groupData['blockedMembers'] is List) {
-          final List<dynamic> membersUid = groupData['blockedMembers'];
-          membersUid.remove(currentUserId);
+      if (groupData.containsKey('blockedMembers') &&
+          groupData['blockedMembers'] is List) {
+        List<dynamic> blockedMembers = List.from(groupData['blockedMembers']);
+        
+        // Remove all occurrences of currentUserId
+        blockedMembers.removeWhere((userId) => userId == currentUserId);
 
-          await groupDocRef.update({'blockedMembers': membersUid});
-          await addCurrentUserFromMembers(groupId, currentUserId, context);
+        await groupDocRef.update({'blockedMembers': blockedMembers});
+        await addCurrentUserFromMembers(groupId, currentUserId, context);
 
-          if (context.mounted) {
-            if (context.mounted) {
-              final user = pro.Provider.of<AccountViewModel>(context, listen: false);
+        if (context.mounted) {
+          final user = pro.Provider.of<AccountViewModel>(context, listen: false);
           user.updateIndex(0);
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const LandingPage()));
-            }
-          }
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const LandingPage()));
         }
       }
-    } catch (error) {
-      print('Error removing user from members: $error');
     }
+  } catch (error) {
+    print('Error removing user from blocked members: $error');
   }
+}
+
 
   Future<void> addCurrentUserFromMembers(
       String groupId, String currentUserId, BuildContext context) async {

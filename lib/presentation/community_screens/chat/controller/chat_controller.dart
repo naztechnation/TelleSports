@@ -70,6 +70,27 @@ class ChatController {
     // ref.read(messageReplyProvider.state).update((state) => null);
   }
 
+   void sendTextMessage1(
+    BuildContext context,
+    String text,
+    String recieverUserId,
+    String userId,
+    bool isGroupChat,
+  ) {
+    final messageReply = ref.read(messageReplyProvider);
+    ref.read(userDataAuthProvider).whenData(
+          (value) => chatRepository.sendTextMessage1(
+            context: context,
+            text: text,
+            recieverUserId: recieverUserId,
+            senderUser: value!,
+            messageReply: messageReply,
+            isGroupChat: isGroupChat, userId: userId,
+          ),
+        );
+    // ref.read(messageReplyProvider.state).update((state) => null);
+  }
+
   Future<void> sendFileMessage(
     BuildContext context,
     File file,
