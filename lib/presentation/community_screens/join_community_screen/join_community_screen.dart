@@ -8,6 +8,7 @@ import 'package:tellesports/widgets/modals.dart';
 
 import '../../../handlers/secure_handler.dart';
 import '../../../model/view_models/account_view_model.dart';
+import '../../../notification.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class CommunityInfoScreen extends StatefulWidget {
   final String groupId;
   final String userId;
   final String groupDescription;
+  final String adminFcm;
   const CommunityInfoScreen(
       {Key? key,
       required this.groupImage,
@@ -29,6 +31,7 @@ class CommunityInfoScreen extends StatefulWidget {
       required this.groupNumber,
       required this.groupDescription,
       required this.groupId,
+      required this.adminFcm,
       required this.userId})
       : super(key: key);
 
@@ -92,7 +95,10 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                           style: CustomTextStyles
                                               .titleMediumOnPrimaryBold18),
                                       SizedBox(height: 2.v),
-                                      Text((widget.groupNumber == '1') ?'${widget.groupNumber} Member' :  '${widget.groupNumber} Members',
+                                      Text(
+                                          (widget.groupNumber == '1')
+                                              ? '${widget.groupNumber} Member'
+                                              : '${widget.groupNumber} Members',
                                           style: CustomTextStyles
                                               .titleSmallBluegray900)
                                     ]))
@@ -104,8 +110,8 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                     CustomElevatedButton(
                         text: "Pending Request",
                         processing: isLoading,
-                        buttonStyle: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                         
+                        buttonStyle: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey),
                         onPressed: () async {}),
                   ] else ...[
                     CustomElevatedButton(
@@ -119,6 +125,12 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
 
                             await groupInfo.addUserToRequestsMembers(
                                 widget.groupId, widget.userId, context);
+
+                            sendPushNotification(
+                                widget.adminFcm,
+                                widget.groupName,
+                                'Hello, you have a pending invite from ${widget.groupName}');
+
                             setState(() {
                               isLoading = false;
                             });
@@ -126,10 +138,9 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                             Modals.showToast(
                                 'Request has been sent to community admin for approval',
                                 messageType: MessageType.success);
-user.updateIndex(0);
+                            user.updateIndex(0);
                             AppNavigator.pushAndStackPage(context,
                                 page: LandingPage());
-                                 
                           }
                         }),
                   ],
@@ -137,8 +148,7 @@ user.updateIndex(0);
                   SizedBox(height: 16.v),
                   // CustomOutlinedButton(text: "Report community"),
                   // SizedBox(height: 5.v)
-                ]))
-                ));
+                ]))));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {

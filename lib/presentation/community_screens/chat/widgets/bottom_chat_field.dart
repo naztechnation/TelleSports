@@ -1,14 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart' as provider;
-import 'package:tellesports/utils/loader.dart';
-import 'package:tellesports/widgets/modals.dart';
+ 
 
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/providers/message_reply_provider.dart';
@@ -16,6 +10,7 @@ import '../../../../common/utils/utils.dart';
 
 import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
+import '../../../../notification.dart';
 import '../../../../widgets/custom_text_form_field.dart';
 import '../controller/chat_controller.dart';
 import '../repositories/chat_repository.dart';
@@ -23,11 +18,15 @@ import 'message_reply_preview.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String recieverUserId;
+  final String groupId;
+  final String groupName;
   final bool isGroupChat;
   final Function onTap;
-  const BottomChatField({
+  const BottomChatField( {
     Key? key,
     required this.onTap,
+    required this.groupId,
+    required this.groupName,
     required this.recieverUserId,
     required this.isGroupChat,
   }) : super(key: key);
@@ -70,10 +69,14 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             userId,
             widget.isGroupChat,
           );
+      sendTopicNotification(widget.groupId,widget.groupName,_messageController.text);
+     
+     
       setState(() {
         _messageController.text = '';
       });
       widget.onTap();
+
      
   }
 

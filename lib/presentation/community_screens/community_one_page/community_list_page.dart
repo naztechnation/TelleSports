@@ -239,7 +239,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                   groupDescription: groupData
                                                       .groupDescription,
                                                   groupId: groupData.groupId,
-                                                  userId: userId,
+                                                  userId: userId, adminFcm: groupData.fcmToken,
                                                 );
                                               }
                                             },
@@ -265,6 +265,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
     required String groupDescription,
     required String groupId,
     required String userId,
+    required String adminFcm,
   }) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(
@@ -273,7 +274,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
           groupNumber: groupNumber,
           groupDescription: groupDescription,
           groupId: groupId,
-          userId: userId,
+          userId: userId, adminFcm: adminFcm,
         ));
   }
 

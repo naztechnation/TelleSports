@@ -224,6 +224,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                       .groupDescription,
                                                   groupId: groupData.groupId,
                                                   userId: userId,
+                                                  adminFcm: groupData.fcmToken,
                                                 );
                                               }
                                             },
@@ -250,6 +251,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
     required String groupDescription,
     required String groupId,
     required String userId,
+    required String adminFcm,
   }) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(
@@ -259,6 +261,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
           groupDescription: groupDescription,
           groupId: groupId,
           userId: userId,
+          adminFcm: adminFcm,
         ));
   }
 

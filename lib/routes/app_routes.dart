@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tellesports/model/chat_model/message.dart';
 import 'package:tellesports/presentation/onboarding_screen/onboarding_one_screen.dart';
 import 'package:tellesports/presentation/onboarding_screen/onboarding_two_screen.dart';
 import 'package:tellesports/presentation/onboarding_screen/onboarding_three_screen.dart';

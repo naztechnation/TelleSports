@@ -1,5 +1,6 @@
 class Group {
   final String senderId;
+  final String fcmToken;
   final String name;
   final String pinnedMessage;
   final String groupId;
@@ -24,6 +25,7 @@ class Group {
     required this.groupPic,
     required this.membersUid,
     required this.timeSent,
+    required this.fcmToken
   });
 
   Map<String, dynamic> toMap() {
@@ -41,6 +43,7 @@ class Group {
       'timeSent': timeSent.millisecondsSinceEpoch,
       'groupLink': groupLink,
       'isGroupLocked': isGroupLocked,
+      'fcmToken': fcmToken,
     };
   }
 
@@ -52,6 +55,7 @@ class Group {
       groupId: map['groupId'] ?? '',
       lastMessage: map['lastMessage'] ?? '',
       groupPic: map['groupPic'] ?? '',
+      fcmToken: map['fcmToken'] ?? '',
       membersUid: List<String>.from(map['membersUid']),
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
       groupLink: map['groupLink'] ?? '',

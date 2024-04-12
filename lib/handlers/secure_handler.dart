@@ -34,6 +34,12 @@ class StorageHandler {
     }
   }
 
+   static Future<void> saveFcmToken([String? token]) async {
+    if (token != null) {
+      await storage.write(key: 'FCM', value: token);
+    }
+  }
+
     static Future<void> saveUserPlan([String? plan]) async {
     if (plan != null) {
       await storage.write(key: 'PLAN', value: plan);
@@ -141,6 +147,15 @@ static Future<void> saveBankCode([String? code]) async {
     return user;
   }
 
+ static Future<String?> getUserFCM() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['FCM'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
    static Future<String?> getUserPlan() async {
     Map<String, String> value = await storage.readAll();
     String? user;

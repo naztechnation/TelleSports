@@ -394,6 +394,7 @@ class AuthProviders extends ChangeNotifier {
       required BuildContext context,
       required String name,
       required String groupDesc,
+      required String fcmToken,
       required File profilePic,
       var ref}) async {
     var userDoc = await _firebaseStorage.collection('users').doc(userId).get();
@@ -401,7 +402,7 @@ class AuthProviders extends ChangeNotifier {
     var currentNumberOfGroups = userDoc['numberOfGroups'];
 
     if (currentNumberOfGroups < 3) {
-      await createGroup(context, name, groupDesc, profilePic, ref);
+      await createGroup(context, name, groupDesc, fcmToken ,profilePic, ref,);
 
       return true;
     } else {
@@ -431,7 +432,7 @@ class AuthProviders extends ChangeNotifier {
     }
   }
 
-  Future<void> createGroup(BuildContext context, String name, String groupDesc,
+  Future<void> createGroup(BuildContext context, String name, String groupDesc,String fcmToken,
       File profilePic, var ref) async {
     String userId = await StorageHandler.getUserId() ?? '';
     try {
@@ -448,6 +449,7 @@ class AuthProviders extends ChangeNotifier {
           );
       model.Group group = model.Group(
         pinnedMessage: '',
+        fcmToken: fcmToken,
         isGroupLocked: false,
         groupLink: 'telesportcommunity.com/${groupLink}',
         senderId: userId,

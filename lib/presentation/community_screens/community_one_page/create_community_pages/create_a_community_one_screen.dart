@@ -48,9 +48,11 @@ class _CreateACommunityOneScreenState
   bool isLoading = false;
 
   String userId = '';
+  String fcmToken = '';
 
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+    fcmToken = await StorageHandler.getUserFCM() ?? '';
   }
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -181,7 +183,9 @@ class _CreateACommunityOneScreenState
                             name: groupNameController.text.trim(),
                             groupDesc: groupDescriptionController.text.trim(),
                             profilePic: image!,
-                            ref: ref);
+                            ref: ref, fcmToken: fcmToken);
+
+
                         setState(() {
                           isLoading = false;
                         });

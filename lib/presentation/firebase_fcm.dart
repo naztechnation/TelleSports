@@ -1,13 +1,16 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/handlers/secure_handler.dart';
 import 'package:tellesports/main.dart';
+
+import '../notification.dart';
 
 
 class PushNotifications {
   static final _firebaseMessaging = FirebaseMessaging.instance;
   static final FlutterLocalNotificationsPlugin
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  // request notification permission
   static Future init() async {
     await _firebaseMessaging.requestPermission(
       alert: true,
@@ -18,14 +21,15 @@ class PushNotifications {
       provisional: false,
       sound: true,
     );
-    // get the device fcm token
     final token = await _firebaseMessaging.getToken();
-    print("device token: $token");
+
+    StorageHandler.saveFcmToken(token);
+
+    // sendPushNotification(token ??'','TellaSport','Welcome on board');
+    
   }
 
-// initalize local notifications
   static Future localNotiInit() async {
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/tella');
     final DarwinInitializationSettings initializationSettingsDarwin =
@@ -47,10 +51,10 @@ class PushNotifications {
   // on tap local notification in foreground
   static void onNotificationTap(NotificationResponse notificationResponse) {
     navigatorKey.currentState!
-        .pushNamed("/message", arguments: notificationResponse);
+        .pushNamed(AppRoutes.message, arguments: notificationResponse);
   }
 
-  // show a simple notification
+ 
   static Future showSimpleNotification({
     required String title,
     required String body,

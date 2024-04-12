@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,6 +85,8 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
 
   bool containsId = true;
 
+   final _firebaseMessaging = FirebaseMessaging.instance;
+
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
     Future.delayed(Duration(seconds: 1),( ){
@@ -113,6 +116,13 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
     if (groupInfo.groupAdminId == userId) {
       updateUserGroupNumber();
     }
+
+
+_firebaseMessaging.subscribeToTopic(groupInfo.groupId);
+
+
+
+     
     return WillPopScope(
       onWillPop: () async {
         groupInfo.isSelectedMessage(false);
@@ -528,6 +538,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                                             },
                                             recieverUserId: widget.uid,
                                             isGroupChat: widget.isGroupChat,
+                                            groupName: widget.name, groupId: groupInfo.groupId,
                                           )
                                         : Container(
                                             height: 60,
@@ -564,6 +575,8 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                                             },
                                             recieverUserId: widget.uid,
                                             isGroupChat: widget.isGroupChat,
+                                            groupName: widget.name,
+                                            groupId: groupInfo.groupId
                                           )
                                         : Container(
                                             height: 60,
@@ -599,7 +612,8 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                                       _scrollDown();
                                     },
                                     recieverUserId: widget.uid,
-                                    isGroupChat: widget.isGroupChat,
+                                    isGroupChat: widget.isGroupChat, groupName: widget.name,
+                                    groupId: groupInfo.groupId,
                                   );
                                 },
                               ),
