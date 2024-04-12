@@ -1,7 +1,5 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tellesports/widgets/modals.dart';
 
 import 'core/app_export.dart';
 import 'model/matches_data/fixtues_stats.dart';

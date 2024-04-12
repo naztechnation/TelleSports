@@ -2,16 +2,14 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_messaging/firebase_messaging.dart'; 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pro;
 import 'package:tellesports/firebase_options.dart';
 import 'package:tellesports/theme/theme_helper.dart';
-import 'package:tellesports/routes/app_routes.dart';
-import 'package:tellesports/utils/navigator/page_navigator.dart';
+import 'package:tellesports/routes/app_routes.dart'; 
 
 import 'model/view_models/account_view_model.dart';
 import 'model/view_models/firebase_auth_view_model.dart';
@@ -35,23 +33,22 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // on background notification tapped
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     if (message.notification != null) {
-      print("Background Notification Tapped");
-      navigatorKey.currentState!.pushNamed("/message", arguments: message);
+      
+      navigatorKey.currentState!.pushNamed(AppRoutes.message, arguments: message);
     }
   });
 
   PushNotifications.init();
   PushNotifications.localNotiInit();
-  // Listen to background notifications
+   
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
 
-  // to handle foreground notifications
+   
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     String payloadData = jsonEncode(message.data);
-    print("Got a message in foreground");
+    
     if (message.notification != null) {
       PushNotifications.showSimpleNotification(
           title: message.notification!.title!,
@@ -60,15 +57,15 @@ void main() async {
     }
   });
 
-  // for handling in terminated state
+ 
   final RemoteMessage? message =
       await FirebaseMessaging.instance.getInitialMessage();
 
   if (message != null) {
     Future.delayed(Duration(seconds: 1), () {
+
       
-      
-      navigatorKey.currentState!.pushNamed("/message", arguments: message);
+      navigatorKey.currentState!.pushNamed(AppRoutes.message, arguments: message);
     });
   }
   SystemChrome.setPreferredOrientations(

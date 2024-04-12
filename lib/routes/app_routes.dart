@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tellesports/model/chat_model/message.dart';
 import 'package:tellesports/presentation/onboarding_screen/onboarding_one_screen.dart';
 import 'package:tellesports/presentation/onboarding_screen/onboarding_two_screen.dart';
 import 'package:tellesports/presentation/onboarding_screen/onboarding_three_screen.dart';
@@ -9,6 +10,7 @@ import 'package:tellesports/presentation/manage_account/forgot_password_screen/f
 
 import '../presentation/community_screens/community_one_page/community_info_page.dart';
 import '../presentation/manage_account/update_password_screen/update_password_screen.dart';
+import '../presentation/message.dart';
 import '../presentation/splash_screen_onboarding_screen/splash_screen.dart';
 
 class AppRoutes {
@@ -22,6 +24,7 @@ class AppRoutes {
   static const String onboardingTwoScreen = '/onboarding_two_screen';
 
   static const String signUpScreen = '/sign_up_screen';
+  static const String message = '/message';
 
  
 
@@ -107,6 +110,7 @@ class AppRoutes {
     signinScreen: (context) => SigninScreen(),
     forgotPasswordScreen: (context) => ForgotPasswordScreen(),
     createNewPasswordScreen: (context) => UpdatePasswordScreen(),
+    message: (context) => Messages(),
     
     
     
