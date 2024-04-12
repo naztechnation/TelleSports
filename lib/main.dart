@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pro;
-import 'package:tellesports/firebase_options.dart'; 
+import 'package:tellesports/firebase_options.dart';
 import 'package:tellesports/theme/theme_helper.dart';
 import 'package:tellesports/routes/app_routes.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
 
 import 'model/view_models/account_view_model.dart';
 import 'model/view_models/firebase_auth_view_model.dart';
@@ -15,122 +19,78 @@ import 'model/view_models/match_viewmodel.dart';
 import 'model/view_models/user_view_model.dart';
 import 'presentation/community_screens/chat/repositories/chat_repository.dart';
 import 'presentation/community_screens/provider/auth_provider.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'presentation/firebase_fcm.dart';
 
-import 'requests/send_notifications.dart';
-import 'widgets/modals.dart';
+final navigatorKey = GlobalKey<NavigatorState>();
 
-
-
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await setupFlutterNotifications();
-  showFlutterNotification(message);
-}
-
-AndroidNotificationChannel channel = const AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description:
-      'This channel is used for important notifications.', // description
-  importance: Importance.high,
-);
-
-bool isFlutterLocalNotificationsInitialized = false;
-
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
-Future<void> setupFlutterNotifications() async {
-  if (isFlutterLocalNotificationsInitialized) {
-    return;
-  }
-
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-  isFlutterLocalNotificationsInitialized = true;
-}
-
-void showFlutterNotification(RemoteMessage message) {
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null && !kIsWeb) {
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
-          icon: '@drawable/tella',
-        ),
-      ),
-    );
+// function to lisen to background changes
+Future _firebaseBackgroundMessage(RemoteMessage message) async {
+  if (message.notification != null) {
+    print("Some notification Received");
   }
 }
 
-
-
-
-var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
- await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  
-
-  _firebaseMessaging.getToken().then((token) async {
-    
-   _firebaseMessaging.subscribeToTopic('user');
-
-   if(token != null){
-     sendFCMMessage(token, 'Topic', 'Welcome sir' );
-   }
-     
-   
-  });
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    if (message.data != {}) {
-      
-      Future.delayed(Duration(seconds: 10), () {});
-      showFlutterNotification(message);
+  // on background notification tapped
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    if (message.notification != null) {
+      print("Background Notification Tapped");
+      navigatorKey.currentState!.pushNamed("/message", arguments: message);
     }
   });
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
- 
 
-   
+  PushNotifications.init();
+  PushNotifications.localNotiInit();
+  // Listen to background notifications
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+
+  // to handle foreground notifications
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    String payloadData = jsonEncode(message.data);
+    print("Got a message in foreground");
+    if (message.notification != null) {
+      PushNotifications.showSimpleNotification(
+          title: message.notification!.title!,
+          body: message.notification!.body!,
+          payload: payloadData);
+    }
+  });
+
+  // for handling in terminated state
+  final RemoteMessage? message =
+      await FirebaseMessaging.instance.getInitialMessage();
+
+  if (message != null) {
+    Future.delayed(Duration(seconds: 1), () {
+      
+      
+      navigatorKey.currentState!.pushNamed("/message", arguments: message);
+    });
+  }
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   runApp(ProviderScope(
     child: pro.MultiProvider(
       providers: [
-        pro.ChangeNotifierProvider(create: (_) => AccountViewModel(), lazy: false),
-         pro.ChangeNotifierProvider(create: (_) => MatchViewModel(), lazy: false),
-         pro.ChangeNotifierProvider(create: (_) => UserViewModel(), lazy: false),
-         pro.ChangeNotifierProvider(create: (_) => FirebaseAuthProvider(), lazy: false),
-         pro.ChangeNotifierProvider(create: (_) => AuthProviders(), lazy: false),
-         pro.ChangeNotifierProvider(create: (_) => ChatRepository(firestore: FirebaseFirestore.instance), lazy: false),
-      ], 
-      child:   TellaSports(),
+        pro.ChangeNotifierProvider(
+            create: (_) => AccountViewModel(), lazy: false),
+        pro.ChangeNotifierProvider(
+            create: (_) => MatchViewModel(), lazy: false),
+        pro.ChangeNotifierProvider(create: (_) => UserViewModel(), lazy: false),
+        pro.ChangeNotifierProvider(
+            create: (_) => FirebaseAuthProvider(), lazy: false),
+        pro.ChangeNotifierProvider(create: (_) => AuthProviders(), lazy: false),
+        pro.ChangeNotifierProvider(
+            create: (_) =>
+                ChatRepository(firestore: FirebaseFirestore.instance),
+            lazy: false),
+      ],
+      child: TellaSports(),
     ),
   ));
 }
@@ -140,30 +100,11 @@ class TellaSports extends StatefulWidget {
   State<TellaSports> createState() => _TellaSportsState();
 }
 
-class _TellaSportsState extends State<TellaSports> with WidgetsBindingObserver{
-
-   String? initialMessage;
-  bool _resolved = false;
-
-   @override
+class _TellaSportsState extends State<TellaSports> with WidgetsBindingObserver {
+  @override
   void initState() {
-     FirebaseMessaging.instance.getInitialMessage().then(
-          (value) => setState(
-            () {
-              _resolved = true;
-              initialMessage = value?.data.toString();
-            },
-          ),
-        );
-     
-
-    FirebaseMessaging.onMessage.listen(showFlutterNotification);
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-    });
     super.initState();
-   WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -171,6 +112,7 @@ class _TellaSportsState extends State<TellaSports> with WidgetsBindingObserver{
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
