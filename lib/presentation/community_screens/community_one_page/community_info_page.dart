@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,6 +83,9 @@ class CommunityInfo extends StatefulWidget {
 }
 
 class _CommunityInfoState extends State<CommunityInfo> {
+
+    final _firebaseMessaging = FirebaseMessaging.instance;
+
   TextEditingController vectorController = TextEditingController();
 
   final compaintController = TextEditingController();
@@ -476,6 +480,8 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                     groupInfo.groupId,
                                                     userId,
                                                     context);
+                                                  _firebaseMessaging.unsubscribeFromTopic(groupInfo.groupId);
+
                                             setState(() {
                                               isLoading = false;
                                             });
@@ -504,6 +510,9 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                             });
                                             await groupInfo.deleteGroup(
                                                 groupInfo.groupId, context);
+
+                                                  _firebaseMessaging.unsubscribeFromTopic(groupInfo.groupId);
+
                                             setState(() {
                                               isLoading = false;
                                             });
@@ -561,6 +570,8 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                   setState(() {
                                                     isLoading = false;
                                                   });
+
+                                                  _firebaseMessaging.unsubscribeFromTopic(groupInfo.groupId);
 
                                                   Modals.showDialogModal(
                                                       context,

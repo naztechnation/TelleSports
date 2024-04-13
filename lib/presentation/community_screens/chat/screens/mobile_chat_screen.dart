@@ -85,11 +85,11 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
 
   bool containsId = true;
 
-   final _firebaseMessaging = FirebaseMessaging.instance;
+  final _firebaseMessaging = FirebaseMessaging.instance;
 
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
-    Future.delayed(Duration(seconds: 1),( ){
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {});
     });
   }
@@ -117,12 +117,8 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
       updateUserGroupNumber();
     }
 
+    _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
 
-_firebaseMessaging.subscribeToTopic(groupInfo.groupId);
-
-
-
-     
     return WillPopScope(
       onWillPop: () async {
         groupInfo.isSelectedMessage(false);
@@ -177,7 +173,7 @@ _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
                       backgroundColor: appTheme.lime50,
                       resizeToAvoidBottomInset: false,
                       floatingActionButton: Container(
-                        margin: const EdgeInsets.only(bottom: 50),
+                        margin: const EdgeInsets.only(bottom: 80),
                         child: FloatingActionButton(
                           backgroundColor: Colors.blue.withOpacity(0.5),
                           mini: false,
@@ -528,6 +524,9 @@ _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
                                     ;
                                   } else {
                                     containsId = false;
+
+    _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
+
                                   }
 
                                   if (isGroupLocked) {
@@ -538,7 +537,8 @@ _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
                                             },
                                             recieverUserId: widget.uid,
                                             isGroupChat: widget.isGroupChat,
-                                            groupName: widget.name, groupId: groupInfo.groupId,
+                                            groupName: widget.name,
+                                            groupId: groupInfo.groupId,
                                           )
                                         : Container(
                                             height: 60,
@@ -576,8 +576,7 @@ _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
                                             recieverUserId: widget.uid,
                                             isGroupChat: widget.isGroupChat,
                                             groupName: widget.name,
-                                            groupId: groupInfo.groupId
-                                          )
+                                            groupId: groupInfo.groupId)
                                         : Container(
                                             height: 60,
                                             color: Colors.grey.shade300,
@@ -612,7 +611,8 @@ _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
                                       _scrollDown();
                                     },
                                     recieverUserId: widget.uid,
-                                    isGroupChat: widget.isGroupChat, groupName: widget.name,
+                                    isGroupChat: widget.isGroupChat,
+                                    groupName: widget.name,
                                     groupId: groupInfo.groupId,
                                   );
                                 },

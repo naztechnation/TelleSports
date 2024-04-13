@@ -233,8 +233,8 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 },
                 child: CustomImageView(
                   imagePath: ImageConstant.imgSend,
-                  height: 24.adaptSize,
-                  width: 24.adaptSize,
+                  height: 32.adaptSize,
+                  width: 32.adaptSize,
                   margin: EdgeInsets.only(
                     left: 12.h,
                     top: 5.v,
