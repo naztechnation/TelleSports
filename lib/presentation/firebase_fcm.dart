@@ -25,7 +25,7 @@ class PushNotifications {
 
     StorageHandler.saveFcmToken(token);
 
-    // sendPushNotification(token ??'','TellaSport','Welcome on board');
+     sendPushNotification(token ??'','TellaSport','Welcome on board');
     
   }
 

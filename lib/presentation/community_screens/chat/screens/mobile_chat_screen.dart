@@ -525,7 +525,7 @@ class _MobileChatScreenState extends ConsumerState<MobileChatScreen> {
                                   } else {
                                     containsId = false;
 
-    _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
+    _firebaseMessaging.unsubscribeFromTopic(groupInfo.groupId);
 
                                   }
 
