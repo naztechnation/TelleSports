@@ -61,18 +61,18 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                   SizedBox(height: 15.v),
                   _buildFrameRow(context),
                   SizedBox(height: 24.v),
-                  CustomElevatedButton(
-                      text: "Gift Tellacoins",
-                      margin: EdgeInsets.symmetric(horizontal: 20.h),
-                      leftIcon: Container(
-                          margin: EdgeInsets.only(right: 10.h),
-                          child: CustomImageView(
-                              imagePath: ImageConstant.imgCardgiftcard,
-                              height: 24.adaptSize,
-                              width: 24.adaptSize)),
-                      onPressed: () {
-                        onTapGiftTellacoins(context, widget.username);
-                      }),
+                  // CustomElevatedButton(
+                  //     text: "Gift Tellacoins",
+                  //     margin: EdgeInsets.symmetric(horizontal: 20.h),
+                  //     leftIcon: Container(
+                  //         margin: EdgeInsets.only(right: 10.h),
+                  //         child: CustomImageView(
+                  //             imagePath: ImageConstant.imgCardgiftcard,
+                  //             height: 24.adaptSize,
+                  //             width: 24.adaptSize)),
+                  //     onPressed: () {
+                  //       onTapGiftTellacoins(context, widget.username);
+                  //     }),
                   SizedBox(height: 24.v),
                   _buildFrameColumn(
                     context: context,

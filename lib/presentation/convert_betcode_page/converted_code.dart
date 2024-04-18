@@ -243,7 +243,7 @@ class _ConvertedCodePageState extends State<ConvertedCodePage>
                                               dateTime: widget
                                                       .bookingEventLists?[index]
                                                       .home
-                                                      ?.itemDate
+                                                      ?.itemUtcDate
                                                       .toString() ??
                                                   ''),
                                           style: TextStyle(

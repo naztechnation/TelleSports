@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:tellesports/model/auth_model/login.dart';
 import 'package:tellesports/model/auth_model/notifications.dart';
 import 'package:tellesports/model/auth_model/register.dart';
+import 'package:tellesports/widgets/modals.dart';
 
 import '../../../model/auth_model/bookies.dart';
 import '../../../model/auth_model/bookies_details.dart';
@@ -129,6 +130,10 @@ class AccountRepositoryImpl implements AccountRepository {
      
     },
     );
+
+    
+
+      
 
     return BookiesDetails.fromJson(map);
   }

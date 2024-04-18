@@ -206,15 +206,16 @@ This may have occurred due to one of the following reasons bellow.
 1. We convert only football/soccer games. Please ensure your code only has football games.
           
 2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
+                    
+3. Make sure you have a good network connection.
           
-3. Make sure you have units, if you do not, check any of our available subscription packages.
+3. Check our FAQ section for more details. 
           
-4. Make sure you have a good network connection.
-          
-5. Check our FAQ section for more details. 
-          
-6. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+3. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
           """,
+
+// 3. Make sure you have units, if you do not, check any of our available subscription packages.
+
                     maxLines: 30,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -238,14 +239,12 @@ This may have occurred due to one of the following reasons bellow.
 1. We convert only football/soccer games. Please ensure your code only has football games.
           
 2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
+                
+3. Make sure you have a good network connection.
           
-3. Make sure you have units, if you do not, check any of our available subscription packages.
+4. Check our FAQ section for more details. 
           
-4. Make sure you have a good network connection.
-          
-5. Check our FAQ section for more details. 
-          
-6. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+5. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
           """,
                     maxLines: 30,
                     overflow: TextOverflow.ellipsis,
@@ -271,13 +270,11 @@ This may have occurred due to one of the following reasons bellow.
           
 2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
           
-3. Make sure you have units, if you do not, check any of our available subscription packages.
+3. Make sure you have a good network connection.
           
-4. Make sure you have a good network connection.
+4.  Check our FAQ section for more details. 
           
-5.  Check our FAQ section for more details. 
-          
-6. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+5. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
           """,
                     maxLines: 30,
                     overflow: TextOverflow.ellipsis,
@@ -546,23 +543,28 @@ This may have occurred due to one of the following reasons bellow.
                                             top: 8.v, bottom: 7.v)),
                                     Padding(
                                         padding: EdgeInsets.only(left: 6.h),
-                                        child: Text(balance,
-                                            style: CustomTextStyles
-                                                .headlineLargeWhiteA700))
+                                        child: Text(
+                                          'UNLIMITED',
+                                          //balance,
+                                          style: TextStyle(fontSize: 18,color: Colors.white, fontWeight: FontWeight.w500),
+                                            // style: CustomTextStyles
+                                            //     .headlineLargeWhiteA700
+                                                
+                                                ))
                                   ])
                                 ]),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: CustomIconButton(
-                                  height: 30.adaptSize,
-                                  width: 30.adaptSize,
-                                  padding: EdgeInsets.all(6.h),
-                                  onTap: () {
-                                    onTapBtnPlus(context);
-                                  },
-                                  child: CustomImageView(
-                                      imagePath: ImageConstant.imgPlus)),
-                            )
+                            // Align(
+                            //   alignment: Alignment.centerRight,
+                            //   child: CustomIconButton(
+                            //       height: 30.adaptSize,
+                            //       width: 30.adaptSize,
+                            //       padding: EdgeInsets.all(6.h),
+                            //       onTap: () {
+                            //         onTapBtnPlus(context);
+                            //       },
+                            //       child: CustomImageView(
+                            //           imagePath: ImageConstant.imgPlus)),
+                            // )
                           ])))
             ])));
   }
@@ -605,6 +607,8 @@ This may have occurred due to one of the following reasons bellow.
                         int index = _addressSpinnerItems.indexOf(value);
                         fromId = _accountCubit
                             .viewModel.bookiesBookieFrom[index - 1];
+
+                           
                       })),
             ),
             SizedBox(
@@ -643,6 +647,7 @@ This may have occurred due to one of the following reasons bellow.
                         int index = _addressSpinnerItems1.indexOf(value);
                         toId =
                             _accountCubit.viewModel.bookiesBookieTo[index - 1];
+                            
                       })),
             )
           ])),
