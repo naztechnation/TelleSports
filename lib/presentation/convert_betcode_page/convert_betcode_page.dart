@@ -546,7 +546,7 @@ This may have occurred due to one of the following reasons bellow.
                                         child: Text(
                                           'UNLIMITED',
                                           //balance,
-                                          style: TextStyle(fontSize: 18,color: Colors.white, fontWeight: FontWeight.w500),
+                                          style: TextStyle(fontSize: 16,color: Colors.white, fontWeight: FontWeight.w500),
                                             // style: CustomTextStyles
                                             //     .headlineLargeWhiteA700
                                                 

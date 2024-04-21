@@ -68,6 +68,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool isAppleAuth = false;
 
+  AuthType authType = AuthType.none;
+
   showPassword1() {
     setState(() {
       isShowPassword1 = !isShowPassword1;
@@ -91,10 +93,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _launchUrl() async {
-  if (!await launchUrl(_url)) {
-    throw Exception('Could not launch $_url');
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +247,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   );
                                 },
                               ),
-
                               SizedBox(height: 40.v),
                               CustomElevatedButton(
                                   text: "Register",
@@ -308,6 +309,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       width: 24.adaptSize,
                                     )),
                                 onPressed: () async {
+                                  setState(() {
+                                    authType = AuthType.google;
+                                  });
                                   await FirebaseAuth.instance.signOut();
                                   final GoogleSignIn googleSignIn =
                                       GoogleSignIn();
@@ -323,33 +327,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 },
                               ),
                               SizedBox(height: 13.v),
-                              // if (Platform.isIOS)
-                              //   CustomOutlinedButton(
-                              //       text: "Sign in with Apple",
-                              //       margin:
-                              //           EdgeInsets.symmetric(horizontal: 4.h),
-                              //       leftIcon: Container(
-                              //           margin: EdgeInsets.only(right: 10.h),
-                              //           child: CustomImageView(
-                              //               imagePath: ImageConstant
-                              //                   .imgSocialMediaIconsOnprimary,
-                              //               height: 24.adaptSize,
-                              //               width: 24.adaptSize)),
-                              //       onPressed: () async {
-                              //         await FirebaseAuth.instance.signOut();
-                              //         final GoogleSignIn googleSignIn =
-                              //             GoogleSignIn();
-                              //         await googleSignIn.signOut();
-                              //         UserCredential? user =
-                              //             await authUser.signInWithApple();
-                              //         if (user != null) {
-                              //           Modals.showToast(
-                              //               authUser.successMessage);
-                              //         } else {
-                              //           Modals.showToast(
-                              //               authUser.successMessage);
-                              //         }
-                              //       }),
+                              if (Platform.isIOS)
+                                CustomOutlinedButton(
+                                    text: "Sign in with Apple",
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 4.h),
+                                    leftIcon: Container(
+                                        margin: EdgeInsets.only(right: 10.h),
+                                        child: CustomImageView(
+                                            imagePath: ImageConstant
+                                                .imgSocialMediaIconsOnprimary,
+                                            height: 24.adaptSize,
+                                            width: 24.adaptSize)),
+                                    onPressed: () async {
+                                      setState(() {
+                                    authType = AuthType.apple;
+                                  });
+                                      await FirebaseAuth.instance.signOut();
+
+                                    
+                                       
+                                       
+                                            Modals.showBottomSheetModal(
+                                              context,
+                                              isDissmissible: true,
+                                              isScrollControlled: true,
+                                              heightFactor: 0.9,
+                                              page: registerUserWithGoogle(
+                                                  authUser, context),
+                                            );
+                                          
+
+                                          
+                                    }),
                               SizedBox(height: 13.v),
                               Container(
                                   width: 342.h,
@@ -794,23 +804,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   margin: EdgeInsets.symmetric(horizontal: 4.h),
                   title: 'Creating Account...',
                   onPressed: () async {
-                    if (phoneNumberGoogleController.text.isNotEmpty &&
-                        userNameGoogleController.text.isNotEmpty) {
-                      Navigator.pop(context);
-                      User? user = await authUser.signInWithGoogle();
-                      if (user != null) {
-                        registerUser(
-                            context: ctxt,
-                            isGoogle: true,
-                            email: user.email,
-                            password: user.email,
-                            phoneNumber: phoneNumberGoogleController.text,
-                            username: userNameGoogleController.text);
+                    if (authType.name == 'google') {
+                      if (phoneNumberGoogleController.text.isNotEmpty &&
+                          userNameGoogleController.text.isNotEmpty) {
+                        Navigator.pop(context);
+                        User? user = await authUser.signInWithGoogle();
+                        if (user != null) {
+                          registerUser(
+                              context: ctxt,
+                              isGoogle: true,
+                              email: user.email,
+                              password: user.email,
+                              phoneNumber: phoneNumberGoogleController.text,
+                              username: userNameGoogleController.text);
+                        } else {
+                          Modals.showToast(authUser.successMessage);
+                        }
                       } else {
-                        Modals.showToast(authUser.successMessage);
+                        Modals.showToast('Please fill all fields');
                       }
-                    } else {
-                      Modals.showToast('Please fill all fields');
+                    } else if (authType.name == 'apple') {
+                      if (phoneNumberGoogleController.text.isNotEmpty &&
+                          userNameGoogleController.text.isNotEmpty) {
+                        Navigator.pop(context);
+                        final user = await authUser.signInWithApple();
+
+                        if (user != null) {
+                          if (user.displayName != null && user.email != null) {
+                            registerUser(
+                                context: ctxt,
+                                isGoogle: true,
+                                email: user.email,
+                                password: user.email,
+                                phoneNumber: phoneNumberGoogleController.text,
+                                username: userNameGoogleController.text);
+                          } else {
+                            Modals.showToast('Failed to authenticate user.');
+                          }
+                          if (user != null) {
+                          } else {
+                            Modals.showToast(authUser.successMessage);
+                          }
+                        } else {
+                          Modals.showToast('Please fill all fields');
+                        }
+                      }
                     }
                   }),
             ],

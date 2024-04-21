@@ -26,6 +26,8 @@ import '../../community_screens/provider/auth_provider.dart';
 import '../../landing_page/landing_page.dart';
 import '../../manage_account/verify_account_screen/verify_account_screen.dart';
 
+enum Scope { fullName, email }
+
 class SigninScreen extends ConsumerStatefulWidget {
   SigninScreen({Key? key}) : super(key: key);
 
@@ -225,7 +227,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                               ),
                               SizedBox(height: 29.v),
                               CustomElevatedButton(
-                                  processing: state is AccountLoading || isLoading,
+                                  processing:
+                                      state is AccountLoading || isLoading,
                                   title: 'Authenticating...',
                                   onPressed: (() =>
                                       loginUser(ctx: context, isGoo: false)),
@@ -248,7 +251,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                                       width: 24.adaptSize,
                                     )),
                                 onPressed: () async {
-                                     await FirebaseAuth.instance.signOut();
+                                  await FirebaseAuth.instance.signOut();
                                   final GoogleSignIn googleSignIn =
                                       GoogleSignIn();
                                   await googleSignIn.signOut();
@@ -263,33 +266,52 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                                 },
                               ),
                               SizedBox(height: 13.v),
-                              // if (Platform.isIOS)
-                              //   CustomOutlinedButton(
-                              //       text: "Sign in with Apple",
-                              //       margin:
-                              //           EdgeInsets.symmetric(horizontal: 4.h),
-                              //       leftIcon: Container(
-                              //           margin: EdgeInsets.only(right: 10.h),
-                              //           child: CustomImageView(
-                              //               imagePath: ImageConstant
-                              //                   .imgSocialMediaIconsOnprimary,
-                              //               height: 24.adaptSize,
-                              //               width: 24.adaptSize)),
-                              //       onPressed: () async {
-                              //         await FirebaseAuth.instance.signOut();
-                              //         final GoogleSignIn googleSignIn =
-                              //             GoogleSignIn();
-                              //         await googleSignIn.signOut();
-                              //         UserCredential? user =
-                              //             await authUser.signInWithApple();
-                              //         if (user != null) {
-                              //           Modals.showToast(
-                              //               authUser.successMessage);
-                              //         } else {
-                              //           Modals.showToast(
-                              //               authUser.successMessage);
-                              //         }
-                              //       }),
+                              if (Platform.isIOS)
+                                CustomOutlinedButton(
+                                    text: "Sign in with Apple",
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 4.h),
+                                    leftIcon: Container(
+                                        margin: EdgeInsets.only(right: 10.h),
+                                        child: CustomImageView(
+                                            imagePath: ImageConstant
+                                                .imgSocialMediaIconsOnprimary,
+                                            height: 24.adaptSize,
+                                            width: 24.adaptSize)),
+                                    onPressed: () async {
+                                      try {
+
+                                         await FirebaseAuth.instance.signOut();
+                                        final user =
+                                            await authUser.signInWithApple();
+
+                                       
+                                        if (user != null) {
+                                          if (user.displayName != null &&
+                                              user.email != null) {
+                                            loginUser(
+                                                ctx: context,
+                                                isGoo: true,
+                                                email: user.email);
+                                          } else {
+                                            Modals.showToast(
+                                                'Failed to authenticate user.');
+                                          }
+
+                                          print(
+                                              'Signed in with Apple successfully!');
+                                          print(
+                                              'User display name: ${user.displayName}');
+                                          print('User email: ${user.email}');
+                                        } else {
+                                          print(
+                                              'Sign in with Apple failed or was cancelled.');
+                                        }
+                                      } catch (e) {
+                                        print(
+                                            'Error signing in with Apple: $e');
+                                      }
+                                    }),
                               SizedBox(height: 10.v)
                             ]))),
               ))),
@@ -369,7 +391,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
             email: emailController.text.trim(),
           );
       FocusScope.of(ctx).unfocus();
-    } 
+    }
   }
 
   loginUser(
@@ -406,14 +428,14 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
       required String userId,
       required String image,
       required String email}) async {
-        setState(() {
-          isLoading = true;
-        });
+    setState(() {
+      isLoading = true;
+    });
     await user.uploadUserDetails(
         username: username, userId: userId, imageUrl: image, email: email);
- setState(() {
-          isLoading = false;
-        });
+    setState(() {
+      isLoading = false;
+    });
     onTapSignIn(context);
   }
 }
