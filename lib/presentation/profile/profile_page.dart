@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -40,10 +42,14 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String username = '';
   String email = '';
+  String password = '';
   String phone = '';
   String photo = '';
   String userId = '';
   bool showDelayedWidget = false;
+
+  bool signInWithGoogle = true;
+  String signIn = '';
 
   getUserData() async {
     username = await StorageHandler.getUserName() ?? '';
@@ -51,8 +57,17 @@ class _ProfilePageState extends State<ProfilePage> {
     phone = await StorageHandler.getUserPhone() ?? '';
     photo = await StorageHandler.getUserPhoto() ?? '';
     userId = await StorageHandler.getUserId() ?? '';
+    signIn = await StorageHandler.getShowSignIn() ?? '';
+    password = await StorageHandler.getUserPassword() ?? '';
 
-    setState(() {});
+    setState(() {
+      if (signIn != '') {
+        signInWithGoogle = true;
+      } else {
+        signInWithGoogle = false;
+        
+      }
+    });
   }
 
   @override
@@ -177,10 +192,55 @@ class _ProfilePageState extends State<ProfilePage> {
 
                             if (result.status == ShareResultStatus.success) {
                               Modals.showToast(
-                                  'Thank you for sharing our platform',
+                                  'Thank you for sharing TellaSports',
                                   messageType: MessageType.success);
                             }
                           }),
+                          SizedBox(height: 24.v),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.h, vertical: 2.v),
+                            decoration: AppDecoration.outlineBlack9001.copyWith(
+                                borderRadius: BorderRadiusStyle.roundedBorder8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                (Platform.isAndroid)
+                                    ? Text('Google Login',
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.black))
+                                    : Text('Google/Apple Login',
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.black)),
+                                Theme(
+                                  data: ThemeData(
+                                    useMaterial3: true,
+                                  ).copyWith(
+                                    colorScheme: Theme.of(context)
+                                        .colorScheme
+                                        .copyWith(outline: Colors.grey),
+                                  ),
+                                  child: Switch(
+                                    activeColor: Colors.green,
+                                    inactiveThumbColor: Colors.grey,
+                                    inactiveTrackColor: Colors.grey[400],
+                                    value: signInWithGoogle,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        signInWithGoogle = value;
+
+                                        if (signInWithGoogle) {
+                                          StorageHandler.showSignIns('true');
+                                        } else {
+                                          StorageHandler.showSignIns('');
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           SizedBox(height: 24.v),
                           if (state is DeletingUserLoading)
                             ...[]
@@ -188,8 +248,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             CustomElevatedButton(
                                 text: "Log out",
                                 buttonStyle: CustomButtonStyles.fillRedTL8,
-                                onPressed: () {
-                                  user.signOut(context);
+                                onPressed: () async {
+                                  await user.signOut(context);
+                                  if (signInWithGoogle) {
+                                    StorageHandler.showSignIns('true');
+                                  } else {
+                                    StorageHandler.showSignIns('');
+                                  }
+
+                                  StorageHandler.saveUserEmail(email);
+                                  StorageHandler.saveUserPassword(password);
                                 }),
                           ],
                           SizedBox(height: 24.v),

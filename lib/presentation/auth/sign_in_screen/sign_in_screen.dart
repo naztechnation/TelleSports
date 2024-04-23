@@ -46,10 +46,34 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
 
   bool isGoogle = false;
 
+  AuthType authType = AuthType.none;
+
   showPassword1() {
     setState(() {
       isShowPassword1 = !isShowPassword1;
     });
+  }
+
+String signInValue = '';
+String email = '';
+String password = '';
+
+  getSignInState() async{
+    signInValue = await StorageHandler.getShowSignIn() ?? '';
+    email = await StorageHandler.getUserEmail() ?? '';
+    password = await StorageHandler.getUserPassword() ?? '';
+   Future.delayed(Duration(seconds: 1), (){
+     setState(() {
+      
+      
+    });
+   });
+  }
+
+  @override
+  void initState() {
+    getSignInState();
+    super.initState();
   }
 
   @override
@@ -120,9 +144,16 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                         resendCode(context);
                       } else {
                         if (isGoogle) {
-                          Modals.showToast(
-                              'Please register with google on the registeration page first',
-                              messageType: MessageType.error);
+                          if (authType.name == 'google') {
+                            Modals.showToast(
+                                'Please register with google on the registeration page first',
+                                messageType: MessageType.error);
+                          } else if (authType.name == 'apple') {
+                            Modals.showToast(
+                                'Please register with apple on the registeration page first',
+                                messageType: MessageType.error);
+                          }
+
                           FirebaseAuth.instance.signOut();
                           final GoogleSignIn googleSignIn = GoogleSignIn();
                           googleSignIn.signOut();
@@ -239,7 +270,9 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                               // Text("or login with",
                               //     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black38)),
                               SizedBox(height: 11.v),
-                              CustomOutlinedButton(
+
+                             if(signInValue != '') Column(children: [
+                                 CustomOutlinedButton(
                                 text: "Sign in with Google",
                                 margin: EdgeInsets.symmetric(horizontal: 4.h),
                                 leftIcon: Container(
@@ -251,6 +284,9 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                                       width: 24.adaptSize,
                                     )),
                                 onPressed: () async {
+                                  setState(() {
+                                    authType = AuthType.google;
+                                  });
                                   await FirebaseAuth.instance.signOut();
                                   final GoogleSignIn googleSignIn =
                                       GoogleSignIn();
@@ -258,10 +294,16 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                                   User? user =
                                       await authUser.signInWithGoogle();
                                   if (user != null) {
-                                    loginUser(
+                                    if (email != '' && password != '') {
+                                            loginUser(
                                         ctx: context,
                                         isGoo: true,
-                                        email: user.email);
+                                        email: email,
+                                        password: password
+                                        );
+                                         }else{
+                                          Modals.showToast('Opps user does not exist enter details to login.');
+                                         }
                                   }
                                 },
                               ),
@@ -280,29 +322,27 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                                             width: 24.adaptSize)),
                                     onPressed: () async {
                                       try {
+                                        setState(() {
+                                          authType = AuthType.google;
+                                        });
 
-                                         await FirebaseAuth.instance.signOut();
+                                        await FirebaseAuth.instance.signOut();
                                         final user =
                                             await authUser.signInWithApple();
 
-                                       
                                         if (user != null) {
-                                          if (user.displayName != null &&
-                                              user.email != null) {
+                                          
+                                         if (email != '' && password != '') {
                                             loginUser(
-                                                ctx: context,
-                                                isGoo: true,
-                                                email: user.email);
-                                          } else {
-                                            Modals.showToast(
-                                                'Failed to authenticate user.');
-                                          }
-
-                                          print(
-                                              'Signed in with Apple successfully!');
-                                          print(
-                                              'User display name: ${user.displayName}');
-                                          print('User email: ${user.email}');
+                                        ctx: context,
+                                        isGoo: true,
+                                        email: email,
+                                        password: password
+                                        );
+                                         }else{
+                                          Modals.showToast('Opps user does not exist enter details to login.');
+                                         }
+                                           
                                         } else {
                                           print(
                                               'Sign in with Apple failed or was cancelled.');
@@ -312,6 +352,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                                             'Error signing in with Apple: $e');
                                       }
                                     }),
+                              ],),
+                             
                               SizedBox(height: 10.v)
                             ]))),
               ))),
@@ -395,7 +437,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   }
 
   loginUser(
-      {required BuildContext ctx, required bool isGoo, String? email}) async {
+      {required BuildContext ctx, required bool isGoo, String? email, String? password}) async {
     if (!isGoo) {
       if (_formKey.currentState!.validate()) {
         await ctx.read<AccountCubit>().loginUser(
@@ -410,7 +452,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
     } else {
       await ctx
           .read<AccountCubit>()
-          .loginUser(email: email ?? '', password: email ?? '');
+          .loginUser(email: email ?? '', password: password ?? '');
 
       setState(() {
         isGoogle = true;

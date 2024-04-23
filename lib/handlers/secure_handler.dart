@@ -14,9 +14,10 @@ class StorageHandler {
     if (lastLoginTime == null) return false;
 
     final currentTime = DateTime.now().millisecondsSinceEpoch;
-    final twoDaysInMilliseconds = 2 * 24 * 60 * 60 * 1000; 
+    final oneMonthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
+ 
 
-    return (currentTime - int.parse(lastLoginTime)) < twoDaysInMilliseconds;
+    return (currentTime - int.parse(lastLoginTime)) < oneMonthInMilliseconds;
   }
 
     static Future<void> login() async {
@@ -34,6 +35,12 @@ class StorageHandler {
     }
   }
 
+
+static Future<void> showSignIns([String? userData]) async {
+    if (userData != null) {
+      await storage.write(key: 'SIGNINS', value: userData);
+    }
+  }
    static Future<void> saveFcmToken([String? token]) async {
     if (token != null) {
       await storage.write(key: 'FCM', value: token);
@@ -142,6 +149,16 @@ static Future<void> saveBankCode([String? code]) async {
     String? user;
     String? data = value['EMAIL'];
     if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+   static Future<String?> getShowSignIn() async {
+    Map<String, String> value = await storage.readAll();
+    String user = '';
+    String data = value['SIGNINS'] ?? '';
+    if (data != '') {
       user = data;
     }
     return user;

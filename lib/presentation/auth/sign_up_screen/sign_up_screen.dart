@@ -79,6 +79,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void pickCountry() {
     showCountryPicker(
         context: context,
+        showPhoneCode: true,
+        useSafeArea: true,
+        useRootNavigator: true,
         onSelect: (Country _country) {
           setState(() {
             country = _country;
@@ -292,74 +295,107 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 textAlign: TextAlign.left,
                               ),
-                              SizedBox(height: 42.v),
-                              CustomOutlinedButton(
-                                text: "Sign up with Google",
-                                processing: (state is AccountProcessing ||
-                                    authUser.status ||
-                                    state is AccountLoading),
-                                title: 'Verfying account...',
-                                margin: EdgeInsets.symmetric(horizontal: 4.h),
-                                leftIcon: Container(
-                                    margin: EdgeInsets.only(right: 10.h),
-                                    child: CustomImageView(
-                                      imagePath:
-                                          ImageConstant.imgSocialMediaIcons,
-                                      height: 24.adaptSize,
-                                      width: 24.adaptSize,
-                                    )),
-                                onPressed: () async {
-                                  setState(() {
-                                    authType = AuthType.google;
-                                  });
-                                  await FirebaseAuth.instance.signOut();
-                                  final GoogleSignIn googleSignIn =
-                                      GoogleSignIn();
-                                  await googleSignIn.signOut();
-                                  Modals.showBottomSheetModal(
-                                    context,
-                                    isDissmissible: true,
-                                    isScrollControlled: true,
-                                    heightFactor: 0.9,
-                                    page: registerUserWithGoogle(
-                                        authUser, context),
-                                  );
-                                },
-                              ),
+                              // SizedBox(height: 42.v),
+                        //       CustomOutlinedButton(
+                        //         text: "Sign up with Google",
+                        //         processing: (state is AccountProcessing ||
+                        //             authUser.status ||
+                        //             state is AccountLoading),
+                        //         title: 'Verfying account...',
+                        //         margin: EdgeInsets.symmetric(horizontal: 4.h),
+                        //         leftIcon: Container(
+                        //             margin: EdgeInsets.only(right: 10.h),
+                        //             child: CustomImageView(
+                        //               imagePath:
+                        //                   ImageConstant.imgSocialMediaIcons,
+                        //               height: 24.adaptSize,
+                        //               width: 24.adaptSize,
+                        //             )),
+                        //         onPressed: () async {
+                        //           setState(() {
+                        //             authType = AuthType.google;
+                        //           });
+                        //           await FirebaseAuth.instance.signOut();
+                        //           final GoogleSignIn googleSignIn =
+                        //               GoogleSignIn();
+                        //           await googleSignIn.signOut();
+                        //           // Modals.showBottomSheetModal(
+                        //           //   context,
+                        //           //   isDissmissible: true,
+                        //           //   isScrollControlled: true,
+                        //           //   heightFactor: 0.9,
+                        //           //   page: registerUserWithGoogle(
+                        //           //       authUser, context),
+                        //           // );
+
+                                   
+                        // Navigator.pop(context);
+                        // User? user = await authUser.signInWithGoogle();
+                        // if (user != null) {
+                        //   registerUser(
+                        //       context: context,
+                        //       isGoogle: true,
+                        //       email: user.email,
+                        //       password: user.email,
+                        //       phoneNumber: 'none',
+                        //       username: user.email);
+                        // } else {
+                        //   Modals.showToast(authUser.successMessage);
+                        // }
+                      
+                        //         },
+                        //       ),
                               SizedBox(height: 13.v),
-                              if (Platform.isIOS)
-                                CustomOutlinedButton(
-                                    text: "Sign in with Apple",
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h),
-                                    leftIcon: Container(
-                                        margin: EdgeInsets.only(right: 10.h),
-                                        child: CustomImageView(
-                                            imagePath: ImageConstant
-                                                .imgSocialMediaIconsOnprimary,
-                                            height: 24.adaptSize,
-                                            width: 24.adaptSize)),
-                                    onPressed: () async {
-                                      setState(() {
-                                    authType = AuthType.apple;
-                                  });
-                                      await FirebaseAuth.instance.signOut();
+                        //       if (Platform.isIOS)
+                        //         CustomOutlinedButton(
+                        //             text: "Sign in with Apple",
+                        //             margin:
+                        //                 EdgeInsets.symmetric(horizontal: 4.h),
+                        //             leftIcon: Container(
+                        //                 margin: EdgeInsets.only(right: 10.h),
+                        //                 child: CustomImageView(
+                        //                     imagePath: ImageConstant
+                        //                         .imgSocialMediaIconsOnprimary,
+                        //                     height: 24.adaptSize,
+                        //                     width: 24.adaptSize)),
+                        //             onPressed: () async {
+                        //               setState(() {
+                        //                 authType = AuthType.apple;
+                        //               });
+                        //               await FirebaseAuth.instance.signOut();
 
-                                    
-                                       
-                                       
-                                            Modals.showBottomSheetModal(
-                                              context,
-                                              isDissmissible: true,
-                                              isScrollControlled: true,
-                                              heightFactor: 0.9,
-                                              page: registerUserWithGoogle(
-                                                  authUser, context),
-                                            );
-                                          
+                        //               Modals.showBottomSheetModal(
+                        //                 context,
+                        //                 isDissmissible: true,
+                        //                 isScrollControlled: true,
+                        //                 heightFactor: 0.9,
+                        //                 page: registerUserWithGoogle(
+                        //                     authUser, context),
+                        //               );
 
-                                          
-                                    }),
+                        // Navigator.pop(context);
+                        // final user = await authUser.signInWithApple();
+
+                        // if (user != null) {
+                        //   if ( user.email != null) {
+                        //     registerUser(
+                        //         context: context,
+                        //         isGoogle: true,
+                        //         email: user.email,
+                        //         password: user.email,
+                        //         phoneNumber: 'none',
+                        //         username: user.email);
+                        //   } else {
+                        //     Modals.showToast('Failed to authenticate user.');
+                        //   }
+                          
+                        // } 
+                        // else {
+                        //   Modals.showToast('Please fill all fields');
+                        // }
+                       
+                    
+                        //             }),
                               SizedBox(height: 13.v),
                               Container(
                                   width: 342.h,

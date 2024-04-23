@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tellesports/widgets/modals.dart';
-import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
@@ -20,7 +20,7 @@ class FirebaseAuthProvider extends BaseViewModel {
 
   String _successMessage = '';
   bool _status = false;
-final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
   setToken(String token) async {
     _token = token;
 
@@ -34,98 +34,97 @@ final FirebaseAuth auth = FirebaseAuth.instance;
   }
 
   Future<User?> signInWithGoogle() async {
-  try {
-    _status = true;
-    setViewState(ViewState.success);
+    try {
+      _status = true;
+      setViewState(ViewState.success);
 
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    if (googleUser == null) {
-      _successMessage = 'Authentication canceled';
+      if (googleUser == null) {
+        _successMessage = 'Authentication canceled';
+        _status = false;
+        setViewState(ViewState.success);
+
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential authResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = authResult.user;
+
+      if (authResult != null) {
+        Map<String, dynamic> userInfo = {
+          "email": user!.email,
+          "name": user.displayName,
+          "imageUrl": user.photoURL,
+          "id": user.uid,
+        };
+      }
+
+      _successMessage = 'Authentication successful';
       _status = false;
       setViewState(ViewState.success);
+
+      return user;
+    } catch (error) {
+      if (error is FirebaseAuthException) {
+        switch (error.code) {
+          case 'account-exists-with-different-credential':
+            _successMessage = 'Account already exists';
+            _status = false;
+            break;
+          case 'invalid-credential':
+            _successMessage = 'Invalid credential';
+            _status = false;
+            break;
+          case 'operation-not-allowed':
+            _successMessage = 'Operation not allowed';
+            _status = false;
+            break;
+          case 'user-disabled':
+            _successMessage =
+                'User account has been disabled by an administrator';
+            _status = false;
+            break;
+          case 'user-not-found':
+            _successMessage = 'User not found';
+            _status = false;
+            break;
+          case 'wrong-password':
+            _successMessage = 'Wrong password';
+            _status = false;
+            break;
+          default:
+            _successMessage = "Error during authentication: ${error.message}";
+            _status = false;
+        }
+
+        setViewState(ViewState.success);
+      } else if (error is PlatformException &&
+          error.code == 'sign_in_failed' &&
+          error.details == 'ID Token expired') {
+        // Handle ID Token expiration error
+        _successMessage = 'Session expired, please sign in again';
+        _status = false;
+        setViewState(ViewState.success);
+      } else {
+        _successMessage = "Unexpected error during authentication: $error";
+        _status = false;
+        setViewState(ViewState.success);
+      }
 
       return null;
     }
-
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    final UserCredential authResult =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    final User? user = authResult.user;
-
-    if (authResult != null) {
-      Map<String, dynamic> userInfo = {
-        "email": user!.email,
-        "name": user.displayName,
-        "imageUrl": user.photoURL,
-        "id": user.uid,
-      };
-    }
-
-    _successMessage = 'Authentication successful';
-    _status = false;
-    setViewState(ViewState.success);
-
-    return user;
-  } catch (error) {
-    if (error is FirebaseAuthException) {
-      switch (error.code) {
-        case 'account-exists-with-different-credential':
-          _successMessage = 'Account already exists';
-          _status = false;
-          break;
-        case 'invalid-credential':
-          _successMessage = 'Invalid credential';
-          _status = false;
-          break;
-        case 'operation-not-allowed':
-          _successMessage = 'Operation not allowed';
-          _status = false;
-          break;
-        case 'user-disabled':
-          _successMessage =
-              'User account has been disabled by an administrator';
-          _status = false;
-          break;
-        case 'user-not-found':
-          _successMessage = 'User not found';
-          _status = false;
-          break;
-        case 'wrong-password':
-          _successMessage = 'Wrong password';
-          _status = false;
-          break;
-        default:
-          _successMessage =
-              "Error during authentication: ${error.message}";
-          _status = false;
-      }
-
-      setViewState(ViewState.success);
-    } else if (error is PlatformException &&
-        error.code == 'sign_in_failed' &&
-        error.details == 'ID Token expired') {
-      // Handle ID Token expiration error
-      _successMessage = 'Session expired, please sign in again';
-      _status = false;
-      setViewState(ViewState.success);
-    } else {
-      _successMessage = "Unexpected error during authentication: $error";
-      _status = false;
-      setViewState(ViewState.success);
-    }
-
-    return null;
   }
-}
 
-signInWithGoogleApple(BuildContext context) async {
+  signInWithGoogleApple(BuildContext context) async {
     final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -154,12 +153,11 @@ signInWithGoogleApple(BuildContext context) async {
     }
   }
 
-
 //   Future<UserCredential?> signInWithApple() async {
 //   try {
 //     _status = true;
 //     setViewState(ViewState.loading);
-    
+
 //     final appleProvider = OAuthProvider("apple.com");
 
 //     final auth = await FirebaseAuth.instance.signInWithPopup(appleProvider);
@@ -191,71 +189,31 @@ signInWithGoogleApple(BuildContext context) async {
 //   }
 // }
 
-  Future<User> signInWithApple() async {
-  try {
+  Future<UserCredential?> signInWithApple() async {
+    try {
+      // Request Apple authentication
+      final result = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName
+        ],
+      );
 
-final scopes = [Scope.email, Scope.fullName];
-    
-    // Perform Apple sign-in request
-    final result = await TheAppleSignIn.performRequests(
-      [AppleIdRequest(requestedScopes: scopes)],
-    );
+      // Create Firebase credential
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: result.identityToken,
+        accessToken: result.authorizationCode,
+      );
 
-    switch (result.status) {
-      case AuthorizationStatus.authorized:
-        // Retrieve Apple ID credential
-        final appleIdCredential = result.credential!;
-        
-        // Exchange Apple ID token for Firebase credential
-        final oAuthProvider = OAuthProvider('apple.com');
-        final credential = oAuthProvider.credential(
-          idToken: String.fromCharCodes(appleIdCredential.identityToken!),
-        );
+      // Sign in with Firebase
+      final userCredential = await auth.signInWithCredential(oauthCredential);
 
-        // Sign in user with Firebase credential
-        final userCredential = await auth.signInWithCredential(credential);
-        final firebaseUser = userCredential.user!;
-
-        // If full name scope is requested, update display name
-        if (scopes.contains(Scope.fullName)) {
-          final fullName = appleIdCredential.fullName;
-          if (fullName != null &&
-              fullName.givenName != null &&
-              fullName.familyName != null) {
-            final displayName = '${fullName.givenName} ${fullName.familyName}';
-
-             
-            await firebaseUser.updateDisplayName(displayName);
-          }
-        }
-
-        // Return signed-in Firebase user
-        return firebaseUser;
-
-      case AuthorizationStatus.error:
-        // Handle authorization error
-        throw PlatformException(
-          code: 'ERROR_AUTHORIZATION_DENIED',
-          message: result.error.toString(),
-        );
-
-      case AuthorizationStatus.cancelled:
-        // Handle user cancellation
-        throw PlatformException(
-          code: 'ERROR_ABORTED_BY_USER',
-          message: 'Sign in aborted by user',
-        );
-
-      default:
-        // Handle other authorization statuses
-        throw UnimplementedError();
+      return userCredential;
+    } catch (error) {
+      print("Error during Apple sign-in: $error");
+      return null;
     }
-  } catch (e) {
-    // Handle any other errors
-    rethrow;  
   }
-}
-
 
   Future<void> signOut(BuildContext context) async {
     try {
