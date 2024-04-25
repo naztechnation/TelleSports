@@ -338,8 +338,8 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
   }
 
   onTapBtnPlus(BuildContext context) {
-    AppNavigator.pushAndStackPage(context,
-        page: PricingPageScreen(balance: balance));
+    // AppNavigator.pushAndStackPage(context,
+    //     page: PricingPageScreen(balance: balance));
   }
 
   trasferTellaCoin() {

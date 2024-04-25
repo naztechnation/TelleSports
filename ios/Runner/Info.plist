@@ -42,9 +42,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera permission is required for image upload.</string>
+	<string>App needs camera access. To capture photos for creating user profiles or posting contents on the application.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to allow you to choose photos to upload or share within the app.</string>
+	<string>We need access to your photo library so you can select and share photos within the app.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

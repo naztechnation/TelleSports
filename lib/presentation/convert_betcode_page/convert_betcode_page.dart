@@ -531,7 +531,7 @@ This may have occurred due to one of the following reasons bellow.
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Tellacoin balance:".toUpperCase(),
+                                  Text("Tellacoin:".toUpperCase(),
                                       style:
                                           CustomTextStyles.bodySmallWhiteA700),
                                   Row(children: [
@@ -544,7 +544,7 @@ This may have occurred due to one of the following reasons bellow.
                                     Padding(
                                         padding: EdgeInsets.only(left: 6.h),
                                         child: Text(
-                                          'UNLIMITED',
+                                          'Free',
                                           //balance,
                                           style: TextStyle(fontSize: 16,color: Colors.white, fontWeight: FontWeight.w500),
                                             // style: CustomTextStyles
@@ -716,10 +716,10 @@ This may have occurred due to one of the following reasons bellow.
   }
 
   onTapBtnPlus(BuildContext context) {
-    AppNavigator.pushAndStackPage(context,
-        page: PricingPageScreen(
-          balance: balance,
-        ));
+    // AppNavigator.pushAndStackPage(context,
+    //     page: PricingPageScreen(
+    //       balance: balance,
+    //     ));
   }
 
    updateUser(

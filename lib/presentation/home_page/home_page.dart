@@ -90,8 +90,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   PreferredSizeWidget _buildAppBar(
       BuildContext context, var user, String photo) {
     return CustomAppBar(
-      leadingWidth: 75.h,
-      height: 70,
+      leadingWidth: 70.adaptSize,
+      height: 62.adaptSize,
       leading: (photo == 'null')
           ? AppbarLeadingCircleimage(
               onTap: () {

@@ -594,7 +594,7 @@ class _ViewLivescoresDetailsState extends State<ViewLivescoresDetails> {
   Widget _buildLegend(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      height: 80,
+      height: 120,
       padding: EdgeInsets.symmetric(
         horizontal: 16.h,
         vertical: 15.v,

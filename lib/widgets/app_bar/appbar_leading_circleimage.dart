@@ -27,13 +27,16 @@ class AppbarLeadingCircleimage extends StatelessWidget {
       },
       child: Padding(
         padding: margin ?? EdgeInsets.zero,
-        child: CustomImageView(
-          imagePath: imagePath,
-          height: 36.adaptSize,
-          width: 36.adaptSize,
-          fit: BoxFit.cover,
-          radius: BorderRadius.circular(
-            50.h,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(80),
+          child: CustomImageView(
+            imagePath: imagePath,
+            height: 36.adaptSize,
+            width: 36.adaptSize,
+            fit: BoxFit.cover,
+            radius: BorderRadius.circular(
+              50.h,
+            ),
           ),
         ),
       ),

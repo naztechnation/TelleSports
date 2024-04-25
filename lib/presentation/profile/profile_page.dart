@@ -65,7 +65,6 @@ class _ProfilePageState extends State<ProfilePage> {
         signInWithGoogle = true;
       } else {
         signInWithGoogle = false;
-        
       }
     });
   }
@@ -86,6 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
     mediaQueryData = MediaQuery.of(context);
 
     final user = Provider.of<FirebaseAuthProvider>(context, listen: true);
+    final user1 = Provider.of<AccountViewModel>(context, listen: true);
 
     return SafeArea(
         child: BlocProvider<AccountCubit>(
@@ -197,50 +197,50 @@ class _ProfilePageState extends State<ProfilePage> {
                             }
                           }),
                           SizedBox(height: 24.v),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8.h, vertical: 2.v),
-                            decoration: AppDecoration.outlineBlack9001.copyWith(
-                                borderRadius: BorderRadiusStyle.roundedBorder8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                (Platform.isAndroid)
-                                    ? Text('Google Login',
-                                        style: TextStyle(
-                                            fontSize: 14, color: Colors.black))
-                                    : Text('Google/Apple Login',
-                                        style: TextStyle(
-                                            fontSize: 14, color: Colors.black)),
-                                Theme(
-                                  data: ThemeData(
-                                    useMaterial3: true,
-                                  ).copyWith(
-                                    colorScheme: Theme.of(context)
-                                        .colorScheme
-                                        .copyWith(outline: Colors.grey),
-                                  ),
-                                  child: Switch(
-                                    activeColor: Colors.green,
-                                    inactiveThumbColor: Colors.grey,
-                                    inactiveTrackColor: Colors.grey[400],
-                                    value: signInWithGoogle,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        signInWithGoogle = value;
+                          // Container(
+                          //   padding: EdgeInsets.symmetric(
+                          //       horizontal: 8.h, vertical: 2.v),
+                          //   decoration: AppDecoration.outlineBlack9001.copyWith(
+                          //       borderRadius: BorderRadiusStyle.roundedBorder8),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       (Platform.isAndroid)
+                          //           ? Text('Google Login',
+                          //               style: TextStyle(
+                          //                   fontSize: 14, color: Colors.black))
+                          //           : Text('Google/Apple Login',
+                          //               style: TextStyle(
+                          //                   fontSize: 14, color: Colors.black)),
+                          //       Theme(
+                          //         data: ThemeData(
+                          //           useMaterial3: true,
+                          //         ).copyWith(
+                          //           colorScheme: Theme.of(context)
+                          //               .colorScheme
+                          //               .copyWith(outline: Colors.grey),
+                          //         ),
+                          //         child: Switch(
+                          //           activeColor: Colors.green,
+                          //           inactiveThumbColor: Colors.grey,
+                          //           inactiveTrackColor: Colors.grey[400],
+                          //           value: signInWithGoogle,
+                          //           onChanged: (value) {
+                          //             setState(() {
+                          //               signInWithGoogle = value;
 
-                                        if (signInWithGoogle) {
-                                          StorageHandler.showSignIns('true');
-                                        } else {
-                                          StorageHandler.showSignIns('');
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          //               if (signInWithGoogle) {
+                          //                 StorageHandler.showSignIns('true');
+                          //               } else {
+                          //                 StorageHandler.showSignIns('');
+                          //               }
+                          //             });
+                          //           },
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                           SizedBox(height: 24.v),
                           if (state is DeletingUserLoading)
                             ...[]
@@ -255,7 +255,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   } else {
                                     StorageHandler.showSignIns('');
                                   }
-
+                                  user1.updateIndex(0);
                                   StorageHandler.saveUserEmail(email);
                                   StorageHandler.saveUserPassword(password);
                                 }),
