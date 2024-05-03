@@ -531,9 +531,10 @@ This may have occurred due to one of the following reasons bellow.
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Tellacoin:".toUpperCase(),
+                                  Text("Units".toUpperCase(),
                                       style:
-                                          CustomTextStyles.bodySmallWhiteA700),
+                                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold,
+                                          color: Colors.white)),
                                   Row(children: [
                                     CustomImageView(
                                         imagePath: ImageConstant.imgSettings,

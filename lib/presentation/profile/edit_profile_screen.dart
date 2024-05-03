@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/model/auth_model/login.dart';
 import 'package:tellesports/utils/validator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';

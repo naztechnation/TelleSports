@@ -22,7 +22,7 @@ class SenderMessageCard extends StatefulWidget {
     required this.username,
     required this.index,
 
-    required this.repliedMessageType, required this.name,
+    required this.repliedMessageType, required this.name, required this.onLongPressAction,
   }) : super(key: key);
   final int index;
 
@@ -33,6 +33,9 @@ class SenderMessageCard extends StatefulWidget {
   final String name;
 
   final Function(dynamic value) onRightSwipe;
+  final Function() onLongPressAction;
+
+  
   final String repliedText;
   final String username;
   final MessageEnum repliedMessageType;
@@ -103,6 +106,9 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
 
         
                   });
+
+                widget.onLongPressAction();
+
                 },
               child: Container(
                 decoration: BoxDecoration(

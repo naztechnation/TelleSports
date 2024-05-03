@@ -4,9 +4,7 @@ import 'package:tellesports/model/report/complaint.dart';
 
 import '../../model/prediction_data/predict_match.dart';
 import '../../model/prediction_data/prediction_rating.dart';
-import '../../model/user_model/transfer_tellacoin.dart'; 
-
-
+ 
 abstract class PredictStates extends Equatable {
   const PredictStates();
 }

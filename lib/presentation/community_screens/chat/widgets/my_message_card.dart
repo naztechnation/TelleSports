@@ -21,6 +21,8 @@ class MyMessageCard extends StatefulWidget {
   final String username;
   final MessageEnum repliedMessageType;
   final bool isSeen;
+  final Function() onLongPressAction;
+
 
   const MyMessageCard({
     Key? key,
@@ -34,7 +36,7 @@ class MyMessageCard extends StatefulWidget {
     required this.username,
     required this.repliedMessageType,
     required this.isSeen,
-    required this.name,
+    required this.name, required this.onLongPressAction,
   }) : super(key: key);
 
   @override
@@ -106,6 +108,8 @@ class _MyMessageCardState extends State<MyMessageCard> {
                   groupInfo.setMessageId(widget.messageId);
                   groupInfo.setMessageType(widget.type);
                 });
+
+                 widget.onLongPressAction();
               },
               child: Container(
                 decoration: BoxDecoration(

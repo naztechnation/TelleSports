@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -8,7 +7,6 @@ import 'package:tellesports/events.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_six.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_three.dart';
-import 'package:tellesports/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
 import '../../blocs/matches/match.dart';
