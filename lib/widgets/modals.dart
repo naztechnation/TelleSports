@@ -56,14 +56,14 @@ class Modals {
                     borderRadius: BorderRadius.circular(30.0), 
                   ),
             title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600), ),
-            content: Text(message),
+            content: Text(message, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
             actions: [
               TextButton(
-                child: Text(buttonNoText),
+                child: Text(buttonNoText, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red),),
                 onPressed: () => Navigator.pop(context, false),
               ),
               TextButton(
-                child: Text(buttonYesText),
+                child: Text(buttonYesText, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
                 onPressed: (){
                   onTap();
                   Navigator.pop(context, false);

@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:flutter/services.dart';
+import 'package:tellesports/res/app_images.dart';
+import 'package:tellesports/widgets/image_view.dart';
 import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../../blocs/prediction/prediction.dart';
@@ -17,6 +19,7 @@ import '../../../../core/app_export.dart';
 import '../../../../core/constants/enums.dart';
 import '../../../../handlers/secure_handler.dart';
 import '../../../../model/chat_model/group.dart';
+import '../../../../model/view_models/account_view_model.dart';
 import '../../../../model/view_models/user_view_model.dart';
 import '../../../../requests/repositories/prediction_repo/predict_repository_impl.dart';
 import '../../../../utils/navigator/page_navigator.dart';
@@ -31,6 +34,7 @@ import '../../../../widgets/custom_text_form_field.dart';
 import '../../../../widgets/modal_content.dart';
 import '../../../../widgets/modals.dart';
 
+import '../../../landing_page/landing_page.dart';
 import '../../community_one_page/community_info_page.dart';
 import '../../provider/auth_provider.dart' as pro;
 import '../../provider/auth_provider.dart';
@@ -39,7 +43,6 @@ import '../widgets/bottom_chat_field.dart';
 
 import '../widgets/my_message_card.dart';
 import '../widgets/sender_message_card.dart';
-
 
 class MobileChatScreen extends StatelessWidget {
   static const String routeName = '/mobile-chat-screen';
@@ -65,11 +68,21 @@ class MobileChatScreen extends StatelessWidget {
     return BlocProvider<PredictionCubit>(
       create: (BuildContext context) => PredictionCubit(
           predictRepository: PredictRepositoryImpl(),
-          viewModel: provider.Provider.of<UserViewModel>(context, listen: false)),
-      child: MobileChat(groupDesc,groupNumber,membersUid,name: name, uid: uid, isGroupChat: isGroupChat, profilePic: profilePic,),
+          viewModel:
+              provider.Provider.of<UserViewModel>(context, listen: false)),
+      child: MobileChat(
+        groupDesc,
+        groupNumber,
+        membersUid,
+        name: name,
+        uid: uid,
+        isGroupChat: isGroupChat,
+        profilePic: profilePic,
+      ),
     );
   }
 }
+
 class MobileChat extends ConsumerStatefulWidget {
   static const String routeName = '/mobile-chat-screen';
   final String name;
@@ -91,8 +104,7 @@ class MobileChat extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _MobileChatState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MobileChatState();
 }
 
 class _MobileChatState extends ConsumerState<MobileChat> {
@@ -121,12 +133,12 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
   final _firebaseMessaging = FirebaseMessaging.instance;
 
-   late PredictionCubit _predictionCubit;
+  late PredictionCubit _predictionCubit;
 
+  bool isLoading = false;
 
   getReports() async {
     _predictionCubit = context.read<PredictionCubit>();
-
   }
 
   getUserId() async {
@@ -179,7 +191,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
           listener: (context, state) {
             if (state is ReportUserLoaded) {
               if (state.complaint.success ?? false) {
-                Modals.showToast('Complaint submitted successfully',
+                Modals.showToast('Complaint Submitted Successfully',
                     messageType: MessageType.success);
                 compaintController.clear();
                 groupInfo.isSelectedMessage(false);
@@ -203,7 +215,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
               }
             }
           },
-          builder: (context, state) => (state is ReportUserLoading)
+          builder: (context, state) => (state is ReportUserLoading || isLoading)
               ? LoadingPage()
               : SafeArea(
                   child: Scaffold(
@@ -234,7 +246,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           groupInfo.setTextIndex(-1);
                           groupInfo.setMessageId('');
                           groupInfo.setMessageType(MessageEnum.none);
-        
+
                           Navigator.pop(context);
                         },
                         margin: EdgeInsets.only(
@@ -328,8 +340,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                               Text(
                                                 '${groupInfo.selectedMessage}',
                                                 maxLines: 4,
-                                                overflow:
-                                                    TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     color: Colors.red,
                                                     fontSize: 15),
@@ -345,7 +356,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                             if (_formKey.currentState!
                                                 .validate()) {
                                               Navigator.pop(context);
-        
+
                                               await context
                                                   .read<PredictionCubit>()
                                                   .sendReport(
@@ -356,12 +367,10 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                                           groupInfo.groupName,
                                                       groupId:
                                                           groupInfo.groupId,
-                                                      groupLeaderName:
-                                                          groupInfo
-                                                              .groupMembers[0]
-                                                              .name,
-                                                      groupName: groupInfo
-                                                          .groupName);
+                                                      groupLeaderName: groupInfo
+                                                          .groupMembers[0].name,
+                                                      groupName:
+                                                          groupInfo.groupName);
                                             }
                                           },
                                           headerColorOne: Color(0xFFFDF9ED),
@@ -430,13 +439,11 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                             builder: (BuildContext context,
                                 AsyncSnapshot<DocumentSnapshot> snapshot) {
                               final pinnedMessage =
-                                  snapshot.data?.get('pinnedMessage') ??
-                                      false;
-        
+                                  snapshot.data?.get('pinnedMessage') ?? false;
+
                               return (pinnedMessage != '')
                                   ? Container(
-                                      width:
-                                          MediaQuery.of(context).size.width,
+                                      width: MediaQuery.of(context).size.width,
                                       color: Colors.white,
                                       child: Padding(
                                         padding: const EdgeInsets.all(12.0),
@@ -493,7 +500,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {}
-        
+
                                 groupInfo.clearGroupImageList();
                                 return Expanded(
                                   child: ListView.builder(
@@ -501,9 +508,8 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                     shrinkWrap: true,
                                     itemCount: snapshot.data?.length ?? 0,
                                     itemBuilder: (context, index) {
-                                      final messageData =
-                                          snapshot.data?[index];
-        
+                                      final messageData = snapshot.data?[index];
+
                                       if (messageData.type ==
                                           MessageEnum.image) {
                                         groupInfo.updateGroupImageList(
@@ -512,7 +518,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                       var timeSent = DateFormat('hh:mm a')
                                           .format(
                                               messageData.timeSent.toLocal());
-        
+
                                       if (!messageData.isSeen &&
                                           messageData.recieverid == userId) {
                                         ref
@@ -554,32 +560,29 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                         );
                                       }
                                       return SenderMessageCard(
-                                          index: index,
-                                          message: messageData.text,
-                                          name: messageData.username,
-                                          date: timeSent,
-                                          type: messageData.type,
-                                          username: messageData.repliedTo,
-                                          repliedMessageType:
-                                              messageData.repliedMessageType,
-                                          onRightSwipe: (value) =>
-                                              onMessageSwipe(
-                                                messageData.text,
-                                                false,
-                                                messageData.type,
-                                              ),
-                                          repliedText:
-                                              messageData.repliedMessage,
-                                          messageId: messageData.messageId,
-                                          onLongPressAction: () {
-                                            if (Platform.isIOS) {
-                                              Modals.showDialogModal(context,
-                                                  page: _buildChatMenu(
-                                                      groupInfo));
-                                            }
-                                          },
-                                          );
-                                          
+                                        index: index,
+                                        message: messageData.text,
+                                        name: messageData.username,
+                                        date: timeSent,
+                                        type: messageData.type,
+                                        username: messageData.repliedTo,
+                                        repliedMessageType:
+                                            messageData.repliedMessageType,
+                                        onRightSwipe: (value) => onMessageSwipe(
+                                          messageData.text,
+                                          false,
+                                          messageData.type,
+                                        ),
+                                        repliedText: messageData.repliedMessage,
+                                        messageId: messageData.messageId,
+                                        onLongPressAction: () {
+                                          if (Platform.isIOS) {
+                                            Modals.showDialogModal(context,
+                                                page:
+                                                    _buildChatMenu(groupInfo));
+                                          }
+                                        },
+                                      );
                                     },
                                   ),
                                 );
@@ -598,23 +601,23 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                 final isGroupLocked =
                                     snapshot.data?.get('isGroupLocked') ??
                                         false;
-        
+
                                 List<dynamic> groupMembersId =
                                     snapshot.data?.get('membersUid') ?? [];
-        
+
                                 List<dynamic> userItem =
                                     removeDuplicates(groupMembersId);
-        
+
                                 if (userItem.contains(userId)) {
                                   containsId = true;
                                   ;
                                 } else {
                                   containsId = false;
-        
-                                  _firebaseMessaging.unsubscribeFromTopic(
-                                      groupInfo.groupId);
+
+                                  _firebaseMessaging
+                                      .unsubscribeFromTopic(groupInfo.groupId);
                                 }
-        
+
                                 if (isGroupLocked) {
                                   return (groupInfo.groupAdminId == userId)
                                       ? BottomChatField(
@@ -691,7 +694,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                           ),
                                         );
                                 }
-        
+
                                 return BottomChatField(
                                   onTap: () {
                                     _scrollDown();
@@ -812,59 +815,82 @@ class _MobileChatState extends ConsumerState<MobileChat> {
       children: [
         if (groupInfo.groupAdminId == userId)
           ListTile(
-            leading: Icon(Icons.delete),
+            leading: CustomImageView(
+              imagePath: AppImages.deleteMessageIcon,
+              height: 24,
+              width: 24,
+            ),
             title: Text('Delete Message'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 15,),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+            ),
             onTap: () {
               Navigator.pop(context);
-              
+
               groupInfo.deleteChatMessage(
                   recieverUserId: widget.uid,
                   userId: userId,
                   messageId: groupInfo.messageId.toString());
             },
           ),
-          Divider(),
+        Divider(),
         if (groupInfo.messageType == MessageEnum.text)
           ListTile(
-            leading: Icon(Icons.copy),
+            leading: CustomImageView(
+              imagePath: AppImages.copyIcon,
+              height: 24,
+              width: 24,
+            ),
             title: Text('Copy'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 15,),
-
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+            ),
             onTap: () {
               Navigator.pop(context);
-              
+
               copyToClipboard(groupInfo.selectedMessage, groupInfo, context);
             },
           ),
-          Divider(),
+        Divider(),
 
         if (groupInfo.groupAdminId == userId)
           ListTile(
-            leading: Icon(Icons.push_pin),
+            leading: CustomImageView(
+              imagePath: AppImages.pinMessageIcon,
+              height: 24,
+              width: 24,
+            ),
             title: Text('Pin Message'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 15,),
-
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+            ),
             onTap: () {
               Navigator.pop(context);
-               
+
               groupInfo.updateGroupPinnedMessage(
                   groupInfo.groupId, groupInfo.selectedMessage);
             },
           ),
-          Divider(),
+        Divider(),
 
         // if (groupInfo.groupAdminId == userId)
         ListTile(
-          leading: Icon(Icons.report),
+          leading: CustomImageView(
+            imagePath: AppImages.reportIcon,
+            height: 24,
+            width: 24,
+          ),
           title: Text('Report'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 15,),
-
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 15,
+          ),
           onTap: () {
-        
-              Navigator.pop(context);
-        
-            
+            Navigator.pop(context);
+
             Modals.showDialogModal(context,
                 page: ModalContentScreen(
                     title: 'Report this message',
@@ -894,7 +920,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         Navigator.pop(context);
-        
+
                         await _predictionCubit.sendReport(
                             complaintType: 'group',
                             complaint:
@@ -909,8 +935,81 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                     headerColorTwo: Color(0xFFFAF3DA)));
           },
         ),
-          
+        Divider(),
+        ListTile(
+          leading: CustomImageView(
+            imagePath: AppImages.flagIcon,
+            height: 24,
+            width: 24,
+          ),
+          title: Text('Flag as Inappropriate',
+              style: TextStyle(color: Colors.red)),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 15,
+          ),
+          onTap: () async {
+            Navigator.pop(context);
 
+            Modals.showAlertOptionDialog(context,
+                title: 'Flag as Inappropriate',
+                message:
+                    'Are you sure you want to Flag the activities in this community as Inappropriate.',
+                onTap: () async {
+              await _predictionCubit.sendReport(
+                  complaintType: 'group',
+                  complaint:
+                      'Flag as Inappropriate:  \n${groupInfo.selectedMessage}   \n\nComplaint: ${groupInfo.selectedMessage}',
+                  reportedUser: groupInfo.groupName,
+                  groupId: groupInfo.groupId,
+                  groupLeaderName: groupInfo.groupMembers[0].name,
+                  groupName: groupInfo.groupName);
+            });
+          },
+        ),
+        Divider(),
+        ListTile(
+            leading: CustomImageView(
+              imagePath: AppImages.blockIcon,
+              height: 24,
+              width: 24,
+            ),
+            title: Text(
+              'Block and Leave Group',
+              style: TextStyle(color: Colors.red),
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+
+              if (groupInfo.groupAdminId == userId) {
+                Modals.showToast(
+                    'You are an admin and can\'t leave the community');
+              } else {
+                Modals.showAlertOptionDialog(context,
+                    title: 'Exit Community',
+                    message: 'Are you sure you want to leave this community.',
+                    onTap: () async {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await groupInfo.removeCurrentUserFromMembers(
+                      groupInfo.groupId, userId, context);
+                  _firebaseMessaging.unsubscribeFromTopic(groupInfo.groupId);
+
+                  setState(() {
+                    isLoading = false;
+                  });
+                  AppNavigator.pushAndStackPage(context, page: LandingPage());
+                  provider.Provider.of<AccountViewModel>(context, listen: true)
+                      .updateIndex(0);
+                });
+              }
+              ;
+            }),
       ],
     );
   }
