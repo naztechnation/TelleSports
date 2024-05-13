@@ -48,6 +48,7 @@ class Modals {
       required String message,
       required Function onTap,
       String buttonYesText = 'Yes',
+      bool call = true,
       String buttonNoText = 'No'}) async {
     final data = await showDialog<bool>(
         context: context,
@@ -56,7 +57,22 @@ class Modals {
                     borderRadius: BorderRadius.circular(30.0), 
                   ),
             title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600), ),
-            content: Text(message, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(),
+                const SizedBox(height: 10,),
+                Text(message, 
+                textAlign: TextAlign.justify,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, ),
+                
+                ),
+                const SizedBox(height: 14,),
+
+                Divider(),
+
+              ],
+            ),
             actions: [
               TextButton(
                 child: Text(buttonNoText, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red),),
@@ -66,7 +82,10 @@ class Modals {
                 child: Text(buttonYesText, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
                 onPressed: (){
                   onTap();
-                  Navigator.pop(context, false);
+                   
+                 Navigator.pop(context, false);
+
+                 
                 },
               )
             ],

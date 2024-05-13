@@ -6,7 +6,7 @@ class UserModel {
   final String email;
   final String bio;
   final int numberOfGroups;
-  final List<String> groupId;
+  final List<String> blockedId;
   UserModel({
     required this.name,
     required this.uid,
@@ -14,7 +14,7 @@ class UserModel {
     required this.profilePic,
     required this.isOnline,
     required this.email,
-    required this.groupId,
+    required this.blockedId,
     required this.numberOfGroups,
   });
 
@@ -25,7 +25,7 @@ class UserModel {
       'profilePic': profilePic,
       'isOnline': isOnline,
       'email': email,
-      'groupId': groupId,
+      'blockedId': blockedId,
       'bio': bio,
       'numberOfGroups': numberOfGroups,
     };
@@ -40,7 +40,7 @@ class UserModel {
       isOnline: map['isOnline'] ?? false,
       email: map['email'] ?? '',
       numberOfGroups: map['numberOfGroups'] ?? 0 ,
-      groupId: List<String>.from(map['groupId']),
+      blockedId: List<String>.from(map['blockedId']) ?? [],
     );
   }
 }

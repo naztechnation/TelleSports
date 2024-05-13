@@ -18,7 +18,9 @@ class AppImages {
   static const pinMessageIcon = '${_baseUrl}pin.png';
   static const reportIcon = '${_baseUrl}report.png';
   static const flagIcon = '${_baseUrl}flag.png';
+  static const blockUserIcon = '${_baseUrl}block_user.png';
   static const blockIcon = '${_baseUrl}group_remove.png';
   static const football = '${_baseUrl}football_logo.jpeg';
+  static const delayChat = '${_baseUrl}delay_chat.png';
   
 }

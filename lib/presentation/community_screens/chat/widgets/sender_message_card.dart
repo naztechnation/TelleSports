@@ -15,18 +15,20 @@ class SenderMessageCard extends StatefulWidget {
     required this.message,
     required this.date,
     required this.messageId,
-    
+    required this.senderId,
     required this.type,
     required this.onRightSwipe,
     required this.repliedText,
     required this.username,
     required this.index,
-
-    required this.repliedMessageType, required this.name, required this.onLongPressAction,
+    required this.repliedMessageType,
+    required this.name,
+    required this.onLongPressAction,
   }) : super(key: key);
   final int index;
 
   final String message;
+  final String senderId;
   final String messageId;
   final String date;
   final MessageEnum type;
@@ -35,7 +37,6 @@ class SenderMessageCard extends StatefulWidget {
   final Function(dynamic value) onRightSwipe;
   final Function() onLongPressAction;
 
-  
   final String repliedText;
   final String username;
   final MessageEnum repliedMessageType;
@@ -56,18 +57,28 @@ class _SenderMessageCardState extends State<SenderMessageCard> {
     final groupInfo = Provider.of<AuthProviders>(context, listen: true);
 
     double screenHeight = MediaQuery.of(context).size.height;
-double statusBarHeight = MediaQuery.of(context).padding.top;
-double appBarHeight = Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight;
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    double appBarHeight =
+        Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight;
 
-double availableHeight = screenHeight - statusBarHeight - appBarHeight;
- adjustedHeight = availableHeight * 0.57;
+    double availableHeight = screenHeight - statusBarHeight - appBarHeight;
+    adjustedHeight = availableHeight * 0.57;
     return SwipeTo(
       onRightSwipe: widget.onRightSwipe,
       child: Container(
-         margin: EdgeInsets.only(top: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? 12 : 8),
-        padding: EdgeInsets.only(bottom: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? 3 : 0),
+        margin: EdgeInsets.only(
+            top: (groupInfo.isSelected && widget.index == groupInfo.textIndex)
+                ? 12
+                : 8),
+        padding: EdgeInsets.only(
+            bottom:
+                (groupInfo.isSelected && widget.index == groupInfo.textIndex)
+                    ? 3
+                    : 0),
         decoration: BoxDecoration(
-          color: (groupInfo.isSelected && widget.index == groupInfo.textIndex) ? Colors.blue.shade100 : Colors.transparent,
+          color: (groupInfo.isSelected && widget.index == groupInfo.textIndex)
+              ? Colors.blue.shade100
+              : Colors.transparent,
         ),
         width: MediaQuery.sizeOf(context).width,
         child: Align(
@@ -78,47 +89,42 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
             ),
             child: GestureDetector(
               onTap: () {
-                  setState(() {
-                    groupInfo.isSelectedMessage(false);
-                    groupInfo.setSelectedMessage('');
-                      
-                     groupInfo.setTextIndex(-1) ;
-                     groupInfo.setMessageId('') ;
-                     groupInfo.setMessageType(MessageEnum.none) ;
-        
-                  });
+                setState(() {
+                  groupInfo.isSelectedMessage(false);
+                  groupInfo.setSelectedMessage('');
+                  groupInfo.setSelectedSenderId('');
+                  groupInfo.setTextIndex(-1);
+                  groupInfo.setMessageId('');
+                  groupInfo.setMessageType(MessageEnum.none);
+                });
 
-                   if(widget.type  ==  MessageEnum.image){
-
-                  Modals.showDialogModal(context,page: _showFullImage(context, widget.message))
-
-                  ;
+                if (widget.type == MessageEnum.image) {
+                  Modals.showDialogModal(context,
+                      page: _showFullImage(context, widget.message));
                 }
-                },
-                onLongPress: () {
-                  setState(() {
-                    groupInfo.isSelectedMessage(true);
-        
-                    groupInfo.setSelectedMessage(widget.message);
-                     groupInfo.setTextIndex(widget.index) ;
-                     groupInfo.setMessageId(widget.messageId) ;
-                     groupInfo.setMessageType(widget.type) ;
+              },
+              onLongPress: () {
+                setState(() {
+                  groupInfo.isSelectedMessage(true);
 
-        
-                  });
+                  groupInfo.setSelectedMessage(widget.message);
+                  groupInfo.setTextIndex(widget.index);
+                  groupInfo.setMessageId(widget.messageId);
+                  groupInfo.setSelectedSenderId(widget.senderId);
+
+                  groupInfo.setMessageType(widget.type);
+                });
 
                 widget.onLongPressAction();
-
-                },
+              },
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: senderMessageColor,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                margin: EdgeInsets.only(
-                    left: 20,
-                    top: 3),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                margin: EdgeInsets.only(left: 20, top: 3),
                 child: Column(
                   children: [
                     Padding(
@@ -156,9 +162,8 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
                                 ),
                               ),
                               child: DisplayTextImageGIF(
-                                    isMe: false,
-                                    username: widget.name,
-              
+                                isMe: false,
+                                username: widget.name,
                                 message: widget.repliedText,
                                 type: widget.repliedMessageType,
                               ),
@@ -166,9 +171,8 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
                             const SizedBox(height: 8),
                           ],
                           DisplayTextImageGIF(
-                                    isMe: false,
-                                    username:  widget.name,
-              
+                            isMe: false,
+                            username: widget.name,
                             message: widget.message,
                             type: widget.type,
                           ),
@@ -196,29 +200,29 @@ double availableHeight = screenHeight - statusBarHeight - appBarHeight;
   }
 
   _showFullImage(BuildContext context, String imageUrl) {
- return  GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
+    return GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: adjustedHeight,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Center(
+                child: ImageView.network(
+                  width: MediaQuery.sizeOf(context).width,
                   height: adjustedHeight,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Center(
-                      child: ImageView.network(
-                        width: MediaQuery.sizeOf(context).width,
-                        height: adjustedHeight,
-                        imageUrl,
-                         placeholder: 'assets/images/loading.gif',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  imageUrl,
+                  placeholder: 'assets/images/loading.gif',
+                  fit: BoxFit.cover,
                 ),
-              ],
+              ),
             ),
-          );
+          ),
+        ],
+      ),
+    );
   }
 }

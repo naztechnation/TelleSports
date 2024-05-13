@@ -19,6 +19,7 @@ class MyMessageCard extends StatefulWidget {
   final Function(dynamic value) onLeftSwipe;
   final String repliedText;
   final String username;
+  final String senderId;
   final MessageEnum repliedMessageType;
   final bool isSeen;
   final Function() onLongPressAction;
@@ -27,6 +28,9 @@ class MyMessageCard extends StatefulWidget {
   const MyMessageCard({
     Key? key,
     required this.message,
+    required this.senderId,
+
+    
     required this.index,
     required this.date,
     required this.type,
@@ -88,7 +92,8 @@ class _MyMessageCardState extends State<MyMessageCard> {
                 setState(() {
                   groupInfo.isSelectedMessage(false);
                   groupInfo.setSelectedMessage('');
-
+                  groupInfo.setSelectedSenderId('');
+                  
                   groupInfo.setTextIndex(-1);
                   groupInfo.setMessageId('');
                   groupInfo.setMessageType(MessageEnum.none);
@@ -107,6 +112,8 @@ class _MyMessageCardState extends State<MyMessageCard> {
                   groupInfo.setTextIndex(widget.index);
                   groupInfo.setMessageId(widget.messageId);
                   groupInfo.setMessageType(widget.type);
+                  groupInfo.setSelectedSenderId(widget.senderId);
+
                 });
 
                  widget.onLongPressAction();

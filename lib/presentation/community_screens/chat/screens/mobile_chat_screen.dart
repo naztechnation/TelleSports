@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,7 @@ import '../../../../core/app_export.dart';
 import '../../../../core/constants/enums.dart';
 import '../../../../handlers/secure_handler.dart';
 import '../../../../model/chat_model/group.dart';
+import '../../../../model/chat_model/user_model.dart';
 import '../../../../model/view_models/account_view_model.dart';
 import '../../../../model/view_models/user_view_model.dart';
 import '../../../../requests/repositories/prediction_repo/predict_repository_impl.dart';
@@ -36,6 +38,7 @@ import '../../../../widgets/modals.dart';
 
 import '../../../landing_page/landing_page.dart';
 import '../../community_one_page/community_info_page.dart';
+import '../../community_one_page/widgets/requests_page.dart';
 import '../../provider/auth_provider.dart' as pro;
 import '../../provider/auth_provider.dart';
 import '../controller/chat_controller.dart';
@@ -115,6 +118,10 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  List<UserModel> requestItems = [];
+
+  List<String> blockedUsers = [];
+
   @override
   void dispose() {
     super.dispose();
@@ -124,6 +131,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     groupInfo.isSelectedMessage(false);
     groupInfo.setSelectedMessage('');
     groupInfo.setTextIndex(-1);
+    groupInfo.setSelectedSenderId('');
     _scrollController.dispose();
   }
 
@@ -135,7 +143,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
   late PredictionCubit _predictionCubit;
 
-  bool isLoading = false;
+  bool isLoading = true;
 
   getReports() async {
     _predictionCubit = context.read<PredictionCubit>();
@@ -148,6 +156,8 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     });
   }
 
+  bool methodCalled = false;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -155,11 +165,20 @@ class _MobileChatState extends ConsumerState<MobileChat> {
         _scrollDown();
       });
     });
+
     getUserId();
     getReports();
 
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
+
     super.initState();
   }
+
+  BuildContext? contex;
 
   @override
   Widget build(
@@ -171,8 +190,15 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     if (groupInfo.groupAdminId == userId) {
       updateUserGroupNumber();
     }
+    if (!methodCalled) {
+      getMyBlockedUsers(groupInfo);
+
+      contex = context;
+    }
 
     _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
+
+    requestItems = removeDuplicates1(groupInfo.requestedMembers);
 
     return WillPopScope(
       onWillPop: () async {
@@ -181,6 +207,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
         groupInfo.setTextIndex(-1);
         groupInfo.setMessageId('');
         groupInfo.setMessageType(MessageEnum.none);
+        groupInfo.setSelectedSenderId('');
 
         Navigator.pop(context);
 
@@ -198,6 +225,8 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                 groupInfo.setSelectedMessage('');
                 groupInfo.setTextIndex(-1);
                 groupInfo.setMessageId('');
+                groupInfo.setSelectedSenderId('');
+
                 groupInfo.setMessageType(MessageEnum.none);
               } else {
                 Modals.showToast('Failed to submit complaint',
@@ -246,6 +275,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           groupInfo.setTextIndex(-1);
                           groupInfo.setMessageId('');
                           groupInfo.setMessageType(MessageEnum.none);
+                          groupInfo.setSelectedSenderId('');
 
                           Navigator.pop(context);
                         },
@@ -427,10 +457,88 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                         groupInfo.setSelectedMessage('');
                         groupInfo.setTextIndex(-1);
                         groupInfo.setMessageId('');
+                        groupInfo.setSelectedSenderId('');
+
                         groupInfo.setMessageType(MessageEnum.none);
                       },
                       child: Column(
                         children: [
+                          if (groupInfo.groupAdminId == userId)
+                            StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('groups')
+                                    .doc(groupInfo.groupId)
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                  final requests =
+                                      snapshot.data?.get('requestsMembers') ??
+                                          false;
+
+                                  groupInfo.requestedUsers(requests);
+
+                                  requestItems = removeDuplicates1(
+                                      groupInfo.requestedMembers);
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      AppNavigator.pushAndStackPage(context,
+                                          page: RequestedUsersPage(
+                                            item: requestItems,
+                                          ));
+                                    },
+                                    child: (requestItems.isNotEmpty)
+                                        ? Container(
+                                            padding: const EdgeInsets.all(12),
+                                            color: Colors.white,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    CustomImageView(
+                                                      imagePath:
+                                                          AppImages.delayChat,
+                                                      height: 24,
+                                                      width: 24,
+                                                      color: Colors.blue,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Text('Pending Requests'),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  width: 26.adaptSize,
+                                                  height: 26.adaptSize,
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Colors.red),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "${requestItems.length}",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : SizedBox.shrink(),
+                                  );
+                                }),
+                          Divider(),
                           StreamBuilder<DocumentSnapshot>(
                             stream: FirebaseFirestore.instance
                                 .collection('groups')
@@ -449,8 +557,11 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                         padding: const EdgeInsets.all(12.0),
                                         child: Row(
                                           children: [
-                                            Icon(
-                                              Icons.push_pin,
+                                            CustomImageView(
+                                              imagePath:
+                                                  AppImages.pinMessageIcon,
+                                              height: 24,
+                                              width: 24,
                                               color: Colors.blue,
                                             ),
                                             SizedBox(
@@ -510,6 +621,87 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                     itemBuilder: (context, index) {
                                       final messageData = snapshot.data?[index];
 
+                                      if (blockedUsers
+                                          .contains(messageData.senderId)) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Modals.showAlertOptionDialog(
+                                                context,
+                                                call: false,
+                                                title: 'UnBlock this user'
+                                                    .toUpperCase(),
+                                                message:
+                                                    'Are you sure you want to unblock this user? Once this action is completed you would view this users contents in every community you share with them. Do you wish to continue?',
+                                                onTap: () async {
+                                              setState(() {
+                                                isLoading = true;
+                                              });
+
+                                              await groupInfo
+                                                  .removeUserFromBlockedList(
+                                                userId: userId,
+                                                memberId: messageData.senderId,
+                                              );
+
+                                              groupInfo
+                                                  .isSelectedMessage(false);
+                                              groupInfo.setSelectedMessage('');
+                                              groupInfo.setTextIndex(-1);
+                                              groupInfo.setMessageId('');
+                                              groupInfo.setSelectedSenderId('');
+
+                                              groupInfo.setMessageType(
+                                                  MessageEnum.none);
+                                              setState(() {
+                                                isLoading = false;
+                                              });
+
+                                              AppNavigator.pushAndStackPage(
+                                                  contex!,
+                                                  rootNavigator: true,
+                                                  page: LandingPage());
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(10),
+                                            margin: EdgeInsets.fromLTRB(
+                                                50, 12, 10, 5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.grey.shade300,
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Center(
+                                                    child: Text(
+                                                  'User content blocked',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontStyle: FontStyle.italic,
+                                                    color: Colors.red,
+                                                  ),
+                                                )),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Align(
+                                                    alignment:
+                                                        Alignment.bottomRight,
+                                                    child: Text(
+                                                      'tap to unblock this user',
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 10,
+                                                          fontStyle:
+                                                              FontStyle.italic),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }  
+
                                       if (messageData.type ==
                                           MessageEnum.image) {
                                         groupInfo.updateGroupImageList(
@@ -536,6 +728,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                           name: messageData.username,
                                           index: index,
                                           date: timeSent,
+                                          senderId: messageData.senderId,
                                           type: messageData.type,
                                           repliedText:
                                               messageData.repliedMessage,
@@ -564,6 +757,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                         message: messageData.text,
                                         name: messageData.username,
                                         date: timeSent,
+                                        senderId: messageData.senderId,
                                         type: messageData.type,
                                         username: messageData.repliedTo,
                                         repliedMessageType:
@@ -731,6 +925,18 @@ class _MobileChatState extends ConsumerState<MobileChat> {
         );
   }
 
+  List<UserModel> removeDuplicates1(List<UserModel> items) {
+    Map<int, UserModel> uniqueItems = {};
+
+    items.forEach((item) {
+      if (items.isNotEmpty || items != []) {
+        uniqueItems[int.tryParse(item.uid)!] = item;
+      }
+    });
+
+    return uniqueItems.values.toList();
+  }
+
   Future<void> copyToClipboard(
       String text, var groupInfo, BuildContext context) async {
     await Clipboard.setData(ClipboardData(text: text)).then((value) => {
@@ -738,6 +944,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
           groupInfo.isSelectedMessage(false),
           groupInfo.setSelectedMessage(''),
           groupInfo.setTextIndex(-1),
+          groupInfo.setSelectedSenderId(''),
           groupInfo.setMessageId(''),
           groupInfo.setMessageType(MessageEnum.none)
         });
@@ -763,7 +970,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     );
   }
 
-  List<String> removeDuplicates(List<dynamic> items) {
+  List<dynamic> removeDuplicates(List<dynamic> items) {
     Map<int, String> uniqueItems = {};
 
     items.forEach((item) {
@@ -938,6 +1145,58 @@ class _MobileChatState extends ConsumerState<MobileChat> {
         Divider(),
         ListTile(
           leading: CustomImageView(
+            imagePath: AppImages.blockUserIcon,
+            height: 24,
+            width: 24,
+          ),
+          title: Text(
+              (blockedUsers.contains(groupInfo.selectedSenderId)
+                  ? 'Unblock this user'
+                  : 'Block this user'),
+              style: TextStyle(color: Colors.red)),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 15,
+          ),
+          onTap: () async {
+            Navigator.pop(context);
+
+            Modals.showAlertOptionDialog(context,
+                title: 'Block this user',
+                message:
+                    'Are you sure you want to block this user? Once this action is completed you would sieze to view this users contents in every community you share with them. Do you wish to continue?',
+                onTap: () async {
+              if (userId.trim() == groupInfo.selectedSenderId) {
+                Modals.showToast('Opps you cant block yourself');
+              } else {
+                setState(() {
+                  isLoading = true;
+                });
+
+                await groupInfo.updateMyBlockedUsers(
+                    userId: userId, memberUid: groupInfo.selectedSenderId);
+
+                groupInfo.isSelectedMessage(false);
+                groupInfo.setSelectedMessage('');
+                groupInfo.setTextIndex(-1);
+                groupInfo.setMessageId('');
+                groupInfo.setSelectedSenderId('');
+
+                groupInfo.setMessageType(MessageEnum.none);
+                setState(() {
+                  isLoading = false;
+                });
+
+                AppNavigator.pushAndStackPage(context, page: LandingPage());
+                provider.Provider.of<AccountViewModel>(context, listen: true)
+                    .updateIndex(0);
+              }
+            });
+          },
+        ),
+        Divider(),
+        ListTile(
+          leading: CustomImageView(
             imagePath: AppImages.flagIcon,
             height: 24,
             width: 24,
@@ -990,7 +1249,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                     'You are an admin and can\'t leave the community');
               } else {
                 Modals.showAlertOptionDialog(context,
-                    title: 'Exit Community',
+                    title: 'Block and Exit Community',
                     message: 'Are you sure you want to leave this community.',
                     onTap: () async {
                   setState(() {
@@ -1012,5 +1271,14 @@ class _MobileChatState extends ConsumerState<MobileChat> {
             }),
       ],
     );
+  }
+
+  getMyBlockedUsers(groupInfo) async {
+    blockedUsers = await groupInfo.getMyBlockedUsers(userId: userId);
+    setState(() {
+      if (!methodCalled) {
+        methodCalled = true;
+      }
+    });
   }
 }

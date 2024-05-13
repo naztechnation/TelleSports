@@ -26,7 +26,7 @@ import '../../community_screens/provider/auth_provider.dart';
 import '../../landing_page/landing_page.dart';
 import '../../manage_account/verify_account_screen/verify_account_screen.dart';
 
-enum Scope { fullName, email }
+enum Scope {fullName, email }
 
 class SigninScreen extends ConsumerStatefulWidget {
   SigninScreen({Key? key}) : super(key: key);
@@ -271,88 +271,88 @@ String password = '';
                               //     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black38)),
                               SizedBox(height: 11.v),
 
-                             if(signInValue != '') Column(children: [
-                                 CustomOutlinedButton(
-                                text: "Sign in with Google",
-                                margin: EdgeInsets.symmetric(horizontal: 4.h),
-                                leftIcon: Container(
-                                    margin: EdgeInsets.only(right: 10.h),
-                                    child: CustomImageView(
-                                      imagePath:
-                                          ImageConstant.imgSocialMediaIcons,
-                                      height: 24.adaptSize,
-                                      width: 24.adaptSize,
-                                    )),
-                                onPressed: () async {
-                                  setState(() {
-                                    authType = AuthType.google;
-                                  });
-                                  await FirebaseAuth.instance.signOut();
-                                  final GoogleSignIn googleSignIn =
-                                      GoogleSignIn();
-                                  await googleSignIn.signOut();
-                                  User? user =
-                                      await authUser.signInWithGoogle();
-                                  if (user != null) {
-                                    if (email != '' && password != '') {
-                                            loginUser(
-                                        ctx: context,
-                                        isGoo: true,
-                                        email: email,
-                                        password: password
-                                        );
-                                         }else{
-                                          Modals.showToast('Opps user does not exist enter details to login.');
-                                         }
-                                  }
-                                },
-                              ),
-                              SizedBox(height: 13.v),
-                              if (Platform.isIOS)
-                                CustomOutlinedButton(
-                                    text: "Sign in with Apple",
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 4.h),
-                                    leftIcon: Container(
-                                        margin: EdgeInsets.only(right: 10.h),
-                                        child: CustomImageView(
-                                            imagePath: ImageConstant
-                                                .imgSocialMediaIconsOnprimary,
-                                            height: 24.adaptSize,
-                                            width: 24.adaptSize)),
-                                    onPressed: () async {
-                                      try {
-                                        setState(() {
-                                          authType = AuthType.google;
-                                        });
+                            //  if(signInValue != '') Column(children: [
+                            //      CustomOutlinedButton(
+                            //     text: "Sign in with Google",
+                            //     margin: EdgeInsets.symmetric(horizontal: 4.h),
+                            //     leftIcon: Container(
+                            //         margin: EdgeInsets.only(right: 10.h),
+                            //         child: CustomImageView(
+                            //           imagePath:
+                            //               ImageConstant.imgSocialMediaIcons,
+                            //           height: 24.adaptSize,
+                            //           width: 24.adaptSize,
+                            //         )),
+                            //     onPressed: () async {
+                            //       setState(() {
+                            //         authType = AuthType.google;
+                            //       });
+                            //       await FirebaseAuth.instance.signOut();
+                            //       final GoogleSignIn googleSignIn =
+                            //           GoogleSignIn();
+                            //       await googleSignIn.signOut();
+                            //       User? user =
+                            //           await authUser.signInWithGoogle();
+                            //       if (user != null) {
+                            //         if (email != '' && password != '') {
+                            //                 loginUser(
+                            //             ctx: context,
+                            //             isGoo: true,
+                            //             email: email,
+                            //             password: password
+                            //             );
+                            //              }else{
+                            //               Modals.showToast('Opps user does not exist enter details to login.');
+                            //              }
+                            //       }
+                            //     },
+                            //   ),
+                            //   SizedBox(height: 13.v),
+                            //   if (Platform.isIOS)
+                            //     CustomOutlinedButton(
+                            //         text: "Sign in with Apple",
+                            //         margin:
+                            //             EdgeInsets.symmetric(horizontal: 4.h),
+                            //         leftIcon: Container(
+                            //             margin: EdgeInsets.only(right: 10.h),
+                            //             child: CustomImageView(
+                            //                 imagePath: ImageConstant
+                            //                     .imgSocialMediaIconsOnprimary,
+                            //                 height: 24.adaptSize,
+                            //                 width: 24.adaptSize)),
+                            //         onPressed: () async {
+                            //           try {
+                            //             setState(() {
+                            //               authType = AuthType.google;
+                            //             });
 
-                                        await FirebaseAuth.instance.signOut();
-                                        final user =
-                                            await authUser.signInWithApple();
+                            //             await FirebaseAuth.instance.signOut();
+                            //             final user =
+                            //                 await authUser.signInWithApple();
 
-                                        if (user != null) {
+                            //             if (user != null) {
                                           
-                                         if (email != '' && password != '') {
-                                            loginUser(
-                                        ctx: context,
-                                        isGoo: true,
-                                        email: email,
-                                        password: password
-                                        );
-                                         }else{
-                                          Modals.showToast('Opps user does not exist enter details to login.');
-                                         }
+                            //              if (email != '' && password != '') {
+                            //                 loginUser(
+                            //             ctx: context,
+                            //             isGoo: true,
+                            //             email: email,
+                            //             password: password
+                            //             );
+                            //              }else{
+                            //               Modals.showToast('Opps user does not exist enter details to login.');
+                            //              }
                                            
-                                        } else {
-                                          print(
-                                              'Sign in with Apple failed or was cancelled.');
-                                        }
-                                      } catch (e) {
-                                        print(
-                                            'Error signing in with Apple: $e');
-                                      }
-                                    }),
-                              ],),
+                            //             } else {
+                            //               print(
+                            //                   'Sign in with Apple failed or was cancelled.');
+                            //             }
+                            //           } catch (e) {
+                            //             print(
+                            //                 'Error signing in with Apple: $e');
+                            //           }
+                            //         }),
+                            //   ],),
                              
                               SizedBox(height: 10.v)
                             ]))),
