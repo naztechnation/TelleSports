@@ -6,7 +6,7 @@ class UserModel {
   final String email;
   final String bio;
   final int numberOfGroups;
-  final List<String> blockedId;
+  final List<dynamic> blockedId;
   UserModel({
     required this.name,
     required this.uid,

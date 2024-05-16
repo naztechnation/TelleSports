@@ -37,9 +37,16 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
   List<String> userItem = [];
 
   String userId = '';
+  
+  String plan = '';
+  String email = '';
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
-    setState(() {});
+    plan = await StorageHandler.getUserPlan() ?? '';
+    email = await StorageHandler.getUserEmail() ?? '';
+   Future.delayed(Duration(seconds: 1), (() {
+      setState(() {});
+   }));
   }
 
   bool _dataAdded = false;
@@ -65,10 +72,13 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
         child: Scaffold(
       body: Scaffold(
           resizeToAvoidBottomInset: false,
-          bottomNavigationBar: Padding(
+          bottomNavigationBar: 
+          // (plan.toLowerCase() == 'Community Leader'.toLowerCase() || email.toLowerCase().trim() == 'officialtellasport@gmail.com') ?
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: buildBuyTellacoins(context),
           ),
+          // : SizedBox.shrink(),
           // appBar: _buildAppBar(context,),
 
           body: SizedBox(

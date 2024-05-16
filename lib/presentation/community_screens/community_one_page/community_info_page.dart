@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/common/widgets/loader.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/presentation/community_screens/community_one_page/update_commmunity_info.dart'; 
+import 'package:tellesports/presentation/community_screens/community_one_page/update_commmunity_info.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
-import 'package:tellesports/widgets/custom_elevated_button.dart'; 
+import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/image_view.dart';
 
 import '../../../blocs/prediction/prediction.dart';
@@ -83,8 +83,7 @@ class CommunityInfo extends StatefulWidget {
 }
 
 class _CommunityInfoState extends State<CommunityInfo> {
-
-    final _firebaseMessaging = FirebaseMessaging.instance;
+  final _firebaseMessaging = FirebaseMessaging.instance;
 
   TextEditingController vectorController = TextEditingController();
 
@@ -122,108 +121,152 @@ class _CommunityInfoState extends State<CommunityInfo> {
 
     moveItemToFirst(groupInfo.groupAdminId);
 
-   
-
-     if (!_dataAdded) {
-                          getUsers(groupInfo, widget.membersUid);
-                          _dataAdded = true;
-                        }
+    if (!_dataAdded) {
+      getUsers(groupInfo, widget.membersUid);
+      _dataAdded = true;
+    }
 
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: _buildAppBar(context),
             body: BlocConsumer<PredictionCubit, PredictStates>(
-              listener: (context, state) {
-                if (state is ReportUserLoaded) {
-                  if (state.complaint.success ?? false) {
-                    Modals.showToast('Complaint submitted successfully',
-                        messageType: MessageType.success);
-                    compaintController.clear();
-                  } else {
-                    Modals.showToast('Failed to submit complaint',
-                        messageType: MessageType.error);
+                listener: (context, state) {
+                  if (state is ReportUserLoaded) {
+                    if (state.complaint.success ?? false) {
+                      Modals.showToast('Complaint submitted successfully',
+                          messageType: MessageType.success);
+                      compaintController.clear();
+                    } else {
+                      Modals.showToast('Failed to submit complaint',
+                          messageType: MessageType.error);
+                    }
+                  } else if (state is PredictApiErr) {
+                    if (state.message != null) {
+                      Modals.showToast(state.message ?? '',
+                          messageType: MessageType.error);
+                    }
+                  } else if (state is PredictNetworkErr) {
+                    if (state.message != null) {
+                      Modals.showToast(state.message ?? '',
+                          messageType: MessageType.error);
+                    }
                   }
-                } else if (state is PredictApiErr) {
-                  if (state.message != null) {
-                    Modals.showToast(state.message ?? '',
-                        messageType: MessageType.error);
-                  }
-                } else if (state is PredictNetworkErr) {
-                  if (state.message != null) {
-                    Modals.showToast(state.message ?? '',
-                        messageType: MessageType.error);
-                  }
-                }
-              },
-              builder: (context, state) => SingleChildScrollView(
-                  padding: EdgeInsets.only(top: 15.v),
-                  child: Container(
-                      margin: EdgeInsets.only(bottom: 5.v),
-                      padding: EdgeInsets.symmetric(horizontal: 20.h),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Modals.showDialogModal(
-                                          borderRadius: 12,
-                                          context,
-                                          page: _showFullImage(
-                                              context, widget.profilePic));
-                                    },
-                                    child: CustomImageView(
-                                        imagePath: widget.profilePic,
-                                        placeHolder: ImageConstant.imgAvatar,
-                                        height: 64.adaptSize,
-                                        width: 64.adaptSize,
-                                        radius: BorderRadius.circular(32.h)),
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 10.h, bottom: 18.v),
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(widget.name,
-                                                style: TextStyle(
-                                                    color: appTheme.gray900,
-                                                    fontSize: 18.fSize,
-                                                    fontFamily: 'DM Sans',
-                                                    fontWeight:
-                                                        FontWeight.w700)),
-                                            SizedBox(height: 2.v),
-                                            Text(
-                                                (groupMembers.length == '1')
-                                                    ? "${groupMembers.length}   Member"
-                                                    : "${groupMembers.length}   Members",
-                                                style: TextStyle(
-                                                    color: theme.colorScheme
-                                                        .onPrimaryContainer,
-                                                    fontSize: 14.fSize,
-                                                    fontFamily: 'DM Sans',
-                                                    fontWeight:
-                                                        FontWeight.w500))
-                                          ]))
-                                ]),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            if (groupInfo.groupAdminId == userId)
-                              Column(children: [
-                                Card(
-                                  elevation: 0.3,
-                                  child: ListTile(
-                                    leading: const Icon(
-                                      Icons.notifications,
-                                      color: Colors.blue,
+                },
+                builder: (context, state) => SingleChildScrollView(
+                      padding: EdgeInsets.only(top: 15.v),
+                      child: Container(
+                          margin: EdgeInsets.only(bottom: 5.v),
+                          padding: EdgeInsets.symmetric(horizontal: 20.h),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Modals.showDialogModal(
+                                              borderRadius: 12,
+                                              context,
+                                              page: _showFullImage(
+                                                  context, widget.profilePic));
+                                        },
+                                        child: CustomImageView(
+                                            imagePath: widget.profilePic,
+                                            placeHolder:
+                                                ImageConstant.imgAvatar,
+                                            height: 64.adaptSize,
+                                            width: 64.adaptSize,
+                                            radius:
+                                                BorderRadius.circular(32.h)),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 10.h, bottom: 18.v),
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(widget.name,
+                                                    style: TextStyle(
+                                                        color: appTheme.gray900,
+                                                        fontSize: 18.fSize,
+                                                        fontFamily: 'DM Sans',
+                                                        fontWeight:
+                                                            FontWeight.w700)),
+                                                SizedBox(height: 2.v),
+                                                Text(
+                                                    (groupMembers.length == '1')
+                                                        ? "${groupMembers.length}   Member"
+                                                        : "${groupMembers.length}   Members",
+                                                    style: TextStyle(
+                                                        color: theme.colorScheme
+                                                            .onPrimaryContainer,
+                                                        fontSize: 14.fSize,
+                                                        fontFamily: 'DM Sans',
+                                                        fontWeight:
+                                                            FontWeight.w500))
+                                              ]))
+                                    ]),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                if (groupInfo.groupAdminId == userId)
+                                  Column(children: [
+                                    Card(
+                                      elevation: 0.3,
+                                      child: ListTile(
+                                        leading: const Icon(
+                                          Icons.notifications,
+                                          color: Colors.blue,
+                                        ),
+                                        title: const Text('Mute Community'),
+                                        trailing:
+                                            StreamBuilder<DocumentSnapshot>(
+                                          stream: FirebaseFirestore.instance
+                                              .collection('groups')
+                                              .doc(groupInfo.groupId)
+                                              .snapshots(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<DocumentSnapshot>
+                                                  snapshot) {
+                                            final isGroupLocked = snapshot.data
+                                                    ?.get('isGroupLocked') ??
+                                                false;
+
+                                            return CupertinoSwitch(
+                                                value: isGroupLocked,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) =>
+                                                    setState(() {
+                                                      groupInfo
+                                                          .updateGroupLockStatus(
+                                                              groupInfo.groupId,
+                                                              newValue);
+                                                    }));
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                    title: const Text('Mute Community'),
-                                    trailing: StreamBuilder<DocumentSnapshot>(
+                                  ]),
+
+                                SizedBox(height: 24.v),
+                                _buildCommunityDescription(context,
+                                    groupInfo.groupDescription, groupInfo),
+                                //   SizedBox(height: 24.v),
+                                //  _buildShareCommunity(context, groupInfo.groupLink),
+                                if (groupInfo.groupImageList.isNotEmpty)
+                                  SizedBox(height: 24.v),
+                                if (groupInfo.groupImageList.isNotEmpty)
+                                  _buildMedia(
+                                      context, groupInfo.groupImageList),
+                                SizedBox(height: 14.v),
+                                if (groupInfo.groupAdminId == userId)
+                                  SizedBox(height: 12.v),
+                                if (groupInfo.groupAdminId == userId)
+                                  StreamBuilder<DocumentSnapshot>(
                                       stream: FirebaseFirestore.instance
                                           .collection('groups')
                                           .doc(groupInfo.groupId)
@@ -231,416 +274,427 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                       builder: (BuildContext context,
                                           AsyncSnapshot<DocumentSnapshot>
                                               snapshot) {
-                                        final isGroupLocked = snapshot.data
-                                                ?.get('isGroupLocked') ??
+                                        final requests = snapshot.data
+                                                ?.get('requestsMembers') ??
                                             false;
 
-                                        return CupertinoSwitch(
-                                            value: isGroupLocked,
-                                            activeColor: Colors.blue,
-                                            onChanged: (newValue) =>
-                                                setState(() {
-                                                  groupInfo
-                                                      .updateGroupLockStatus(
-                                                          groupInfo.groupId,
-                                                          newValue);
-                                                }));
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ]),
+                                        groupInfo.requestedUsers(requests);
 
-                            SizedBox(height: 24.v),
-                            _buildCommunityDescription(
-                                context, groupInfo.groupDescription, groupInfo),
-                            //   SizedBox(height: 24.v),
-                            //  _buildShareCommunity(context, groupInfo.groupLink),
-                            if (groupInfo.groupImageList.isNotEmpty)
-                              SizedBox(height: 24.v),
-                            if (groupInfo.groupImageList.isNotEmpty)
-                              _buildMedia(context, groupInfo.groupImageList),
-                            SizedBox(height: 14.v),
-                            if (groupInfo.groupAdminId == userId)
-                              SizedBox(height: 12.v),
-                            if (groupInfo.groupAdminId == userId)
-                              StreamBuilder<DocumentSnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('groups')
-                                      .doc(groupInfo.groupId)
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<DocumentSnapshot>
-                                          snapshot) {
-                                    final requests =
-                                        snapshot.data?.get('requestsMembers') ??
+                                        requestItems = removeDuplicates(
+                                            groupInfo.requestedMembers);
+
+                                        final blockedRequests = snapshot.data
+                                                ?.get('blockedMembers') ??
                                             false;
 
-                                    groupInfo.requestedUsers(requests);
+                                        groupInfo.blockedUsers(blockedRequests);
 
-                                    requestItems = removeDuplicates(
-                                        groupInfo.requestedMembers);
-
-                                        final blockedRequests =
-                                        snapshot.data?.get('blockedMembers') ??
-                                            false;
-
-                                    groupInfo.blockedUsers(blockedRequests);
-
-                                    blockedItems = removeDuplicates(
-                                        groupInfo.blockedMembers);
+                                        blockedItems = removeDuplicates(
+                                            groupInfo.blockedMembers);
 
                                         final usersIds =
-                                        snapshot.data?.get('membersUid') ??
-                                            [];
+                                            snapshot.data?.get('membersUid') ??
+                                                [];
 
-                                            getUsers(groupInfo, usersIds);
+                                        getUsers(groupInfo, usersIds);
 
-                                    return GestureDetector(
-                                      onTap: () {
-                                        AppNavigator.pushAndStackPage(context,
-                                            page: RequestedUsersPage(
-                                              item: requestItems,
-                                            ));
-                                      },
-                                      child: Card(
-                                          elevation: 0.2,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text('Requests'),
-                                                Container(
-                                                  width: 26.adaptSize,
-                                                  height: 26.adaptSize,
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.red),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "${requestItems.length}",
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )),
-                                    );
-                                  }),
-                            if (groupInfo.groupAdminId == userId)
-                              SizedBox(height: 11.v),
-                            if (groupInfo.groupAdminId == userId)
-                              GestureDetector(
-                                      onTap: () {
-                                        AppNavigator.pushAndStackPage(context,
-                                            page: BlockedUsersPage(
-                                                item: blockedItems));
-                                      },
-                                      child: Card(
-                                          elevation: 0.2,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text('Blocked Users'),
-                                                Container(
-                                                  width: 26.adaptSize,
-                                                  height: 26.adaptSize,
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.red),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "${blockedItems.length}",
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )),
-                                    ), 
-                            
-                           SizedBox(height: 24.v),
-                             Card(
-          elevation: 0.4,
-          child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 11.v),
-              // decoration: AppDecoration.outlineBlackF
-              //     .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        (groupMembers.length == '1')
-                            ? "${groupMembers.length} Member"
-                            : "${groupMembers.length} Members",
-                        style: TextStyle(
-                            fontSize: 16.fSize,
-                            fontFamily: 'DM Sans',
-                            fontWeight: FontWeight.w700)),
-                    SizedBox(height: 8.v),
-                    ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: (groupMembers.length <= 10) ? groupMembers.length : 10,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              AppNavigator.pushAndStackPage(context,
-                                  page: IndividualUserInfo(
-                                    name: groupMembers[index].name,
-                                    image: groupMembers[index].profilePic,
-                                    bio: groupMembers[index].bio,
-                                    username: groupMembers[index].name,
-                                    isGroupAdmin:
-                                        groupInfo.groupAdminId == groupMembers[index].uid,
-                                    memberId: groupMembers[index].uid,
-                                  ));
-                            },
-                            child: UserprofileItemWidget(
-                              name: groupMembers[index].name,
-                              bio: groupMembers[index].bio,
-                              index: groupInfo.groupAdminId == groupMembers[index].uid,
-                              image: groupMembers[index].profilePic,
-                            ),
-                          );
-                        }),
-                    SizedBox(height: 12.v),
-                    GestureDetector(
-                      onTap: () {
-                        AppNavigator.pushAndStackPage(context,
-                            page: AllUsersPage(
-                              users: groupMembers,
-                              adminId: groupInfo.groupAdminId,
-                            ));
-                      },
-                      child: Text("see all >",
-                          style: TextStyle(
-                              fontSize: 16.fSize,
-                              fontFamily: 'DM Sans',
-                              fontWeight: FontWeight.w500)),
-                    ),
-                  ])),
-        ),
-     
-                            
-                  if (isLoading || state is ReportUserLoading) ...[
-                              SizedBox(height: 24.v),
-                              Center(
-                                child: Loader(),
-                              )
-                            ] else ...[
-                              Column(
-                                children: [
-                                  SizedBox(height: 30.v),
-                                  CustomElevatedButton(
-                                      text: "Leave community",
-                                      processing: isLoading,
-                                      buttonStyle: CustomButtonStyles.fillRed,
-                                      onPressed: () async {
-                                        if (groupInfo.groupAdminId == userId) {
-                                          Modals.showToast(
-                                              'You are an admin and can\'t leave the community');
-                                        } else {
-                                          Modals.showAlertOptionDialog(context,
-                                              title: 'Exit Community',
-                                              message:
-                                                  'Are you sure you want to leave this community.',
-                                              onTap: () async {
-                                            setState(() {
-                                              isLoading = true;
-                                            });
-                                            await groupInfo
-                                                .removeCurrentUserFromMembers(
-                                                    groupInfo.groupId,
-                                                    userId,
-                                                    context);
-                                                  _firebaseMessaging.unsubscribeFromTopic(groupInfo.groupId);
-
-                                            setState(() {
-                                              isLoading = false;
-                                            });
+                                        return GestureDetector(
+                                          onTap: () {
                                             AppNavigator.pushAndStackPage(
                                                 context,
-                                                page: LandingPage());
-                                            user.updateIndex(0);
-                                          });
-                                        }
-                                      }),
-                                  if (groupInfo.groupAdminId == userId)
-                                    SizedBox(height: 16.v),
-                                  if (groupInfo.groupAdminId == userId)
-                                    CustomElevatedButton(
-                                        text: "Delete community",
-                                        processing: isLoading,
-                                        buttonStyle: CustomButtonStyles.fillRed,
-                                        onPressed: () async {
-                                          Modals.showAlertOptionDialog(context,
-                                              title: 'Delete Community',
-                                              message:
-                                                  'Warning: Are you sure you want to Delete this community. As  this action cannot be reversed...',
-                                              onTap: () async {
-                                            setState(() {
-                                              isLoading = true;
-                                            });
-                                            await groupInfo.deleteGroup(
-                                                groupInfo.groupId, context);
-
-                                                  _firebaseMessaging.unsubscribeFromTopic(groupInfo.groupId);
-
-                                            setState(() {
-                                              isLoading = false;
-                                            });
-                                            user.updateIndex(0);
-                                            AppNavigator.pushAndStackPage(
-                                                context,
-                                                page: LandingPage());
-                                          });
-                                        }),
-                                  SizedBox(height: 16.v),
-                                  CustomOutlinedButton(
-                                    text: "Report community",
-                                    processing: isLoading,
-                                    onPressed: () {
-                                      Modals.showDialogModal(context,
-                                          page: ModalContentScreen(
-                                              title: 'Report this user',
-                                              body: Column(
-                                                children: [
-                                                  _buildComplaintField(context)
-                                                ],
-                                              ),
-                                              btnText: 'Submit',
-                                              onPressed: () async {
-                                                Navigator.pop(context);
-                                                if (compaintController
-                                                    .text.isNotEmpty) {
-                                                  await _predictionCubit
-                                                      .sendReport(
-                                                          complaintType:
-                                                              'group',
-                                                          complaint:
-                                                              compaintController
-                                                                  .text,
-                                                          reportedUser:
-                                                              groupInfo
-                                                                  .groupName,
-                                                          groupId:
-                                                              groupInfo.groupId,
-                                                          groupLeaderName:
-                                                              groupMembers[0]
-                                                                  .name,
-                                                          groupName: groupInfo
-                                                              .groupName);
-
-                                                  setState(() {
-                                                    isLoading = true;
-                                                  });
-
-                                                  await groupInfo
-                                                      .removeCurrentUserFromMembers(
-                                                          groupInfo.groupId,
-                                                          userId,
-                                                          context);
-                                                  setState(() {
-                                                    isLoading = false;
-                                                  });
-
-                                                  _firebaseMessaging.unsubscribeFromTopic(groupInfo.groupId);
-
-                                                  Modals.showDialogModal(
-                                                      context,
-                                                      page: ModalContentScreen(
-                                                          title:
-                                                              'Thanks for your feedback!!!!'
-                                                                  .toUpperCase(),
-                                                          body: Text(
-                                                            'We have recieved your feedback and we would look into it shortly we are sorry for any inconvenience this has caused you.',
-                                                            maxLines: 4,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
+                                                page: RequestedUsersPage(
+                                                  item: requestItems,
+                                                ));
+                                          },
+                                          child: Card(
+                                              elevation: 0.2,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text('Requests'),
+                                                    Container(
+                                                      width: 26.adaptSize,
+                                                      height: 26.adaptSize,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: Colors.red),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4.0),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "${requestItems.length}",
                                                             style: TextStyle(
-                                                              color: appTheme
-                                                                  .gray900,
-                                                              fontSize:
-                                                                  18.fSize,
-                                                              fontFamily:
-                                                                  'DM Sans',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .white),
                                                           ),
-                                                          btnText: 'Close',
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          headerColorOne:
-                                                              Color.fromARGB(
-                                                                  255,
-                                                                  192,
-                                                                  234,
-                                                                  206),
-                                                          headerColorTwo:
-                                                              Color.fromARGB(
-                                                                  255,
-                                                                  65,
-                                                                  210,
-                                                                  101)));
-
-                                                  Future.delayed(
-                                                      Duration(seconds: 10),
-                                                      () {
-                                                    AppNavigator
-                                                        .pushAndStackPage(
-                                                            context,
-                                                            page:
-                                                                LandingPage());
-                                                    user.updateIndex(0);
-                                                  });
-                                                } else {
-                                                  Modals.showToast(
-                                                      'Please fill in your complaints');
-                                                }
-                                              },
-                                              headerColorOne: Color(0xFFFDF9ED),
-                                              headerColorTwo:
-                                                  Color(0xFFFAF3DA)));
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
+                                        );
+                                      }),
+                                if (groupInfo.groupAdminId == userId)
+                                  SizedBox(height: 11.v),
+                                if (groupInfo.groupAdminId == userId)
+                                  GestureDetector(
+                                    onTap: () {
+                                      AppNavigator.pushAndStackPage(context,
+                                          page: BlockedUsersPage(
+                                              item: blockedItems));
                                     },
+                                    child: Card(
+                                        elevation: 0.2,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Blocked Users'),
+                                              Container(
+                                                width: 26.adaptSize,
+                                                height: 26.adaptSize,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.red),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "${blockedItems.length}",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )),
                                   ),
-                                  SizedBox(height: 30.v)
-                                ],
-                              )
-                            
-                           ]])),
-            ))));
+
+                                SizedBox(height: 24.v),
+                                Card(
+                                  elevation: 0.4,
+                                  child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8.h, vertical: 11.v),
+                                      // decoration: AppDecoration.outlineBlackF
+                                      //     .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
+                                      child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                (groupMembers.length == '1')
+                                                    ? "${groupMembers.length} Member"
+                                                    : "${groupMembers.length} Members",
+                                                style: TextStyle(
+                                                    fontSize: 16.fSize,
+                                                    fontFamily: 'DM Sans',
+                                                    fontWeight:
+                                                        FontWeight.w700)),
+                                            SizedBox(height: 8.v),
+                                            ListView.builder(
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount:
+                                                    (groupMembers.length <= 10)
+                                                        ? groupMembers.length
+                                                        : 10,
+                                                itemBuilder: (context, index) {
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      AppNavigator.pushAndStackPage(
+                                                          context,
+                                                          page:
+                                                              IndividualUserInfo(
+                                                            name: groupMembers[
+                                                                    index]
+                                                                .name,
+                                                            image: groupMembers[
+                                                                    index]
+                                                                .profilePic,
+                                                            bio: groupMembers[
+                                                                    index]
+                                                                .bio,
+                                                            username:
+                                                                groupMembers[
+                                                                        index]
+                                                                    .name,
+                                                            isGroupAdmin: groupInfo
+                                                                    .groupAdminId ==
+                                                                groupMembers[
+                                                                        index]
+                                                                    .uid,
+                                                            memberId:
+                                                                groupMembers[
+                                                                        index]
+                                                                    .uid,
+                                                          ));
+                                                    },
+                                                    child:
+                                                        UserprofileItemWidget(
+                                                      name: groupMembers[index]
+                                                          .name,
+                                                      bio: groupMembers[index]
+                                                          .bio,
+                                                      index: groupInfo
+                                                              .groupAdminId ==
+                                                          groupMembers[index]
+                                                              .uid,
+                                                      image: groupMembers[index]
+                                                          .profilePic,
+                                                    ),
+                                                  );
+                                                }),
+                                            SizedBox(height: 12.v),
+                                            GestureDetector(
+                                              onTap: () {
+                                                AppNavigator.pushAndStackPage(
+                                                    context,
+                                                    page: AllUsersPage(
+                                                      users: groupMembers,
+                                                      adminId: groupInfo
+                                                          .groupAdminId,
+                                                    ));
+                                              },
+                                              child: Text("see all >",
+                                                  style: TextStyle(
+                                                      fontSize: 16.fSize,
+                                                      fontFamily: 'DM Sans',
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ),
+                                          ])),
+                                ),
+
+                                if (isLoading ||
+                                    state is ReportUserLoading) ...[
+                                  SizedBox(height: 24.v),
+                                  Center(
+                                    child: Loader(),
+                                  )
+                                ] else ...[
+                                  Column(
+                                    children: [
+                                      SizedBox(height: 30.v),
+                                      CustomElevatedButton(
+                                          text: "Leave community",
+                                          processing: isLoading,
+                                          buttonStyle:
+                                              CustomButtonStyles.fillRed,
+                                          onPressed: () async {
+                                            if (groupInfo.groupAdminId ==
+                                                userId) {
+                                              Modals.showToast(
+                                                  'You are an admin and can\'t leave the community');
+                                            } else {
+                                              Modals.showAlertOptionDialog(
+                                                  context,
+                                                  title: 'Exit Community',
+                                                  message:
+                                                      'Are you sure you want to leave this community.',
+                                                  onTap: () async {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                await groupInfo
+                                                    .removeCurrentUserFromMembers(
+                                                        groupInfo.groupId,
+                                                        userId,
+                                                        context);
+                                                _firebaseMessaging
+                                                    .unsubscribeFromTopic(
+                                                        groupInfo.groupId);
+
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                                AppNavigator.pushAndStackPage(
+                                                    context,
+                                                    page: LandingPage());
+                                                user.updateIndex(0);
+                                              });
+                                            }
+                                          }),
+                                      if (groupInfo.groupAdminId == userId)
+                                        SizedBox(height: 16.v),
+                                      if (groupInfo.groupAdminId == userId)
+                                        CustomElevatedButton(
+                                            text: "Delete community",
+                                            processing: isLoading,
+                                            buttonStyle:
+                                                CustomButtonStyles.fillRed,
+                                            onPressed: () async {
+                                              Modals.showAlertOptionDialog(
+                                                  context,
+                                                  title: 'Delete Community',
+                                                  message:
+                                                      'Warning: Are you sure you want to Delete this community. As  this action cannot be reversed...',
+                                                  onTap: () async {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                await groupInfo.deleteGroup(
+                                                    groupInfo.groupId, context);
+
+                                                _firebaseMessaging
+                                                    .unsubscribeFromTopic(
+                                                        groupInfo.groupId);
+
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                                user.updateIndex(0);
+                                                AppNavigator.pushAndStackPage(
+                                                    context,
+                                                    page: LandingPage());
+                                              });
+                                            }),
+                                      SizedBox(height: 16.v),
+                                      CustomOutlinedButton(
+                                        text: "Report community",
+                                        processing: isLoading,
+                                        onPressed: () {
+                                          Modals.showDialogModal(context,
+                                              page: ModalContentScreen(
+                                                  title: 'Report this user',
+                                                  body: Column(
+                                                    children: [
+                                                      _buildComplaintField(
+                                                          context)
+                                                    ],
+                                                  ),
+                                                  btnText: 'Submit',
+                                                  onPressed: () async {
+                                                    Navigator.pop(context);
+                                                    if (compaintController
+                                                        .text.isNotEmpty) {
+                                                      await _predictionCubit
+                                                          .sendReport(
+                                                              complaintType:
+                                                                  'group',
+                                                              complaint:
+                                                                  compaintController
+                                                                      .text,
+                                                              reportedUser:
+                                                                  groupInfo
+                                                                      .groupName,
+                                                              groupId: groupInfo
+                                                                  .groupId,
+                                                              groupLeaderName:
+                                                                  groupMembers[
+                                                                          0]
+                                                                      .name,
+                                                              groupName: groupInfo
+                                                                  .groupName);
+
+                                                      setState(() {
+                                                        isLoading = true;
+                                                      });
+
+                                                      await groupInfo
+                                                          .removeCurrentUserFromMembers(
+                                                              groupInfo.groupId,
+                                                              userId,
+                                                              context);
+                                                      setState(() {
+                                                        isLoading = false;
+                                                      });
+
+                                                      _firebaseMessaging
+                                                          .unsubscribeFromTopic(
+                                                              groupInfo
+                                                                  .groupId);
+
+                                                      Modals.showDialogModal(
+                                                          context,
+                                                          page:
+                                                              ModalContentScreen(
+                                                                  title: 'Thanks for your feedback!!!!'
+                                                                      .toUpperCase(),
+                                                                  body: Text(
+                                                                    'We have recieved your feedback and we would look into it shortly we are sorry for any inconvenience this has caused you.',
+                                                                    maxLines: 4,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: appTheme
+                                                                          .gray900,
+                                                                      fontSize:
+                                                                          18.fSize,
+                                                                      fontFamily:
+                                                                          'DM Sans',
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
+                                                                  ),
+                                                                  btnText:
+                                                                      'Close',
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  headerColorOne:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          192,
+                                                                          234,
+                                                                          206),
+                                                                  headerColorTwo:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          65,
+                                                                          210,
+                                                                          101)));
+
+                                                      Future.delayed(
+                                                          Duration(seconds: 10),
+                                                          () {
+                                                        AppNavigator
+                                                            .pushAndStackPage(
+                                                                context,
+                                                                page:
+                                                                    LandingPage());
+                                                        user.updateIndex(0);
+                                                      });
+                                                    } else {
+                                                      Modals.showToast(
+                                                          'Please fill in your complaints');
+                                                    }
+                                                  },
+                                                  headerColorOne:
+                                                      Color(0xFFFDF9ED),
+                                                  headerColorTwo:
+                                                      Color(0xFFFAF3DA)));
+                                        },
+                                      ),
+                                      SizedBox(height: 30.v)
+                                    ],
+                                  )
+                                ]
+                              ])),
+                    ))));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -830,8 +884,6 @@ class _CommunityInfoState extends State<CommunityInfo> {
     );
   }
 
-   
-
   _showFullImage(BuildContext context, String imageUrl) {
     return GestureDetector(
       onTap: () => Navigator.pop(context),
@@ -877,8 +929,13 @@ class _CommunityInfoState extends State<CommunityInfo> {
   }
 
   getUsers(groupInfo, List<dynamic> membersUid) async {
+
+     
+
     groupMembers = await groupInfo.fetchUsers(membersUid);
 
+     
+ 
     setState(() {});
   }
 

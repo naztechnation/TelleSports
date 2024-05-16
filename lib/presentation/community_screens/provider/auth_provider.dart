@@ -485,7 +485,7 @@ Future<void> removeUserFromBlockedList({
 
     var currentNumberOfGroups = userDoc['numberOfGroups'];
 
-    if (currentNumberOfGroups < 3) {
+    if (currentNumberOfGroups < 2) {
       await createGroup(
         context,
         name,
@@ -497,7 +497,7 @@ Future<void> removeUserFromBlockedList({
 
       return true;
     } else {
-      Modals.showToast('Opps you cant create more than 3 groups');
+      Modals.showToast('Opps you cant create more than 2 groups');
       return false;
     }
   }
@@ -565,21 +565,23 @@ Future<void> removeUserFromBlockedList({
   }
 
   Future<List<UserModel>> fetchUsers(List<dynamic> membersUid) async {
-    try {
-      final List<UserModel> users = [];
+  try {
+    final List<UserModel> users = [];
 
-      for (String userId in membersUid) {
+    for (dynamic member in membersUid) {
+      if (member is String) { 
         final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
             .collection('users')
-            .doc(userId)
+            .doc(member)
             .get();
 
         if (userSnapshot.exists) {
+
           final Map<String, dynamic> userData =
               userSnapshot.data() as Map<String, dynamic>;
 
           final UserModel user = UserModel(
-            uid: userId,
+            uid: member,
             name: userData['name'],
             email: userData['email'],
             profilePic: userData['profilePic'],
@@ -589,16 +591,21 @@ Future<void> removeUserFromBlockedList({
             blockedId: userData['blockedId'],
           );
 
+           
+
           users.add(user);
         }
       }
-      _users = users;
-      return users;
-    } catch (error) {
-      print('Error fetching users: $error');
-      return [];
     }
+    _users = users;
+    return users;
+  } catch (error) {
+    print('Error fetching users: $error');
+    return [];
   }
+}
+
+
 
   Future<List<UserModel>> requestedUsers(List<dynamic> membersUid) async {
     try {

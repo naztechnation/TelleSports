@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:tellesports/utils/validator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
+import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../blocs/accounts/account.dart';
 import '../../core/constants/enums.dart';
@@ -52,6 +54,7 @@ class EditProfileScreen extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
 
     final user = Provider.of<UserViewModel>(context, listen: true);
+    final user1 = Provider.of<AccountViewModel>(context, listen: false);
 
     return SafeArea(
         child: BlocProvider<AccountCubit>(
@@ -64,8 +67,8 @@ class EditProfileScreen extends StatelessWidget {
           if (state is AccountUpdated) {
             if (state.user.success ?? false) {
               Modals.showToast(state.user.message ?? '');
-
-              AppNavigator.pushAndReplacePage(context, page: SigninScreen());
+              user1.updateIndex(0);
+              AppNavigator.pushAndStackPage(context, page: LandingPage());
             } else {
               Modals.showToast(state.user.message ?? '');
             }
@@ -168,16 +171,14 @@ class EditProfileScreen extends StatelessWidget {
                     SizedBox(height: 24.v),
                     CustomElevatedButton(
                       title: 'Updating Profile...',
-                      processing:
-                          state is AccountLoading ,
+                      processing: state is AccountLoading,
                       text: "Save changes",
                       onPressed: () {
                         if (user.imageURl == null) {
                           Modals.showToast('Please select an image to update');
                         } else {
                           if (_formKey.currentState!.validate()) {
-                                                         updateUserProfile(context, user.imageURl!);
-
+                            updateUserProfile(context, user.imageURl!);
                           }
                         }
                       },

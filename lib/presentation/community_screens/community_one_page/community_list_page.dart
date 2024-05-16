@@ -42,9 +42,11 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
 
   String userId = '';
   String plan = '';
+  String email = '';
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
     plan = await StorageHandler.getUserPlan() ?? '';
+    email = await StorageHandler.getUserEmail() ?? '';
    Future.delayed(Duration(seconds: 1), (() {
       setState(() {});
    }));
@@ -79,10 +81,13 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
         child: Scaffold(
       body: Scaffold(
           resizeToAvoidBottomInset: false,
-          bottomNavigationBar: (plan.toLowerCase() == 'Community Leader'.toLowerCase()) ?Padding(
+          bottomNavigationBar:
+          //  (plan.toLowerCase() == 'Community Leader'.toLowerCase() || email.toLowerCase().trim() == 'officialtellasport@gmail.com') ?
+           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: buildBuyTellacoins(context),
-          ): SizedBox.shrink(),
+          ),
+          // : SizedBox.shrink(),
           // appBar: _buildAppBar(context,),
 
           body: SizedBox(

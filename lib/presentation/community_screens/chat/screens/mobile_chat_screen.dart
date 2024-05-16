@@ -295,6 +295,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           children: [
                             AppbarTitleCircleimage(
                               onTap: () {
+                            
                                 onTapGroup(context, widget.profilePic,
                                     widget.name, widget.membersUid);
                               },
