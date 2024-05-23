@@ -459,12 +459,15 @@ Future<void> removeUserFromBlockedList({
 }
 
   Future<List<String>> getMyBlockedUsers({required String userId}) async {
+  if (userId.isEmpty) {
+    print('User ID cannot be empty.');
+    return []; // Return an empty list if userId is empty
+  }
+
   var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
   if (userDoc.exists) {
     List<String> currentBlockedUsers = List<String>.from(userDoc.data()?['blockedId'] ?? []);
-
-    
     return currentBlockedUsers; // Return the list of blocked users
   } else {
     print('User $userId not found.');
@@ -564,19 +567,19 @@ Future<void> removeUserFromBlockedList({
     }
   }
 
-  Future<List<UserModel>> fetchUsers(List<dynamic> membersUid) async {
+
+Future<List<UserModel>> fetchUsers(List<dynamic> membersUid) async {
   try {
     final List<UserModel> users = [];
 
     for (dynamic member in membersUid) {
-      if (member is String) { 
+      if (member is String && member.isNotEmpty) { // Check if member is a non-empty string
         final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
             .collection('users')
             .doc(member)
             .get();
 
         if (userSnapshot.exists) {
-
           final Map<String, dynamic> userData =
               userSnapshot.data() as Map<String, dynamic>;
 
@@ -591,19 +594,23 @@ Future<void> removeUserFromBlockedList({
             blockedId: userData['blockedId'],
           );
 
-           
-
           users.add(user);
         }
+      }else{
+         print('Not found: ');
+    return [];
       }
     }
     _users = users;
     return users;
   } catch (error) {
     print('Error fetching users: $error');
+
+    
     return [];
   }
 }
+
 
 
 
@@ -639,7 +646,7 @@ Future<void> removeUserFromBlockedList({
       notifyListeners();
       return _requestedUsers;
     } catch (error) {
-      print('Error fetching users: $error');
+      print('Error fetching requested users: $error');
       return [];
     }
   }
@@ -677,7 +684,7 @@ Future<void> removeUserFromBlockedList({
       _blockedUsers = users;
       return users;
     } catch (error) {
-      print('Error fetching users: $error');
+      print('Error fetching blocked uusers: $error');
       return [];
     }
   }
@@ -715,7 +722,7 @@ Future<void> removeUserFromBlockedList({
       _blockedUsers = users;
       return users;
     } catch (error) {
-      print('Error fetching users: $error');
+      print('Error fetching my blocked users: $error');
       return [];
     }
   }

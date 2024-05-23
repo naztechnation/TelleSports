@@ -43,6 +43,9 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
   String userId = '';
   String plan = '';
   String email = '';
+
+  bool isLoading = true;
+
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
     plan = await StorageHandler.getUserPlan() ?? '';
@@ -58,6 +61,12 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
   void initState() {
     getUserId();
     _focusNode = FocusNode();
+ Future.delayed(Duration(seconds: 2), (() {
+    setState(() {
+       isLoading = false;
+    });
+   }));
+
     super.initState();
   }
 
@@ -77,7 +86,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
     final checkUserExist =
         provider.Provider.of<pro.AuthProviders>(context, listen: false);
 
-    return SafeArea(
+    return (isLoading) ? LoadingPage() :SafeArea(
         child: Scaffold(
       body: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -92,7 +101,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
 
           body: SizedBox(
               width: mediaQueryData.size.width,
-              child: SingleChildScrollView(
+              child:  SingleChildScrollView(
                   child: StreamBuilder<List<Group>>(
                       stream: checkUserExist.getAllChatGroups(userId),
                       builder: (context, snapshot) {

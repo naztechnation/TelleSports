@@ -48,7 +48,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     getUserName();
 
-    tabviewController = TabController(length: 2, vsync: this);
+    tabviewController = TabController(length: 1, vsync: this);
     Future.delayed(Duration(seconds: 3), () {
       setState(() {
         showDelayedWidget = true;
@@ -77,7 +77,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         controller: tabviewController,
                         children: [
                           ConvertBetcodes(),
-                          ViewLivescoresPage(),
+                         // ViewLivescoresPage(),
                         ],
                       ),
                     ),
@@ -229,11 +229,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               "Convert Betcodes",
             ),
           ),
-          Tab(
-            child: Text(
-              "View Livescores",
-            ),
-          ),
+          // Tab(
+          //   child: Text(
+          //     "View Livescores",
+          //   ),
+          // ),
         ],
       ),
     );

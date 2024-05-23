@@ -151,6 +151,9 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+
+  
+
     Future.delayed(Duration(seconds: 1), () {
       setState(() {});
     });
@@ -169,11 +172,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     getUserId();
     getReports();
 
-    Future.delayed(Duration(seconds: 1), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
+   
 
     super.initState();
   }
@@ -185,13 +184,17 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     BuildContext context,
   ) {
     final groupInfo =
-        provider.Provider.of<pro.AuthProviders>(context, listen: true);
+        provider.Provider.of<pro.AuthProviders>(context, listen: false);
 
     if (groupInfo.groupAdminId == userId) {
       updateUserGroupNumber();
     }
     if (!methodCalled) {
-      getMyBlockedUsers(groupInfo);
+
+      Future.delayed(Duration(seconds: 1), () {
+      getMyBlockedUsers(groupInfo, userId);
+    });
+     
 
       contex = context;
     }
@@ -244,7 +247,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
               }
             }
           },
-          builder: (context, state) => (state is ReportUserLoading || isLoading)
+          builder: (context, state) => (state is ReportUserLoading )
               ? LoadingPage()
               : SafeArea(
                   child: Scaffold(
@@ -474,9 +477,11 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                     AsyncSnapshot<DocumentSnapshot> snapshot) {
                                   final requests =
                                       snapshot.data?.get('requestsMembers') ??
-                                          false;
+                                          [];
 
-                                  groupInfo.requestedUsers(requests);
+                                   
+                                    groupInfo.requestedUsers(requests);
+                                  
 
                                   requestItems = removeDuplicates1(
                                       groupInfo.requestedMembers);
@@ -1274,7 +1279,10 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     );
   }
 
-  getMyBlockedUsers(groupInfo) async {
+  getMyBlockedUsers(groupInfo,userId) async {
+
+     
+
     blockedUsers = await groupInfo.getMyBlockedUsers(userId: userId);
     setState(() {
       if (!methodCalled) {

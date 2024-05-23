@@ -134,7 +134,7 @@ class _NotificationsState extends State<Notifications> {
                                 AppNavigator.pushAndStackPage(context,
                                     page: NotificationsDetails(
                                       notifyId:
-                                          notifications[index].id.toString(),
+                                          notifications[index].id.toString(), title: '', message: notifications[index].message ?? '', date: notifications[index].createdAt ?? '',
                                     ));
                               },
                               child: Container(
@@ -164,7 +164,7 @@ class _NotificationsState extends State<Notifications> {
                                       SizedBox(height: 20.0),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             AppUtils.formatComplexDate(
@@ -172,6 +172,8 @@ class _NotificationsState extends State<Notifications> {
                                                         .createdAt ??
                                                     ''),
                                           ),
+
+                                          Text('View More...', style: TextStyle(color: Colors.green.shade900),),
                                         ],
                                       ),
                                     ],
@@ -205,7 +207,7 @@ class _NotificationsState extends State<Notifications> {
       ),
       centerTitle: true,
       title: AppbarSubtitle(
-        text: "Notification",
+        text: "Notifications",
         margin: EdgeInsets.only(
           top: 10.v,
           bottom: 8.v,

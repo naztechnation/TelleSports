@@ -588,7 +588,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               if (text.isNotEmpty && text[0] == '0') {
                 phoneNumberController.value =
                     phoneNumberController.value.copyWith(
-                  text: text.substring(1), // Consume the leading zero
+                  text: text.substring(1),  
                   selection: TextSelection(
                     baseOffset: text.length - 1,
                     extentOffset: text.length - 1,

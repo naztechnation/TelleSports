@@ -196,7 +196,7 @@ class AccountRepositoryImpl implements AccountRepository {
   
   @override
   Future<NotificationsDetails> getNotificationsDetails({required String notifyId}) async {
-    final map = await Requests().get(
+    final map = await Requests().put(
       AppStrings.getNotificationsDetailsUrl(notifyId),
     );
 
