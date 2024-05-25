@@ -465,24 +465,28 @@ This may have occurred due to one of the following reasons bellow.
                           if (convertionHistoties?.isNotEmpty ?? false) ...[
                             _buildSingleConversion(context)
                           ] else ...[
-                            SizedBox(height: 24.v),
-                            Text(
+                            SizedBox(height: 40.v),
+
+                             Text(
                                 "Start converting betcodes from 200 available bookies!",
                                 style: CustomTextStyles.labelLargeBlack900),
-                            SizedBox(height: 10.v),
-                            _buildBuyTellacoins(context),
-                            SizedBox(height: 11.v),
-                            Container(
-                                height: 198.v,
-                                width: 193.h,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 28.h, vertical: 25.v),
-                                child: CustomImageView(
-                                    fit: BoxFit.cover,
-                                    imagePath:
-                                        ImageConstant.imgIllustrationStartup,
-                                    width: MediaQuery.sizeOf(context).width,
-                                    alignment: Alignment.bottomLeft))
+                            // Text(
+                            //     "Start converting betcodes from 200 available bookies!",
+                            //     style: CustomTextStyles.labelLargeBlack900),
+                            // SizedBox(height: 10.v),
+                            // _buildBuyTellacoins(context),
+                            // SizedBox(height: 11.v),
+                            // Container(
+                            //     height: 198.v,
+                            //     width: 193.h,
+                            //     padding: EdgeInsets.symmetric(
+                            //         horizontal: 28.h, vertical: 25.v),
+                            //     child: CustomImageView(
+                            //         fit: BoxFit.cover,
+                            //         imagePath:
+                            //             ImageConstant.imgIllustrationStartup,
+                            //         width: MediaQuery.sizeOf(context).width,
+                            //         alignment: Alignment.bottomLeft))
                           ],
                         ],
                       ]),
