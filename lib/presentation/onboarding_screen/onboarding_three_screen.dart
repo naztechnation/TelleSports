@@ -39,7 +39,8 @@ class OnboardingThreeScreen extends StatelessWidget {
                               style:
                                   CustomTextStyles.headlineLargeRed400.copyWith(
                                 height: 1.10,
-                                fontSize: 37.0,
+                               fontSize: 28.0,
+                                fontWeight: FontWeight.w700
                               ),
                             ),
                           ),
@@ -67,7 +68,7 @@ class OnboardingThreeScreen extends StatelessWidget {
                     SizedBox(height: 12.v),
                     CustomElevatedButton(
                         text: "Create an account",
-                textSize: 22,
+               
 
                         buttonStyle: CustomButtonStyles.fillRed,
                         onPressed: () {

@@ -46,7 +46,8 @@ class OnboardingTwoScreen extends StatelessWidget {
                               style:
                                   CustomTextStyles.headlineLargeBlue400.copyWith(
                                 height: 1.10,
-                                fontSize: 27.0,
+                                fontSize: 28.0,
+                                fontWeight: FontWeight.w700
                               ),
                             ),
                           ),

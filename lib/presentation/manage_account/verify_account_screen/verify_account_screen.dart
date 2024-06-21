@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -100,70 +101,83 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
                       width: double.maxFinite,
                       padding: EdgeInsets.symmetric(horizontal: 16.h),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [CustomImageView(
+                                  imagePath: ImageConstant.imgTellasportLogo,
+                                  height: 32.v,
+                                  width: 203.h),
+                              SizedBox(height: 22.v),
                         Text("Verify Account",
-                            style: theme.textTheme.headlineLarge),
+                            style: theme.textTheme.headlineLarge!.copyWith(fontSize: 32, fontWeight: FontWeight.w700)),
                         SizedBox(height: 5.v),
                         RichText(
-                          text: TextSpan(children: [
+                          text: TextSpan(
+                            
+                            children: [
                               TextSpan(
                                   text: "Code has been sent to ",
-                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black)),
+                                  
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black)),
                              
                               TextSpan(
                                   text: widget.email,
-                                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.green.shade800))
+                                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.blue.shade800))
                             ]),
-                            textAlign: TextAlign.left, textScaler: TextScaler.linear(1.3)),
+                            textAlign: TextAlign.center, textScaler: TextScaler.linear(1.3)),
                         SizedBox(height: 1.v),
                        
                         Text("Enter the code to verify your account.",
-                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black)),
+                             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black)),
                         SizedBox(height: 39.v),
                         _buildTextField(context),
                         SizedBox(height: 12.v),
                         if (isCountdownComplete)
                           (state is AccountProcessing)
                               ? Text('')
-                              : Padding(
-                                  padding: EdgeInsets.only(left: 12, right: 12),
+                              : Align(
+                                child: Center(
                                   child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Padding(
                                             padding:
                                                 EdgeInsets.only(bottom: 1.v),
                                             child: Text("Didn’t Receive Code?",
-                                                style: TextStyle(fontSize: 14))),
-                                        Expanded(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              _resendCode(
-                                                context,
-                                              );
-                                            },
-                                            child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 8.h),
-                                                child: Text("Resend Code",
-                                                    style: CustomTextStyles
-                                                        .titleSmallPoppinsBlue400
-                                                        .copyWith(
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline, decorationColor:
-                                                            Colors.blue, fontSize: 15.3))),
-                                          ),
+                                            textAlign: TextAlign.center,
+                                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400))),
+                                        GestureDetector(
+                                          onTap: () {
+                                            _resendCode(
+                                              context,
+                                            );
+                                          },
+                                          child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 8.h),
+                                              child: Text("Resend Code",
+                                          textAlign: TextAlign.center,
+                                        
+                                                  style: CustomTextStyles
+                                                      .titleSmallPoppinsBlue400
+                                                      .copyWith(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline, 
+                                                                  
+                                                                  decorationColor:
+                                                          Colors.blue, fontSize: 14.0, fontWeight: FontWeight.w500))),
                                         )
-                                      ])),
+                                      ]),
+                                ),
+                              ),
                         SizedBox(height: 7.v),
                         if (!isCountdownComplete)
                           Text(
                             "Resend code in $countdown secs",
                             style: theme.textTheme.bodyMedium!
-                                .copyWith(color: Colors.green),
+                                .copyWith(color: Colors.blue, fontSize: 14.0, fontWeight: FontWeight.w500),
                           ),
                         SizedBox(height: 32.v),
                         if (state is AccountProcessing) ...[

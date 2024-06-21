@@ -216,7 +216,7 @@ String password = '';
                               SizedBox(height: 8.v),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
+                                    horizontal: .0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -236,7 +236,8 @@ String password = '';
                                                                 .underline,
                                                         decorationColor:
                                                             Colors.blue,
-                                                        fontSize: 15.3)))),
+                                                            fontWeight: FontWeight.w500,
+                                                        fontSize: 14.0)))),
                                     Align(
                                         alignment: Alignment.centerRight,
                                         child: GestureDetector(
@@ -252,7 +253,8 @@ String password = '';
                                                                 .underline,
                                                         decorationColor:
                                                             Colors.blue,
-                                                        fontSize: 15.3)))),
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 14.0)))),
                                   ],
                                 ),
                               ),
@@ -365,7 +367,7 @@ String password = '';
         padding: EdgeInsets.only(left: 8.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("E-mail",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           SizedBox(height: 2.v),
           CustomTextFormField(
               controller: emailController,
@@ -383,7 +385,7 @@ String password = '';
       padding: EdgeInsets.only(left: 8.h),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text("Password",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         SizedBox(height: 3.v),
         CustomTextFormField(
             controller: passwordController,

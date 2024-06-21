@@ -44,7 +44,7 @@ class _LoadingScreenState extends State<SplashScreen> with SingleTickerProviderS
           page: SplashScreenOnboardingScreen());
     } else if (userLoggedIn == '') {
        AppNavigator.pushAndReplacePage(context,
-          page: SplashScreenOnboardingScreen());
+          page: SigninScreen());
     } else {
       AppNavigator.pushAndStackPage(context, page: LandingPage());
     }

@@ -5,13 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'; 
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/presentation/manage_account/verify_account_screen/verify_account_screen.dart';
-import 'package:tellesports/widgets/custom_elevated_button.dart';
-import 'package:tellesports/widgets/custom_outlined_button.dart';
+import 'package:tellesports/widgets/custom_elevated_button.dart'; 
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -276,15 +274,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     TextSpan(
                                       text: "Already have an account? ",
                                       style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+
                                           color: Colors.black,
                                           wordSpacing: 3),
                                     ),
                                     TextSpan(
                                       text: "Sign in",
                                       style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 14,
                                           color: Colors.green.shade800,
+                                              fontWeight: FontWeight.w500,
+
                                           wordSpacing: 3),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
@@ -405,29 +407,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         TextSpan(
                                           text: "By ",
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+
                                               wordSpacing: 3),
                                         ),
                                         TextSpan(
                                           text: "signing up",
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+
                                               wordSpacing: 3),
                                         ),
                                         TextSpan(
                                           text: ", you agree to ",
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+
                                               wordSpacing: 3),
                                         ),
                                         TextSpan(
                                           text: "our",
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+
                                               wordSpacing: 3),
                                         ),
                                         TextSpan(text: " "),
@@ -438,29 +448,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             },
                                           text: "Terms of Service",
                                           style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.green.shade900,
+                                              fontSize: 14,
+                                              color: Colors.blue.shade800,
+                                              fontWeight: FontWeight.w500,
                                               wordSpacing: 3),
                                         ),
                                         TextSpan(
                                           text: " and ",
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+
                                               wordSpacing: 3),
                                         ),
                                         TextSpan(
                                           text: "Privacy Policy",
                                           style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black,
+                                              fontSize: 14,
+                                              color: Colors.blue.shade800,
+                                              fontWeight: FontWeight.w500,
+
                                               wordSpacing: 3),
                                         ),
                                         TextSpan(
                                           text: ".",
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.blue.shade800,
+                                              fontWeight: FontWeight.w500,
+
                                               wordSpacing: 3),
                                         )
                                       ]),
@@ -477,7 +494,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Username",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           SizedBox(height: 3.v),
           CustomTextFormField(
             controller: userNameController,
@@ -496,7 +513,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("E-mail ",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           SizedBox(height: 3.v),
           CustomTextFormField(
             controller: emailController,
@@ -521,7 +538,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Phone number",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           SizedBox(height: 3.v),
           CustomTextFormField(
             prefix: (country != null)
@@ -609,7 +626,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Phone number",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           SizedBox(height: 3.v),
           CustomTextFormField(
             prefix: (country != null)
@@ -696,7 +713,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildUserNameGoogleTextField(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text("Username",
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
       SizedBox(height: 3.v),
       CustomTextFormField(
         controller: userNameGoogleController,
@@ -718,7 +735,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         padding: EdgeInsets.only(left: 0.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Create a password",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           SizedBox(height: 2.v),
           CustomTextFormField(
             controller: passwordController,

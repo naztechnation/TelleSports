@@ -95,7 +95,10 @@ class _PasswordStrengthCheckerState extends State<PasswordStrengthChecker> {
               padding: const EdgeInsets.only(bottom: 4.0),
               child: Text(
                 entry.value,
-                style: TextStyle(color: color),
+                style: TextStyle(color: color, 
+                                              fontWeight: FontWeight.w500,
+                
+                ),
               ),
             );
           },

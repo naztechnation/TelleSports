@@ -10,7 +10,7 @@ class CustomElevatedButton extends BaseButton {
     this.decoration,
     this.leftIcon,
     this.rightIcon,
-    this.textSize = 18,
+    this.textSize = 16,
     this.processing = false,
     this.title = 'Loading...',
     this.textColor = Colors.white,
@@ -98,7 +98,7 @@ class CustomElevatedButton extends BaseButton {
                 Text(
                   text,
                   style:
-                      TextStyle(fontSize: textSize, color:  textColor),
+                      TextStyle(fontSize: textSize, color:  textColor, fontWeight: FontWeight.w500),
                 ),
                 rightIcon ?? const SizedBox.shrink(),
               ],

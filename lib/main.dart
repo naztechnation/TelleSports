@@ -19,6 +19,9 @@ import 'presentation/community_screens/chat/repositories/chat_repository.dart';
 import 'presentation/community_screens/provider/auth_provider.dart';
 import 'presentation/firebase_fcm.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
  
@@ -113,11 +116,28 @@ class _TellaSportsState extends State<TellaSports> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: theme,
+      
+      theme: themeData(theme),
+
       title: 'Tellasport',
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.splashScreenOnboardingScreen,
       routes: AppRoutes.routes,
     );
+  }
+
+  ThemeData themeData(ThemeData theme) {
+    return theme.copyWith(
+        textTheme: GoogleFonts.dmSansTextTheme(
+          theme.textTheme,
+          
+        ),
+        
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: ZoomPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          },
+        ));
   }
 }

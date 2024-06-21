@@ -45,7 +45,7 @@ class SplashScreenOnboardingScreen extends StatelessWidget {
                               maxLines: 4,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.justify,
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400))),
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
                       SizedBox(height: 30.v),
                       CustomElevatedButton(
                           text: "Continue",

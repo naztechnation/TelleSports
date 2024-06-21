@@ -146,13 +146,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             AppNavigator.pushAndStackPage(context,
                                 page: UpdatePasswordScreen());
                           }),
-                          SizedBox(height: 24.v),
-                          _buildShareFrame(context,
-                              text: "Update Account",
-                              image: ImageConstant.imgHelpCenter, onTap: () {
-                            AppNavigator.pushAndStackPage(context,
-                                page: UpdateAccountScreen());
-                          }),
+                          // SizedBox(height: 24.v),
+                          // _buildShareFrame(context,
+                          //     text: "Update Account",
+                          //     image: ImageConstant.imgHelpCenter, onTap: () {
+                          //   AppNavigator.pushAndStackPage(context,
+                          //       page: UpdateAccountScreen());
+                          // }),
                           SizedBox(height: 24.v),
                           _buildShareFrame(context,
                               text: "Submit Prediction",
