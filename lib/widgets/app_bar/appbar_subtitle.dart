@@ -30,6 +30,8 @@ class AppbarSubtitle extends StatelessWidget {
           text,
           style: theme.textTheme.titleLarge!.copyWith(
             color: theme.colorScheme.onPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.w700
           ),
         ),
       ),

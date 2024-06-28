@@ -568,7 +568,7 @@ Future<void> removeUserFromBlockedList({
   }
 
 
-Future<List<UserModel>> fetchUsers(List<dynamic> membersUid) async {
+Future<List<UserModel>> fetchUsers(dynamic membersUid) async {
   try {
     final List<UserModel> users = [];
 

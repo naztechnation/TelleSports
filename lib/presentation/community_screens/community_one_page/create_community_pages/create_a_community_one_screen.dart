@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pro;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
+import 'package:tellesports/presentation/community_screens/community_one_page/create_community_pages/describe_community.dart';
 import 'package:tellesports/presentation/landing_page/landing_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
@@ -80,7 +81,24 @@ class _CreateACommunityOneScreenState
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: _buildAppBar(context),
+        appBar:   AppBar(
+          leadingWidth: 44.h,
+          leading: AppbarLeadingImage(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            imagePath: ImageConstant.imgArrowBack,
+            margin: EdgeInsets.only(
+              left: 20.h,
+              
+            ),
+          ),
+          centerTitle: true,
+          title: AppbarSubtitle(
+            text: "Create a community",
+            
+          ),
+        ),
         body: SingleChildScrollView(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -101,14 +119,14 @@ class _CreateACommunityOneScreenState
                            selectImage();
                         },
                         child: Container(
-                            height: 120.adaptSize,
-                            width: 120.adaptSize,
+                            height: 100.adaptSize,
+                            width: 100.adaptSize,
                             padding: EdgeInsets.symmetric(
                               horizontal: 16.h,
                               vertical: 19.v,
                             ),
                         
-                            decoration: BoxDecoration(border: Border.all(color: Colors.blue,width: 2 ),
+                            decoration: BoxDecoration(border: Border.all(color: Colors.blue,width: 1 ),
                             borderRadius: BorderRadius.circular(70)),
                             child: CustomImageView(
                               imagePath: ImageConstant.imgLock,
@@ -139,14 +157,13 @@ class _CreateACommunityOneScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Add community photo".toUpperCase(),
+                          "Add community photo",
                           style: TextStyle(
-                            color: Colors.red,
+                            color: Color(0xFF342E37),
                             fontSize: 14.fSize,
                             fontFamily: 'DM Sans',
                             fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.red
+                            decorationColor: Color(0xFF342E37)
                           ),
                         ),
                         CustomImageView(
@@ -170,40 +187,42 @@ class _CreateACommunityOneScreenState
                     buttonStyle: CustomButtonStyles.fillBlue,
                     processing: isLoading,
                     onPressed: () async {
-                      if (groupNameController.text.trim().isNotEmpty &&
-                          groupDescriptionController.text.trim().isNotEmpty &&
-                          image != null) {
-                        setState(() {
-                          isLoading = true;
-                        });
+                      AppNavigator.pushAndStackPage(context,
+                                page: DescribeCommunity());
+                      // if (groupNameController.text.trim().isNotEmpty &&
+                      //     groupDescriptionController.text.trim().isNotEmpty &&
+                      //     image != null) {
+                      //   setState(() {
+                      //     isLoading = true;
+                      //   });
 
-                        var isTrue = await groupData.checkUserGroupLimit(
-                            userId: userId,
-                            context: context,
-                            name: groupNameController.text.trim(),
-                            groupDesc: groupDescriptionController.text.trim(),
-                            profilePic: image!,
-                            ref: ref, fcmToken: fcmToken);
+                      //   var isTrue = await groupData.checkUserGroupLimit(
+                      //       userId: userId,
+                      //       context: context,
+                      //       name: groupNameController.text.trim(),
+                      //       groupDesc: groupDescriptionController.text.trim(),
+                      //       profilePic: image!,
+                      //       ref: ref, fcmToken: fcmToken);
 
 
-                        setState(() {
-                          isLoading = false;
-                        });
+                      //   setState(() {
+                      //     isLoading = false;
+                      //   });
 
-                        if (isTrue) {
-                          user.updateIndex(0);
-                          AppNavigator.pushAndStackPage(context,
-                              page: LandingPage());
-                        } else {
-                          Future.delayed(Duration(seconds: 3), (){
-                          Modals.showToast('Failed  to create group');
+                      //   if (isTrue) {
+                      //     user.updateIndex(0);
+                      //     AppNavigator.pushAndStackPage(context,
+                      //         page: LandingPage());
+                      //   } else {
+                      //     Future.delayed(Duration(seconds: 3), (){
+                      //     Modals.showToast('Failed  to create group');
 
-                          });
-                        }
-                      } else {
-                        Modals.showToast(
-                            'Please input all fields and an image');
-                      }
+                      //     });
+                      //   }
+                      // } else {
+                      //   Modals.showToast(
+                      //       'Please input all fields and an image');
+                      // }
                     },
                   ),
                   SizedBox(height: 5.v),
@@ -216,32 +235,7 @@ class _CreateACommunityOneScreenState
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      height: 86.v,
-      leadingWidth: 44.h,
-      leading: AppbarLeadingImage(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        imagePath: ImageConstant.imgArrowBack,
-        margin: EdgeInsets.only(
-          left: 20.h,
-          top: 50.v,
-          bottom: 12.v,
-        ),
-      ),
-      centerTitle: true,
-      title: AppbarSubtitle(
-        text: "Create a community".toUpperCase(),
-        margin: EdgeInsets.only(
-          top: 49.v,
-          bottom: 9.v,
-        ),
-      ),
-      styleType: Style.bgOutline,
-    );
-  }
+   
 
   Widget _buildTextField(BuildContext context) {
     return Column(
@@ -262,22 +256,7 @@ class _CreateACommunityOneScreenState
           hintText: "Name your community",
           textInputAction: TextInputAction.next,
         ),
-        Text(
-          "Enter description",
-          style: TextStyle(
-            color: appTheme.gray900,
-            fontSize: 14.fSize,
-            fontFamily: 'DM Sans',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 10.v),
-        CustomTextFormField(
-          controller: groupDescriptionController,
-          hintText: "Commuity description",
-          maxLines: 4,
-          textInputAction: TextInputAction.done,
-        ),
+      
       ],
     );
   }

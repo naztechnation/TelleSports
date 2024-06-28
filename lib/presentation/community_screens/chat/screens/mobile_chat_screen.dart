@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:flutter/services.dart';
@@ -126,7 +127,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
   void dispose() {
     super.dispose();
     final groupInfo =
-        provider.Provider.of<pro.AuthProviders>(context, listen: true);
+        provider.Provider.of<pro.AuthProviders>(context, listen: false);
 
     groupInfo.isSelectedMessage(false);
     groupInfo.setSelectedMessage('');
@@ -152,8 +153,6 @@ class _MobileChatState extends ConsumerState<MobileChat> {
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
 
-  
-
     Future.delayed(Duration(seconds: 1), () {
       setState(() {});
     });
@@ -172,8 +171,6 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     getUserId();
     getReports();
 
-   
-
     super.initState();
   }
 
@@ -184,17 +181,15 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     BuildContext context,
   ) {
     final groupInfo =
-        provider.Provider.of<pro.AuthProviders>(context, listen: false);
+        provider.Provider.of<pro.AuthProviders>(context, listen: true);
 
     if (groupInfo.groupAdminId == userId) {
       updateUserGroupNumber();
     }
     if (!methodCalled) {
-
       Future.delayed(Duration(seconds: 1), () {
-      getMyBlockedUsers(groupInfo, userId);
-    });
-     
+        getMyBlockedUsers(groupInfo, userId);
+      });
 
       contex = context;
     }
@@ -247,7 +242,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
               }
             }
           },
-          builder: (context, state) => (state is ReportUserLoading )
+          builder: (context, state) => (state is ReportUserLoading)
               ? LoadingPage()
               : SafeArea(
                   child: Scaffold(
@@ -298,7 +293,6 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           children: [
                             AppbarTitleCircleimage(
                               onTap: () {
-                            
                                 onTapGroup(context, widget.profilePic,
                                     widget.name, widget.membersUid);
                               },
@@ -332,127 +326,6 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           ],
                         ),
                       ),
-                      actions: [
-                        if (Platform.isAndroid) ...[
-                          if (groupInfo.isSelected) ...[
-                            PopupMenuButton<String>(
-                              icon: Icon(Icons.more_vert),
-                              onSelected: (String choice) {
-                                if (choice == 'delete') {
-                                  groupInfo.deleteChatMessage(
-                                      recieverUserId: widget.uid,
-                                      userId: userId,
-                                      messageId:
-                                          groupInfo.messageId.toString());
-                                } else if (choice == 'pin') {
-                                  groupInfo.updateGroupPinnedMessage(
-                                      groupInfo.groupId,
-                                      groupInfo.selectedMessage);
-                                } else if (choice == 'copy') {
-                                  copyToClipboard(groupInfo.selectedMessage,
-                                      groupInfo, context);
-                                } else if (choice == 'report') {
-                                  // compaintController.text =
-                                  //     groupInfo.selectedMessage;
-                                  Modals.showDialogModal(context,
-                                      page: ModalContentScreen(
-                                          title: 'Report this message',
-                                          body: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Offensive Message:'
-                                                    .toUpperCase(),
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                '${groupInfo.selectedMessage}',
-                                                maxLines: 4,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 15),
-                                              ),
-                                              const SizedBox(
-                                                height: 20,
-                                              ),
-                                              _buildComplaintField(context)
-                                            ],
-                                          ),
-                                          btnText: 'Submit',
-                                          onPressed: () async {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              Navigator.pop(context);
-
-                                              await context
-                                                  .read<PredictionCubit>()
-                                                  .sendReport(
-                                                      complaintType: 'group',
-                                                      complaint:
-                                                          'Offensive Message:  \n${groupInfo.selectedMessage}   \n\nComplaint: ${compaintController.text}',
-                                                      reportedUser:
-                                                          groupInfo.groupName,
-                                                      groupId:
-                                                          groupInfo.groupId,
-                                                      groupLeaderName: groupInfo
-                                                          .groupMembers[0].name,
-                                                      groupName:
-                                                          groupInfo.groupName);
-                                            }
-                                          },
-                                          headerColorOne: Color(0xFFFDF9ED),
-                                          headerColorTwo: Color(0xFFFAF3DA)));
-                                }
-                              },
-                              itemBuilder: (BuildContext context) =>
-                                  <PopupMenuEntry<String>>[
-                                if (groupInfo.groupAdminId == userId)
-                                  const PopupMenuItem<String>(
-                                    value: 'delete',
-                                    child: ListTile(
-                                      leading: Icon(Icons.delete),
-                                      title: Text('Delete Message'),
-                                    ),
-                                  ),
-                                if (groupInfo.messageType == MessageEnum.text)
-                                  const PopupMenuItem<String>(
-                                    value: 'copy',
-                                    child: ListTile(
-                                      leading: Icon(Icons.copy),
-                                      title: Text('Copy'),
-                                    ),
-                                  ),
-                                if (groupInfo.groupAdminId == userId)
-                                  const PopupMenuItem<String>(
-                                    value: 'pin',
-                                    child: ListTile(
-                                      leading: Icon(Icons.push_pin),
-                                      title: Text('Pin Message'),
-                                    ),
-                                  ),
-                                // if (groupInfo.groupAdminId == userId)
-                                const PopupMenuItem<String>(
-                                  value: 'report',
-                                  child: ListTile(
-                                    leading: Icon(Icons.report),
-                                    title: Text('Report'),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ],
-                        const SizedBox(
-                          width: 5,
-                        )
-                      ],
                       styleType: Style.bgOutline,
                     ),
                     body: GestureDetector(
@@ -467,7 +340,125 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                       },
                       child: Column(
                         children: [
-                          if (groupInfo.groupAdminId == userId)
+                          Container(
+                            margin: EdgeInsets.fromLTRB(20, 10, 20, 489),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF183A5C),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.fromLTRB(18.4, 2, 18.4, 2),
+                                      child: Text(
+                                        'Today',
+                                        style: GoogleFonts.getFont(
+                                          'DM Sans',
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 10,
+                                          color: Color(0xFFFFFFFF),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF183A5C),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.fromLTRB(18.5, 2, 18.5, 2),
+                                      child: Text(
+                                        'You created this community',
+                                        style: GoogleFonts.getFont(
+                                          'DM Sans',
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 10,
+                                          color: Color(0xFFFFFFFF),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFECF4FC),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.fromLTRB(11.3, 8, 11.3, 8),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            margin:
+                                                EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                            child: Text(
+                                              'Share your community so other users can find you and interact with your content! ',
+                                              textAlign: TextAlign.center,
+                                              style: GoogleFonts.getFont(
+                                                'DM Sans',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 10,
+                                                color: Color(0xFF1F1C21),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Text(
+                                              'tsportcommunity.com/hjidihewio46372',
+                                              style: GoogleFonts.getFont(
+                                                'DM Sans',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                                color: Color(0xFF3C91E5),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF3C91E5),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(0, 12, 0.4, 12),
+                                    child: Text(
+                                      'Share community',
+                                      style: GoogleFonts.getFont(
+                                        'DM Sans',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                        color: Color(0xFFFFFFFF),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (groupInfo.groupAdminId == userId) ...[
                             StreamBuilder<DocumentSnapshot>(
                                 stream: FirebaseFirestore.instance
                                     .collection('groups')
@@ -479,9 +470,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                       snapshot.data?.get('requestsMembers') ??
                                           [];
 
-                                   
-                                    groupInfo.requestedUsers(requests);
-                                  
+                                  groupInfo.requestedUsers(requests);
 
                                   requestItems = removeDuplicates1(
                                       groupInfo.requestedMembers);
@@ -544,6 +533,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                         : SizedBox.shrink(),
                                   );
                                 }),
+                          ],
                           Divider(),
                           StreamBuilder<DocumentSnapshot>(
                             stream: FirebaseFirestore.instance
@@ -706,7 +696,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                             ),
                                           ),
                                         );
-                                      }  
+                                      }
 
                                       if (messageData.type ==
                                           MessageEnum.image) {
@@ -750,7 +740,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                           isSeen: messageData.isSeen,
                                           messageId: messageData.messageId,
                                           onLongPressAction: () {
-                                            if (Platform.isIOS) {
+                                            if (Platform.isAndroid) {
                                               Modals.showDialogModal(context,
                                                   page: _buildChatMenu(
                                                       groupInfo));
@@ -776,7 +766,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                         repliedText: messageData.repliedMessage,
                                         messageId: messageData.messageId,
                                         onLongPressAction: () {
-                                          if (Platform.isIOS) {
+                                          if (Platform.isAndroid) {
                                             Modals.showDialogModal(context,
                                                 page:
                                                     _buildChatMenu(groupInfo));
@@ -1279,10 +1269,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     );
   }
 
-  getMyBlockedUsers(groupInfo,userId) async {
-
-     
-
+  getMyBlockedUsers(groupInfo, userId) async {
     blockedUsers = await groupInfo.getMyBlockedUsers(userId: userId);
     setState(() {
       if (!methodCalled) {
