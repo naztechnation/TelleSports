@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/common/widgets/loader.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -129,7 +130,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: _buildAppBar(context),
+            appBar: _buildAppBar(context, groupInfo),
             body: BlocConsumer<PredictionCubit, PredictStates>(
                 listener: (context, state) {
                   if (state is ReportUserLoaded) {
@@ -156,67 +157,66 @@ class _CommunityInfoState extends State<CommunityInfo> {
                 builder: (context, state) => SingleChildScrollView(
                       padding: EdgeInsets.only(top: 15.v),
                       child: Container(
-                          margin: EdgeInsets.only(bottom: 5.v),
-                          padding: EdgeInsets.symmetric(horizontal: 20.h),
+                          margin: EdgeInsets.symmetric(horizontal: 15.v),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Modals.showDialogModal(
-                                              borderRadius: 12,
-                                              context,
-                                              page: _showFullImage(
-                                                  context, widget.profilePic));
-                                        },
-                                        child: CustomImageView(
-                                            imagePath: widget.profilePic,
-                                            placeHolder:
-                                                ImageConstant.imgAvatar,
-                                            height: 64.adaptSize,
-                                            width: 64.adaptSize,
-                                            radius:
-                                                BorderRadius.circular(32.h)),
-                                      ),
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10.h, bottom: 18.v),
-                                          child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(widget.name,
-                                                    style: TextStyle(
-                                                        color: appTheme.gray900,
-                                                        fontSize: 18.fSize,
-                                                        fontFamily: 'DM Sans',
-                                                        fontWeight:
-                                                            FontWeight.w700)),
-                                                SizedBox(height: 2.v),
-                                                Text(
-                                                    (groupMembers.length == '1')
-                                                        ? "${groupMembers.length}   Member"
-                                                        : "${groupMembers.length}   Members",
-                                                    style: TextStyle(
-                                                        color: theme.colorScheme
-                                                            .onPrimaryContainer,
-                                                        fontSize: 14.fSize,
-                                                        fontFamily: 'DM Sans',
-                                                        fontWeight:
-                                                            FontWeight.w500))
-                                              ]))
-                                    ]),
+                                ListTile(
+                                  contentPadding: EdgeInsets.all(0),
+                                  leading: GestureDetector(
+                                    onTap: () {
+                                      Modals.showDialogModal(
+                                          borderRadius: 12,
+                                          context,
+                                          page: _showFullImage(
+                                              context, widget.profilePic));
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(32.h),
+                                      child: CustomImageView(
+                                          imagePath: widget.profilePic,
+                                          placeHolder: ImageConstant.imgAvatar,
+                                          height: 60.adaptSize,
+                                          width: 60.adaptSize,
+                                          radius: BorderRadius.circular(32.h)),
+                                    ),
+                                  ),
+                                  title: Text(widget.name,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          color: appTheme.gray900,
+                                          fontSize: 18.fSize,
+                                          fontFamily: 'DM Sans',
+                                          fontWeight: FontWeight.w700)),
+                                  subtitle: Text(
+                                      (groupMembers.length == '1')
+                                          ? "${groupMembers.length}   Member"
+                                          : "${groupMembers.length}   Members",
+                                      style: TextStyle(
+                                          color: theme
+                                              .colorScheme.onPrimaryContainer,
+                                          fontSize: 14.fSize,
+                                          fontFamily: 'DM Sans',
+                                          fontWeight: FontWeight.w500)),
+                                ),
+
                                 const SizedBox(
                                   height: 12,
                                 ),
                                 if (groupInfo.groupAdminId == userId)
                                   Column(children: [
-                                    Card(
-                                      elevation: 0.3,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Color(0x66F3F2F3),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color(0x0F000000),
+                                            offset: Offset(0, 0),
+                                            blurRadius: 1,
+                                          ),
+                                        ],
+                                      ),
                                       child: ListTile(
                                         leading: const Icon(
                                           Icons.notifications,
@@ -306,8 +306,19 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                   item: requestItems,
                                                 ));
                                           },
-                                          child: Card(
-                                              elevation: 0.2,
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: Color(0x66F3F2F3),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Color(0x0F000000),
+                                                    offset: Offset(0, 0),
+                                                    blurRadius: 1,
+                                                  ),
+                                                ],
+                                              ),
                                               child: Container(
                                                 padding:
                                                     const EdgeInsets.all(10),
@@ -353,8 +364,19 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                           page: BlockedUsersPage(
                                               item: blockedItems));
                                     },
-                                    child: Card(
-                                        elevation: 0.2,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Color(0x66F3F2F3),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Color(0x0F000000),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 1,
+                                            ),
+                                          ],
+                                        ),
                                         child: Container(
                                           padding: const EdgeInsets.all(10),
                                           child: Row(
@@ -385,10 +407,119 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                           ),
                                         )),
                                   ),
-
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 24),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color(0x66F3F2F3),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0x0F000000),
+                                        offset: Offset(0, 0),
+                                        blurRadius: 3,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(8, 12, 8.4, 12),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    0, 0, 9, 3),
+                                                child: SizedBox(
+                                                  width: 279,
+                                                  child: Text(
+                                                    'Tellacoins received',
+                                                    style: GoogleFonts.getFont(
+                                                      'DM Sans',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      color: Color(0xFF1F1C21),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                '2,500',
+                                                style: GoogleFonts.getFont(
+                                                  'DM Sans',
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 16,
+                                                  color: Color(0xFF1F1C21),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 9, 3),
+                                              child: SizedBox(
+                                                width: 279,
+                                                child: Text(
+                                                  'Naira',
+                                                  style: GoogleFonts.getFont(
+                                                    'DM Sans',
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14,
+                                                    color: Color(0xFF1F1C21),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              '2,500',
+                                              style: GoogleFonts.getFont(
+                                                'DM Sans',
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 16,
+                                                color: Color(0xFF1F1C21),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 SizedBox(height: 24.v),
-                                Card(
-                                  elevation: 0.4,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color(0x66F3F2F3),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0x0F000000),
+                                        offset: Offset(0, 0),
+                                        blurRadius: 3,
+                                      ),
+                                    ],
+                                  ),
                                   child: Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 8.h, vertical: 11.v),
@@ -697,9 +828,9 @@ class _CommunityInfoState extends State<CommunityInfo> {
                     ))));
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, var group) {
     return CustomAppBar(
-      height: 86.v,
+      height: 70.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         onTap: () {
@@ -708,7 +839,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
-          top: 50.v,
+          top: 5.v,
           bottom: 12.v,
         ),
       ),
@@ -716,60 +847,72 @@ class _CommunityInfoState extends State<CommunityInfo> {
       title: AppbarSubtitle(
         text: "Community Info",
         margin: EdgeInsets.only(
-          top: 49.v,
+          top: 5.v,
           bottom: 9.v,
         ),
       ),
       styleType: Style.bgOutline,
+      actions: [
+        if (group.groupAdminId == userId)
+          GestureDetector(
+            onTap: () {
+              AppNavigator.pushAndStackPage(context,
+                  page: UpdateCommunityInfoScreen(
+                      widget.profilePic, group.groupId));
+            },
+            child: ImageView.svg(
+              'assets/images/img_edit.svg',
+              height: 25,
+            ),
+          ),
+        const SizedBox(
+          width: 20,
+        )
+      ],
     );
   }
 
   Widget _buildCommunityDescription(
       BuildContext context, String desc, var group) {
-    return Card(
-      elevation: 0.4,
-      child: Container(
-          padding: EdgeInsets.all(8.h),
-          // decoration: AppDecoration.outlineBlackF
-          //     .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
-          child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 4.v),
-                Text("Community Description",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                        fontSize: 16.fSize,
-                        fontFamily: 'DM Sans',
-                        fontWeight: FontWeight.w700)),
-                SizedBox(height: 6.v),
-                Container(
-                    width: 312.h,
-                    margin: EdgeInsets.only(right: 21.h),
-                    child: Text(desc,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: appTheme.gray900,
-                            fontSize: 14.fSize,
-                            fontFamily: 'DM Sans',
-                            fontWeight: FontWeight.w500))),
-                const SizedBox(
-                  height: 20,
-                ),
-                if (group.groupAdminId == userId)
-                  CustomElevatedButton(
-                    text: 'Edit Info',
-                    onPressed: () {
-                      AppNavigator.pushAndStackPage(context,
-                          page: UpdateCommunityInfoScreen(
-                              widget.profilePic, group.groupId));
-                    },
-                  )
-              ])),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(height: 4.v),
+        Text("About  ${widget.name}",
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: TextStyle(
+                fontSize: 16.fSize,
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w700)),
+        SizedBox(height: 6.v),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Color(0x66F3F2F3),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x0F000000),
+                offset: Offset(0, 0),
+                blurRadius: 1,
+              ),
+            ],
+          ),
+          child: Container(
+              width: MediaQuery.sizeOf(context).width,
+              padding: EdgeInsets.all(12.h),
+              child: Text(desc,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: appTheme.gray900,
+                      fontSize: 14.fSize,
+                      fontFamily: 'DM Sans',
+                      fontWeight: FontWeight.w500))),
+        ),
+      ],
     );
   }
 
@@ -929,13 +1072,8 @@ class _CommunityInfoState extends State<CommunityInfo> {
   }
 
   getUsers(groupInfo, List<dynamic> membersUid) async {
-
-     
-
     groupMembers = await groupInfo.fetchUsers(membersUid);
 
-     
- 
     setState(() {});
   }
 

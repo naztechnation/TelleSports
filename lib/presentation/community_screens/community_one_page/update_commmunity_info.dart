@@ -3,10 +3,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart' as pro;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
+import 'package:tellesports/presentation/community_screens/community_one_page/create_community_pages/advanced_settings.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
@@ -100,16 +103,15 @@ class _UpdateCommunityInfoScreenState
                   image == null
                       ? GestureDetector(
                         onTap: () {
-                          Modals.showDialogModal(context, page:  _showFullImage(context, widget.currentImage));
+                          Modals.showDialogModal(context, page: 
+                           _showFullImage(context, widget.currentImage));
                           
                         },
                         child: Container(
-                            height: 150.adaptSize,
-                            width: 150.adaptSize,
+                            height: 100.adaptSize,
+                            width: 100.adaptSize,
                             
-                            // decoration: AppDecoration.outlineBlue200.copyWith(
-                            //   borderRadius: BorderRadiusStyle.circleBorder50,
-                            // ),
+                          
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(80),
                               child: CustomImageView(
@@ -143,14 +145,14 @@ class _UpdateCommunityInfoScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Update community photo".toUpperCase(),
+                          "Add community photo",
                           style: TextStyle(
-                            color: Colors.red,
+                            color: Colors.black,
                             fontSize: 14.fSize,
                             fontFamily: 'DM Sans',
                             fontWeight: FontWeight.w500,
                             decoration: TextDecoration.underline,
-                            decorationColor: Colors.red
+                            decorationColor: Colors.black
                           ),
                         ),
                         CustomImageView(
@@ -167,7 +169,29 @@ class _UpdateCommunityInfoScreenState
                   ),
                   SizedBox(height: 23.v),
                   _buildTextField(context),
-                  SizedBox(height: 24.v),
+                  SizedBox(height: 24.v),     
+                           GestureDetector(
+                            onTap: () {
+                              AppNavigator.pushAndStackPage(context, page: AdvancedSettingsScreen());
+                            },
+                             child: Container(
+                                             margin: EdgeInsets.fromLTRB(0, 0, 0, 24),
+                                             child: Align(
+                                               alignment: Alignment.topLeft,
+                                               child: Text(
+                                                 'Advanced settings',
+                                                 style: GoogleFonts.getFont(
+                                                   'DM Sans',
+                                                   fontWeight: FontWeight.w500,
+                                                   fontSize: 14,
+                                                   color: Color(0xFF3074B7),
+                                                 ),
+                                               ),
+                                             ),
+                                           ),
+                           ),
+                  SizedBox(height: 8.v),     
+
                   CustomElevatedButton(
                     text: "Update Info",
                     title: "Updating info...",
@@ -215,7 +239,7 @@ class _UpdateCommunityInfoScreenState
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 86.v,
+      height: 70.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         onTap: () {
@@ -224,15 +248,15 @@ class _UpdateCommunityInfoScreenState
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
-          top: 30.v,
+          top: 10.v,
           bottom: 12.v,
         ),
       ),
       centerTitle: true,
       title: AppbarSubtitle(
-        text: "Update Community Info".toUpperCase(),
+        text: "Edit Community Info",
         margin: EdgeInsets.only(
-          top: 25.v,
+          top: 10.v,
           bottom: 9.v,
         ),
       ),
@@ -244,21 +268,21 @@ class _UpdateCommunityInfoScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Text(
-        //   "Community name",
-        //   style: TextStyle(
-        //     color: appTheme.gray900,
-        //     fontSize: 14.fSize,
-        //     fontFamily: 'DM Sans',
-        //     fontWeight: FontWeight.w500,
-        //   ),
-        // ),
-        // SizedBox(height: 2.v),
-        // CustomTextFormField(
-        //   controller: groupNameController,
-        //   hintText: "Name your community",
-        //   textInputAction: TextInputAction.next,
-        // ),
+        Text(
+          "Community name",
+          style: TextStyle(
+            color: appTheme.gray900,
+            fontSize: 14.fSize,
+            fontFamily: 'DM Sans',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        SizedBox(height: 2.v),
+        CustomTextFormField(
+          controller: groupNameController,
+          hintText: "Name your community",
+          textInputAction: TextInputAction.next,
+        ),
         Text(
           "Enter description",
           style: TextStyle(

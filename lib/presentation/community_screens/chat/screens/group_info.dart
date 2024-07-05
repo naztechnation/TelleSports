@@ -7,7 +7,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../provider/auth_provider.dart'  as pro;
 
-// import '../../../provider/auth_provider.dart' as pro;
 
 class GroupInfoScreen extends StatefulWidget {
   static const String routeName = '/group-info-screen';

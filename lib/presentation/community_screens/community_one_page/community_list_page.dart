@@ -13,7 +13,7 @@ import '../../../widgets/modals.dart';
 import '../chat/screens/mobile_chat_screen.dart';
 import '../join_community_screen/join_community_screen.dart';
 import '../provider/auth_provider.dart' as pro;
-import 'empty_comunity_page.dart';
+import 'empty_community_page.dart';
 import 'search_group.dart';
 import 'widgets/community_item_widget.dart';
 import 'package:provider/provider.dart' as provider;
@@ -235,9 +235,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                       ));
                                                 }
                                               } else {
-                                                Modals.showToast(
-                                                  'You are not a member of this group',
-                                                );
+                                                
                                                 List<String> userItem =
                                                     removeDuplicates(
                                                         groupData.membersUid);
@@ -253,7 +251,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                   groupDescription: groupData
                                                       .groupDescription,
                                                   groupId: groupData.groupId,
-                                                  userId: userId, adminFcm: groupData.fcmToken,
+                                                  userId: userId, adminFcm: groupData.fcmToken, groupInfo: checkUserExist.requestedMembers,
                                                 );
                                               }
                                             },
@@ -280,6 +278,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
     required String groupId,
     required String userId,
     required String adminFcm,
+  required dynamic groupInfo,
+
   }) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(
@@ -288,7 +288,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
           groupNumber: groupNumber,
           groupDescription: groupDescription,
           groupId: groupId,
-          userId: userId, adminFcm: adminFcm,
+          userId: userId, adminFcm: adminFcm, 
         ));
   }
 

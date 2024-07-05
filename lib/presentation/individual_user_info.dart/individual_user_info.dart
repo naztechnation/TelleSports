@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/presentation/gift_tellacoins_screen/gift_tellacoins_screen.dart';
 import 'package:tellesports/presentation/user_info_page/user_info_page.dart';
@@ -8,7 +10,6 @@ import 'package:tellesports/widgets/custom_elevated_button.dart';
 
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
-import '../../widgets/modals.dart';
 import '../community_screens/provider/auth_provider.dart' as pro;
 import 'package:provider/provider.dart' as provider;
 
@@ -55,40 +56,337 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
     return SafeArea(
         child: Scaffold(
             appBar: _buildAppBar(context),
-            body: SizedBox(
-                width: double.maxFinite,
-                child: Column(children: [
-                  SizedBox(height: 15.v),
-                  _buildFrameRow(context),
-                  SizedBox(height: 24.v),
-                  // CustomElevatedButton(
-                  //     text: "Gift Tellacoins",
-                  //     margin: EdgeInsets.symmetric(horizontal: 20.h),
-                  //     leftIcon: Container(
-                  //         margin: EdgeInsets.only(right: 10.h),
-                  //         child: CustomImageView(
-                  //             imagePath: ImageConstant.imgCardgiftcard,
-                  //             height: 24.adaptSize,
-                  //             width: 24.adaptSize)),
-                  //     onPressed: () {
-                  //       onTapGiftTellacoins(context, widget.username);
-                  //     }),
-                  SizedBox(height: 24.v),
-                  _buildFrameColumn(
-                    context: context,
-                    groupName: groupInfo.groupName,
-                    groupPics: groupInfo.groupPics,
-                    groupNumber: groupInfo.groupNumber,
+            body: SingleChildScrollView(
+              child: Column(
+                 
+                children: [
+                SizedBox(height: 15.v),
+                _buildFrameRow(context),
+                SizedBox(height: 24.v),
+                CustomElevatedButton(
+                    text: "Gift Tellacoins",
+                    buttonStyle: ElevatedButton.styleFrom(backgroundColor: Color(0xff3C91E5)),
+                    margin: EdgeInsets.symmetric(horizontal: 20.h),
+                    leftIcon: Container(
+                        margin: EdgeInsets.only(right: 10.h),
+                        child: CustomImageView(
+                            imagePath: ImageConstant.imgCardgiftcard,
+                            height: 24.adaptSize,
+                            width: 24.adaptSize)),
+                    onPressed: () {
+                      onTapGiftTellacoins(context, widget.username);
+                    }),
+                SizedBox(height: 24.v),
+                _buildFrameColumn(
+                  context: context,
+                  groupName: groupInfo.groupName,
+                  groupPics: groupInfo.groupPics,
+                  groupNumber: groupInfo.groupNumber,
+                ),
+                SizedBox(height: 24.v),
+                Container(
+                  margin: EdgeInsets.fromLTRB(15, 0, 15, 24),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Color(0x66F3F2F3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0x0F000000),
+                        offset: Offset(0, 0),
+                        blurRadius: 3,
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 24.v),
-                  // _buildFrameColumn1(),
-                  _buildTabBarView(context)
-                ]))));
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(8, 12, 8.8, 19.5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0, 0, 0, 15.5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Communities in common',
+                              style: GoogleFonts.getFont(
+                                'DM Sans',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                                color: Color(0xFF342E37),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0, 0, 0, 23),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: CustomImageView(
+                                      imagePath: ImageConstant.imgAvatar,
+                                      placeHolder:
+                                          ImageConstant.imgAvatar64x64,
+                                      height: 64.adaptSize,
+                                      width: 64.adaptSize,
+                                      radius: BorderRadius.circular(32.h)),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(0, 2.5, 0, 16.5),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 0, 0, 2),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 10.5, 0),
+                                              child: SizedBox(
+                                                width: 243.5,
+                                                child: Text(
+                                                  'Pixsellz Team',
+                                                  style: GoogleFonts.getFont(
+                                                    'DM Sans',
+                                                    fontWeight:
+                                                        FontWeight.w500,
+                                                    fontSize: 16,
+                                                    color: Color(0xFF1F1C21),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              '₦',
+                                              style: GoogleFonts.getFont(
+                                                'DM Sans',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                color: Color(0xFF3C91E5),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          '1,223 members',
+                                          style: GoogleFonts.getFont(
+                                            'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: Color(0xFF8E8E93),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0, 0, 0, 23),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: CustomImageView(
+                                      imagePath: ImageConstant.imgAvatar,
+                                      placeHolder:
+                                          ImageConstant.imgAvatar64x64,
+                                      height: 64.adaptSize,
+                                      width: 64.adaptSize,
+                                      radius: BorderRadius.circular(32.h)),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(0, 2.5, 0, 16.5),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 0, 0, 2),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 10.5, 0),
+                                              child: SizedBox(
+                                                width: 243.5,
+                                                child: Text(
+                                                  'Pixsellz Team',
+                                                  style: GoogleFonts.getFont(
+                                                    'DM Sans',
+                                                    fontWeight:
+                                                        FontWeight.w500,
+                                                    fontSize: 16,
+                                                    color: Color(0xFF1F1C21),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              '₦',
+                                              style: GoogleFonts.getFont(
+                                                'DM Sans',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                color: Color(0xFF3C91E5),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          '1,223 members',
+                                          style: GoogleFonts.getFont(
+                                            'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: Color(0xFF8E8E93),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CustomImageView(
+                                    imagePath: ImageConstant.imgAvatar,
+                                    placeHolder: ImageConstant.imgAvatar64x64,
+                                    height: 64.adaptSize,
+                                    width: 64.adaptSize,
+                                    radius: BorderRadius.circular(32.h)),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.fromLTRB(0, 2.5, 0, 16.5),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 2),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.fromLTRB(
+                                                0, 0, 10.5, 0),
+                                            child: SizedBox(
+                                              width: 243.5,
+                                              child: Text(
+                                                'Pixsellz Team',
+                                                style: GoogleFonts.getFont(
+                                                  'DM Sans',
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16,
+                                                  color: Color(0xFF1F1C21),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            '₦',
+                                            style: GoogleFonts.getFont(
+                                              'DM Sans',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                              color: Color(0xFF3C91E5),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        '1,223 members',
+                                        style: GoogleFonts.getFont(
+                                          'DM Sans',
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: Color(0xFF8E8E93),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                 UserInfoPage(
+                isGroupAdmin: widget.isGroupAdmin,
+                memberId: widget.memberId,
+                memberName: widget.name,
+              )
+              ]),
+            )));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 86.v,
+      height: 70.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         onTap: () {
@@ -97,7 +395,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
-          top: 50.v,
+          top: 0.v,
           bottom: 12.v,
         ),
       ),
@@ -105,7 +403,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
       title: AppbarSubtitle(
         text: "Info",
         margin: EdgeInsets.only(
-          top: 49.v,
+          top: 0.v,
           bottom: 9.v,
         ),
       ),
@@ -113,11 +411,11 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
     );
   }
 
-  Widget _buildFrameRow(BuildContext context) {
+    _buildFrameRow(BuildContext context) {
     return Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-            padding: EdgeInsets.only(left: 20.h, right: 45.h),
+            padding: EdgeInsets.only(left: 20.h, right: 0.h),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               if (widget.image == "" || widget.image == "null") ...[
                 CustomImageView(
@@ -145,7 +443,6 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                                     .titleMediumOnPrimaryBold18),
                             SizedBox(height: 3.v),
                             SizedBox(
-                                width: 251.h,
                                 child: Text(widget.bio,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -154,17 +451,26 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
             ])));
   }
 
-  Widget _buildFrameColumn(
+    _buildFrameColumn(
       {required BuildContext context,
       required String groupName,
       required String groupPics,
       required String groupNumber}) {
     return Container(
-        width: 350.h,
+         height: 140,
         margin: EdgeInsets.symmetric(horizontal: 20.h),
         padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 13.v),
-        decoration: AppDecoration.outlineBlack9001
-            .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
+        decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Color(0x66F3F2F3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0x0F000000),
+                        offset: Offset(0, 0),
+                        blurRadius: 3,
+                      ),
+                    ],
+                  ),
         child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,9 +497,10 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                           Text(groupName,
                               style: CustomTextStyles.titleMediumBlack900_1),
                           SizedBox(height: 2.v),
-                          Text( (groupNumber == '1')
-                                          ? "${groupNumber}   Member"
-                                          : "${groupNumber}   Members",
+                          Text(
+                              (groupNumber == '1')
+                                  ? "${groupNumber}   Member"
+                                  : "${groupNumber}   Members",
                               style: CustomTextStyles.titleSmallBluegray400)
                         ]))
               ]),
@@ -254,16 +561,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
             ]));
   }
 
-  Widget _buildTabBarView(BuildContext context) {
-    return Expanded(
-        child: SizedBox(
-            child: TabBarView(controller: tabviewController, children: [
-      UserInfoPage(
-        isGroupAdmin: widget.isGroupAdmin,
-        memberId: widget.memberId, memberName: widget.name,
-      ),
-    ])));
-  }
+   
 
   onTapGiftTellacoins(BuildContext context, String username) {
     AppNavigator.pushAndStackPage(context,

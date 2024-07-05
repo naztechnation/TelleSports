@@ -156,7 +156,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     final isShowMessageReply = messageReply != null;
 
     return Column(
-      mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
       children: [
         isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
         Container(

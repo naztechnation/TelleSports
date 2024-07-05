@@ -17,7 +17,7 @@ import 'package:tellesports/widgets/custom_text_form_field.dart';
 import '../../model/chat_model/group.dart';
 import 'chat/screens/mobile_chat_screen.dart';
 import 'join_community_screen/join_community_screen.dart';
-import 'community_one_page/empty_comunity_page.dart';
+import 'community_one_page/empty_community_page.dart';
 import 'community_one_page/widgets/community_item_widget.dart';
 import 'community_one_page/widgets/create_community.dart';
 import 'provider/auth_provider.dart' as pro;
@@ -234,7 +234,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                       .groupDescription,
                                                   groupId: groupData.groupId,
                                                   userId: userId,
-                                                  adminFcm: groupData.fcmToken,
+                                                  adminFcm: groupData.fcmToken, groupInfo: checkUserExist.requestedMembers,
                                                 );
                                               }
                                             },
@@ -262,6 +262,8 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
     required String groupId,
     required String userId,
     required String adminFcm,
+  required dynamic groupInfo,
+
   }) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(
@@ -271,7 +273,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
           groupDescription: groupDescription,
           groupId: groupId,
           userId: userId,
-          adminFcm: adminFcm,
+          adminFcm: adminFcm,  
         ));
   }
 

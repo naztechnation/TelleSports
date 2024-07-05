@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -252,7 +253,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                       margin: const EdgeInsets.only(bottom: 80),
                       child: FloatingActionButton(
                         backgroundColor: Colors.blue.withOpacity(0.5),
-                        mini: false,
+                        mini: true,
                         elevation: 0.0,
                         onPressed: () {
                           _scrollDown();
@@ -341,7 +342,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                       child: Column(
                         children: [
                           Container(
-                            margin: EdgeInsets.fromLTRB(20, 10, 20, 489),
+                            margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -436,7 +437,9 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                     ),
                                   ),
                                 ),
+
                                 Container(
+                                  width: MediaQuery.sizeOf(context).width,
                                   decoration: BoxDecoration(
                                     color: Color(0xFF3C91E5),
                                     borderRadius: BorderRadius.circular(8),
@@ -444,13 +447,15 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                   child: Container(
                                     padding:
                                         EdgeInsets.fromLTRB(0, 12, 0.4, 12),
-                                    child: Text(
-                                      'Share community',
-                                      style: GoogleFonts.getFont(
-                                        'DM Sans',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14,
-                                        color: Color(0xFFFFFFFF),
+                                    child: Center(
+                                      child: Text(
+                                        'Share community',
+                                        style: GoogleFonts.getFont(
+                                          'DM Sans',
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: Color(0xFFFFFFFF),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -534,7 +539,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                   );
                                 }),
                           ],
-                          Divider(),
+                          SizedBox(height: 20,),
                           StreamBuilder<DocumentSnapshot>(
                             stream: FirebaseFirestore.instance
                                 .collection('groups')

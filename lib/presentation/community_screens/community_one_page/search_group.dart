@@ -12,15 +12,14 @@ import '../../../widgets/modals.dart';
 import '../chat/screens/mobile_chat_screen.dart';
 import '../join_community_screen/join_community_screen.dart';
 import '../provider/auth_provider.dart' as pro;
-import 'empty_comunity_page.dart';
+import 'empty_community_page.dart';
 import 'widgets/community_item_widget.dart';
 import 'package:provider/provider.dart' as provider;
 
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
-
-import 'widgets/create_community.dart';
+ 
 
 class SearchGroupPage extends ConsumerStatefulWidget {
   const SearchGroupPage({Key? key}) : super(key: key);
@@ -247,7 +246,7 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                       .groupDescription,
                                                   groupId: groupData.groupId,
                                                   userId: userId,
-                                                  adminFcm: groupData.fcmToken,
+                                                  adminFcm: groupData.fcmToken, groupInfo: checkUserExist.requestedMembers,
                                                 );
                                               }
                                             },
@@ -274,6 +273,8 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
     required String groupId,
     required String userId,
     required String adminFcm,
+  required dynamic groupInfo,
+    
   }) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(

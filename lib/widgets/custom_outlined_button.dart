@@ -85,7 +85,7 @@ class CustomOutlinedButton extends BaseButton {
           ),
         )
       : Container(
-        height: 55,
+        height: 45,
         width: this.width ?? double.maxFinite,
         margin: margin,
         decoration: decoration,

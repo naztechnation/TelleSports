@@ -83,7 +83,7 @@ class CustomElevatedButton extends BaseButton {
           ),
         )
       : Container(
-          height: this.height ?? 55.v,
+          height: this.height ?? 45.v,
           width: this.width ?? double.maxFinite,
           margin: margin,
           decoration: decoration,

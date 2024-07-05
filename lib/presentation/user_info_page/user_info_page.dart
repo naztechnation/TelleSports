@@ -101,121 +101,116 @@ class UserInfoPageState extends State<UserInfo>
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
     final user = provider.Provider.of<AccountViewModel>(context, listen: true);
 
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: BlocConsumer<PredictionCubit, PredictStates>(
-          listener: (context, state) {
-            if (state is ReportUserLoaded) {
-              if (state.complaint.success ?? false) {
-                Modals.showToast('Complaint submitted successfully',
-                    messageType: MessageType.success);
-                compaintController.clear();
-              } else {
-                Modals.showToast('Failed to submit complaint',
-                    messageType: MessageType.error);
-              }
-            } else if (state is PredictApiErr) {
-              if (state.message != null) {
-                Modals.showToast(state.message ?? '',
-                    messageType: MessageType.error);
-              }
-            } else if (state is PredictNetworkErr) {
-              if (state.message != null) {
-                Modals.showToast(state.message ?? '',
-                    messageType: MessageType.error);
-              }
+    return  BlocConsumer<PredictionCubit, PredictStates>(
+        listener: (context, state) {
+          if (state is ReportUserLoaded) {
+            if (state.complaint.success ?? false) {
+              Modals.showToast('Complaint submitted successfully',
+                  messageType: MessageType.success);
+              compaintController.clear();
+            } else {
+              Modals.showToast('Failed to submit complaint',
+                  messageType: MessageType.error);
             }
-          },
-          builder: (context, state) => Container(
-            width: double.maxFinite,
-            decoration: AppDecoration.fillWhiteA,
-            child: Column(
-              children: [
-                SizedBox(height: 36.v),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.h),
-                  child: Column(
-                    children: [
-                      if (widget.isGroupAdmin) SizedBox(height: 24.v),
-                      if (groupData.groupAdminId == userId)
-                        if (state is ReportUserLoading)
-                          ...[]
-                        else ...[
-                          CustomElevatedButton(
-                            text: "Block",
-                            processing: isLoading,
-                            buttonStyle: CustomButtonStyles.fillRedTL8,
-                            onPressed: () async {
-                              if (widget.isGroupAdmin) {
-                                Modals.showToast(
-                                    'Oppss you can\'t block yourself');
-                              } else {
-                                setState(() {
-                                  isLoading = true;
-                                });
-                                await groupData.removeCurrentUserFromMembers(
-                                    groupData.groupId,
-                                    widget.memberId,
-                                    context);
-                                await groupData.addUserToBlockedMembers(
-                                    groupData.groupId,
-                                    widget.memberId,
-                                    context);
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                user.updateIndex(0);
-                                AppNavigator.pushAndStackPage(context,
-                                    page: LandingPage());
-                              }
-                            },
-                          ),
-                        ],
-                      if (groupData.groupAdminId == userId)
-                        SizedBox(height: 16.v),
-                      if (isLoading)
+          } else if (state is PredictApiErr) {
+            if (state.message != null) {
+              Modals.showToast(state.message ?? '',
+                  messageType: MessageType.error);
+            }
+          } else if (state is PredictNetworkErr) {
+            if (state.message != null) {
+              Modals.showToast(state.message ?? '',
+                  messageType: MessageType.error);
+            }
+          }
+        },
+        builder: (context, state) => Container(
+          width: double.maxFinite,
+          decoration: AppDecoration.fillWhiteA,
+          child: Column(
+            children: [
+              SizedBox(height: 36.v),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.h),
+                child: Column(
+                  children: [
+                    if (widget.isGroupAdmin) SizedBox(height: 24.v),
+                    if (groupData.groupAdminId == userId)
+                      if (state is ReportUserLoading)
                         ...[]
                       else ...[
-                        CustomOutlinedButton(
-                          text: "Report user",
-                          title: 'Submitting report...',
-                          loadingColour: Colors.green.shade700,
-                          processing: state is ReportUserLoading,
-                          onPressed: () {
-                            Modals.showDialogModal(context,
-                                page: ModalContentScreen(
-                                    title: 'Report this user',
-                                    body: Column(
-                                      children: [_buildComplaintField(context)],
-                                    ),
-                                    btnText: 'Submit',
-                                    onPressed: () async {
-                                      Navigator.pop(context);
-                                      if (compaintController.text.isNotEmpty) {
-                                        _predictionCubit.sendReport(
-                                            complaintType: 'user',
-                                            complaint: compaintController.text,
-                                            reportedUser: widget.memberName);
-                                      } else {
-                                        Modals.showToast(
-                                            'Please fill in your complaints');
-                                      }
-                                    },
-                                    headerColorOne: Color(0xFFFDF9ED),
-                                    headerColorTwo: Color(0xFFFAF3DA)));
+                        CustomElevatedButton(
+                          text: "Block",
+                          processing: isLoading,
+                          buttonStyle: CustomButtonStyles.fillRedTL8,
+                          onPressed: () async {
+                            if (widget.isGroupAdmin) {
+                              Modals.showToast(
+                                  'Oppss you can\'t block yourself');
+                            } else {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              await groupData.removeCurrentUserFromMembers(
+                                  groupData.groupId,
+                                  widget.memberId,
+                                  context);
+                              await groupData.addUserToBlockedMembers(
+                                  groupData.groupId,
+                                  widget.memberId,
+                                  context);
+                              setState(() {
+                                isLoading = false;
+                              });
+                              user.updateIndex(0);
+                              AppNavigator.pushAndStackPage(context,
+                                  page: LandingPage());
+                            }
                           },
                         ),
-                      ]
-                    ],
-                  ),
+                      ],
+                    if (groupData.groupAdminId == userId)
+                      SizedBox(height: 16.v),
+                    if (isLoading)
+                      ...[]
+                    else ...[
+                      CustomOutlinedButton(
+                        text: "Report user",
+                        title: 'Submitting report...',
+                        loadingColour: Colors.green.shade700,
+                        processing: state is ReportUserLoading,
+                        onPressed: () {
+                          Modals.showDialogModal(context,
+                              page: ModalContentScreen(
+                                  title: 'Report this user',
+                                  body: Column(
+                                    children: [_buildComplaintField(context)],
+                                  ),
+                                  btnText: 'Submit',
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    if (compaintController.text.isNotEmpty) {
+                                      _predictionCubit.sendReport(
+                                          complaintType: 'user',
+                                          complaint: compaintController.text,
+                                          reportedUser: widget.memberName);
+                                    } else {
+                                      Modals.showToast(
+                                          'Please fill in your complaints');
+                                    }
+                                  },
+                                  headerColorOne: Color(0xFFFDF9ED),
+                                  headerColorTwo: Color(0xFFFAF3DA)));
+                        },
+                      ),
+                    ]
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
-      ),
-    );
+        ));
+      
   }
 
   Widget _buildComplaintField(BuildContext context) {

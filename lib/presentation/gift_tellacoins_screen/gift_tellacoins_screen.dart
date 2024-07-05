@@ -119,8 +119,9 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                         Duration(
                           seconds: 2,
                         ), () {
-                          final user = Provider.of<AccountViewModel>(context, listen: true);
-          user.updateIndex(0);
+                      final user =
+                          Provider.of<AccountViewModel>(context, listen: true);
+                      user.updateIndex(0);
                       AppNavigator.pushAndReplacePage(context,
                           page: LandingPage());
                     });
@@ -151,44 +152,44 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                       SizedBox(height: 39.v),
                       _buildTextField(context),
                       SizedBox(height: 24.v),
-                      // CustomElevatedButton(
-                      //   text: "Gift Tellacoins",
-                      //   title: 'Transfering tellacoin...',
-                      //   processing: state is TransferCoinLoading,
-                      //   isDisabled: isSufficient,
-                      //   leftIcon: Container(
-                      //       margin: EdgeInsets.only(right: 10.h),
-                      //       child: CustomImageView(
-                      //           imagePath: ImageConstant.imgCardgiftcard,
-                      //           height: 24.adaptSize,
-                      //           width: 24.adaptSize)),
-                      //   onPressed: () {
-                      //     Modals.showDialogModal(context,
-                      //         page: ModalContentScreen(
-                      //             title: 'Continue With Transfer',
-                      //             body: Text(
-                      //               'N.B: Are you sure you want to transfer ${amountController.text} Tellacoins to ${widget.desUserId}. As This action can\'t be reversed.',
-                      //               maxLines: 3,
-                      //               overflow: TextOverflow.ellipsis,
-                      //               style: TextStyle(
-                      //                 color: appTheme.gray900,
-                      //                 fontSize: 14.fSize,
-                      //                 fontFamily: 'DM Sans',
-                      //                 fontWeight: FontWeight.w500,
-                      //               ),
-                      //             ),
-                      //             btnText: 'Proceed',
-                      //             onPressed: () {
-                      //               trasferTellaCoin();
+                      CustomElevatedButton(
+                        text: "Gift Tellacoins",
+                        title: 'Transfering tellacoin...',
+                        processing: state is TransferCoinLoading,
+                        isDisabled: isSufficient,
+                        leftIcon: Container(
+                            margin: EdgeInsets.only(right: 10.h),
+                            child: CustomImageView(
+                                imagePath: ImageConstant.imgCardgiftcard,
+                                height: 24.adaptSize,
+                                width: 24.adaptSize)),
+                        onPressed: () {
+                          Modals.showDialogModal(context,
+                              page: ModalContentScreen(
+                                  title: 'Continue With Transfer',
+                                  body: Text(
+                                    'N.B: Are you sure you want to transfer ${amountController.text} Tellacoins to ${widget.desUserId}. As This action can\'t be reversed.',
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: appTheme.gray900,
+                                      fontSize: 14.fSize,
+                                      fontFamily: 'DM Sans',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  btnText: 'Proceed',
+                                  onPressed: () {
+                                    trasferTellaCoin();
 
-                      //               Navigator.pop(context);
-                      //             },
-                      //             headerColorOne:
-                      //                 Color.fromARGB(255, 208, 151, 151),
-                      //             headerColorTwo:
-                      //                 Color.fromARGB(255, 234, 132, 132)));
-                      //   },
-                      // ),
+                                    Navigator.pop(context);
+                                  },
+                                  headerColorOne:
+                                      Color.fromARGB(255, 208, 151, 151),
+                                  headerColorTwo:
+                                      Color.fromARGB(255, 234, 132, 132)));
+                        },
+                      ),
                       SizedBox(height: 5.v)
                     ])),
               ),
@@ -197,7 +198,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 86.v,
+      height: 70.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         onTap: () {
@@ -206,7 +207,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
-          top: 50.v,
+          top: 0.v,
           bottom: 12.v,
         ),
       ),
@@ -214,7 +215,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
       title: AppbarSubtitle(
         text: "Gift Tellacoins",
         margin: EdgeInsets.only(
-          top: 49.v,
+          top: 0.v,
           bottom: 9.v,
         ),
       ),

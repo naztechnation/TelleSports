@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,19 +8,17 @@ import '../../../../widgets/app_bar/appbar_subtitle.dart';
 import '../../../../widgets/custom_elevated_button.dart';
 import '../../../../widgets/custom_text_form_field.dart';
 
-class SetUpCommunity extends StatefulWidget {
-  const SetUpCommunity({super.key});
+class AdvancedSettingsScreen extends StatefulWidget {
+  const AdvancedSettingsScreen({super.key});
 
   @override
-  State<SetUpCommunity> createState() => _SetUpCommunityState();
+  State<AdvancedSettingsScreen> createState() => _AdvancedSettingsScreenState();
 }
 
-class _SetUpCommunityState extends State<SetUpCommunity> {
+class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   String? _selectedOption;
-  bool _isSwitched = false;
-
   String? _selectedPaymentOption;
-
+  bool _isSwitched = false;
 
   final List<String> _options = [
     'Free to join',
@@ -32,7 +29,6 @@ class _SetUpCommunityState extends State<SetUpCommunity> {
   final List<String> _paymentOption = [
     'One time payment',
     'Monthly',
-    
   ];
   @override
   Widget build(BuildContext context) {
@@ -46,13 +42,11 @@ class _SetUpCommunityState extends State<SetUpCommunity> {
             imagePath: ImageConstant.imgArrowBack,
             margin: EdgeInsets.only(
               left: 20.h,
-               
             ),
           ),
           centerTitle: true,
           title: AppbarSubtitle(
-            text: "Set up your community",
-             
+            text: "Advanced Settings",
           ),
         ),
         body: Container(
@@ -141,67 +135,96 @@ class _SetUpCommunityState extends State<SetUpCommunity> {
                             ],
                           ),
                         ),
-                        Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Color(0x66F3F2F3),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0x0F000000),
-                                      offset: Offset(0, 0),
-                                      blurRadius: 1,
+                        if (_selectedOption.toString().toLowerCase() ==
+                            'Pay to join'.toLowerCase())
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 0, 32),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'Payment Type',
+                                      style: GoogleFonts.getFont(
+                                        'DM Sans',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                        color: Color(0xFF342E37),
+                                      ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: _paymentOption.map((option) {
-                                    return Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: option,
-                                          activeColor: Colors.blue,
-                                          groupValue: _selectedPaymentOption,
-                                          onChanged: (String? value) {
-                                            setState(() {
-                                              _selectedPaymentOption = value;
-                                            });
-                                          },
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedPaymentOption = option;
-                                            });
-                                          },
-                                          child: Text(
-                                            option,
-                                            style: TextStyle(
-                                              fontSize: 16.0,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Color(0x66F3F2F3),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0x0F000000),
+                                        offset: Offset(0, 0),
+                                        blurRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: _paymentOption.map((option) {
+                                      return Row(
+                                        children: [
+                                          Radio<String>(
+                                            value: option,
+                                            activeColor: Colors.blue,
+                                            groupValue: _selectedPaymentOption,
+                                            onChanged: (String? value) {
+                                              setState(() {
+                                                _selectedPaymentOption = value;
+                                              });
+                                            },
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                _selectedPaymentOption = option;
+                                              });
+                                            },
+                                            child: Text(
+                                              option,
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    );
-                                  }).toList(),
+                                        ],
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
-                              ),
-                     if(_selectedOption.toString().toLowerCase() == 'Pay to join'.toLowerCase())   Container(
-                          margin: EdgeInsets.fromLTRB(0, 0, 0, 32),
-                              padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Color(0x66F3F2F3),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0x0F000000),
-                                      offset: Offset(0, 0),
-                                      blurRadius: 1,
-                                    ),
-                                  ],
+                              ],
+                            ),
+                          ),
+                        if (_selectedOption.toString().toLowerCase() ==
+                            'Pay to join'.toLowerCase())
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 0, 32),
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Color(0x66F3F2F3),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x0F000000),
+                                  offset: Offset(0, 0),
+                                  blurRadius: 1,
                                 ),
-                                child: _buildTextField(context),
-                                ),
+                              ],
+                            ),
+                            child: _buildTextField(context),
+                          ),
                         Container(
                           margin: EdgeInsets.fromLTRB(0, 0, 0, 32),
                           decoration: BoxDecoration(
@@ -214,11 +237,10 @@ class _SetUpCommunityState extends State<SetUpCommunity> {
                                 blurRadius: 1,
                               ),
                             ],
-              
-                            
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 12),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -254,8 +276,8 @@ class _SetUpCommunityState extends State<SetUpCommunity> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: CustomElevatedButton(
-                            text: "Save and continue",
-                            title: "Creating community...",
+                            text: "Save changes",
+                            title: "Saving...",
                             buttonStyle: CustomButtonStyles.fillBlue,
                             onPressed: () async {
                               // AppNavigator.pushAndStackPage(context,
@@ -273,7 +295,7 @@ class _SetUpCommunityState extends State<SetUpCommunity> {
         ));
   }
 
-   Widget _buildTextField(BuildContext context) {
+  Widget _buildTextField(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -292,7 +314,7 @@ class _SetUpCommunityState extends State<SetUpCommunity> {
           hintText: "₦",
           textInputAction: TextInputAction.next,
         ),
-      Align(
+        Align(
           alignment: Alignment.topLeft,
           child: Text(
             '1 Tellacoin = ₦100',
