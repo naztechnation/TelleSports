@@ -18,6 +18,7 @@ import 'package:tellesports/widgets/image_view.dart';
 import '../../../blocs/prediction/prediction.dart';
 import '../../../core/constants/enums.dart';
 import '../../../handlers/secure_handler.dart';
+import '../../../model/chat_model/group.dart';
 import '../../../model/chat_model/user_model.dart';
 import '../../../model/view_models/account_view_model.dart';
 import '../../../model/view_models/user_view_model.dart';
@@ -44,7 +45,7 @@ import 'widgets/userprofile_item_widget.dart';
 class CommunityInfoScreen extends StatelessWidget {
   final String profilePic;
   final String name;
-  final List<String> membersUid;
+  final List<MemberData> membersUid;
   CommunityInfoScreen(
       {Key? key,
       required this.profilePic,
@@ -70,7 +71,7 @@ class CommunityInfoScreen extends StatelessWidget {
 class CommunityInfo extends StatefulWidget {
   final String profilePic;
   final String name;
-  final List<String> membersUid;
+  final List<MemberData> membersUid;
 
   CommunityInfo(
       {Key? key,

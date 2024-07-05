@@ -34,7 +34,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
     with AutomaticKeepAliveClientMixin<AllGroupsListPage> {
   TextEditingController searchController = TextEditingController();
 
-  List<String> userItem = [];
+  List<MemberData> userItem = [];
 
   String userId = '';
   
@@ -171,7 +171,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                         itemBuilder: (context, index) {
                                           Group groupData = checkUserExist.searchResult1[index];
 
-                                          userItem = removeDuplicates(
+                                          userItem = removeDuplicateUsers(
                                               groupData.membersUid);
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:
@@ -188,7 +188,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                           .length
                                                           .toString(),
                                                       groupAdminId: groupData
-                                                          .membersUid[0],
+                                                          .membersUid[0].userId,
                                                       groupId:
                                                           groupData.groupId,
                                                       groupLink:
@@ -277,17 +277,15 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
         ));
   }
 
-  List<String> removeDuplicates(List<String> items) {
-    Map<int, String> uniqueItems = {};
+List<MemberData> removeDuplicateUsers(List<MemberData> users) {
+  final Map<String, MemberData> uniqueUsers = {};
 
-    items.forEach((item) {
-      if (items.isNotEmpty || items != []) {
-        uniqueItems[int.tryParse(item)!] = item;
-      }
-    });
-
-    return uniqueItems.values.toList();
+  for (var user in users) {
+    uniqueUsers[user.userId] = user;
   }
+
+  return uniqueUsers.values.toList();
+}
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(

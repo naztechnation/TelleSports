@@ -461,49 +461,59 @@ Future<void> removeUserFromBlockedList({
   Future<List<String>> getMyBlockedUsers({required String userId}) async {
   if (userId.isEmpty) {
     print('User ID cannot be empty.');
-    return []; // Return an empty list if userId is empty
+    return [];
   }
 
   var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
   if (userDoc.exists) {
     List<String> currentBlockedUsers = List<String>.from(userDoc.data()?['blockedId'] ?? []);
-    return currentBlockedUsers; // Return the list of blocked users
+    return currentBlockedUsers; 
   } else {
     print('User $userId not found.');
-    return []; // Return an empty list if user not found
+    return []; 
   }
 }
 
 
-  Future<bool> checkUserGroupLimit(
-      {required String userId,
-      required BuildContext context,
-      required String name,
-      required String groupDesc,
-      required String fcmToken,
-      required File profilePic,
-      var ref}) async {
-    var userDoc = await _firebaseStorage.collection('users').doc(userId).get();
+  Future<bool> checkUserGroupLimit({
+  required String userId,
+  required BuildContext context,
+  required String name,
+  required String groupDesc,
+  required String fcmToken,
+  required File profilePic,
+  required String communityType,
+  required String communityPrice,
+  required String paymentType,
+  required bool showMemberCount,
+  var ref,
+}) async {
+  var userDoc = await _firebaseStorage.collection('users').doc(userId).get();
 
-    var currentNumberOfGroups = userDoc['numberOfGroups'];
+  var currentNumberOfGroups = userDoc['numberOfGroups'];
 
-    if (currentNumberOfGroups < 2) {
-      await createGroup(
-        context,
-        name,
-        groupDesc,
-        fcmToken,
-        profilePic,
-        ref,
-      );
+  if (currentNumberOfGroups < 2) {
+    await createGroup(
+      context,
+      name,
+      groupDesc,
+      fcmToken,
+      profilePic,
+      ref,
+      communityType,
+      communityPrice,
+      paymentType,
+      showMemberCount,
+    );
 
-      return true;
-    } else {
-      Modals.showToast('Opps you cant create more than 2 groups');
-      return false;
-    }
+    return true;
+  } else {
+    Modals.showToast('Oops, you can\'t create more than 2 groups');
+    return false;
   }
+}
+
 
   UpdateGroupCount({
     required String userId,
@@ -526,46 +536,61 @@ Future<void> removeUserFromBlockedList({
     }
   }
 
-  Future<void> createGroup(BuildContext context, String name, String groupDesc,
-      String fcmToken, File profilePic, var ref) async {
-    String userId = await StorageHandler.getUserId() ?? '';
-    try {
-      List<String> uids = [];
+  Future<void> createGroup(
+    BuildContext context,
+    String name,
+    String groupDesc,
+    String fcmToken,
+    File profilePic,
+    var ref,
+    String communityType,
+    String communityPrice,
+    String paymentType,
+    bool showMemberCount,
+  ) async {
+  String userId = await StorageHandler.getUserId() ?? '';
+  try {
+    List<MemberData> members = [
+      MemberData(userId: userId, dateJoined: DateTime.now()),
+    ];
 
-      var groupId = const Uuid().v1();
-      var groupLink = const Uuid().v4();
+    var groupId = const Uuid().v1();
+    var groupLink = const Uuid().v4();
 
-      String profileUrl = await ref
-          .read(commonFirebaseStorageRepositoryProvider)
-          .storeFileToFirebase(
-            'group/$groupId',
-            profilePic,
-          );
-      model.Group group = model.Group(
-        pinnedMessage: '',
-        fcmToken: fcmToken,
-        isGroupLocked: false,
-        groupLink: 'telesportcommunity.com/${groupLink}',
-        senderId: userId,
-        name: name,
-        groupId: groupId,
-        lastMessage: '',
-        groupPic: profileUrl,
-        membersUid: [userId, ...uids],
-        timeSent: DateTime.now(),
-        groupDescription: groupDesc,
-        blockedMembers: [],
-        requestsMembers: [],
-      );
+    String profileUrl = await ref
+        .read(commonFirebaseStorageRepositoryProvider)
+        .storeFileToFirebase(
+          'group/$groupId',
+          profilePic,
+        );
 
-      await _firebaseStorage
-          .collection('groups')
-          .doc(groupId)
-          .set(group.toMap());
-    } catch (e) {
-      Modals.showToast(e.toString());
-    }
+    Group group = Group(
+      pinnedMessage: '',
+      fcmToken: fcmToken,
+      isGroupLocked: false,
+      groupLink: 'telesportcommunity.com/${groupLink}',
+      senderId: userId,
+      name: name,
+      groupId: groupId,
+      lastMessage: '',
+      groupPic: profileUrl,
+      membersUid: members,
+      timeSent: DateTime.now(),
+      groupDescription: groupDesc,
+      blockedMembers: [],
+      requestsMembers: [],
+      communityType: communityType,
+      communityPrice: communityPrice,
+      paymentType: paymentType,
+      showMemberCount: showMemberCount,
+    );
+
+    await _firebaseStorage.collection('groups').doc(groupId).set(group.toMap());
+  } catch (e) {
+    Modals.showToast(e.toString());
   }
+}
+
 
 
 Future<List<UserModel>> fetchUsers(dynamic membersUid) async {

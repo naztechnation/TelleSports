@@ -57,7 +57,7 @@ class MobileChatScreen extends StatelessWidget {
   final String profilePic;
   final String groupNumber;
   final String groupDesc;
-  final List<String> membersUid;
+  final List<MemberData> membersUid;
   const MobileChatScreen(
     this.groupDesc,
     this.groupNumber,
@@ -96,7 +96,7 @@ class MobileChat extends ConsumerStatefulWidget {
   final String profilePic;
   final String groupNumber;
   final String groupDesc;
-  final List<String> membersUid;
+  final List<MemberData> membersUid;
   const MobileChat(
     this.groupDesc,
     this.groupNumber,
@@ -955,7 +955,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     BuildContext context,
     String image,
     String name,
-    final List<String> membersUid,
+    final List<MemberData> membersUid,
   ) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(

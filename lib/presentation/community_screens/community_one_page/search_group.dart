@@ -1,10 +1,9 @@
- 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../handlers/secure_handler.dart';
-import '../../../model/chat_model/group.dart'; 
+import '../../../model/chat_model/group.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_subtitle_two.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
@@ -19,7 +18,6 @@ import 'package:provider/provider.dart' as provider;
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
- 
 
 class SearchGroupPage extends ConsumerStatefulWidget {
   const SearchGroupPage({Key? key}) : super(key: key);
@@ -42,9 +40,9 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
     plan = await StorageHandler.getUserPlan() ?? '';
-   Future.delayed(Duration(seconds: 1), (() {
+    Future.delayed(Duration(seconds: 1), (() {
       setState(() {});
-   }));
+    }));
   }
 
   bool _dataAdded = false;
@@ -76,7 +74,7 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
         child: Scaffold(
       body: Scaffold(
           resizeToAvoidBottomInset: false,
-          
+
           // appBar: _buildAppBar(context,),
 
           body: SizedBox(
@@ -109,15 +107,11 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                 const SizedBox(height: 15),
                                 CustomTextFormField(
                                     controller: searchController,
-
-                                    
                                     onChanged: (value) {
                                       checkUserExist.filterSearchResults(value);
 
-                                      if(searchController.text.isEmpty){
-                                        setState(() {
-                                          
-                                        });
+                                      if (searchController.text.isEmpty) {
+                                        setState(() {});
                                       }
                                     },
                                     hintText: "Search for communities",
@@ -129,30 +123,32 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                         Navigator.pop(context);
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.only(left: 10.0, right: 12),
-                                        child: Icon(Icons.arrow_back, size: 25,),
+                                        padding: const EdgeInsets.only(
+                                            left: 10.0, right: 12),
+                                        child: Icon(
+                                          Icons.arrow_back,
+                                          size: 25,
+                                        ),
                                       ),
                                     ),
                                     suffix: GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          
-                                        });
+                                        setState(() {});
                                       },
                                       child: Container(
-                                       
-                                         decoration: BoxDecoration(
-                                           color: Colors.blue,
-                                           borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8))
-                                         ),
+                                          decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(8),
+                                                  bottomRight:
+                                                      Radius.circular(8))),
                                           child: Padding(
-                                              padding: const EdgeInsets.all(10),
+                                            padding: const EdgeInsets.all(10),
                                             child: CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.imgSearchGray400,
-                                                
-                                                color: Colors.white,
-                                                ),
+                                              imagePath: ImageConstant
+                                                  .imgSearchGray400,
+                                              color: Colors.white,
+                                            ),
                                           )),
                                     ),
                                     prefixConstraints:
@@ -175,9 +171,9 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                         itemCount:
                                             checkUserExist.searchResult.length,
                                         itemBuilder: (context, index) {
-                                           
-                                            Group groupData = checkUserExist.searchResult[index];
-                                    
+                                          Group groupData = checkUserExist
+                                              .searchResult[index];
+
                                           return CommunityPageComponent(
                                             onTapCommunityPageComponent:
                                                 () async {
@@ -185,18 +181,19 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                   groupData.requestsMembers);
                                               checkUserExist.blockedUsers(
                                                   groupData.blockedMembers);
-                                    
-                                              List<String> userItem =
-                                                  removeDuplicates(
+
+                                              List<MemberData> userItem =
+                                                  removeDuplicateUsers(
                                                       groupData.membersUid);
-                                               
+
                                               if (userItem.contains(userId)) {
                                                 if (context.mounted) {
                                                   checkUserExist.addGroupInfo(
                                                       groupNumber: userItem
                                                           .length
                                                           .toString(),
-                                                      groupAdminId: userItem[0],
+                                                      groupAdminId:
+                                                          userItem[0].userId,
                                                       groupId:
                                                           groupData.groupId,
                                                       groupLink:
@@ -210,7 +207,7 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                       groupName: groupData.name,
                                                       groupPics:
                                                           groupData.groupPic);
-                                    
+
                                                   AppNavigator.pushAndStackPage(
                                                       context,
                                                       page: MobileChatScreen(
@@ -218,7 +215,7 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                             .groupDescription,
                                                         userItem.length
                                                             .toString(),
-                                                            userItem,
+                                                        userItem,
                                                         name: groupData.name,
                                                         uid: groupData.groupId,
                                                         isGroupChat: true,
@@ -230,11 +227,10 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                 Modals.showToast(
                                                   'You are not a member of this group',
                                                 );
-                                                List<String> userItem =
-                                                    removeDuplicates(
+                                                List<MemberData> userItem =
+                                                    removeDuplicateUsers(
                                                         groupData.membersUid);
-                                                 
-                                    
+
                                                 onTapCommunityPageComponent(
                                                   context: context,
                                                   groupImage:
@@ -246,7 +242,9 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                       .groupDescription,
                                                   groupId: groupData.groupId,
                                                   userId: userId,
-                                                  adminFcm: groupData.fcmToken, groupInfo: checkUserExist.requestedMembers,
+                                                  adminFcm: groupData.fcmToken,
+                                                  groupInfo: checkUserExist
+                                                      .requestedMembers,
                                                 );
                                               }
                                             },
@@ -273,8 +271,7 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
     required String groupId,
     required String userId,
     required String adminFcm,
-  required dynamic groupInfo,
-    
+    required dynamic groupInfo,
   }) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(
@@ -288,37 +285,13 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
         ));
   }
 
-  List<String> removeDuplicates(List<String> items) {
-    Map<int, String> uniqueItems = {};
+  List<MemberData> removeDuplicateUsers(List<MemberData> users) {
+    final Map<String, MemberData> uniqueUsers = {};
 
-    items.forEach((item) {
-      if (items.isNotEmpty || items != []) {
-        uniqueItems[int.tryParse(item)!] = item;
-      }
-    });
+    for (var user in users) {
+      uniqueUsers[user.userId] = user;
+    }
 
-    return uniqueItems.values.toList();
-  }
-
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      leadingWidth: 44.h,
-      leading: AppbarLeadingImage(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        imagePath: ImageConstant.imgArrowBack,
-        margin: EdgeInsets.only(
-          left: 20.h,
-          top: 15.v,
-          bottom: 16.v,
-        ),
-      ),
-      centerTitle: true,
-      title: AppbarSubtitleTwo(
-        text: "Tellasport Community",
-      ),
-      styleType: Style.bgOutline_3,
-    );
+    return uniqueUsers.values.toList();
   }
 }

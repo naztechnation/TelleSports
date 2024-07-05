@@ -48,18 +48,13 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
   getCurrentUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
 
-    setState(() {
- 
-      
-    });
+    setState(() {});
 
-    Future.delayed(Duration(seconds: 4),(){
-        setState(() {
- 
-isLoading = false;
-      
-    });
+    Future.delayed(Duration(seconds: 4), () {
+      setState(() {
+        isLoading = false;
       });
+    });
   }
 
   bool isUserAlreadyRequested = false;
@@ -68,8 +63,6 @@ isLoading = false;
   void initState() {
     getCurrentUserId();
     super.initState();
-
-
   }
 
   @override
@@ -119,59 +112,57 @@ isLoading = false;
                                       ]))
                             ])),
                     SizedBox(height: 24.v),
-                    _buildCommunityDescription(context, widget.groupDescription),
+                    _buildCommunityDescription(
+                        context, widget.groupDescription),
                     SizedBox(height: 50.v),
-                    if(isLoading)...[
+                    if (isLoading) ...[
                       CircularProgressIndicator.adaptive()
-                    ]else...[
-                      if (isUserAlreadyRequested) ...[
-                      Text("You have sent a request to join this community.",
-                                            style: TextStyle()),
-                    SizedBox(height: 24.v),
-
-                      CustomElevatedButton(
-                          text: "Cancel request",
-                          processing: isLoading,
-                          buttonStyle: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff3C91E5)),
-                          onPressed: () async {}),
                     ] else ...[
-                      CustomElevatedButton(
-                          text: "Join community",
-                          processing: isLoading,
-                          onPressed: () async {
-                            if (!isUserAlreadyRequested) {
-                              setState(() {
-                                isLoading = true;
-                              });
-                  
-                              await groupInfo.addUserToRequestsMembers(
-                                  widget.groupId, widget.userId, context);
-                  
-                              sendPushNotification(
-                                  widget.adminFcm,
-                                  widget.groupName,
-                                  'Hello, you have a pending invite from ${widget.groupName}');
-                  
-                              setState(() {
-                                isLoading = false;
-                              });
-                  
-                              Modals.showToast(
-                                  'Request has been sent to community admin for approval',
-                                  messageType: MessageType.success);
-                              user.updateIndex(0);
-                              AppNavigator.pushAndStackPage(context,
-                                  page: LandingPage());
-                            }
-                          }),
-                           SizedBox(height: 16.v),
-                     CustomOutlinedButton(text: "Report community"),
-                    // SizedBox(height: 5.v)
-                    ],
+                      if (isUserAlreadyRequested) ...[
+                        Text("You have sent a request to join this community.",
+                            style: TextStyle()),
+                        SizedBox(height: 24.v),
+                        CustomElevatedButton(
+                            text: "Cancel request",
+                            processing: isLoading,
+                            buttonStyle: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xff3C91E5)),
+                            onPressed: () async {}),
+                      ] else ...[
+                        CustomElevatedButton(
+                            text: "Join community",
+                            processing: isLoading,
+                            onPressed: () async {
+                              if (!isUserAlreadyRequested) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+
+                                await groupInfo.addUserToRequestsMembers(
+                                    widget.groupId, widget.userId, context);
+
+                                sendPushNotification(
+                                    widget.adminFcm,
+                                    widget.groupName,
+                                    'Hello, you have a pending invite from ${widget.groupName}');
+
+                                setState(() {
+                                  isLoading = false;
+                                });
+
+                                Modals.showToast(
+                                    'Request has been sent to community admin for approval',
+                                    messageType: MessageType.success);
+                                user.updateIndex(0);
+                                AppNavigator.pushAndStackPage(context,
+                                    page: LandingPage());
+                              }
+                            }),
+                        SizedBox(height: 16.v),
+                        CustomOutlinedButton(text: "Report community"),
+                        // SizedBox(height: 5.v)
+                      ],
                     ]
-                  
-                   
                   ]),
                 ))));
   }
@@ -205,59 +196,52 @@ isLoading = false;
 
   Widget _buildCommunityDescription(BuildContext context, String desc) {
     return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Text("About ${widget.groupName}",
-                  style: CustomTextStyles.titleMediumBluegray900),
-                  const SizedBox(height: 12,),
+        Text("About ${widget.groupName}",
+            style: CustomTextStyles.titleMediumBluegray900),
+        const SizedBox(
+          height: 12,
+        ),
         Container(
-          width: MediaQuery.sizeOf(context).width,
+            width: MediaQuery.sizeOf(context).width,
             padding: EdgeInsets.all(8.h),
-             decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Color(0x66F3F2F3),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0x0F000000),
-                                offset: Offset(0, 0),
-                                blurRadius: 1,
-                              ),
-                            ],
-                          ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Color(0x66F3F2F3),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x0F000000),
+                  offset: Offset(0, 0),
+                  blurRadius: 1,
+                ),
+              ],
+            ),
             child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  
-                   
                   Container(
                       margin: EdgeInsets.only(right: 21.h),
                       child: Text(desc,
                           maxLines: 1000,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              theme.textTheme.titleSmall!.copyWith(fontSize: 16)))
+                          style: theme.textTheme.titleSmall!
+                              .copyWith(fontSize: 16)))
                 ])),
       ],
     );
   }
 
-   
-
   checkUserExists(var groupInfo) {
-   
-
-  for (var userIds in groupInfo.requestedMembers) {
-    if (userIds.uid == userId) {
-      setState(() {
-        isUserAlreadyRequested = true;
-      });
-      break;
+    for (var userIds in groupInfo.requestedMembers) {
+      if (userIds.uid == userId) {
+        setState(() {
+          isUserAlreadyRequested = true;
+        });
+        break;
+      }
     }
   }
-
-   
-}
 }

@@ -194,8 +194,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                               checkUserExist.blockedUsers(
                                                   groupData.blockedMembers);
                                     
-                                              List<String> userItem =
-                                                  removeDuplicates(
+                                              List<MemberData> userItem =
+                                                  removeDuplicateUsers(
                                                       groupData.membersUid);
                                                
                                               if (userItem.contains(userId)) {
@@ -204,7 +204,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                       groupNumber: userItem
                                                           .length
                                                           .toString(),
-                                                      groupAdminId: userItem[0],
+                                                      groupAdminId: userItem[0].userId,
                                                       groupId:
                                                           groupData.groupId,
                                                       groupLink:
@@ -236,8 +236,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                 }
                                               } else {
                                                 
-                                                List<String> userItem =
-                                                    removeDuplicates(
+                                                List<MemberData> userItem =
+                                                    removeDuplicateUsers(
                                                         groupData.membersUid);
                                                  
                                     
@@ -292,17 +292,15 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
         ));
   }
 
-  List<String> removeDuplicates(List<String> items) {
-    Map<int, String> uniqueItems = {};
+  List<MemberData> removeDuplicateUsers(List<MemberData> users) {
+  final Map<String, MemberData> uniqueUsers = {};
 
-    items.forEach((item) {
-      if (items.isNotEmpty || items != []) {
-        uniqueItems[int.tryParse(item)!] = item;
-      }
-    });
-
-    return uniqueItems.values.toList();
+  for (var user in users) {
+    uniqueUsers[user.userId] = user;
   }
+
+  return uniqueUsers.values.toList();
+}
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(

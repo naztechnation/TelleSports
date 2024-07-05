@@ -51,7 +51,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
 
   List<Group> userGroups = [];
   List<int> membersUidLength = [];
-  List<String> membersUid = [];
+  List<MemberData> membersUid = [];
 
   bool isAnyLengthGreaterThanOrEqual = false;
 
@@ -118,7 +118,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                 membersUid.addAll(group.membersUid);
               }
 
-              membersUid = removeDuplicates(membersUid);
+              membersUid = removeDuplicateUsers(membersUid);
 
               for (var group in userGroups) {
                 int length = group.membersUid.toSet().length;
@@ -257,10 +257,11 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
     );
   }
 
-  List<String> removeDuplicates(List<String> items) {
-    Set<String> uniqueItems = items.toSet();
-    return uniqueItems.toList();
-  }
+ List<MemberData> removeDuplicateUsers(List<MemberData> users) {
+  Set<MemberData> uniqueUsers = users.toSet();
+  return uniqueUsers.toList();
+}
+
 
   checkEventStatus() {
     if (bank == "" || bank == "null" || bank == null) {
