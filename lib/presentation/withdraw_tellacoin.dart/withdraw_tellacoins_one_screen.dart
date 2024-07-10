@@ -14,6 +14,7 @@ import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart'; 
+import '../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import '../community_screens/provider/auth_provider.dart';
 import 'finish_withdrawal.dart';
 
@@ -202,10 +203,10 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                           1000) ...[
                         GestureDetector(
                           onTap: () {
-                            // AppNavigator.pushAndStackPage(context,
-                            //     page: PricingPageScreen(
-                            //       balance: widget.tellaCoinBalance, 
-                            //     ));
+                            AppNavigator.pushAndStackPage(context,
+                                page: PricingPageScreen(
+                                  balance: widget.tellaCoinBalance, 
+                                ));
                           },
                           child: Align(
                             child: Text(

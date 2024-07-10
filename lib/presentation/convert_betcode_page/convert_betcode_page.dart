@@ -120,7 +120,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
     super.build(context);
     mediaQueryData = MediaQuery.of(context);
 
-    final users =Provider.of<AuthProviders>(context, listen: true);
+    final users = Provider.of<AuthProviders>(context, listen: true);
 
     return SafeArea(
         child: BlocConsumer<AccountCubit, AccountStates>(
@@ -159,19 +159,18 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
             balance = state.user.tellacoinBalance.toString();
 
-              updateUser(
-                        context: context,
-                        user: users,
-                        username: state.user.user?.username ?? '',
-                        userId: state.user.user?.id.toString() ?? '',
-                        image: (state.user.profilePicture.toString() !=
-                                    'null' ||
-                                state.user.profilePicture.toString() != '' ||
-                                state.user.profilePicture.toString() != null)
-                            ? state.user.profilePicture.toString()
-                            : AppStrings.degaultImage,
-                        email: state.user.user?.email ?? '',
-                      );
+            updateUser(
+              context: context,
+              user: users,
+              username: state.user.user?.username ?? '',
+              userId: state.user.user?.id.toString() ?? '',
+              image: (state.user.profilePicture.toString() != 'null' ||
+                      state.user.profilePicture.toString() != '' ||
+                      state.user.profilePicture.toString() != null)
+                  ? state.user.profilePicture.toString()
+                  : AppStrings.degaultImage,
+              email: state.user.user?.email ?? '',
+            );
           }
           if (user?.isActive == '0') {
             Modals.showToast('Your account is not active',
@@ -209,13 +208,13 @@ This may have occurred due to one of the following reasons bellow.
                     
 3. Make sure you have a good network connection.
           
-3. Check our FAQ section for more details. 
+4. Check our FAQ section for more details. 
           
-3. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+5. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+
+6. Make sure you have units, if you do not, check any of our available subscription packages.
+
           """,
-
-// 3. Make sure you have units, if you do not, check any of our available subscription packages.
-
                     maxLines: 30,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -259,7 +258,7 @@ This may have occurred due to one of the following reasons bellow.
                   headerColorOne: Color.fromARGB(255, 208, 151, 151),
                   headerColorTwo: Color.fromARGB(255, 234, 132, 132)));
         } else if (state is BookingsApiErr) {
-           Modals.showDialogModal(context,
+          Modals.showDialogModal(context,
               page: ModalContentScreen(
                   title: 'Conversion Error',
                   body: Text(
@@ -466,27 +465,23 @@ This may have occurred due to one of the following reasons bellow.
                             _buildSingleConversion(context)
                           ] else ...[
                             SizedBox(height: 40.v),
-
-                             Text(
+                            Text(
                                 "Start converting betcodes from 200 available bookies!",
                                 style: CustomTextStyles.labelLargeBlack900),
-                            // Text(
-                            //     "Start converting betcodes from 200 available bookies!",
-                            //     style: CustomTextStyles.labelLargeBlack900),
-                            // SizedBox(height: 10.v),
-                            // _buildBuyTellacoins(context),
-                            // SizedBox(height: 11.v),
-                            // Container(
-                            //     height: 198.v,
-                            //     width: 193.h,
-                            //     padding: EdgeInsets.symmetric(
-                            //         horizontal: 28.h, vertical: 25.v),
-                            //     child: CustomImageView(
-                            //         fit: BoxFit.cover,
-                            //         imagePath:
-                            //             ImageConstant.imgIllustrationStartup,
-                            //         width: MediaQuery.sizeOf(context).width,
-                            //         alignment: Alignment.bottomLeft))
+                            SizedBox(height: 10.v),
+                            _buildBuyTellacoins(context),
+                            SizedBox(height: 11.v),
+                            Container(
+                                height: 198.v,
+                                width: 193.h,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 28.h, vertical: 25.v),
+                                child: CustomImageView(
+                                    fit: BoxFit.cover,
+                                    imagePath:
+                                        ImageConstant.imgIllustrationStartup,
+                                    width: MediaQuery.sizeOf(context).width,
+                                    alignment: Alignment.bottomLeft))
                           ],
                         ],
                       ]),
@@ -536,8 +531,9 @@ This may have occurred due to one of the following reasons bellow.
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Units".toUpperCase(),
-                                      style:
-                                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.white)),
                                   Row(children: [
                                     CustomImageView(
@@ -549,27 +545,29 @@ This may have occurred due to one of the following reasons bellow.
                                     Padding(
                                         padding: EdgeInsets.only(left: 6.h),
                                         child: Text(
-                                          'Free',
-                                          //balance,
-                                          style: TextStyle(fontSize: 16,color: Colors.white, fontWeight: FontWeight.w500),
-                                            // style: CustomTextStyles
-                                            //     .headlineLargeWhiteA700
-                                                
-                                                ))
+                                          // 'Free',
+                                          balance,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500),
+                                          // style: CustomTextStyles
+                                          //     .headlineLargeWhiteA700
+                                        ))
                                   ])
                                 ]),
-                            // Align(
-                            //   alignment: Alignment.centerRight,
-                            //   child: CustomIconButton(
-                            //       height: 30.adaptSize,
-                            //       width: 30.adaptSize,
-                            //       padding: EdgeInsets.all(6.h),
-                            //       onTap: () {
-                            //         onTapBtnPlus(context);
-                            //       },
-                            //       child: CustomImageView(
-                            //           imagePath: ImageConstant.imgPlus)),
-                            // )
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: CustomIconButton(
+                                  height: 30.adaptSize,
+                                  width: 30.adaptSize,
+                                  padding: EdgeInsets.all(6.h),
+                                  onTap: () {
+                                    onTapBtnPlus(context);
+                                  },
+                                  child: CustomImageView(
+                                      imagePath: ImageConstant.imgPlus)),
+                            )
                           ])))
             ])));
   }
@@ -612,8 +610,6 @@ This may have occurred due to one of the following reasons bellow.
                         int index = _addressSpinnerItems.indexOf(value);
                         fromId = _accountCubit
                             .viewModel.bookiesBookieFrom[index - 1];
-
-                           
                       })),
             ),
             SizedBox(
@@ -652,7 +648,6 @@ This may have occurred due to one of the following reasons bellow.
                         int index = _addressSpinnerItems1.indexOf(value);
                         toId =
                             _accountCubit.viewModel.bookiesBookieTo[index - 1];
-                            
                       })),
             )
           ])),
@@ -721,22 +716,20 @@ This may have occurred due to one of the following reasons bellow.
   }
 
   onTapBtnPlus(BuildContext context) {
-    // AppNavigator.pushAndStackPage(context,
-    //     page: PricingPageScreen(
-    //       balance: balance,
-    //     ));
+    AppNavigator.pushAndStackPage(context,
+        page: PricingPageScreen(
+          balance: balance,
+        ));
   }
 
-   updateUser(
+  updateUser(
       {required BuildContext context,
       required var user,
       required String username,
       required String userId,
       required String image,
       required String email}) async {
-        
     await user.uploadUserDetails(
         username: username, userId: userId, imageUrl: image, email: email);
-  
   }
 }

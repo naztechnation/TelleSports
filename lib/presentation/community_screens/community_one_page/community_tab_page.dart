@@ -61,8 +61,8 @@ class CommunityTabContainerPageState extends State<CommunityTabPage>
    
   Widget _buildTopSection(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.h,),
-      decoration: AppDecoration.outlineGray,
+      margin: EdgeInsets.symmetric(horizontal: 20.h,vertical: 2),
+      
       child: Column(
         children: [
           Text(

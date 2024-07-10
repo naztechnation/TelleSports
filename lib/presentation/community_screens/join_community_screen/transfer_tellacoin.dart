@@ -23,6 +23,7 @@ import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
 import '../../../widgets/modals.dart';
+import '../../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import '../../landing_page/landing_page.dart';
 
  
@@ -113,6 +114,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+    updateTextColor();
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -219,7 +221,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
       ),
       centerTitle: true,
       title: AppbarSubtitle(
-        text: "Gift Tellacoins",
+        text: "Transfer Tellacoins",
         margin: EdgeInsets.only(
           top: 0.v,
           bottom: 9.v,
@@ -346,8 +348,8 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
   }
 
   onTapBtnPlus(BuildContext context) {
-    // AppNavigator.pushAndStackPage(context,
-    //     page: PricingPageScreen(balance: balance));
+    AppNavigator.pushAndStackPage(context,
+        page: PricingPageScreen(balance: balance));
   }
 
   trasferTellaCoin() {
