@@ -36,32 +36,37 @@ class _LoadingPageState extends State<LoadingPage>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ScaleTransition(
-          scale: _animation,
-          child: Container(
-            height: 98.adaptSize,
-            width: 98.adaptSize,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(60),
-              color: Colors.white,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(60),
-              child: CustomIconButton(
-                height: 98.adaptSize,
-                width: 98.adaptSize,
-                padding: EdgeInsets.all(5.h),
-                decoration: IconButtonStyleHelper.fillPrimary,
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: CustomImageView(
-                    imagePath: ImageConstant.imgLightBulb,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        child: 
+        
+        CircularProgressIndicator.adaptive(),
+        
+        
+        // ScaleTransition(
+        //   scale: _animation,
+        //   child: Container(
+        //     height: 98.adaptSize,
+        //     width: 98.adaptSize,
+        //     decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(60),
+        //       color: Colors.white,
+        //     ),
+        //     child: ClipRRect(
+        //       borderRadius: BorderRadius.circular(60),
+        //       child: CustomIconButton(
+        //         height: 98.adaptSize,
+        //         width: 98.adaptSize,
+        //         padding: EdgeInsets.all(5.h),
+        //         decoration: IconButtonStyleHelper.fillPrimary,
+        //         child: Padding(
+        //           padding: const EdgeInsets.all(18.0),
+        //           child: CustomImageView(
+        //             imagePath: ImageConstant.imgLightBulb,
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ),
     );
   }

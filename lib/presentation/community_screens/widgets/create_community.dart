@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utils/navigator/page_navigator.dart';
-import '../../../../widgets/custom_elevated_button.dart';
+import '../../../utils/navigator/page_navigator.dart';
+import '../../../widgets/custom_elevated_button.dart';
 import '../create_community_pages/create_a_community_one_screen.dart';
 
 Widget buildBuyTellacoins(BuildContext context) {

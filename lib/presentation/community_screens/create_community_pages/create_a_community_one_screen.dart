@@ -2,23 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart' as pro;
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/handlers/secure_handler.dart';
-import 'package:tellesports/presentation/community_screens/community_one_page/create_community_pages/describe_community.dart';
-import 'package:tellesports/presentation/landing_page/landing_page.dart';
+import 'package:tellesports/presentation/community_screens/create_community_pages/describe_community.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
-import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 import 'package:tellesports/widgets/modals.dart';
 
-import '../../../../common/utils/utils.dart';
-import '../../../../model/view_models/account_view_model.dart';
-import '../../../../utils/navigator/page_navigator.dart';
-import '../../../../widgets/app_bar/appbar_subtitle.dart';
-import '../../../../widgets/image_view.dart';
-import '../../provider/auth_provider.dart';
+import '../../../common/utils/utils.dart';
+import '../../../utils/navigator/page_navigator.dart';
+import '../../../utils/validator.dart';
+import '../../../widgets/app_bar/appbar_subtitle.dart';
+import '../../../widgets/image_view.dart';
 
 class CreateACommunityOneScreen extends ConsumerStatefulWidget {
   CreateACommunityOneScreen({Key? key})
@@ -34,8 +29,7 @@ class CreateACommunityOneScreen extends ConsumerStatefulWidget {
 class _CreateACommunityOneScreenState
     extends ConsumerState<CreateACommunityOneScreen> {
   final TextEditingController groupNameController = TextEditingController();
-  final TextEditingController groupDescriptionController =
-      TextEditingController();
+  
 
   File? image;
 
@@ -44,17 +38,7 @@ class _CreateACommunityOneScreenState
     setState(() {});
   }
 
-
-
-  bool isLoading = false;
-
-  String userId = '';
-  String fcmToken = '';
-
-  getUserId() async {
-    userId = await StorageHandler.getUserId() ?? '';
-    fcmToken = await StorageHandler.getUserFCM() ?? '';
-  }
+  
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -62,26 +46,22 @@ class _CreateACommunityOneScreenState
   void dispose() {
     super.dispose();
     groupNameController.dispose();
-    groupDescriptionController.dispose();
+    
   }
 
   @override
   void initState() {
-    getUserId();
+   
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final groupData = pro.Provider.of<AuthProviders>(context, listen: true);
-
-    final user = pro.Provider.of<AccountViewModel>(context, listen: true);
-
-   
+    
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar:   AppBar(
+        appBar: AppBar(
           leadingWidth: 44.h,
           leading: AppbarLeadingImage(
             onTap: () {
@@ -90,13 +70,11 @@ class _CreateACommunityOneScreenState
             imagePath: ImageConstant.imgArrowBack,
             margin: EdgeInsets.only(
               left: 20.h,
-              
             ),
           ),
           centerTitle: true,
           title: AppbarSubtitle(
             text: "Create a community",
-            
           ),
         ),
         body: SingleChildScrollView(
@@ -115,19 +93,20 @@ class _CreateACommunityOneScreenState
                 children: [
                   image == null
                       ? GestureDetector(
-                        onTap: () {
-                           selectImage();
-                        },
-                        child: Container(
+                          onTap: () {
+                            selectImage();
+                          },
+                          child: Container(
                             height: 100.adaptSize,
                             width: 100.adaptSize,
                             padding: EdgeInsets.symmetric(
                               horizontal: 16.h,
                               vertical: 19.v,
                             ),
-                        
-                            decoration: BoxDecoration(border: Border.all(color: Colors.blue,width: 1 ),
-                            borderRadius: BorderRadius.circular(70)),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.blue, width: 1),
+                                borderRadius: BorderRadius.circular(70)),
                             child: CustomImageView(
                               imagePath: ImageConstant.imgLock,
                               height: 50.v,
@@ -135,19 +114,19 @@ class _CreateACommunityOneScreenState
                               alignment: Alignment.center,
                             ),
                           ),
-                      )
+                        )
                       : GestureDetector(
-                        onTap: () {
-                          Modals.showDialogModal(context, page:  _showFullImage(context, image!));
-                           
-                        },
-                        child: CircleAvatar(
+                          onTap: () {
+                            Modals.showDialogModal(context,
+                                page: _showFullImage(context, image!));
+                          },
+                          child: CircleAvatar(
                             backgroundImage: FileImage(
                               image!,
                             ),
                             radius: 64,
                           ),
-                      ),
+                        ),
                   SizedBox(height: 10.v),
                   GestureDetector(
                     onTap: () {
@@ -159,12 +138,11 @@ class _CreateACommunityOneScreenState
                         Text(
                           "Add community photo",
                           style: TextStyle(
-                            color: Color(0xFF342E37),
-                            fontSize: 14.fSize,
-                            fontFamily: 'DM Sans',
-                            fontWeight: FontWeight.w500,
-                            decorationColor: Color(0xFF342E37)
-                          ),
+                              color: Color(0xFF342E37),
+                              fontSize: 14.fSize,
+                              fontFamily: 'DM Sans',
+                              fontWeight: FontWeight.w500,
+                              decorationColor: Color(0xFF342E37)),
                         ),
                         CustomImageView(
                           imagePath: ImageConstant.imgEdit,
@@ -185,44 +163,18 @@ class _CreateACommunityOneScreenState
                     text: "Save and continue",
                     title: "Creating community...",
                     buttonStyle: CustomButtonStyles.fillBlue,
-                    processing: isLoading,
                     onPressed: () async {
-                      AppNavigator.pushAndStackPage(context,
-                                page: DescribeCommunity());
-                      // if (groupNameController.text.trim().isNotEmpty &&
-                      //     groupDescriptionController.text.trim().isNotEmpty &&
-                      //     image != null) {
-                      //   setState(() {
-                      //     isLoading = true;
-                      //   });
-
-                      //   var isTrue = await groupData.checkUserGroupLimit(
-                      //       userId: userId,
-                      //       context: context,
-                      //       name: groupNameController.text.trim(),
-                      //       groupDesc: groupDescriptionController.text.trim(),
-                      //       profilePic: image!,
-                      //       ref: ref, fcmToken: fcmToken);
-
-
-                      //   setState(() {
-                      //     isLoading = false;
-                      //   });
-
-                      //   if (isTrue) {
-                      //     user.updateIndex(0);
-                      //     AppNavigator.pushAndStackPage(context,
-                      //         page: LandingPage());
-                      //   } else {
-                      //     Future.delayed(Duration(seconds: 3), (){
-                      //     Modals.showToast('Failed  to create group');
-
-                      //     });
-                      //   }
-                      // } else {
-                      //   Modals.showToast(
-                      //       'Please input all fields and an image');
-                      // }
+                      if (_formKey.currentState!.validate()) {
+                        if (image != null) {
+                          AppNavigator.pushAndStackPage(context,
+                              page: DescribeCommunity(
+                                communityName: groupNameController.text, communityImage: image!,
+                              ));
+                        } else {
+                          Modals.showToast('select image');
+                        }
+                      }
+                      
                     },
                   ),
                   SizedBox(height: 5.v),
@@ -234,8 +186,6 @@ class _CreateACommunityOneScreenState
       ),
     );
   }
-
-   
 
   Widget _buildTextField(BuildContext context) {
     return Column(
@@ -255,47 +205,52 @@ class _CreateACommunityOneScreenState
           controller: groupNameController,
           hintText: "Name your community",
           textInputAction: TextInputAction.next,
+          validator: (value) {
+            return Validator.validate(value, 'Community name');
+          },
         ),
-      
       ],
     );
   }
-    
 
-   _showFullImage(BuildContext context, File imageUrl) {
- return  GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  children: [
-                    Container(
+  _showFullImage(BuildContext context, File imageUrl) {
+    return GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            children: [
+              Container(
+                height: MediaQuery.sizeOf(context).height * 0.65,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Center(
+                    child: ImageView.file(
+                      width: MediaQuery.sizeOf(context).width,
                       height: MediaQuery.sizeOf(context).height * 0.65,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Center(
-                          child: ImageView.file(
-                            width: MediaQuery.sizeOf(context).width,
-                            height: MediaQuery.sizeOf(context).height * 0.65,
-                            imageUrl,
-                            
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                      imageUrl,
+                      fit: BoxFit.cover,
                     ),
-                    Align(
+                  ),
+                ),
+              ),
+              Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(top:12.0, right: 20),
-                    child: Icon(Icons.close, color: Colors.red, size: 39,),
+                    padding: const EdgeInsets.only(top: 12.0, right: 20),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.red,
+                      size: 39,
+                    ),
                   ))
-                  ],
-                ),
-              ],
-            ),
-          );
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

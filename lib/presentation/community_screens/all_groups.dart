@@ -18,8 +18,8 @@ import '../../model/chat_model/group.dart';
 import 'chat/screens/mobile_chat_screen.dart';
 import 'join_community_screen/join_community_screen.dart';
 import 'community_one_page/empty_community_page.dart';
-import 'community_one_page/widgets/community_item_widget.dart';
-import 'community_one_page/widgets/create_community.dart';
+import 'widgets/community_item_widget.dart';
+import 'widgets/create_community.dart';
 import 'provider/auth_provider.dart' as pro;
 
 class AllGroupsListPage extends ConsumerStatefulWidget {
@@ -235,6 +235,10 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                   groupId: groupData.groupId,
                                                   userId: userId,
                                                   adminFcm: groupData.fcmToken, groupInfo: checkUserExist.requestedMembers,
+                                                  isPaid: groupData.communityType, communityPrice: groupData.communityPrice, showCount: groupData.showMemberCount,
+                                                  userItem: userItem, 
+                                                  isGroupLocked: groupData.isGroupLocked, communityLink: groupData.groupLink, pinnedMessage: groupData.groupLink,
+
                                                 );
                                               }
                                             },
@@ -243,8 +247,8 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                 (userItem.length == 1)? '${userItem.length.toString()} Member' : '${userItem.length.toString()} Members',
                                             groupPic: groupData.groupPic,
                                             date: null,
-                                            groupNumber:
-                                                userItem.length.toString(),
+                                            isPaid:
+                                                groupData.communityType.toString(),
                                           );
                                         }))
                               ]))
@@ -263,6 +267,14 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
     required String userId,
     required String adminFcm,
   required dynamic groupInfo,
+  required String isPaid,
+  required String communityPrice,
+  required bool showCount,
+  required List<MemberData> userItem,
+required     bool isGroupLocked,
+
+  required String communityLink,
+  required String pinnedMessage,
 
   }) {
     AppNavigator.pushAndStackPage(context,
@@ -274,6 +286,10 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
           groupId: groupId,
           userId: userId,
           adminFcm: adminFcm,  
+          isPaid: isPaid, communityPrice: communityPrice, showCount: showCount, 
+          userItem: userItem, 
+          communityLink: communityLink, isGroupLocked: isGroupLocked, pinnedMessage: pinnedMessage, 
+
         ));
   }
 

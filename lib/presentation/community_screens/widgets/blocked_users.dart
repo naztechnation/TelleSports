@@ -11,8 +11,8 @@ import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
 import 'package:provider/provider.dart';
  
-import '../../../../model/chat_model/user_model.dart';
-import '../../provider/auth_provider.dart' as pro;
+import '../../../model/chat_model/user_model.dart';
+import '../provider/auth_provider.dart' as pro;
 import 'request_delete_info.dart'; 
 
 

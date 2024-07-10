@@ -36,7 +36,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
    }
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -47,10 +47,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.tellasport.tellasport"
         minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

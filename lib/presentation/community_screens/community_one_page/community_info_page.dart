@@ -35,10 +35,10 @@ import '../../landing_page/landing_page.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'all_users_page.dart';
 
-import 'widgets/blocked_users.dart';
-import 'widgets/image_view.dart';
-import 'widgets/requests_page.dart';
-import 'widgets/userprofile_item_widget.dart';
+import '../widgets/blocked_users.dart';
+import '../widgets/image_view.dart';
+import '../widgets/requests_page.dart';
+import '../widgets/userprofile_item_widget.dart';
 
 // ignore_for_file: must_be_immutable
 

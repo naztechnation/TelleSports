@@ -12,7 +12,7 @@ import '../chat/screens/mobile_chat_screen.dart';
 import '../join_community_screen/join_community_screen.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'empty_community_page.dart';
-import 'widgets/community_item_widget.dart';
+import '../widgets/community_item_widget.dart';
 import 'package:provider/provider.dart' as provider;
 
 import 'package:flutter/material.dart';
@@ -232,28 +232,38 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                         groupData.membersUid);
 
                                                 onTapCommunityPageComponent(
-                                                  context: context,
-                                                  groupImage:
-                                                      groupData.groupPic,
-                                                  groupName: groupData.name,
-                                                  groupNumber: userItem.length
-                                                      .toString(),
-                                                  groupDescription: groupData
-                                                      .groupDescription,
-                                                  groupId: groupData.groupId,
-                                                  userId: userId,
-                                                  adminFcm: groupData.fcmToken,
-                                                  groupInfo: checkUserExist
-                                                      .requestedMembers,
-                                                );
+                                                    context: context,
+                                                    groupImage:
+                                                        groupData.groupPic,
+                                                    groupName: groupData.name,
+                                                    groupNumber: userItem.length
+                                                        .toString(),
+                                                    groupDescription: groupData
+                                                        .groupDescription,
+                                                    groupId: groupData.groupId,
+                                                    userId: userId,
+                                                    adminFcm:
+                                                        groupData.fcmToken,
+                                                    groupInfo: checkUserExist
+                                                        .requestedMembers,
+                                                    isPaid:
+                                                        groupData.communityType,
+                                                    communityPrice: groupData
+                                                        .communityPrice,
+                                                    showCount: groupData
+                                                        .showMemberCount,
+                                                    userItem: userItem,
+                                                  isGroupLocked: groupData.isGroupLocked, communityLink: groupData.groupLink, pinnedMessage: groupData.groupLink,
+                                                    
+                                                    );
                                               }
                                             },
                                             groupName: groupData.name,
                                             lastMessage: groupData.lastMessage,
                                             groupPic: groupData.groupPic,
                                             date: groupData.timeSent.toLocal(),
-                                            groupNumber:
-                                                userItem.length.toString(),
+                                            isPaid: groupData.communityType
+                                                .toString(),
                                           );
                                         }))
                               ]))
@@ -272,6 +282,14 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
     required String userId,
     required String adminFcm,
     required dynamic groupInfo,
+    required String isPaid,
+    required String communityPrice,
+    required bool showCount,
+  required List<MemberData> userItem,
+required     bool isGroupLocked,
+
+  required String communityLink,
+  required String pinnedMessage,
   }) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(
@@ -282,6 +300,12 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
           groupId: groupId,
           adminFcm: adminFcm,
           userId: userId,
+          isPaid: isPaid,
+          communityPrice: communityPrice,
+          showCount: showCount,
+          userItem: userItem, 
+          communityLink: communityLink, isGroupLocked: isGroupLocked, pinnedMessage: pinnedMessage, 
+
         ));
   }
 

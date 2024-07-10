@@ -1,28 +1,23 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+ 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../handlers/secure_handler.dart';
 import '../../../model/chat_model/group.dart'; 
-import '../../../widgets/app_bar/appbar_leading_image.dart';
-import '../../../widgets/app_bar/appbar_subtitle_two.dart';
-import '../../../widgets/app_bar/custom_app_bar.dart';
-import '../../../widgets/modals.dart';
 import '../chat/screens/mobile_chat_screen.dart';
 import '../join_community_screen/join_community_screen.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'empty_community_page.dart';
 import 'search_group.dart';
-import 'widgets/community_item_widget.dart';
+import '../widgets/community_item_widget.dart';
 import 'package:provider/provider.dart' as provider;
 
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
-import 'widgets/create_community.dart';
+import '../widgets/create_community.dart';
 
 class CommunityListPage extends ConsumerStatefulWidget {
   const CommunityListPage({Key? key}) : super(key: key);
@@ -108,7 +103,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const LoadingPage();
-                        } else if (snapshot.data!.isEmpty) {
+                        } else if (snapshot.data?.isEmpty ?? false) {
                           return EmptyCommunityPage();
                         }
 
@@ -116,7 +111,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                           checkUserExist.clearGroupInfo();
                           checkUserExist.clearSearchList();
                           checkUserExist.updateSearchList(
-                            snapshot.data!,
+                            snapshot.data,
                           );
                           _dataAdded = true;
                         }
@@ -198,7 +193,7 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                   removeDuplicateUsers(
                                                       groupData.membersUid);
                                                
-                                              if (userItem.contains(userId)) {
+                                              if (userItem.any((user) => user.userId == userId)) {
                                                 if (context.mounted) {
                                                   checkUserExist.addGroupInfo(
                                                       groupNumber: userItem
@@ -251,7 +246,13 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                   groupDescription: groupData
                                                       .groupDescription,
                                                   groupId: groupData.groupId,
-                                                  userId: userId, adminFcm: groupData.fcmToken, groupInfo: checkUserExist.requestedMembers,
+                                                  userId: userId, adminFcm: groupData.fcmToken, 
+                                                  isPaid: groupData.communityType, 
+                                                  communityPrice: groupData.communityPrice, 
+                                                  showCount: groupData.showMemberCount, 
+                                                  userItem: userItem,
+                                                  isGroupLocked: groupData.isGroupLocked, communityLink: groupData.groupLink, pinnedMessage: groupData.groupLink,
+
                                                 );
                                               }
                                             },
@@ -259,8 +260,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                             lastMessage: groupData.lastMessage,
                                             groupPic: groupData.groupPic,
                                             date: groupData.timeSent.toLocal(),
-                                            groupNumber:
-                                                userItem.length.toString(),
+                                            isPaid:
+                                                groupData.communityType.toString(),
                                           );
                                         }))
                               ]))
@@ -278,8 +279,14 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
     required String groupId,
     required String userId,
     required String adminFcm,
-  required dynamic groupInfo,
+  required String isPaid,
+  required String communityPrice,
+  required bool showCount,
+  required List<MemberData> userItem,
+required     bool isGroupLocked,
 
+  required String communityLink,
+  required String pinnedMessage,
   }) {
     AppNavigator.pushAndStackPage(context,
         page: CommunityInfoScreen(
@@ -289,6 +296,10 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
           groupDescription: groupDescription,
           groupId: groupId,
           userId: userId, adminFcm: adminFcm, 
+          isPaid: isPaid, communityPrice: communityPrice, 
+          showCount: showCount, userItem: userItem, 
+          communityLink: communityLink, isGroupLocked: isGroupLocked, pinnedMessage: pinnedMessage, 
+
         ));
   }
 
@@ -302,25 +313,5 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
   return uniqueUsers.values.toList();
 }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      leadingWidth: 44.h,
-      leading: AppbarLeadingImage(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        imagePath: ImageConstant.imgArrowBack,
-        margin: EdgeInsets.only(
-          left: 20.h,
-          top: 15.v,
-          bottom: 16.v,
-        ),
-      ),
-      centerTitle: true,
-      title: AppbarSubtitleTwo(
-        text: "Tellasport Community",
-      ),
-      styleType: Style.bgOutline_3,
-    );
-  }
+ 
 }

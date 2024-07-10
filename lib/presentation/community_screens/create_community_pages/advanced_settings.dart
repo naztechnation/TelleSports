@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/app_export.dart';
-import '../../../../widgets/app_bar/appbar_leading_image.dart';
-import '../../../../widgets/app_bar/appbar_subtitle.dart';
-import '../../../../widgets/custom_elevated_button.dart';
-import '../../../../widgets/custom_text_form_field.dart';
+import '../../../core/app_export.dart';
+import '../../../widgets/app_bar/appbar_leading_image.dart';
+import '../../../widgets/app_bar/appbar_subtitle.dart';
+import '../../../widgets/custom_elevated_button.dart';
+import '../../../widgets/custom_text_form_field.dart';
 
 class AdvancedSettingsScreen extends StatefulWidget {
   const AdvancedSettingsScreen({super.key});

@@ -5,9 +5,9 @@ import 'package:provider/provider.dart' as provider;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/utils/loader.dart';
 
-import '../../../../widgets/modal_content.dart';
-import '../../../../widgets/modals.dart';
-import '../../provider/auth_provider.dart' as pro;
+import '../../../widgets/modal_content.dart';
+import '../../../widgets/modals.dart';
+import '../provider/auth_provider.dart' as pro;
 
 // ignore: must_be_immutable
 class RequestDeleteInfo extends StatefulWidget {

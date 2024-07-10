@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+ 
 import 'package:intl/intl.dart';
 import 'package:tellesports/core/app_export.dart';
 
@@ -8,11 +8,11 @@ class CommunityPageComponent extends StatelessWidget {
  final String groupName;
  final String lastMessage;
  final String groupPic;
- final String groupNumber;
+ final String isPaid;
  final DateTime? date;
   CommunityPageComponent({
     Key? key,
-    this.onTapCommunityPageComponent, required this.groupName, required this.lastMessage, required this.groupPic,  this.date, required this.groupNumber,
+    this.onTapCommunityPageComponent, required this.groupName, required this.lastMessage, required this.groupPic,  this.date, required this.isPaid,
   }) : super(
           key: key,
         );
@@ -84,24 +84,37 @@ class CommunityPageComponent extends StatelessWidget {
                             style: CustomTextStyles.titleSmallGray600,
                           ),
                           SizedBox(height: 9.v),
-                          // Align(
-                          //   alignment: Alignment.centerRight,
-                          //   child: Container(
-                          //     width: 32.adaptSize,
-                          //     height: 32.adaptSize,
+                        if(date == null)...[
+                           if(isPaid.toLowerCase() == 'Free to join'.toLowerCase() || isPaid.toLowerCase() == 'Require permission'.toLowerCase())...[
+                            Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              
                                
-                          //     decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF3C91E5)),
-                          //     child: Padding(
-                          //       padding: const EdgeInsets.all(4.0),
-                          //       child: Center(
-                          //         child: Text(
-                          //           "${groupNumber}",
-                          //           style: TextStyle(fontSize: 9, color: Colors.white),
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Color(0xFF3C91E5)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical:4.0, horizontal: 8),
+                                child: Center(
+                                  child: Text(
+                                    "Free",
+                                    style: TextStyle(fontSize: 9, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                         ]else...[
+                          Padding(
+                                padding: const EdgeInsets.symmetric(vertical:4.0, horizontal: 8),
+                                child: Center(
+                                  child: Text(
+                                    "₦",
+                                    style: TextStyle(fontSize: 14, color: Color(0xFF3C91E5)),
+                                  ),
+                                ),
+                              ),
+                         ] 
+                        ]
                         ],
                       ),
                     ),

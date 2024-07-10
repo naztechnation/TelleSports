@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:tellesports/common/widgets/loader.dart';
 import 'package:tellesports/core/utils/size_utils.dart';
 
-import '../../../../core/app_export.dart';
-import '../../../../widgets/app_bar/appbar_leading_image.dart';
-import '../../../../widgets/app_bar/appbar_subtitle.dart';
-import '../../../../widgets/app_bar/custom_app_bar.dart';
-import '../../provider/auth_provider.dart';
+import '../../../core/app_export.dart';
+import '../../../widgets/app_bar/appbar_leading_image.dart';
+import '../../../widgets/app_bar/appbar_subtitle.dart';
+import '../../../widgets/app_bar/custom_app_bar.dart';
+import '../provider/auth_provider.dart';
 
 class ShowAllImageView extends StatelessWidget {
 

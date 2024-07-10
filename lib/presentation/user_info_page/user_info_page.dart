@@ -12,6 +12,7 @@ import 'package:tellesports/widgets/modals.dart';
 
 import '../../blocs/prediction/prediction.dart';
 import '../../core/constants/enums.dart';
+import '../../model/chat_model/group.dart';
 import '../../model/view_models/account_view_model.dart';
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/prediction_repo/predict_repository_impl.dart';
@@ -157,7 +158,11 @@ class UserInfoPageState extends State<UserInfo>
                                   context);
                               await groupData.addUserToBlockedMembers(
                                   groupData.groupId,
-                                  widget.memberId,
+                                  [
+                                        MemberData(
+                                            userId: widget.memberId,
+                                            dateJoined: DateTime.now())
+                                      ],
                                   context);
                               setState(() {
                                 isLoading = false;

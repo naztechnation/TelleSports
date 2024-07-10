@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:tellesports/widgets/modals.dart';
 
 void showSnackBar({required BuildContext context, required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(

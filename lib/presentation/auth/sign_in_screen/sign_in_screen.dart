@@ -383,7 +383,8 @@ String password = '';
   Widget _buildPasswordSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 8.h),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+       children: [
         Text("Password",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         SizedBox(height: 3.v),

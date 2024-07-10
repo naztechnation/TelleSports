@@ -8,7 +8,7 @@ import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import '../../../model/chat_model/user_model.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../individual_user_info.dart/individual_user_info.dart';
-import 'widgets/userprofile_item_widget.dart';
+import '../widgets/userprofile_item_widget.dart';
 
 class AllUsersPage extends StatelessWidget {
   final String adminId;

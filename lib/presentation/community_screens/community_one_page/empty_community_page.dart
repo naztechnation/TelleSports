@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/widgets/custom_text_form_field.dart';
 
-import 'widgets/create_community.dart';
+import '../widgets/create_community.dart';
 
 // ignore_for_file: must_be_immutable
 class EmptyCommunityPage extends StatefulWidget {

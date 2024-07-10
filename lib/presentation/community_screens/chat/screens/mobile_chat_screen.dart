@@ -40,7 +40,7 @@ import '../../../../widgets/modals.dart';
 
 import '../../../landing_page/landing_page.dart';
 import '../../community_one_page/community_info_page.dart';
-import '../../community_one_page/widgets/requests_page.dart';
+import '../../widgets/requests_page.dart';
 import '../../provider/auth_provider.dart' as pro;
 import '../../provider/auth_provider.dart';
 import '../controller/chat_controller.dart';
@@ -475,6 +475,8 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                       snapshot.data?.get('requestsMembers') ??
                                           [];
 
+                                         
+
                                   groupInfo.requestedUsers(requests);
 
                                   requestItems = removeDuplicates1(
@@ -785,123 +787,123 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           const SizedBox(
                             height: 20,
                           ),
-                          Container(
-                            child: StreamBuilder<DocumentSnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('groups')
-                                  .doc(groupInfo.groupId)
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                final isGroupLocked =
-                                    snapshot.data?.get('isGroupLocked') ??
-                                        false;
+                          // Container(
+                          //   child: StreamBuilder<DocumentSnapshot>(
+                          //     stream: FirebaseFirestore.instance
+                          //         .collection('groups')
+                          //         .doc(groupInfo.groupId)
+                          //         .snapshots(),
+                          //     builder: (BuildContext context,
+                          //         AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          //       final isGroupLocked =
+                          //           snapshot.data?.get('isGroupLocked') ??
+                          //               false;
 
-                                List<dynamic> groupMembersId =
-                                    snapshot.data?.get('membersUid') ?? [];
+                          //       List<MemberData> groupMembersId =
+                          //           snapshot.data?.get('membersUid') ?? [];
 
-                                List<dynamic> userItem =
-                                    removeDuplicates(groupMembersId);
+                          //       List<MemberData> userItem =
+                          //           removeDuplicateUsers(groupMembersId);
 
-                                if (userItem.contains(userId)) {
-                                  containsId = true;
-                                  ;
-                                } else {
-                                  containsId = false;
+                          //       if (userItem.any((user) => user.userId == userId)) {
+                          //         containsId = true;
+                                   
+                          //       } else {
+                          //         containsId = false;
 
-                                  _firebaseMessaging
-                                      .unsubscribeFromTopic(groupInfo.groupId);
-                                }
+                          //         _firebaseMessaging
+                          //             .unsubscribeFromTopic(groupInfo.groupId);
+                          //       }
 
-                                if (isGroupLocked) {
-                                  return (groupInfo.groupAdminId == userId)
-                                      ? BottomChatField(
-                                          onTap: () {
-                                            _scrollDown();
-                                          },
-                                          recieverUserId: widget.uid,
-                                          isGroupChat: widget.isGroupChat,
-                                          groupName: widget.name,
-                                          groupId: groupInfo.groupId,
-                                        )
-                                      : Container(
-                                          height: 60,
-                                          color: Colors.grey.shade300,
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 0.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.lock,
-                                                  color: Colors.blue,
-                                                  size: 14,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  'only admins can send messages here',
-                                                  style: TextStyle(
-                                                      color: Colors.blue),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                } else if (!containsId) {
-                                  return (groupInfo.groupAdminId == userId)
-                                      ? BottomChatField(
-                                          onTap: () {
-                                            _scrollDown();
-                                          },
-                                          recieverUserId: widget.uid,
-                                          isGroupChat: widget.isGroupChat,
-                                          groupName: widget.name,
-                                          groupId: groupInfo.groupId)
-                                      : Container(
-                                          height: 60,
-                                          color: Colors.grey.shade300,
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 0.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.lock,
-                                                  color: Colors.blue,
-                                                  size: 14,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  'you are no longer a member of this group',
-                                                  style: TextStyle(
-                                                      color: Colors.blue),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                }
+                          //       if (isGroupLocked) {
+                          //         return (groupInfo.groupAdminId == userId)
+                          //             ? BottomChatField(
+                          //                 onTap: () {
+                          //                   _scrollDown();
+                          //                 },
+                          //                 recieverUserId: widget.uid,
+                          //                 isGroupChat: widget.isGroupChat,
+                          //                 groupName: widget.name,
+                          //                 groupId: groupInfo.groupId,
+                          //               )
+                          //             : Container(
+                          //                 height: 60,
+                          //                 color: Colors.grey.shade300,
+                          //                 child: Padding(
+                          //                   padding:
+                          //                       EdgeInsets.only(bottom: 0.0),
+                          //                   child: Row(
+                          //                     mainAxisAlignment:
+                          //                         MainAxisAlignment.center,
+                          //                     children: [
+                          //                       Icon(
+                          //                         Icons.lock,
+                          //                         color: Colors.blue,
+                          //                         size: 14,
+                          //                       ),
+                          //                       SizedBox(
+                          //                         width: 10,
+                          //                       ),
+                          //                       Text(
+                          //                         'only admins can send messages here',
+                          //                         style: TextStyle(
+                          //                             color: Colors.blue),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //               );
+                          //       } else if (!containsId) {
+                          //         return (groupInfo.groupAdminId == userId)
+                          //             ? BottomChatField(
+                          //                 onTap: () {
+                          //                   _scrollDown();
+                          //                 },
+                          //                 recieverUserId: widget.uid,
+                          //                 isGroupChat: widget.isGroupChat,
+                          //                 groupName: widget.name,
+                          //                 groupId: groupInfo.groupId)
+                          //             : Container(
+                          //                 height: 60,
+                          //                 color: Colors.grey.shade300,
+                          //                 child: Padding(
+                          //                   padding:
+                          //                       EdgeInsets.only(bottom: 0.0),
+                          //                   child: Row(
+                          //                     mainAxisAlignment:
+                          //                         MainAxisAlignment.center,
+                          //                     children: [
+                          //                       Icon(
+                          //                         Icons.lock,
+                          //                         color: Colors.blue,
+                          //                         size: 14,
+                          //                       ),
+                          //                       SizedBox(
+                          //                         width: 10,
+                          //                       ),
+                          //                       Text(
+                          //                         'you are no longer a member of this group',
+                          //                         style: TextStyle(
+                          //                             color: Colors.blue),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //               );
+                          //       }
 
-                                return BottomChatField(
-                                  onTap: () {
-                                    _scrollDown();
-                                  },
-                                  recieverUserId: widget.uid,
-                                  isGroupChat: widget.isGroupChat,
-                                  groupName: widget.name,
-                                  groupId: groupInfo.groupId,
-                                );
-                              },
-                            ),
-                          ),
+                          //       return BottomChatField(
+                          //         onTap: () {
+                          //           _scrollDown();
+                          //         },
+                          //         recieverUserId: widget.uid,
+                          //         isGroupChat: widget.isGroupChat,
+                          //         groupName: widget.name,
+                          //         groupId: groupInfo.groupId,
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -938,6 +940,18 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     return uniqueItems.values.toList();
   }
 
+   List<MemberData> removeDuplicateUsers(List<MemberData> items) {
+   Map<int, MemberData> uniqueItems = {};
+
+    items.forEach((item) {
+      if (items.isNotEmpty || items != []) {
+        uniqueItems[int.tryParse(item.userId)!] = item;
+      }
+    });
+
+    return uniqueItems.values.toList();
+}
+
   Future<void> copyToClipboard(
       String text, var groupInfo, BuildContext context) async {
     await Clipboard.setData(ClipboardData(text: text)).then((value) => {
@@ -971,17 +985,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     );
   }
 
-  List<dynamic> removeDuplicates(List<dynamic> items) {
-    Map<int, String> uniqueItems = {};
-
-    items.forEach((item) {
-      if (items.isNotEmpty || items != []) {
-        uniqueItems[int.tryParse(item)!] = item;
-      }
-    });
-
-    return uniqueItems.values.toList();
-  }
+   
 
   Widget _buildComplaintField(BuildContext context) {
     return Padding(
