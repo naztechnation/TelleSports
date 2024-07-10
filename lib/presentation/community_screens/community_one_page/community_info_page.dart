@@ -684,7 +684,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                   isLoading = true;
                                                 });
                                                 await groupInfo.deleteGroup(
-                                                    groupInfo.groupId, context);
+                                                    groupInfo.groupId, context, userId);
 
                                                 _firebaseMessaging
                                                     .unsubscribeFromTopic(

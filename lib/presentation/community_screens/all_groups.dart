@@ -238,7 +238,8 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                   isPaid: groupData.communityType, communityPrice: groupData.communityPrice, showCount: groupData.showMemberCount,
                                                   userItem: userItem, 
                                                   isGroupLocked: groupData.isGroupLocked, communityLink: groupData.groupLink, pinnedMessage: groupData.groupLink,
-
+ adminId: userItem[0]
+                                                                    .userId,
                                                 );
                                               }
                                             },
@@ -272,13 +273,14 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
   required bool showCount,
   required List<MemberData> userItem,
 required     bool isGroupLocked,
+    required String adminId,
 
   required String communityLink,
   required String pinnedMessage,
 
   }) {
     AppNavigator.pushAndStackPage(context,
-        page: CommunityInfoScreen(
+        page: JoinCommunityInfoScreen(
           groupImage: groupImage,
           groupName: groupName,
           groupNumber: groupNumber,
@@ -289,6 +291,7 @@ required     bool isGroupLocked,
           isPaid: isPaid, communityPrice: communityPrice, showCount: showCount, 
           userItem: userItem, 
           communityLink: communityLink, isGroupLocked: isGroupLocked, pinnedMessage: pinnedMessage, 
+           adminId: adminId, 
 
         ));
   }

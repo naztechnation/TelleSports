@@ -22,13 +22,15 @@ import '../../../widgets/modal_content.dart';
 import '../../landing_page/landing_page.dart';
 import '../chat/screens/mobile_chat_screen.dart';
 import '../provider/auth_provider.dart' as pro;
+import 'transfer_tellacoin.dart';
 
-class CommunityInfoScreen extends StatefulWidget {
+class JoinCommunityInfoScreen extends StatefulWidget {
   final String groupImage;
   final String groupName;
   final String groupNumber;
   final String groupId;
   final String userId;
+  final String adminId;
   final String groupDescription;
   final String adminFcm;
   final String isPaid;
@@ -40,7 +42,7 @@ class CommunityInfoScreen extends StatefulWidget {
 
   final List<MemberData> userItem;
 
-  const CommunityInfoScreen(
+  const JoinCommunityInfoScreen(
       {Key? key,
       required this.groupImage,
       required this.groupName,
@@ -52,24 +54,23 @@ class CommunityInfoScreen extends StatefulWidget {
       required this.isPaid,
       required this.communityPrice,
       required this.showCount,
-      required this.userItem, 
+      required this.userItem,
       required this.communityLink,
-       required this.isGroupLocked,
-        required this.pinnedMessage})
+      required this.isGroupLocked,
+      required this.pinnedMessage, required this.adminId})
       : super(key: key);
 
   @override
-  State<CommunityInfoScreen> createState() => _CommunityInfoScreenState();
+  State<JoinCommunityInfoScreen> createState() => _CommunityInfoScreenState();
 }
 
-class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
+class _CommunityInfoScreenState extends State<JoinCommunityInfoScreen> {
   String userId = '';
   String username = '';
 
   bool isLoading = true;
 
   final compaintController = TextEditingController();
-
 
   getCurrentUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
@@ -181,24 +182,17 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                   setState(() {
                                     isLoading = false;
                                   });
-                                   groupInfo.addGroupInfo(
-                                                      groupNumber: widget.userItem
-                                                          .length
-                                                          .toString(),
-                                                      groupAdminId: widget.userItem[0].userId,
-                                                      groupId:
-                                                          widget.groupId,
-                                                      groupLink:
-                                                          widget.communityLink,
-                                                      isGroupLocked: widget
-                                                          .isGroupLocked,
-                                                      pinnedMessage: widget
-                                                          .pinnedMessage,
-                                                      groupDesription: widget
-                                                          .groupDescription,
-                                                      groupName: widget.groupName,
-                                                      groupPics:
-                                                         widget.groupImage);
+                                  groupInfo.addGroupInfo(
+                                      groupNumber:
+                                          widget.userItem.length.toString(),
+                                      groupAdminId: widget.userItem[0].userId,
+                                      groupId: widget.groupId,
+                                      groupLink: widget.communityLink,
+                                      isGroupLocked: widget.isGroupLocked,
+                                      pinnedMessage: widget.pinnedMessage,
+                                      groupDesription: widget.groupDescription,
+                                      groupName: widget.groupName,
+                                      groupPics: widget.groupImage);
                                   AppNavigator.pushAndStackPage(context,
                                       page: MobileChatScreen(
                                         widget.groupDescription,
@@ -212,32 +206,39 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                 }
                               }),
                           SizedBox(height: 16.v),
-                          CustomOutlinedButton(text: "Report community",
-                           title: 'Submitting report...',
-                           processing: isLoading,
-                           onPressed: () {
-                             Modals.showDialogModal(context,
-                              page: ModalContentScreen(
-                                  title: 'Report this user',
-                                  body: Column(
-                                    children: [_buildComplaintField(context)],
-                                  ),
-                                  btnText: 'Submit',
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    if (compaintController.text.isNotEmpty) {
-                                      context.read<PredictionCubit>().sendReport(
-                                          complaintType: 'user',
-                                          complaint: compaintController.text,
-                                          reportedUser: username);
-                                    } else {
-                                      Modals.showToast(
-                                          'Please fill in your complaints');
-                                    }
-                                  },
-                                  headerColorOne: Color(0xFFFDF9ED),
-                                  headerColorTwo: Color(0xFFFAF3DA)));
-                           },
+                          CustomOutlinedButton(
+                            text: "Report community",
+                            title: 'Submitting report...',
+                            processing: isLoading,
+                            onPressed: () {
+                              Modals.showDialogModal(context,
+                                  page: ModalContentScreen(
+                                      title: 'Report this user',
+                                      body: Column(
+                                        children: [
+                                          _buildComplaintField(context)
+                                        ],
+                                      ),
+                                      btnText: 'Submit',
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        if (compaintController
+                                            .text.isNotEmpty) {
+                                          context
+                                              .read<PredictionCubit>()
+                                              .sendReport(
+                                                  complaintType: 'user',
+                                                  complaint:
+                                                      compaintController.text,
+                                                  reportedUser: username);
+                                        } else {
+                                          Modals.showToast(
+                                              'Please fill in your complaints');
+                                        }
+                                      },
+                                      headerColorOne: Color(0xFFFDF9ED),
+                                      headerColorTwo: Color(0xFFFAF3DA)));
+                            },
                           ),
                         ]
                       ],
@@ -294,32 +295,39 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                                 }
                               }),
                           SizedBox(height: 16.v),
-                          CustomOutlinedButton(text: "Report community",
-                           title: 'Submitting report...',
-                           processing: isLoading,
-                           onPressed: () {
-                             Modals.showDialogModal(context,
-                              page: ModalContentScreen(
-                                  title: 'Report this user',
-                                  body: Column(
-                                    children: [_buildComplaintField(context)],
-                                  ),
-                                  btnText: 'Submit',
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    if (compaintController.text.isNotEmpty) {
-                                      context.read<PredictionCubit>().sendReport(
-                                          complaintType: 'user',
-                                          complaint: compaintController.text,
-                                          reportedUser: username);
-                                    } else {
-                                      Modals.showToast(
-                                          'Please fill in your complaints');
-                                    }
-                                  },
-                                  headerColorOne: Color(0xFFFDF9ED),
-                                  headerColorTwo: Color(0xFFFAF3DA)));
-                           },
+                          CustomOutlinedButton(
+                            text: "Report community",
+                            title: 'Submitting report...',
+                            processing: isLoading,
+                            onPressed: () {
+                              Modals.showDialogModal(context,
+                                  page: ModalContentScreen(
+                                      title: 'Report this user',
+                                      body: Column(
+                                        children: [
+                                          _buildComplaintField(context)
+                                        ],
+                                      ),
+                                      btnText: 'Submit',
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        if (compaintController
+                                            .text.isNotEmpty) {
+                                          context
+                                              .read<PredictionCubit>()
+                                              .sendReport(
+                                                  complaintType: 'user',
+                                                  complaint:
+                                                      compaintController.text,
+                                                  reportedUser: username);
+                                        } else {
+                                          Modals.showToast(
+                                              'Please fill in your complaints');
+                                        }
+                                      },
+                                      headerColorOne: Color(0xFFFDF9ED),
+                                      headerColorTwo: Color(0xFFFAF3DA)));
+                            },
                           ),
                         ]
                       ]
@@ -341,64 +349,52 @@ class _CommunityInfoScreenState extends State<CommunityInfoScreen> {
                               onPressed: () async {}),
                         ] else ...[
                           Text("This is a paid community.", style: TextStyle()),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           CustomElevatedButton(
                               text:
                                   "Pay ${widget.communityPrice} Tellacoins to join",
                               processing: isLoading,
                               onPressed: () async {
                                 if (!isUserAlreadyRequested) {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-
-                                  await groupInfo.addCurrentUserFromMembers(
-                                      widget.groupId,
-                                      [
-                                        MemberData(
-                                            userId: userId,
-                                            dateJoined: DateTime.now())
-                                      ],
-                                      context);
-
-                                  setState(() {
-                                    isLoading = false;
-                                  });
-
-                                  Modals.showToast(
-                                      'Request has been sent to community admin for approval',
-                                      messageType: MessageType.success);
-                                  user.updateIndex(1);
-                                  AppNavigator.pushAndStackPage(context,
-                                      page: LandingPage());
+                                  AppNavigator.pushAndStackPage(context, page: TransferTellacoinsScreen(desUserId: widget.adminId, transferAmount: widget.communityPrice, groupName: widget.groupName,));
                                 }
                               }),
                           SizedBox(height: 16.v),
-                          CustomOutlinedButton(text: "Report community",
-                           title: 'Submitting report...',
-                           processing: isLoading,
-                           onPressed: () {
-                             Modals.showDialogModal(context,
-                              page: ModalContentScreen(
-                                  title: 'Report this user',
-                                  body: Column(
-                                    children: [_buildComplaintField(context)],
-                                  ),
-                                  btnText: 'Submit',
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    if (compaintController.text.isNotEmpty) {
-                                      context.read<PredictionCubit>().sendReport(
-                                          complaintType: 'user',
-                                          complaint: compaintController.text,
-                                          reportedUser: username);
-                                    } else {
-                                      Modals.showToast(
-                                          'Please fill in your complaints');
-                                    }
-                                  },
-                                  headerColorOne: Color(0xFFFDF9ED),
-                                  headerColorTwo: Color(0xFFFAF3DA)));
-                           },
+                          CustomOutlinedButton(
+                            text: "Report community",
+                            title: 'Submitting report...',
+                            processing: isLoading,
+                            onPressed: () {
+                              Modals.showDialogModal(context,
+                                  page: ModalContentScreen(
+                                      title: 'Report this user',
+                                      body: Column(
+                                        children: [
+                                          _buildComplaintField(context)
+                                        ],
+                                      ),
+                                      btnText: 'Submit',
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        if (compaintController
+                                            .text.isNotEmpty) {
+                                          context
+                                              .read<PredictionCubit>()
+                                              .sendReport(
+                                                  complaintType: 'user',
+                                                  complaint:
+                                                      compaintController.text,
+                                                  reportedUser: username);
+                                        } else {
+                                          Modals.showToast(
+                                              'Please fill in your complaints');
+                                        }
+                                      },
+                                      headerColorOne: Color(0xFFFDF9ED),
+                                      headerColorTwo: Color(0xFFFAF3DA)));
+                            },
                           ),
                         ]
                       ],

@@ -493,7 +493,7 @@ Future<void> removeUserFromBlockedList({
 
   var currentNumberOfGroups = userDoc['numberOfGroups'];
 
-  if (currentNumberOfGroups < 2) {
+  if (currentNumberOfGroups is int && currentNumberOfGroups < 3) {
     await createGroup(
       context,
       name,
@@ -507,9 +507,13 @@ Future<void> removeUserFromBlockedList({
       showMemberCount,
     );
 
+     await FirebaseFirestore.instance.collection('users').doc(userId).update({
+          'numberOfGroups': FieldValue.increment(1),
+        });
+
     return true;
   } else {
-    Modals.showToast('Oops, you can\'t create more than 2 groups');
+    Modals.showToast('Oops, you can\'t create more than 3 groups');
     return false;
   }
 }
@@ -1113,17 +1117,45 @@ Future<List<UserModel>> myBlockedUsers(List<dynamic> membersUid) async {
   }
 }
 
-  Future<void> deleteGroup(String groupId, BuildContext context) async {
+  Future<void> deleteGroup(String groupId, BuildContext context, String admiId) async {
     try {
       final DocumentReference groupDocRef =
           FirebaseFirestore.instance.collection('groups').doc(groupId);
 
       await groupDocRef.delete();
+      decrementGroupCountIfNeeded(admiId);
       if (context.mounted) {}
     } catch (error) {
       print('Error deleting group: $error');
     }
   }
+
+  Future<bool> decrementGroupCountIfNeeded(String userId) async {
+  try {
+    var userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+    var userDoc = await userDocRef.get();
+
+    if (userDoc.exists) {
+      var currentNumberOfGroups = userDoc.data()?['numberOfGroups'] ?? 0;
+
+      if (currentNumberOfGroups > 0) {
+        await userDocRef.update({
+          'numberOfGroups': FieldValue.increment(-1),
+        });
+        return true;
+      } else {
+        Modals.showToast('Number of groups is already zero');
+        return false;
+      }
+    } else {
+      Modals.showToast('User document does not exist');
+      return false;
+    }
+  } catch (e) {
+    Modals.showToast('Error decrementing group count: $e');
+    return false;
+  }
+}
 
   Future<void> updateGroupLockStatus(String groupId, bool isGroupLocked) async {
     try {

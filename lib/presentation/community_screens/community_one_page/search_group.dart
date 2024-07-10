@@ -253,7 +253,8 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                     showCount: groupData
                                                         .showMemberCount,
                                                     userItem: userItem,
-                                                  isGroupLocked: groupData.isGroupLocked, communityLink: groupData.groupLink, pinnedMessage: groupData.groupLink,
+                                                  isGroupLocked: groupData.isGroupLocked, communityLink: groupData.groupLink, pinnedMessage: groupData.groupLink, adminId: userItem[0]
+                                                                    .userId,
                                                     
                                                     );
                                               }
@@ -264,6 +265,7 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                             date: groupData.timeSent.toLocal(),
                                             isPaid: groupData.communityType
                                                 .toString(),
+                                              
                                           );
                                         }))
                               ]))
@@ -290,9 +292,11 @@ required     bool isGroupLocked,
 
   required String communityLink,
   required String pinnedMessage,
+    required String adminId,
+
   }) {
     AppNavigator.pushAndStackPage(context,
-        page: CommunityInfoScreen(
+        page: JoinCommunityInfoScreen(
           groupImage: groupImage,
           groupName: groupName,
           groupNumber: groupNumber,
@@ -304,7 +308,10 @@ required     bool isGroupLocked,
           communityPrice: communityPrice,
           showCount: showCount,
           userItem: userItem, 
-          communityLink: communityLink, isGroupLocked: isGroupLocked, pinnedMessage: pinnedMessage, 
+          communityLink: communityLink, 
+          isGroupLocked: isGroupLocked,
+           pinnedMessage: pinnedMessage,
+           adminId: adminId, 
 
         ));
   }

@@ -189,7 +189,7 @@ userId = await StorageHandler.getUserId() ?? '';
        if(groupInfo.groupMembers[0].uid ==  userId)    GestureDetector(
             onTap: (){
               if(groupInfo.groupMembers[0].uid ==  userId) {
-                              groupInfo.deleteGroup(groupInfo.groupId, context);
+                              groupInfo.deleteGroup(groupInfo.groupId, context, userId);
 
               }else{
 
