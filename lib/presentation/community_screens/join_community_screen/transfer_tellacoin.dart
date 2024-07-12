@@ -16,24 +16,47 @@ import 'package:tellesports/widgets/modal_content.dart';
 
 import '../../../blocs/user/user.dart';
 import '../../../core/constants/enums.dart';
-import '../../../model/view_models/account_view_model.dart';
+import '../../../model/chat_model/group.dart';
 import '../../../model/view_models/user_view_model.dart';
+import '../../../notification.dart';
 import '../../../requests/repositories/user_repo/user_repository_impl.dart';
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
 import '../../../widgets/modals.dart';
 import '../../buy_tellacoins_screen/buy_tellacoins_screen.dart';
-import '../../landing_page/landing_page.dart';
+import '../chat/screens/mobile_chat_screen.dart';
+import '../provider/auth_provider.dart' as pro;
+
 
  
 
 class TransferTellacoinsScreen extends StatelessWidget {
-  final String desUserId;
+  final String username;
   final String transferAmount;
   final String groupName;
+  final String groupImage;
+  final bool isGroupLocked;
+  final String groupNumber;
+  final String groupId;
+  final String userId;
+  final String adminId;
+  final String groupDescription;
+  final String adminFcm;
+   final String communityPrice;
+  final String communityLink;
+  final String pinnedMessage;
+  final List<MemberData> userItem;
 
-  const TransferTellacoinsScreen({Key? key, required this.desUserId, required this.transferAmount, required this.groupName})
+
+  const TransferTellacoinsScreen({Key? key, required this.username, 
+  required this.transferAmount, required this.groupName, 
+  required this.groupImage, required this.groupNumber, 
+  required this.groupId, required this.userId, required this.adminId,
+   required this.groupDescription, required this.adminFcm, 
+   required this.communityPrice, required this.communityLink, 
+   required this.pinnedMessage, required this.userItem, required this.isGroupLocked
+   })
       : super(key: key);
 
   @override
@@ -42,18 +65,31 @@ class TransferTellacoinsScreen extends StatelessWidget {
           userRepository: UserRepositoryImpl(),
           viewModel: Provider.of<UserViewModel>(context, listen: false)),
       child: GiftTellacoin(
-        desUserId: desUserId,
+        username: username,
          transferAmount: transferAmount,
-         groupName: groupName
+         groupName: groupName, groupImage: groupImage, groupNumber: groupNumber, groupId: groupId, userId: userId, adminId: adminId, groupDescription: groupDescription, adminFcm: adminFcm, communityPrice: communityPrice, communityLink: communityLink, pinnedMessage: pinnedMessage, userItem: userItem, isGroupLocked: isGroupLocked,
+         
       ));
 }
 
 class GiftTellacoin extends StatefulWidget {
-  final String desUserId;
+  final String username;
   final String transferAmount;
   final String groupName;
+  final String groupImage;
+  final bool isGroupLocked;
+  final String groupNumber;
+  final String groupId;
+  final String userId;
+  final String adminId;
+  final String groupDescription;
+  final String adminFcm;
+   final String communityPrice;
+  final String communityLink;
+  final String pinnedMessage;
+  final List<MemberData> userItem;
 
-  GiftTellacoin({Key? key, required this.desUserId, required this.transferAmount, required this.groupName}) : super(key: key);
+  GiftTellacoin({Key? key, required this.username, required this.transferAmount, required this.groupName, required this.groupImage, required this.groupNumber, required this.groupId, required this.userId, required this.adminId, required this.groupDescription, required this.adminFcm, required this.communityPrice, required this.communityLink, required this.pinnedMessage, required this.userItem, required this.isGroupLocked}) : super(key: key);
 
   @override
   State<GiftTellacoin> createState() => _GiftTellacoinState();
@@ -65,16 +101,21 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String balance = '';
+  String username = '';
+  String userId = '';
 
   Color amountColor = Colors.black;
 
   Timer? _debounce;
   bool isSufficient = false;
+  bool isLoading = false;
 
   late UserCubit _accountCubit;
 
   getUserBalance() async {
     balance = await StorageHandler.getUserBalance() ?? '';
+    username = await StorageHandler.getUserName() ?? '';
+    userId = await StorageHandler.getUserId() ?? '';
 
     Future.delayed(Duration(seconds: 0), () {
       setState(() {});
@@ -114,6 +155,8 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
+    final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
+
     updateTextColor();
     return SafeArea(
         child: Scaffold(
@@ -128,16 +171,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                     StorageHandler.saveUserBalance(
                         state.tellacoin.data?.tellaCoins.toString());
 
-                    Future.delayed(
-                        Duration(
-                          seconds: 2,
-                        ), () {
-                      final user =
-                          Provider.of<AccountViewModel>(context, listen: true);
-                      user.updateIndex(0);
-                      AppNavigator.pushAndReplacePage(context,
-                          page: LandingPage());
-                    });
+                   addUserToGroup(groupInfo) ;
                   } else {
                     Modals.showToast(state.tellacoin.message ?? '',
                         messageType: MessageType.error);
@@ -168,7 +202,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                       CustomElevatedButton(
                         text: "Transfer Tellacoins",
                         title: 'Transfering tellacoin...',
-                        processing: state is TransferCoinLoading,
+                        processing: state is TransferCoinLoading || isLoading,
                         isDisabled: isSufficient,
                          
                         onPressed: () {
@@ -177,7 +211,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                                   title: 'Continue With Transfer',
                                   body: Text(
                                     'N.B: Are you sure you want to transfer ${widget.transferAmount} Tellacoins to the Admin of ${widget.groupName}. As This action can\'t be reversed.',
-                                    maxLines: 3,
+                                    maxLines: 8,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: appTheme.gray900,
@@ -188,8 +222,8 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                                   ),
                                   btnText: 'Proceed',
                                   onPressed: () {
-                                    trasferTellaCoin();
-
+                                    //  trasferTellaCoin();
+                                    Modals.showToast(widget.adminFcm);
                                     Navigator.pop(context);
                                   },
                                   headerColorOne:
@@ -355,7 +389,54 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
   trasferTellaCoin() {
     if (_formKey.currentState!.validate()) {
       _accountCubit.transferTellaCoin(
-          amount: amountController.text, userId: widget.desUserId);
+          amount: amountController.text, username: widget.username);
     }
+  }
+
+  addUserToGroup(var groupInfo)async{
+     setState(() {
+                                    isLoading = true;
+                                  });
+
+                                  await groupInfo.addCurrentUserFromMembers(
+                                      widget.groupId,
+                                      [
+                                        MemberData(
+                                            userId: userId,
+                                            dateJoined: DateTime.now(),
+                                            username: username
+                                            )
+                                      ],
+                                      context);
+
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  groupInfo.addGroupInfo(
+                                      groupNumber:
+                                          widget.userItem.length.toString(),
+                                      groupAdminId: widget.userItem[0].userId,
+                                      groupId: widget.groupId,
+                                      groupLink: widget.communityLink,
+                                      isGroupLocked: widget.isGroupLocked,
+                                      pinnedMessage: widget.pinnedMessage,
+                                      groupDesription: widget.groupDescription,
+                                      groupName: widget.groupName,
+                                      groupPics: widget.groupImage);
+
+                                       sendPushNotification(
+                                      widget.adminFcm,
+                                      widget.groupName,
+                                      'Hello, you have a pending invite from ${widget.groupName}');
+                                  AppNavigator.pushAndStackPage(context,
+                                      page: MobileChatScreen(
+                                        widget.groupDescription,
+                                        widget.groupNumber.toString(),
+                                        widget.userItem,
+                                        name: widget.groupName,
+                                        uid: widget.groupId,
+                                        isGroupChat: true,
+                                        profilePic: widget.groupImage,
+                                      ));
   }
 }

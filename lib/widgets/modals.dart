@@ -123,10 +123,10 @@ class Modals {
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 12),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 30),
               shape: RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius.circular(borderRadius)), //this right here
+                      BorderRadius.circular(borderRadius)),  
               child: page);
         });
     return data;

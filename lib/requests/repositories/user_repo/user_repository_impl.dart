@@ -9,7 +9,7 @@ import 'user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
   @override
-  Future<TransferTellacoin> transferTellaCoins({required String desUserId, required String amount}) async {
+  Future<TransferTellacoin> transferTellaCoins({required String username, required String amount}) async {
 
     final map = await Requests().post(
       
@@ -17,7 +17,7 @@ class UserRepositoryImpl implements UserRepository {
        
        body: {
         'amount': amount,
-        'to_': desUserId
+        'to_': username
       }
     );
 

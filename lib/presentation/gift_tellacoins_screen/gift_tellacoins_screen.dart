@@ -346,7 +346,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
   trasferTellaCoin() {
     if (_formKey.currentState!.validate()) {
       _accountCubit.transferTellaCoin(
-          amount: amountController.text, userId: widget.desUserId);
+          amount: amountController.text, username: widget.desUserId);
     }
   }
 }

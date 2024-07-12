@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+ 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+ 
 import 'package:provider/provider.dart' as provider;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/utils/loader.dart';
@@ -138,6 +138,7 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                                           .removeCurrentUserFromBlockedMembers(
                                               groupInfo.groupId,
                                               widget.userId,
+                                              widget.name,
                                               context);
 
                                       setState(() {
@@ -197,6 +198,8 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                                               .removeCurrentUserFromRequestsMembers(
                                                   groupInfo.groupId,
                                                   widget.userId,
+                                              widget.name,
+
                                                   context);
 
                                           setState(() {

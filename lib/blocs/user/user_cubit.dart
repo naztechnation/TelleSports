@@ -17,14 +17,14 @@ class UserCubit extends Cubit<UserStates> {
 
   Future<void> transferTellaCoin({
     required String amount,
-    required String userId,
+    required String username,
     
   }) async {
     try {
       emit(TransferCoinLoading());
 
       final agents = await userRepository.transferTellaCoins(
-        desUserId: userId,
+        username: username,
         amount: amount,
         
       );

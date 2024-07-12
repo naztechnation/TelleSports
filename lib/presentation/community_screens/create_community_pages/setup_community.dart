@@ -42,6 +42,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
   bool isLoading = false;
 
   String userId = '';
+  String username= '';
   String fcmToken = '';
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -50,6 +51,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
 
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+    username = await StorageHandler.getUserName() ?? '';
     fcmToken = await StorageHandler.getUserFCM() ?? '';
   }
 
@@ -344,7 +346,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
                                             communityPrice:
                                                 priceController.text,
                                             paymentType: _selectedPaymentOption,
-                                            showMemberCount: _isSwitched);
+                                            showMemberCount: _isSwitched, username: username);
 
                                     setState(() {
                                       isLoading = false;
@@ -386,7 +388,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
                                                   priceController.text,
                                               paymentType:
                                                   _selectedPaymentOption,
-                                              showMemberCount: _isSwitched);
+                                              showMemberCount: _isSwitched, username: username);
 
                                       setState(() {
                                         isLoading = false;

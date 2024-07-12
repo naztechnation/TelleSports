@@ -92,16 +92,19 @@ class Group {
 
 class MemberData {
   final String userId;
+  final String username;
   final DateTime dateJoined;
 
   MemberData({
     required this.userId,
+    required this.username,
     required this.dateJoined,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
+      'username': username,
       'dateJoined': dateJoined.millisecondsSinceEpoch,
     };
   }
@@ -109,6 +112,7 @@ class MemberData {
   factory MemberData.fromMap(Map<String, dynamic> map) {
     return MemberData(
       userId: map['userId'] ?? '',
+      username: map['username'] ?? '',
       dateJoined: DateTime.fromMillisecondsSinceEpoch(map['dateJoined']),
     );
   }

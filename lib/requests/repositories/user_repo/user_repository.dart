@@ -11,7 +11,7 @@ abstract class UserRepository {
 
 
     Future<TransferTellacoin> transferTellaCoins({
-    required String desUserId,
+    required String username,
     required String amount,
     
   });

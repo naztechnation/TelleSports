@@ -175,7 +175,9 @@ class _CommunityInfoScreenState extends State<JoinCommunityInfoScreen> {
                                       [
                                         MemberData(
                                             userId: userId,
-                                            dateJoined: DateTime.now())
+                                            dateJoined: DateTime.now(),
+                                            username: username
+                                            )
                                       ],
                                       context);
 
@@ -273,7 +275,9 @@ class _CommunityInfoScreenState extends State<JoinCommunityInfoScreen> {
                                       [
                                         MemberData(
                                             userId: userId,
-                                            dateJoined: DateTime.now())
+                                            dateJoined: DateTime.now(),
+                                            username: username
+                                            ),
                                       ],
                                       context);
 
@@ -358,7 +362,16 @@ class _CommunityInfoScreenState extends State<JoinCommunityInfoScreen> {
                               processing: isLoading,
                               onPressed: () async {
                                 if (!isUserAlreadyRequested) {
-                                  AppNavigator.pushAndStackPage(context, page: TransferTellacoinsScreen(desUserId: widget.adminId, transferAmount: widget.communityPrice, groupName: widget.groupName,));
+                                   
+                                    AppNavigator.pushAndStackPage(context, page: TransferTellacoinsScreen(username: 
+                                    widget.userItem.first.username, 
+                                    transferAmount: widget.communityPrice,
+                                     groupName: widget.groupName, groupImage: widget.groupImage, groupNumber: widget.groupNumber, 
+                                     groupId: widget.groupId, userId: widget.userId, adminId:  widget.adminId,
+                                      groupDescription: widget.groupDescription, adminFcm: widget.adminFcm, communityPrice: widget.communityPrice,
+                                       communityLink: widget.communityLink, pinnedMessage: widget.pinnedMessage, userItem: widget.userItem, isGroupLocked: widget.isGroupLocked,
+                                    
+                                    ));
                                 }
                               }),
                           SizedBox(height: 16.v),

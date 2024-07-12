@@ -161,6 +161,7 @@ class UserInfoPageState extends State<UserInfo>
                                   [
                                         MemberData(
                                             userId: widget.memberId,
+                                            username: widget.memberName,
                                             dateJoined: DateTime.now())
                                       ],
                                   context);

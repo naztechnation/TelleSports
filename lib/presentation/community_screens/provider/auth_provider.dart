@@ -480,6 +480,7 @@ Future<void> removeUserFromBlockedList({
   required String userId,
   required BuildContext context,
   required String name,
+  required String username,
   required String groupDesc,
   required String fcmToken,
   required File profilePic,
@@ -497,6 +498,7 @@ Future<void> removeUserFromBlockedList({
     await createGroup(
       context,
       name,
+      username,
       groupDesc,
       fcmToken,
       profilePic,
@@ -543,6 +545,7 @@ Future<void> removeUserFromBlockedList({
   Future<void> createGroup(
     BuildContext context,
     String name,
+    String username,
     String groupDesc,
     String fcmToken,
     File profilePic,
@@ -555,11 +558,12 @@ Future<void> removeUserFromBlockedList({
   String userId = await StorageHandler.getUserId() ?? '';
   try {
     List<MemberData> members = [
-      MemberData(userId: userId, dateJoined: DateTime.now()),
+      MemberData(userId: userId, dateJoined: DateTime.now(), username: username),
     ];
 
     var groupId = const Uuid().v1();
-    var groupLink = const Uuid().v4();
+    var uuid = Uuid();
+  var groupLink = uuid.v4().substring(0, 15);
 
     String profileUrl = await ref
         .read(commonFirebaseStorageRepositoryProvider)
@@ -929,22 +933,28 @@ Future<List<UserModel>> myBlockedUsers(List<dynamic> membersUid) async {
           groupData['membersUid'] is List) {
         List<dynamic> membersUid = List.from(groupData['membersUid']);
  
-        membersUid.removeWhere((member) {
+        bool userExists = membersUid.any((member) {
           final user = MemberData.fromMap(member);
           return user.userId == currentUserId;
         });
 
-        await groupDocRef.update({'membersUid': membersUid});
+        if (userExists) {
+          membersUid.removeWhere((member) {
+            final user = MemberData.fromMap(member);
+            return user.userId == currentUserId;
+          });
+
+          await groupDocRef.update({'membersUid': membersUid});
       }
     }
-  } catch (error) {
+  }} catch (error) {
     print('Error removing user from members: $error');
   }
 }
 
 
   Future<void> removeCurrentUserFromRequestsMembers(
-    String groupId, String currentUserId, BuildContext context) async {
+    String groupId, String currentUserId, String username, BuildContext context) async {
   try {
     final DocumentReference groupDocRef =
         FirebaseFirestore.instance.collection('groups').doc(groupId);
@@ -968,7 +978,7 @@ Future<List<UserModel>> myBlockedUsers(List<dynamic> membersUid) async {
         await groupDocRef.update({'requestsMembers': requestsMembers});
 
         await addCurrentUserFromMembers(
-            groupId, [MemberData(userId: currentUserId, dateJoined: DateTime.now())], context);
+            groupId, [MemberData(userId: currentUserId, dateJoined: DateTime.now(), username: username)], context);
 
         if (context.mounted) {
           final user =
@@ -986,7 +996,7 @@ Future<List<UserModel>> myBlockedUsers(List<dynamic> membersUid) async {
 
 
  Future<void> removeCurrentUserFromBlockedMembers(
-    String groupId, String currentUserId, BuildContext context) async {
+    String groupId, String currentUserId, String username, BuildContext context) async {
   try {
     final DocumentReference groupDocRef =
         FirebaseFirestore.instance.collection('groups').doc(groupId);
@@ -1008,7 +1018,7 @@ Future<List<UserModel>> myBlockedUsers(List<dynamic> membersUid) async {
 
         await groupDocRef.update({'blockedMembers': blockedMembers});
 
-        await addCurrentUserFromMembers(groupId, [MemberData(userId: currentUserId, dateJoined: DateTime.now())], context);
+        await addCurrentUserFromMembers(groupId, [MemberData(userId: currentUserId, dateJoined: DateTime.now(), username: username)], context);
 
         if (context.mounted) {
           final user = pro.Provider.of<AccountViewModel>(context, listen: false);
