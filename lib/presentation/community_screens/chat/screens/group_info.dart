@@ -105,11 +105,14 @@ userId = await StorageHandler.getUserId() ?? '';
               child: ListTile(
                 leading: const Icon(Icons.notifications),
                 title: const Text('Mute Group'),
-                trailing: CupertinoSwitch(
-                    value: groupInfo.isGroupLocked,
-                    onChanged: (newValue) => setState(() {
-                      groupInfo.updateGroupLockStatus(groupInfo.groupId, newValue);
-                    } )),
+                trailing: Transform.scale(
+                                    scale: 0.67,
+                  child: CupertinoSwitch(
+                      value: groupInfo.isGroupLocked,
+                      onChanged: (newValue) => setState(() {
+                        groupInfo.updateGroupLockStatus(groupInfo.groupId, newValue);
+                      } )),
+                ),
               ),
             ),
             const Divider(

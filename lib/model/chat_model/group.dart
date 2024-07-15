@@ -1,3 +1,5 @@
+
+ 
 class Group {
   final String senderId;
   final String fcmToken;
@@ -9,9 +11,9 @@ class Group {
   final String groupLink;
   final String groupPic;
   final String groupDescription;
-  final List<MemberData> membersUid;
-  final List<String> blockedMembers;
-  final List<String> requestsMembers;
+  List<MemberData> membersUid;
+  List<String> blockedMembers;
+  List<String> requestsMembers;
   final DateTime timeSent;
   final String communityType;
   final String communityPrice;
@@ -29,15 +31,17 @@ class Group {
     required this.groupLink,
     required this.groupPic,
     required this.groupDescription,
-    required this.membersUid,
-    required this.blockedMembers,
-    required this.requestsMembers,
+    required List<MemberData> membersUid,
+    required List<String> blockedMembers,
+    required List<String> requestsMembers,
     required this.timeSent,
     required this.communityType,
     required this.communityPrice,
     required this.paymentType,
     required this.showMemberCount,
-  });
+  })  : membersUid = _removeDuplicateMembers(membersUid),
+        blockedMembers = _removeDuplicateIds(blockedMembers),
+        requestsMembers = _removeDuplicateIds(requestsMembers);
 
   Map<String, dynamic> toMap() {
     return {
@@ -86,7 +90,17 @@ class Group {
       showMemberCount: map['showMemberCount'] ?? false,
     );
   }
+
+  static List<MemberData> _removeDuplicateMembers(List<MemberData> members) {
+    final memberIds = <String>{};
+    return members.where((member) => memberIds.add(member.userId)).toList();
+  }
+
+  static List<String> _removeDuplicateIds(List<String> ids) {
+    return ids.toSet().toList();
+  }
 }
+
 
 
 

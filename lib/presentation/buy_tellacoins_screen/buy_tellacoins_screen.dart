@@ -362,13 +362,13 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 86.v,
+      height: 70.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
-          top: 50.v,
+          
           bottom: 12.v,
         ),
         onTap: () {
@@ -379,7 +379,7 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
       title: AppbarSubtitle(
         text: "Buy Tellacoins",
         margin: EdgeInsets.only(
-          top: 50.v,
+           
           bottom: 8.v,
         ),
       ),
@@ -398,8 +398,9 @@ class _BuyTellacoinsScreenState extends State<BuyTellacoinsScreen> {
         right: 12.h,
         left: 12.h,
       ),
+      textSize: 13,
       buttonStyle: CustomButtonStyles.fillTeal,
-      buttonTextStyle: CustomTextStyles.labelLargeInter,
+      buttonTextStyle: TextStyle(fontSize: 12),
       alignment: Alignment.centerRight,
     );
   }

@@ -110,6 +110,12 @@ String password = '';
                       StorageHandler.saveUserId(state.user.user?.id.toString());
                       StorageHandler.saveUserBalance(
                           state.user.tellacoinBalance.toString());
+
+                          StorageHandler.saveCoinRate(
+                          state.user.tellaCoinRate.toString());
+
+                          StorageHandler.saveRecievedCoin(
+                          state.user.receivedTellacoin.toString());
                       StorageHandler.saveUserPhoto(
                           state.user.profilePicture.toString());
                       StorageHandler.saveUserAccountName(

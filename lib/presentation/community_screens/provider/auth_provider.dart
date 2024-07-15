@@ -61,6 +61,9 @@ class AuthProviders extends ChangeNotifier {
   int _textIndex = -1;
   ScrollController _scrollController = ScrollController();
 
+
+  Group? _groupData = null;
+
   ImagePicker picker = ImagePicker();
 
   List<Group> _searchResult = [];
@@ -147,6 +150,14 @@ class AuthProviders extends ChangeNotifier {
   changeState(AuthScreenState authScreenState) {
     _isLogin = authScreenState;
     notifyListeners();
+  }
+
+  updateGroupData(Group groupData){
+
+    _groupData = groupData;
+
+    notifyListeners();
+
   }
 
   _setStatus(AuthState status) {
@@ -601,48 +612,58 @@ Future<void> removeUserFromBlockedList({
 
 
 
-Future<List<UserModel>> fetchUsers(dynamic membersUid) async {
+Future<List<UserModel>> fetchUsers(List<MemberData> membersUid) async {
   try {
     final List<UserModel> users = [];
+ int av= 0;
+    for (var member in membersUid) {
+      av++;
+      if (member.userId.isNotEmpty) {
+        try {
+          final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(member.userId)
+              .get();
 
-    for (dynamic member in membersUid) {
-      if (member is String && member.isNotEmpty) { // Check if member is a non-empty string
-        final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(member)
-            .get();
+          if (userSnapshot.exists) {
+            final Map<String, dynamic> userData =
+                userSnapshot.data() as Map<String, dynamic>;
 
-        if (userSnapshot.exists) {
-          final Map<String, dynamic> userData =
-              userSnapshot.data() as Map<String, dynamic>;
+            final UserModel user = UserModel(
+              uid: member.userId,
+              name: userData['name'],
+              email: userData['email'],
+              profilePic: userData['profilePic'],
+              isOnline: userData['isOnline'],
+              numberOfGroups: userData['numberOfGroups'],
+              bio: userData['bio'],
+              blockedId: userData['blockedId'],
+            );
 
-          final UserModel user = UserModel(
-            uid: member,
-            name: userData['name'],
-            email: userData['email'],
-            profilePic: userData['profilePic'],
-            isOnline: userData['isOnline'],
-            numberOfGroups: userData['numberOfGroups'],
-            bio: userData['bio'],
-            blockedId: userData['blockedId'],
-          );
-
-          users.add(user);
+            users.add(user);
+          }
+        } catch (e) {
+          print('Error fetching user with uid ${member.userId}: $e');
         }
-      }else{
-         print('Not found: ');
-    return [];
       }
+
+
     }
-    _users = users;
+
+   
+
+    if (users.isEmpty) {
+      print('No users found');
+    }
+
     return users;
   } catch (error) {
     print('Error fetching users: $error');
-
-    
     return [];
   }
 }
+
+
 
 
 
@@ -1192,6 +1213,32 @@ Future<List<UserModel>> myBlockedUsers(List<dynamic> membersUid) async {
     }
   }
 
+  Future<void> updateFreeGroup({required String groupId,required String communityType,required   bool showMemberCount}) async {
+    try {
+      final DocumentReference groupDocRef =
+          FirebaseFirestore.instance.collection('groups').doc(groupId);
+
+      await groupDocRef.update({'communityType': communityType});
+      await groupDocRef.update({'showMemberCount': showMemberCount});
+    } catch (error) {
+      print('Error updating group lock status: $error');
+    }
+  }
+
+  Future<void> updatePaidGroup({required String groupId,required String communityType,required   bool showMemberCount,required String paymentType,required String communityPrice,}) async {
+    try {
+      final DocumentReference groupDocRef =
+          FirebaseFirestore.instance.collection('groups').doc(groupId);
+
+      await groupDocRef.update({'communityType': communityType});
+      await groupDocRef.update({'showMemberCount': showMemberCount});
+      await groupDocRef.update({'communityPrice': communityPrice});
+      await groupDocRef.update({'paymentType': paymentType});
+    } catch (error) {
+      print('Error updating group lock status: $error');
+    }
+  }
+
   Future<void> updateGroupPinnedMessage(
       String groupId, String groupPinnedMessage) async {
     try {
@@ -1567,4 +1614,5 @@ Future<List<UserModel>> myBlockedUsers(List<dynamic> membersUid) async {
   List<Group> get dummyData => _dummyData;
   List<Group> get searchResult1 => _searchResult1;
   List<Group> get dummyData1 => _dummyData1;
+  Group? get groupData => _groupData;
 }

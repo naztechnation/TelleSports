@@ -55,6 +55,9 @@ class _UpdateCommunityInfoScreenState
 
   String userId = '';
 
+  bool _dataAdded = false;
+
+
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
   }
@@ -81,6 +84,12 @@ class _UpdateCommunityInfoScreenState
 
     final user = pro.Provider.of<AccountViewModel>(context, listen: true);
 
+     if (!_dataAdded) {
+      
+       groupNameController.text = groupData.groupData?.name ?? '';
+       groupDescriptionController.text = groupData.groupData?.groupDescription ?? '';
+      _dataAdded = true;
+    }
    
     return SafeArea(
       child: Scaffold(

@@ -26,6 +26,7 @@ import '../../../requests/repositories/prediction_repo/predict_repository_impl.d
 import '../../../utils/navigator/page_navigator.dart';
 import '../../../utils/validator.dart';
 import '../../../widgets/app_bar/appbar_subtitle.dart';
+import '../../../widgets/app_bar/appbar_subtitle_four.dart';
 import '../../../widgets/custom_outlined_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import '../../../widgets/modal_content.dart';
@@ -45,7 +46,7 @@ import '../widgets/userprofile_item_widget.dart';
 class CommunityInfoScreen extends StatelessWidget {
   final String profilePic;
   final String name;
-  final List<MemberData> membersUid;
+  final List<dynamic> membersUid;
   CommunityInfoScreen(
       {Key? key,
       required this.profilePic,
@@ -71,7 +72,7 @@ class CommunityInfoScreen extends StatelessWidget {
 class CommunityInfo extends StatefulWidget {
   final String profilePic;
   final String name;
-  final List<MemberData> membersUid;
+  final List<dynamic> membersUid;
 
   CommunityInfo(
       {Key? key,
@@ -98,10 +99,21 @@ class _CommunityInfoState extends State<CommunityInfo> {
   List<UserModel> groupMembers = [];
   String userId = '';
   bool _dataAdded = false;
+  String sentTellacoinBalance = '';
+  String coinRate = '';
+
+  double calRate = 0;
 
   bool isLoading = false;
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+    sentTellacoinBalance = await StorageHandler.getTransferedCoin() ?? '';
+    coinRate = await StorageHandler.getCoinRate() ?? '';
+    double sentTellacoinBalanceDouble = double.tryParse(sentTellacoinBalance) ?? 0;
+double coinRateDouble = double.tryParse(coinRate) ?? 0;
+  calRate = sentTellacoinBalanceDouble * coinRateDouble;
+
+
     _predictionCubit = context.read<PredictionCubit>();
 
     setState(() {});
@@ -115,11 +127,12 @@ class _CommunityInfoState extends State<CommunityInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final groupInfo = Provider.of<pro.AuthProviders>(context, listen: true);
-    final user = Provider.of<AccountViewModel>(context, listen: true);
+    final groupInfo = Provider.of<pro.AuthProviders>(context, listen: false);
+    final user = Provider.of<AccountViewModel>(context, listen: false);
 
     requestItems = removeDuplicates(groupInfo.requestedMembers);
     blockedItems = removeDuplicates(groupInfo.blockedMembers);
+      
 
     moveItemToFirst(groupInfo.groupAdminId);
 
@@ -162,45 +175,78 @@ class _CommunityInfoState extends State<CommunityInfo> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ListTile(
-                                  contentPadding: EdgeInsets.all(0),
-                                  leading: GestureDetector(
-                                    onTap: () {
-                                      Modals.showDialogModal(
-                                          borderRadius: 12,
-                                          context,
-                                          page: _showFullImage(
-                                              context, widget.profilePic));
-                                    },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(32.h),
-                                      child: CustomImageView(
-                                          imagePath: widget.profilePic,
-                                          placeHolder: ImageConstant.imgAvatar,
-                                          height: 60.adaptSize,
-                                          width: 60.adaptSize,
-                                          radius: BorderRadius.circular(32.h)),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Modals.showDialogModal(
+                                            borderRadius: 12,
+                                            context,
+                                            page: _showFullImage(
+                                                context, widget.profilePic));
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(32.h),
+                                        child: CustomImageView(
+                                            imagePath: widget.profilePic,
+                                            placeHolder:
+                                                ImageConstant.imgAvatar,
+                                            height: 60.adaptSize,
+                                            width: 60.adaptSize,
+                                            radius:
+                                                BorderRadius.circular(32.h)),
+                                      ),
                                     ),
-                                  ),
-                                  title: Text(widget.name,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                          color: appTheme.gray900,
-                                          fontSize: 18.fSize,
-                                          fontFamily: 'DM Sans',
-                                          fontWeight: FontWeight.w700)),
-                                  subtitle: Text(
-                                      (groupMembers.length == '1')
-                                          ? "${groupMembers.length}   Member"
-                                          : "${groupMembers.length}   Members",
-                                      style: TextStyle(
-                                          color: theme
-                                              .colorScheme.onPrimaryContainer,
-                                          fontSize: 14.fSize,
-                                          fontFamily: 'DM Sans',
-                                          fontWeight: FontWeight.w500)),
-                                ),
+                                    const SizedBox(
+                                      width: 12,
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.name,
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        StreamBuilder<DocumentSnapshot>(
+                                            stream: FirebaseFirestore.instance
+                                                .collection('groups')
+                                                .doc(groupInfo.groupId)
+                                                .snapshots(),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<DocumentSnapshot>
+                                                    snapshot) {
+                                              var groupMembersIds = snapshot
+                                                      .data
+                                                      ?.get('membersUid') ??
+                                                  [];
 
+                                              var showMember = snapshot.data
+                                                      ?.get(
+                                                          'showMemberCount') ??
+                                                  [];
+
+                                            var memcount = removeDuplicateUsers(groupMembersIds);
+
+                                              return Text(
+                                                (showMember)
+                                                    ? (memcount.length
+                                                                .toString() ==
+                                                            '1')
+                                                        ? "${memcount.length}   Member"
+                                                        : "${memcount.length}   Members"
+                                                    : '',
+                                              );
+                                            }),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(
                                   height: 12,
                                 ),
@@ -219,11 +265,16 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                         ],
                                       ),
                                       child: ListTile(
-                                        leading: const Icon(
-                                          Icons.notifications,
-                                          color: Colors.blue,
+                                        contentPadding: EdgeInsets.all(0),
+                                        leading: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: const Icon(
+                                            Icons.notifications,
+                                            color: Colors.blue,
+                                          ),
                                         ),
-                                        title: const Text('Mute Community'),
+                                        title: const Text('Mute Community', style: TextStyle(fontSize: 13),),
                                         trailing:
                                             StreamBuilder<DocumentSnapshot>(
                                           stream: FirebaseFirestore.instance
@@ -237,27 +288,31 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                     ?.get('isGroupLocked') ??
                                                 false;
 
-                                            return CupertinoSwitch(
-                                                value: isGroupLocked,
-                                                activeColor: Colors.blue,
-                                                onChanged: (newValue) =>
-                                                    setState(() {
-                                                      groupInfo
-                                                          .updateGroupLockStatus(
-                                                              groupInfo.groupId,
-                                                              newValue);
-                                                    }));
+                                            return Transform.scale(
+                                              scale: 0.67,
+                                              child: CupertinoSwitch(
+                                                  value: isGroupLocked,
+                                                  activeColor: Colors.blue,
+                                                  onChanged: (newValue) =>
+                                                      setState(() {
+                                                        groupInfo
+                                                            .updateGroupLockStatus(
+                                                                groupInfo
+                                                                    .groupId,
+                                                                newValue);
+                                                      })),
+                                            );
                                           },
                                         ),
                                       ),
                                     ),
                                   ]),
-
                                 SizedBox(height: 24.v),
                                 _buildCommunityDescription(context,
                                     groupInfo.groupDescription, groupInfo),
-                                //   SizedBox(height: 24.v),
-                                //  _buildShareCommunity(context, groupInfo.groupLink),
+                                SizedBox(height: 24.v),
+                                _buildShareCommunity(
+                                    context, groupInfo.groupLink),
                                 if (groupInfo.groupImageList.isNotEmpty)
                                   SizedBox(height: 24.v),
                                 if (groupInfo.groupImageList.isNotEmpty)
@@ -460,7 +515,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                 ),
                                               ),
                                               Text(
-                                                '2,500',
+                                                sentTellacoinBalance,
                                                 style: GoogleFonts.getFont(
                                                   'DM Sans',
                                                   fontWeight: FontWeight.w700,
@@ -494,7 +549,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                               ),
                                             ),
                                             Text(
-                                              '2,500',
+                                              '${calRate}',
                                               style: GoogleFonts.getFont(
                                                 'DM Sans',
                                                 fontWeight: FontWeight.w700,
@@ -532,7 +587,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                (groupMembers.length == '1')
+                                                (groupMembers.length == 1)
                                                     ? "${groupMembers.length} Member"
                                                     : "${groupMembers.length} Members",
                                                 style: TextStyle(
@@ -552,7 +607,10 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                 itemBuilder: (context, index) {
                                                   return GestureDetector(
                                                     onTap: () {
-                                                      AppNavigator.pushAndStackPage(
+                                                      if(groupMembers[index].uid == userId){
+
+                                                      }else{
+                                                        AppNavigator.pushAndStackPage(
                                                           context,
                                                           page:
                                                               IndividualUserInfo(
@@ -579,6 +637,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                                         index]
                                                                     .uid,
                                                           ));
+                                                      }
                                                     },
                                                     child:
                                                         UserprofileItemWidget(
@@ -615,7 +674,6 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                             ),
                                           ])),
                                 ),
-
                                 if (isLoading ||
                                     state is ReportUserLoading) ...[
                                   SizedBox(height: 24.v),
@@ -684,7 +742,9 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                   isLoading = true;
                                                 });
                                                 await groupInfo.deleteGroup(
-                                                    groupInfo.groupId, context, userId);
+                                                    groupInfo.groupId,
+                                                    context,
+                                                    userId);
 
                                                 _firebaseMessaging
                                                     .unsubscribeFromTopic(
@@ -873,6 +933,19 @@ class _CommunityInfoState extends State<CommunityInfo> {
     );
   }
 
+  List<dynamic> removeDuplicateUsers(List<dynamic> items) {
+    Map<int, dynamic> uniqueItems = {};
+
+    for (var item in items) {
+      if (items.isNotEmpty || items != []) {
+         uniqueItems[int.tryParse(item['userId'])!] = item;
+          
+      }
+    }
+
+    return uniqueItems.values.toList();
+  }
+
   Widget _buildCommunityDescription(
       BuildContext context, String desc, var group) {
     return Column(
@@ -920,42 +993,50 @@ class _CommunityInfoState extends State<CommunityInfo> {
   Widget _buildShareCommunity(BuildContext context, String groupLink) {
     return GestureDetector(
         onTap: () {
-          // onTapShareCommunity(context);
+          //onTapShareCommunity(context);
         },
-        child: Card(
-          elevation: 0.4,
-          child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 12.v),
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Share Community",
-                        style: TextStyle(
-                            fontSize: 16.fSize,
-                            fontFamily: 'DM Sans',
-                            fontWeight: FontWeight.w700)),
-                    SizedBox(height: 6.v),
-                    Row(children: [
-                      Expanded(
-                        child: Padding(
-                            padding: EdgeInsets.only(top: 3.v, bottom: 1.v),
-                            child: Text("$groupLink",
-                                style: TextStyle(
-                                    color: appTheme.blue300,
-                                    fontSize: 14.fSize,
-                                    fontFamily: 'DM Sans',
-                                    fontWeight: FontWeight.w500))),
-                      ),
-                      CustomImageView(
-                          imagePath: ImageConstant.imgShare,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
-                          margin: EdgeInsets.only(left: 48.h))
-                    ])
-                  ])),
-        ));
+        child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Color(0x66F3F2F3),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x0F000000),
+                  offset: Offset(0, 0),
+                  blurRadius: 3,
+                ),
+              ],
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 12.v),
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Share Community",
+                      style: TextStyle(
+                          fontSize: 16.fSize,
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.w700)),
+                  SizedBox(height: 6.v),
+                  Row(children: [
+                    Expanded(
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 3.v, bottom: 1.v),
+                          child: Text("$groupLink",
+                              style: TextStyle(
+                                  color: appTheme.blue300,
+                                  fontSize: 14.fSize,
+                                  fontFamily: 'DM Sans',
+                                  fontWeight: FontWeight.w500))),
+                    ),
+                    CustomImageView(
+                        imagePath: ImageConstant.imgShare,
+                        height: 24.adaptSize,
+                        width: 24.adaptSize,
+                        margin: EdgeInsets.only(left: 48.h))
+                  ])
+                ])));
   }
 
   Widget _buildMedia(BuildContext context, List<String> images) {
@@ -1073,9 +1154,10 @@ class _CommunityInfoState extends State<CommunityInfo> {
   }
 
   getUsers(groupInfo, List<dynamic> membersUid) async {
-    groupMembers = await groupInfo.fetchUsers(membersUid);
+     groupMembers = await groupInfo.fetchUsers(membersUid);
 
-    setState(() {});
+    setState(() {
+    });
   }
 
   Widget _buildComplaintField(BuildContext context) {

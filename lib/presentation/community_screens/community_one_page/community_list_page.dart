@@ -197,6 +197,8 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                 return CommunityPageComponent(
                                                   onTapCommunityPageComponent:
                                                       () async {
+                                                        checkUserExist.updateGroupData(groupData);
+
                                                     checkUserExist
                                                         .requestedUsers(groupData
                                                             .requestsMembers);

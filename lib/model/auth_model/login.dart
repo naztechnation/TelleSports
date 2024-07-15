@@ -6,6 +6,8 @@ class LoginUser {
   Token? token;
   User? user;
   var tellacoinBalance;
+  var receivedTellacoin;
+  var tellaCoinRate;
   UserWallet? userWallet;
   Plan? plan;
   String? profilePicture;
@@ -19,6 +21,8 @@ class LoginUser {
     token = json['token'] != null ? new Token.fromJson(json['token']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     tellacoinBalance = json['tellacoin_balance'];
+    receivedTellacoin = json['received_tellacoin'];
+    tellaCoinRate = json['tella_coin_rate'];
     userWallet = json['user_wallet'] != null
         ? new UserWallet.fromJson(json['user_wallet'])
         : null;
@@ -39,6 +43,8 @@ class LoginUser {
     }
 
     data['tellacoin_balance'] = this.tellacoinBalance;
+    data['received_tellacoin'] = this.receivedTellacoin;
+    data['tella_coin_rate'] = this.tellaCoinRate;
      if (this.userWallet != null) {
       data['user_wallet'] = this.userWallet!.toJson();
     }

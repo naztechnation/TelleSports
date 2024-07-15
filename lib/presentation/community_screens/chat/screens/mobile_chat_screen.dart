@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:flutter/services.dart';
 import 'package:tellesports/res/app_images.dart';
-import 'package:tellesports/widgets/image_view.dart';
 import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../../blocs/prediction/prediction.dart';
@@ -276,7 +273,8 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           groupInfo.setMessageType(MessageEnum.none);
                           groupInfo.setSelectedSenderId('');
 
-                          AppNavigator.pushAndReplacePage(context, page: LandingPage());
+                          AppNavigator.pushAndReplacePage(context,
+                              page: LandingPage());
                         },
                         margin: EdgeInsets.only(
                           left: 20.h,
@@ -290,58 +288,91 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           top: 0.v,
                           bottom: 4.v,
                         ),
-                        child: Row(
-                          children: [
-                            AppbarTitleCircleimage(
-                              onTap: () {
-                                onTapGroup(context, widget.profilePic,
-                                    widget.name, widget.membersUid);
-                              },
-                              imagePath: widget.profilePic,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppbarSubtitleTwo(
-                                    text: widget.name,
-                                    onTap: () {
-                                      onTapGroup(context, widget.profilePic,
-                                          widget.name, widget.membersUid);
-                                    },
-                                  ),
-                                  StreamBuilder<DocumentSnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('groups')
-                                    .doc(groupInfo.groupId)
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-                                       List<dynamic> groupMembersIds =
-                                      snapshot.data?.get('membersUid') ??
-                                          [];
-
-                                          var showMember =
-                                      snapshot.data?.get('showMemberCount') ??
-                                          [];
-                                      return AppbarSubtitleFour(
-                                        onTap: () {
-                                          onTapGroup(context, widget.profilePic,
-                                              widget.name, widget.membersUid);
-                                        },
-                                        text: (showMember) ? (groupMembersIds.length.toString() == '1')
-                                            ? "${groupMembersIds.length}   Member"
-                                            : "${groupMembersIds.length}   Members" : '',
-                                        margin: EdgeInsets.only(right: 28.h),
-                                      );
-                                    }
-                                  ),
-                                ],
+                        child: GestureDetector(
+                          onTap: () {
+                            onTapGroup(context, widget.profilePic, widget.name,
+                                widget.membersUid);
+                          },
+                          child: Row(
+                            children: [
+                              AppbarTitleCircleimage(
+                                onTap: () {
+                                  onTapGroup(context, widget.profilePic,
+                                      widget.name, widget.membersUid);
+                                },
+                                imagePath: widget.profilePic,
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding: EdgeInsets.only(left: 8.h),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppbarSubtitleTwo(
+                                      text: widget.name,
+                                      onTap: () {
+                                        onTapGroup(context, widget.profilePic,
+                                            widget.name, widget.membersUid);
+                                      },
+                                    ),
+                                    StreamBuilder<DocumentSnapshot>(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('groups')
+                                            .doc(groupInfo.groupId)
+                                            .snapshots(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<DocumentSnapshot>
+                                                snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {}
+
+                                          if (snapshot.hasError) {}
+
+                                          if (!snapshot.hasData ||
+                                              !snapshot.data!.exists) {}
+
+                                          List<MemberData> groupMembers = [];
+                                          if (snapshot.data
+                                                  ?.get('membersUid') !=
+                                              null) {
+                                            groupMembers =
+                                                List<MemberData>.from((snapshot
+                                                            .data
+                                                            ?.get('membersUid')
+                                                        as List)
+                                                    .map((item) =>
+                                                        MemberData.fromMap(item
+                                                            as Map<String,
+                                                                dynamic>)));
+                                          }
+                                          var showMember = snapshot.data
+                                                  ?.get('showMemberCount') ??
+                                              false;
+
+                                          var memcount = removeDuplicateMembers(
+                                              groupMembers);
+                                          return AppbarSubtitleFour(
+                                            onTap: () {
+                                              onTapGroup(
+                                                  context,
+                                                  widget.profilePic,
+                                                  widget.name,
+                                                  widget.membersUid);
+                                            },
+                                            text: (showMember)
+                                                ? (memcount.length.toString() ==
+                                                        '1')
+                                                    ? "${memcount.length}   Member"
+                                                    : "${memcount.length}   Members"
+                                                : '',
+                                            margin:
+                                                EdgeInsets.only(right: 28.h),
+                                          );
+                                        }),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       styleType: Style.bgOutline,
@@ -358,127 +389,128 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                       },
                       child: Column(
                         children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF183A5C),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
+                          if (groupInfo.groupAdminId == userId)
+                            Container(
+                              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
                                     child: Container(
-                                      padding:
-                                          EdgeInsets.fromLTRB(18.4, 2, 18.4, 2),
-                                      child: Text(
-                                        'Today',
-                                        style: GoogleFonts.getFont(
-                                          'DM Sans',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10,
-                                          color: Color(0xFFFFFFFF),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF183A5C),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                            18.4, 2, 18.4, 2),
+                                        child: Text(
+                                          formatTimestamp(groupInfo.groupData?.membersUid.first.dateJoined.millisecondsSinceEpoch.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),),
+                                          style: GoogleFonts.getFont(
+                                            'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10,
+                                            color: Color(0xFFFFFFFF),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF183A5C),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
                                     child: Container(
-                                      padding:
-                                          EdgeInsets.fromLTRB(18.5, 2, 18.5, 2),
-                                      child: Text(
-                                        'You created this community',
-                                        style: GoogleFonts.getFont(
-                                          'DM Sans',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10,
-                                          color: Color(0xFFFFFFFF),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF183A5C),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                            18.5, 2, 18.5, 2),
+                                        child: Text(
+                                          'You created this community',
+                                          style: GoogleFonts.getFont(
+                                            'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10,
+                                            color: Color(0xFFFFFFFF),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFECF4FC),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
                                     child: Container(
-                                      padding:
-                                          EdgeInsets.fromLTRB(11.3, 8, 11.3, 8),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            margin:
-                                                EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                            child: Text(
-                                              'Share your community so other users can find you and interact with your content! ',
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.getFont(
-                                                'DM Sans',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 10,
-                                                color: Color(0xFF1F1C21),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFFECF4FC),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                            11.3, 8, 11.3, 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 4),
+                                              child: Text(
+                                                'Share your community so other users can find you and interact with your content! ',
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.getFont(
+                                                  'DM Sans',
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 10,
+                                                  color: Color(0xFF1F1C21),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Container(
-                                            child: Text(
-                                              'tsportcommunity.com/hjidihewio46372',
-                                              style: GoogleFonts.getFont(
-                                                'DM Sans',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 12,
-                                                color: Color(0xFF3C91E5),
+                                            Container(
+                                              child: Text(
+                                                '${groupInfo.groupData?.groupLink}',
+                                                style: GoogleFonts.getFont(
+                                                  'DM Sans',
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 12,
+                                                  color: Color(0xFF3C91E5),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: MediaQuery.sizeOf(context).width,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF3C91E5),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(0, 12, 0.4, 12),
-                                    child: Center(
-                                      child: Text(
-                                        'Share community',
-                                        style: GoogleFonts.getFont(
-                                          'DM Sans',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: Color(0xFFFFFFFF),
+                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    width: MediaQuery.sizeOf(context).width,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF3C91E5),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.fromLTRB(0, 12, 0.4, 12),
+                                      child: Center(
+                                        child: Text(
+                                          'Share community',
+                                          style: GoogleFonts.getFont(
+                                            'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: Color(0xFFFFFFFF),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                           if (groupInfo.groupAdminId == userId) ...[
                             StreamBuilder<DocumentSnapshot>(
                                 stream: FirebaseFirestore.instance
@@ -487,6 +519,12 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                     .snapshots(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {}
+
+                                  if (snapshot.hasError) {}
+
+                                  if (!snapshot.hasData) {}
                                   final requests =
                                       snapshot.data?.get('requestsMembers') ??
                                           [];
@@ -565,8 +603,16 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              final pinnedMessage =
-                                  snapshot.data?.get('pinnedMessage') ?? false;
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {}
+
+                              if (snapshot.hasError) {}
+
+                              if (!snapshot.hasData ||
+                                  !snapshot.data!.exists) {}
+
+                              var pinnedMessage =
+                                  snapshot.data?.get('pinnedMessage') ?? '';
 
                               return (pinnedMessage != '')
                                   ? Container(
@@ -631,6 +677,9 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {}
 
+                                if (snapshot.hasError) {}
+
+                                if (!snapshot.hasData) {}
                                 groupInfo.clearGroupImageList();
                                 return Expanded(
                                   child: ListView.builder(
@@ -811,19 +860,22 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                   .snapshots(),
                               builder: (BuildContext context,
                                   AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {}
+
+                                if (snapshot.hasError) {}
+
+                                if (!snapshot.hasData) {}
                                 final isGroupLocked =
                                     snapshot.data?.get('isGroupLocked') ??
                                         false;
 
-                                List<dynamic> groupMembersIds =
+                                var groupMembersIds =
                                     snapshot.data?.get('membersUid') ?? [];
 
-                                List<dynamic> userItem =
-                                    removeDuplicateUsers(groupMembersIds);
-
-                                if (userItem.any((user) => user['userId'] == userId)) {
+                                if (groupMembersIds
+                                    .any((user) => user['userId'] == userId)) {
                                   containsId = true;
-
                                 } else {
                                   containsId = false;
 
@@ -956,17 +1008,9 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     return uniqueItems.values.toList();
   }
 
-  List<dynamic> removeDuplicateUsers(List<dynamic> items) {
-    Map<int, dynamic> uniqueItems = {};
-
-    for (var item in items) {
-      if (items.isNotEmpty || items != []) {
-         uniqueItems[int.tryParse(item['userId'])!] = item;
-          
-      }
-    }
-
-    return uniqueItems.values.toList();
+  List<MemberData> removeDuplicateMembers(List<MemberData> members) {
+    final memberIds = <String>{};
+    return members.where((member) => memberIds.add(member.userId)).toList();
   }
 
   Future<void> copyToClipboard(
@@ -1301,4 +1345,32 @@ class _MobileChatState extends ConsumerState<MobileChat> {
       }
     });
   }
+
+String formatTimestamp(String timestamp) {
+  int milliseconds = int.parse(timestamp);
+ 
+  DateTime date = DateTime.fromMillisecondsSinceEpoch(milliseconds);
+ 
+  DateTime now = DateTime.now();
+
+   
+  int differenceInDays = DateTime(now.year, now.month, now.day)
+      .difference(DateTime(date.year, date.month, date.day))
+      .inDays;
+
+  
+  if (differenceInDays == 0) {
+    return "Today";
+  }
+   
+  else if (differenceInDays == 1) {
+    return "Yesterday";
+  } 
+  else {
+    
+    DateFormat formatter = DateFormat('MMM-dd-yy');
+    return formatter.format(date);
+  }
+}
+
 }

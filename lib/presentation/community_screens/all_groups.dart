@@ -73,12 +73,11 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
       body: Scaffold(
           resizeToAvoidBottomInset: false,
           bottomNavigationBar:
-              // (plan.toLowerCase() == 'Community Leader'.toLowerCase() || email.toLowerCase().trim() == 'officialtellasport@gmail.com') ?
+                (plan.toLowerCase() == 'Community Leader'.toLowerCase() || email.toLowerCase().trim() == 'officialtellasport@gmail.com') ?
               Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: buildBuyTellacoins(context),
-          ),
-          // : SizedBox.shrink(),
+          )  : SizedBox.shrink(),
           // appBar: _buildAppBar(context,),
 
           body: SizedBox(
@@ -489,8 +488,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                   lastMessage:
                                                       groupData.lastMessage,
                                                   groupPic: groupData.groupPic,
-                                                  date: groupData.timeSent
-                                                      .toLocal(),
+                                                 
                                                   isPaid: groupData
                                                       .communityType
                                                       .toString(),

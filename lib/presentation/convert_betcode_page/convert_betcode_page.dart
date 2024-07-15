@@ -139,6 +139,11 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             StorageHandler.saveUserEmail(state.user.user?.email);
             StorageHandler.saveUserPhone(state.user.user?.phone);
             StorageHandler.saveUserName(state.user.user?.username);
+             StorageHandler.saveCoinRate(
+                          state.user.tellaCoinRate.toString());
+
+                          StorageHandler.saveRecievedCoin(
+                          state.user.receivedTellacoin.toString());
 
             StorageHandler.saveUserPlan(state.user.plan?.name);
             StorageHandler.saveUserBalance(

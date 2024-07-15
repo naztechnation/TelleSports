@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/handlers/secure_handler.dart';
 import 'package:tellesports/presentation/gift_tellacoins_screen/gift_tellacoins_screen.dart';
 import 'package:tellesports/presentation/user_info_page/user_info_page.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 import 'package:tellesports/widgets/custom_elevated_button.dart';
 
+import '../../model/chat_model/group.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
+import '../community_screens/community_one_page/empty_community_page.dart';
 import '../community_screens/provider/auth_provider.dart' as pro;
 import 'package:provider/provider.dart' as provider;
+
+import '../community_screens/widgets/community_item_widget.dart';
 
 class IndividualUserInfo extends StatefulWidget {
   final String name;
@@ -40,10 +45,18 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
     with TickerProviderStateMixin {
   late TabController tabviewController;
 
+  bool _dataAdded = false;
+
+  String currentUserId = "";
+
+  getUserId() async {
+    currentUserId = await StorageHandler.getUserId() ?? '';
+  }
+
   @override
   void initState() {
     super.initState();
-    tabviewController = TabController(length: 6, vsync: this);
+    getUserId();
   }
 
   @override
@@ -56,332 +69,178 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
     return SafeArea(
         child: Scaffold(
             appBar: _buildAppBar(context),
-            body: SingleChildScrollView(
-              child: Column(
-                 
-                children: [
-                SizedBox(height: 15.v),
-                _buildFrameRow(context),
-                SizedBox(height: 24.v),
-                CustomElevatedButton(
-                    text: "Gift Tellacoins",
-                    buttonStyle: ElevatedButton.styleFrom(backgroundColor: Color(0xff3C91E5)),
-                    margin: EdgeInsets.symmetric(horizontal: 20.h),
-                    leftIcon: Container(
-                        margin: EdgeInsets.only(right: 10.h),
-                        child: CustomImageView(
-                            imagePath: ImageConstant.imgCardgiftcard,
-                            height: 24.adaptSize,
-                            width: 24.adaptSize)),
-                    onPressed: () {
-                      onTapGiftTellacoins(context, widget.username);
-                    }),
-                SizedBox(height: 24.v),
-                _buildFrameColumn(
-                  context: context,
-                  groupName: groupInfo.groupName,
-                  groupPics: groupInfo.groupPics,
-                  groupNumber: groupInfo.groupNumber,
-                ),
-                SizedBox(height: 24.v),
-                Container(
-                  margin: EdgeInsets.fromLTRB(15, 0, 15, 24),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Color(0x66F3F2F3),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0x0F000000),
-                        offset: Offset(0, 0),
-                        blurRadius: 3,
-                      ),
-                    ],
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(8, 12, 8.8, 19.5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 0, 0, 15.5),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Communities in common',
-                              style: GoogleFonts.getFont(
-                                'DM Sans',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Color(0xFF342E37),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 0, 0, 23),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SizedBox(
-                                  width: 60,
-                                  height: 60,
-                                  child: CustomImageView(
-                                      imagePath: ImageConstant.imgAvatar,
-                                      placeHolder:
-                                          ImageConstant.imgAvatar64x64,
-                                      height: 64.adaptSize,
-                                      width: 64.adaptSize,
-                                      radius: BorderRadius.circular(32.h)),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(0, 2.5, 0, 16.5),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        margin:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 2),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 0, 10.5, 0),
-                                              child: SizedBox(
-                                                width: 243.5,
-                                                child: Text(
-                                                  'Pixsellz Team',
-                                                  style: GoogleFonts.getFont(
-                                                    'DM Sans',
-                                                    fontWeight:
-                                                        FontWeight.w500,
-                                                    fontSize: 16,
-                                                    color: Color(0xFF1F1C21),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              '₦',
-                                              style: GoogleFonts.getFont(
-                                                'DM Sans',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16,
-                                                color: Color(0xFF3C91E5),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          '1,223 members',
-                                          style: GoogleFonts.getFont(
-                                            'DM Sans',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            color: Color(0xFF8E8E93),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 0, 0, 23),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SizedBox(
-                                  width: 60,
-                                  height: 60,
-                                  child: CustomImageView(
-                                      imagePath: ImageConstant.imgAvatar,
-                                      placeHolder:
-                                          ImageConstant.imgAvatar64x64,
-                                      height: 64.adaptSize,
-                                      width: 64.adaptSize,
-                                      radius: BorderRadius.circular(32.h)),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(0, 2.5, 0, 16.5),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        margin:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 2),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 0, 10.5, 0),
-                                              child: SizedBox(
-                                                width: 243.5,
-                                                child: Text(
-                                                  'Pixsellz Team',
-                                                  style: GoogleFonts.getFont(
-                                                    'DM Sans',
-                                                    fontWeight:
-                                                        FontWeight.w500,
-                                                    fontSize: 16,
-                                                    color: Color(0xFF1F1C21),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              '₦',
-                                              style: GoogleFonts.getFont(
-                                                'DM Sans',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16,
-                                                color: Color(0xFF3C91E5),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          '1,223 members',
-                                          style: GoogleFonts.getFont(
-                                            'DM Sans',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            color: Color(0xFF8E8E93),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                              child: SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: CustomImageView(
-                                    imagePath: ImageConstant.imgAvatar,
-                                    placeHolder: ImageConstant.imgAvatar64x64,
-                                    height: 64.adaptSize,
-                                    width: 64.adaptSize,
-                                    radius: BorderRadius.circular(32.h)),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(0, 2.5, 0, 16.5),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 2),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.fromLTRB(
-                                                0, 0, 10.5, 0),
-                                            child: SizedBox(
-                                              width: 243.5,
-                                              child: Text(
-                                                'Pixsellz Team',
-                                                style: GoogleFonts.getFont(
-                                                  'DM Sans',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16,
-                                                  color: Color(0xFF1F1C21),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            '₦',
-                                            style: GoogleFonts.getFont(
-                                              'DM Sans',
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16,
-                                              color: Color(0xFF3C91E5),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        '1,223 members',
-                                        style: GoogleFonts.getFont(
-                                          'DM Sans',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: Color(0xFF8E8E93),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+            body: StreamBuilder<List<Group>>(
+                stream: groupInfo.getAllChatGroups(widget.memberId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No groups found');
+                  }
+
+                  final filteredGroups = filterGroups(
+                      snapshot.data!, currentUserId, widget.memberId);
+                  final filteredCreatedGroups = filterGroupsByFirstMember(
+                      snapshot.data!, widget.memberId);
+
+                  return SingleChildScrollView(
+                    child: Column(children: [
+                      SizedBox(height: 15.v),
+                      _buildFrameRow(context),
+                      SizedBox(height: 24.v),
+                      CustomElevatedButton(
+                          text: "Gift Tellacoins",
+                          buttonStyle: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xff3C91E5)),
+                          margin: EdgeInsets.symmetric(horizontal: 20.h),
+                          leftIcon: Container(
+                              margin: EdgeInsets.only(right: 10.h),
+                              child: CustomImageView(
+                                  imagePath: ImageConstant.imgCardgiftcard,
+                                  height: 24.adaptSize,
+                                  width: 24.adaptSize)),
+                          onPressed: () {
+                            onTapGiftTellacoins(context, widget.username);
+                          }),
+                      SizedBox(height: 24.v),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(15, 0, 15, 24),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color(0x66F3F2F3),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x0F000000),
+                              offset: Offset(0, 0),
+                              blurRadius: 3,
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                 UserInfoPage(
-                isGroupAdmin: widget.isGroupAdmin,
-                memberId: widget.memberId,
-                memberName: widget.name,
-              )
-              ]),
-            )));
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(8, 12, 8.8, 19.5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.fromLTRB(0, 0, 0, 15.5),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    'Communities created',
+                                    style: GoogleFonts.getFont(
+                                      'DM Sans',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                      color: Color(0xFF342E37),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                  alignment: Alignment.center,
+                                  child: Expanded(
+                                    child: ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: filteredCreatedGroups.length,
+                                        itemBuilder: (context, index) {
+                                          final groupData =
+                                              filteredCreatedGroups[index];
+
+                                          return CommunityPageComponent(
+                                            onTapCommunityPageComponent:
+                                                () async {},
+                                            groupName: groupData.name,
+                                            lastMessage: (groupData
+                                                        .membersUid.length >
+                                                    1)
+                                                ? '${groupData.membersUid.length} Members'
+                                                : '${groupData.membersUid.length} Member',
+                                            groupPic: groupData.groupPic,
+                                            isPaid: groupData.communityType
+                                                .toString(),
+                                          );
+                                        }),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 24.v),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(15, 0, 15, 24),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color(0x66F3F2F3),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x0F000000),
+                              offset: Offset(0, 0),
+                              blurRadius: 3,
+                            ),
+                          ],
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(8, 12, 8.8, 19.5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.fromLTRB(0, 0, 0, 15.5),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    'Communities in common',
+                                    style: GoogleFonts.getFont(
+                                      'DM Sans',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                      color: Color(0xFF342E37),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                  alignment: Alignment.center,
+                                  child: Expanded(
+                                    child: ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: filteredGroups.length,
+                                        itemBuilder: (context, index) {
+                                          final groupData =
+                                              filteredGroups[index];
+
+                                          return CommunityPageComponent(
+                                            onTapCommunityPageComponent:
+                                                () async {},
+                                            groupName: groupData.name,
+                                            lastMessage: (groupData
+                                                        .membersUid.length >
+                                                    1)
+                                                ? '${groupData.membersUid.length} Members'
+                                                : '${groupData.membersUid.length} Member',
+                                            groupPic: groupData.groupPic,
+                                            isPaid: groupData.communityType
+                                                .toString(),
+                                          );
+                                        }),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                      UserInfoPage(
+                        isGroupAdmin: widget.isGroupAdmin,
+                        memberId: widget.memberId,
+                        memberName: widget.name,
+                      )
+                    ]),
+                  );
+                })));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -411,7 +270,7 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
     );
   }
 
-    _buildFrameRow(BuildContext context) {
+  _buildFrameRow(BuildContext context) {
     return Align(
         alignment: Alignment.centerLeft,
         child: Padding(
@@ -451,117 +310,25 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
             ])));
   }
 
-    _buildFrameColumn(
-      {required BuildContext context,
-      required String groupName,
-      required String groupPics,
-      required String groupNumber}) {
-    return Container(
-         height: 140,
-        margin: EdgeInsets.symmetric(horizontal: 20.h),
-        padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 13.v),
-        decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Color(0x66F3F2F3),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0x0F000000),
-                        offset: Offset(0, 0),
-                        blurRadius: 3,
-                      ),
-                    ],
-                  ),
-        child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  (widget.isGroupAdmin)
-                      ? "Community created"
-                      : "Community Info",
-                  style: CustomTextStyles.titleMediumBluegray900),
-              SizedBox(height: 14.v),
-              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                CustomImageView(
-                    imagePath: groupPics,
-                    placeHolder: ImageConstant.imgAvatar64x64,
-                    height: 60.adaptSize,
-                    width: 60.adaptSize,
-                    radius: BorderRadius.circular(30.h)),
-                Padding(
-                    padding:
-                        EdgeInsets.only(left: 10.h, top: 2.v, bottom: 15.v),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(groupName,
-                              style: CustomTextStyles.titleMediumBlack900_1),
-                          SizedBox(height: 2.v),
-                          Text(
-                              (groupNumber == '1')
-                                  ? "${groupNumber}   Member"
-                                  : "${groupNumber}   Members",
-                              style: CustomTextStyles.titleSmallBluegray400)
-                        ]))
-              ]),
-              SizedBox(height: 6.v)
-            ]));
+  List<Group> filterGroups(
+      List<Group> groups, String currentUserId, String selectedUserId) {
+    return groups.where((group) {
+      final memberIds =
+          group.membersUid.map((member) => member.userId).toList();
+      return memberIds.contains(currentUserId) &&
+          memberIds.contains(selectedUserId);
+    }).toList();
   }
 
-  Widget _buildFrameColumn1() {
-    return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.h),
-        padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 11.v),
-        decoration: AppDecoration.outlineBlack9001
-            .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
-        child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Media", style: CustomTextStyles.titleMediumBluegray900),
-              SizedBox(height: 8.v),
-              Container(
-                  height: 60.v,
-                  width: 334.h,
-                  child: TabBar(
-                      controller: tabviewController,
-                      labelPadding: EdgeInsets.zero,
-                      tabs: [
-                        Tab(
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgRectangle237,
-                                height: 60.adaptSize,
-                                width: 60.adaptSize)),
-                        Tab(
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgRectangle237,
-                                height: 60.adaptSize,
-                                width: 60.adaptSize)),
-                        Tab(
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgRectangle237,
-                                height: 60.adaptSize,
-                                width: 60.adaptSize)),
-                        Tab(
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgRectangle237,
-                                height: 60.adaptSize,
-                                width: 60.adaptSize)),
-                        Tab(
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgRectangle237,
-                                height: 60.v,
-                                width: 30.h)),
-                        Tab(
-                            child: CustomImageView(
-                                imagePath: ImageConstant.imgArrowRightOnprimary,
-                                height: 24.adaptSize,
-                                width: 24.adaptSize))
-                      ]))
-            ]));
+  List<Group> filterGroupsByFirstMember(
+      List<Group> groups, String currentUserId) {
+    return groups.where((group) {
+      if (group.membersUid.isNotEmpty) {
+        return group.membersUid.first.userId == currentUserId;
+      }
+      return false;
+    }).toList();
   }
-
-   
 
   onTapGiftTellacoins(BuildContext context, String username) {
     AppNavigator.pushAndStackPage(context,

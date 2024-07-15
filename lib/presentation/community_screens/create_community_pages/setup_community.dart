@@ -298,7 +298,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
                                     ),
                                   ),
                                   Transform.scale(
-                                    scale: 0.75,
+                                    scale: 0.67,
                                     child: CupertinoSwitch(
                                       value: _isSwitched,
                                       onChanged: (bool value) {
@@ -353,7 +353,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
                                     });
 
                                     if (isTrue) {
-                                      user.updateIndex(0);
+                                      user.updateIndex(1);
                                       AppNavigator.pushAndStackPage(context,
                                           page: LandingPage());
                                     } else {
