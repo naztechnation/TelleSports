@@ -22,5 +22,6 @@ class AppImages {
   static const blockIcon = '${_baseUrl}group_remove.png';
   static const football = '${_baseUrl}football_logo.jpeg';
   static const delayChat = '${_baseUrl}delay_chat.png';
+  static const check = '${_baseUrl}good.svg';
   
 }

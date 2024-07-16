@@ -16,6 +16,7 @@ import '../../../widgets/modals.dart';
 import '../../blocs/user/user.dart';
 import '../../handlers/secure_handler.dart';
 import '../../model/user_model/country_bank.dart';
+import '../../model/view_models/account_view_model.dart';
 import '../../model/view_models/user_view_model.dart';
 import '../../requests/repositories/user_repo/user_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
@@ -146,6 +147,8 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
                           headerColorOne: Color(0xFFFDF9ED),
                           headerColorTwo: Color(0xFFFAF3DA),
                           onPressed: () {
+                             Provider.of<AccountViewModel>(context, listen: false)
+                    .updateIndex(0);
                             AppNavigator.pushAndReplacePage(context,
                                 page: LandingPage());
                           },
@@ -153,8 +156,10 @@ class _FinishWithdrawalState extends State<FinishWithdrawal> {
 
                     Future.delayed(
                         Duration(
-                          seconds: 5,
+                          seconds: 1,
                         ), () {
+                           Provider.of<AccountViewModel>(context, listen: false)
+                    .updateIndex(0);
                       AppNavigator.pushAndReplacePage(context,
                           page: LandingPage());
                       ;

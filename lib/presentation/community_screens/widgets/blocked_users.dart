@@ -80,7 +80,7 @@ class BlockedUsersPage extends StatelessWidget {
       ),
       centerTitle: true,
       title: AppbarSubtitleOne(
-        text: "$groupNumber requests",
+        text: (int.tryParse(groupNumber )! > 1) ? "$groupNumber Members" : "$groupNumber Member",
       ),
       styleType: Style.bgOutline,
     );

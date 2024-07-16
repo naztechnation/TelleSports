@@ -220,6 +220,12 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                             builder: (BuildContext context,
                                                 AsyncSnapshot<DocumentSnapshot>
                                                     snapshot) {
+                                                        if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {}
+
+                                  if (snapshot.hasError) {}
+
+                                  if (!snapshot.hasData) {}
                                               var groupMembersIds = snapshot
                                                       .data
                                                       ?.get('membersUid') ??
@@ -286,6 +292,12 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                         builder: (BuildContext context,
                                             AsyncSnapshot<DocumentSnapshot>
                                                 snapshot) {
+                                                    if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {}
+
+                                  if (snapshot.hasError) {}
+
+                                  if (!snapshot.hasData) {}
                                           final isGroupLocked = snapshot.data
                                                   ?.get('isGroupLocked') ??
                                               false;
@@ -321,152 +333,201 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                 SizedBox(height: 14.v),
                                 if (groupInfo.groupAdminId == userId)
                                   SizedBox(height: 12.v),
-                                if (groupInfo.groupAdminId == userId &&
-                                    groupInfo.groupData?.communityType
-                                            .toString()
-                                            .toLowerCase() ==
-                                        'Ask to join'.toLowerCase())
-                                  StreamBuilder<DocumentSnapshot>(
-                                      stream: FirebaseFirestore.instance
-                                          .collection('groups')
-                                          .doc(groupInfo.groupId)
-                                          .snapshots(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<DocumentSnapshot>
-                                              snapshot) {
-                                        final requests = snapshot.data
-                                                ?.get('requestsMembers') ??
-                                            false;
+                                StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('groups')
+                                        .doc(groupInfo.groupId)
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<DocumentSnapshot>
+                                            snapshot) {
+                                                if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {}
 
-                                        groupInfo.requestedUsers(requests);
+                                  if (snapshot.hasError) {}
 
-                                        requestItems = removeDuplicates(
-                                            groupInfo.requestedMembers);
+                                  if (!snapshot.hasData) {}
+                                      final requests = snapshot.data
+                                              ?.get('requestsMembers') ??
+                                          false;
 
-                                        final blockedRequests = snapshot.data
-                                                ?.get('blockedMembers') ??
-                                            false;
+                                      groupInfo.requestedUsers(requests);
 
-                                        groupInfo.blockedUsers(blockedRequests);
+                                      requestItems = removeDuplicates(
+                                          groupInfo.requestedMembers);
 
-                                        blockedItems = removeDuplicates(
-                                            groupInfo.blockedMembers);
+                                      final blockedRequests = snapshot.data
+                                              ?.get('blockedMembers') ??
+                                          false;
 
-                                        final usersIds =
-                                            snapshot.data?.get('membersUid') ??
-                                                [];
+                                      groupInfo.blockedUsers(blockedRequests);
 
-                                        getUsers(groupInfo, usersIds);
+                                      blockedItems = removeDuplicates(
+                                          groupInfo.blockedMembers);
 
-                                        return GestureDetector(
-                                          onTap: () {
-                                            AppNavigator.pushAndStackPage(
-                                                context,
-                                                page: RequestedUsersPage(
-                                                  item: requestItems,
-                                                ));
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: Color(0x66F3F2F3),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Color(0x0F000000),
-                                                    offset: Offset(0, 0),
-                                                    blurRadius: 1,
-                                                  ),
-                                                ],
-                                              ),
+                                      final usersIds =
+                                          snapshot.data?.get('membersUid') ??
+                                              [];
+
+                                      getUsers(groupInfo, usersIds);
+
+                                      return Column(
+                                        children: [
+                                          if (groupInfo.groupAdminId ==
+                                                  userId &&
+                                              groupInfo.groupData?.communityType
+                                                      .toString()
+                                                      .toLowerCase() ==
+                                                  'Require permission'.toLowerCase())
+                                            GestureDetector(
+                                              onTap: () {
+                                                AppNavigator.pushAndStackPage(
+                                                    context,
+                                                    page: RequestedUsersPage(
+                                                      item: requestItems,
+                                                    ));
+                                              },
                                               child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text('Requests'),
-                                                    Container(
-                                                      width: 26.adaptSize,
-                                                      height: 26.adaptSize,
-                                                      decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: Colors.red),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(4.0),
-                                                        child: Center(
-                                                          child: Text(
-                                                            "${requestItems.length}",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .white),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    color: Color(0x66F3F2F3),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color:
+                                                            Color(0x0F000000),
+                                                        offset: Offset(0, 0),
+                                                        blurRadius: 1,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text('Requests'),
+                                                        Spacer(),
+                                                        Container(
+                                                          width: 26.adaptSize,
+                                                          height: 26.adaptSize,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: Colors
+                                                                      .red),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(4.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                "${requestItems.length}",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .arrow_forward_ios,
+                                                          size: 14,
+                                                        )
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
-                                              )),
-                                        );
-                                      }),
-                                if (groupInfo.groupAdminId == userId)
-                                  SizedBox(height: 11.v),
-                                if (groupInfo.groupAdminId == userId)
-                                  GestureDetector(
-                                    onTap: () {
-                                      AppNavigator.pushAndStackPage(context,
-                                          page: BlockedUsersPage(
-                                              item: blockedItems));
-                                    },
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: Color(0x66F3F2F3),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Color(0x0F000000),
-                                              offset: Offset(0, 0),
-                                              blurRadius: 1,
+                                                  )),
+                                            ),
+                                          if (groupInfo.groupAdminId == userId)
+                                            SizedBox(height: 11.v),
+                                          if (groupInfo.groupAdminId ==
+                                              userId) ...[
+                                            GestureDetector(
+                                              onTap: () {
+                                                AppNavigator.pushAndStackPage(
+                                                    context,
+                                                    page: BlockedUsersPage(
+                                                        item: blockedItems));
+                                              },
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    color: Color(0x66F3F2F3),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color:
+                                                            Color(0x0F000000),
+                                                        offset: Offset(0, 0),
+                                                        blurRadius: 1,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text('Blocked Users'),
+                                                        Spacer(),
+                                                        Container(
+                                                          width: 26.adaptSize,
+                                                          height: 26.adaptSize,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: Colors
+                                                                      .red),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(4.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                "${blockedItems.length}",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .arrow_forward_ios,
+                                                          size: 14,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )),
                                             ),
                                           ],
-                                        ),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text('Blocked Users'),
-                                              Container(
-                                                width: 26.adaptSize,
-                                                height: 26.adaptSize,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.red),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "${blockedItems.length}",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                  ),
+                                        ],
+                                      );
+                                    }),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -588,45 +649,39 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                         ? currentUser.recieveNotification
                                         : false;
 
-                                    return 
-                                    
-                                    Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Color(0x66F3F2F3),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color(0x0F000000),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 1,
-                                        ),
-                                      ],
-                                    ),
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.all(0),
-                                      leading: const Text(
-                                        'Chat Notifications',
-                                        style: TextStyle(fontSize: 13),
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Color(0x66F3F2F3),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color(0x0F000000),
+                                            offset: Offset(0, 0),
+                                            blurRadius: 1,
+                                          ),
+                                        ],
                                       ),
-                                       
-                                      trailing:
-                                    
-                                    Transform.scale(
-                                      scale: 0.67,
-                                      child: CupertinoSwitch(
-                                        value: isNotifyOn,
-                                        activeColor: Colors.blue,
-                                        onChanged: (newValue) async {
-                                          await groupInfo
-                                              .updateRecieveNotification(
-                                                  groupInfo.groupId,
-                                                  userId,
-                                                  newValue);
-                                        },
-                                      ),
-                                    )
-                                    ),
-                                  );
+                                      child: ListTile(
+                                          contentPadding: EdgeInsets.all(0),
+                                          leading: const Text(
+                                            'Chat Notifications',
+                                            style: TextStyle(fontSize: 13),
+                                          ),
+                                          trailing: Transform.scale(
+                                            scale: 0.67,
+                                            child: CupertinoSwitch(
+                                              value: isNotifyOn,
+                                              activeColor: Colors.blue,
+                                              onChanged: (newValue) async {
+                                                await groupInfo
+                                                    .updateRecieveNotification(
+                                                        groupInfo.groupId,
+                                                        userId,
+                                                        newValue);
+                                              },
+                                            ),
+                                          )),
+                                    );
                                   },
                                 ),
                                 SizedBox(height: 24.v),

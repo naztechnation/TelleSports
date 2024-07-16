@@ -72,12 +72,15 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
         child: Scaffold(
       body: Scaffold(
           resizeToAvoidBottomInset: false,
-          bottomNavigationBar:
-                (plan.toLowerCase() == 'Community Leader'.toLowerCase() || email.toLowerCase().trim() == 'officialtellasport@gmail.com') ?
-              Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: buildBuyTellacoins(context),
-          )  : SizedBox.shrink(),
+          bottomNavigationBar: (plan.toLowerCase() ==
+                      'Community Leader'.toLowerCase() ||
+                  email.toLowerCase().trim() == 'officialtellasport@gmail.com')
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 10),
+                  child: buildBuyTellacoins(context),
+                )
+              : SizedBox.shrink(),
           // appBar: _buildAppBar(context,),
 
           body: SizedBox(
@@ -89,11 +92,11 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const LoadingPage();
-                        } else if (snapshot.data!.isEmpty) {
+                        } else if (snapshot.data?.isEmpty ?? false) {
                           return EmptyCommunityPage();
                         }
 
-                        if (!_dataAdded) {
+                        if (!_dataAdded && snapshot.hasData) {
                           checkUserExist.clearSearchList1();
 
                           checkUserExist.updateSearchList1(
@@ -166,129 +169,110 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                         itemCount:
                                             checkUserExist.searchResult1.length,
                                         itemBuilder: (context, index) {
-                                          
                                           Group? groupData =
-                                                    snapshot.data![index];
+                                              snapshot.data![index];
 
-                                                return CommunityPageComponent(
-                                                  onTapCommunityPageComponent:
-                                                      () async {
-                                                    checkUserExist
-                                                        .requestedUsers(groupData
-                                                            .requestsMembers);
-                                                    checkUserExist.blockedUsers(
-                                                        groupData
-                                                            .blockedMembers);
+                                          return CommunityPageComponent(
+                                            onTapCommunityPageComponent:
+                                                () async {
+                                              checkUserExist.requestedUsers(
+                                                  groupData.requestsMembers);
+                                              checkUserExist.blockedUsers(
+                                                  groupData.blockedMembers);
 
-                                                    List<MemberData> userItem =
-                                                        removeDuplicateUsers(
-                                                            groupData
-                                                                .membersUid);
+                                              List<MemberData> userItem =
+                                                  removeDuplicateUsers(
+                                                      groupData.membersUid);
 
-                                                    if (userItem.any((user) =>
-                                                        user.userId ==
-                                                        userId)) {
-                                                      if (userItem.first
-                                                                  .userId ==
-                                                              userId ||
-                                                          groupData
-                                                                  .communityType
-                                                                  .toLowerCase() ==
-                                                              'Free to join'
-                                                                  .toLowerCase() ||
-                                                          groupData
-                                                                  .communityType
-                                                                  .toLowerCase() ==
-                                                              'Require permission'
-                                                                  .toLowerCase()) {
-                                                        if (context.mounted) {
-                                                          checkUserExist.addGroupInfo(
-                                                              groupNumber: userItem
-                                                                  .length
+                                              if (userItem.any((user) =>
+                                                  user.userId == userId)) {
+                                                if (userItem.first.userId ==
+                                                        userId ||
+                                                    groupData.communityType
+                                                            .toLowerCase() ==
+                                                        'Free to join'
+                                                            .toLowerCase() ||
+                                                    groupData.communityType
+                                                            .toLowerCase() ==
+                                                        'Require permission'
+                                                            .toLowerCase()) {
+                                                  if (context.mounted) {
+                                                    checkUserExist.addGroupInfo(
+                                                        groupNumber: userItem
+                                                            .length
+                                                            .toString(),
+                                                        groupAdminId:
+                                                            userItem[0].userId,
+                                                        groupId:
+                                                            groupData.groupId,
+                                                        groupLink:
+                                                            groupData.groupLink,
+                                                        isGroupLocked: groupData
+                                                            .isGroupLocked,
+                                                        pinnedMessage: groupData
+                                                            .pinnedMessage,
+                                                        groupDesription: groupData
+                                                            .groupDescription,
+                                                        groupName:
+                                                            groupData.name,
+                                                        groupPics:
+                                                            groupData.groupPic);
+
+                                                    AppNavigator
+                                                        .pushAndStackPage(
+                                                            context,
+                                                            page:
+                                                                MobileChatScreen(
+                                                              groupData
+                                                                  .groupDescription,
+                                                              userItem.length
                                                                   .toString(),
-                                                              groupAdminId:
-                                                                  userItem[0]
-                                                                      .userId,
-                                                              groupId: groupData
+                                                              userItem,
+                                                              name: groupData
+                                                                  .name,
+                                                              uid: groupData
                                                                   .groupId,
-                                                              groupLink:
+                                                              isGroupChat: true,
+                                                              profilePic:
                                                                   groupData
-                                                                      .groupLink,
-                                                              isGroupLocked: groupData
-                                                                  .isGroupLocked,
-                                                              pinnedMessage:
-                                                                  groupData
-                                                                      .pinnedMessage,
-                                                              groupDesription:
-                                                                  groupData
-                                                                      .groupDescription,
-                                                              groupName:
-                                                                  groupData
-                                                                      .name,
-                                                              groupPics:
-                                                                  groupData
-                                                                      .groupPic);
+                                                                      .groupPic,
+                                                            ));
+                                                  }
+                                                } else if (groupData
+                                                        .communityType
+                                                        .toLowerCase() ==
+                                                    'Pay to join'
+                                                        .toLowerCase()) {
+                                                  if (groupData.paymentType
+                                                          .toLowerCase() ==
+                                                      'Monthly'.toLowerCase()) {
+                                                    DateTime currentDate =
+                                                        DateTime.now();
 
-                                                          AppNavigator
-                                                              .pushAndStackPage(
-                                                                  context,
-                                                                  page:
-                                                                      MobileChatScreen(
-                                                                    groupData
-                                                                        .groupDescription,
-                                                                    userItem
-                                                                        .length
-                                                                        .toString(),
-                                                                    userItem,
-                                                                    name: groupData
-                                                                        .name,
-                                                                    uid: groupData
-                                                                        .groupId,
-                                                                    isGroupChat:
-                                                                        true,
-                                                                    profilePic:
-                                                                        groupData
-                                                                            .groupPic,
-                                                                  ));
-                                                        }
-                                                      } else if (groupData
-                                                              .communityType
-                                                              .toLowerCase() ==
-                                                          'Pay to join'
-                                                              .toLowerCase()) {
-                                                        if (groupData
-                                                                .paymentType
-                                                                .toLowerCase() ==
-                                                            'Monthly'
-                                                                .toLowerCase()) {
-                                                          DateTime currentDate =
-                                                              DateTime.now();
+                                                    DateTime oneMonthAgo =
+                                                        DateTime(
+                                                      currentDate.year,
+                                                      currentDate.month - 1,
+                                                      currentDate.day,
+                                                      currentDate.hour,
+                                                      currentDate.minute,
+                                                      currentDate.second,
+                                                      currentDate.millisecond,
+                                                      currentDate.microsecond,
+                                                    );
 
-                                                          DateTime oneMonthAgo =
-                                                              DateTime(
-                                                            currentDate.year,
-                                                            currentDate.month -
-                                                                1,
-                                                            currentDate.day,
-                                                            currentDate.hour,
-                                                            currentDate.minute,
-                                                            currentDate.second,
-                                                            currentDate
-                                                                .millisecond,
-                                                            currentDate
-                                                                .microsecond,
-                                                          );
-
-                                                          if (userItem[index]
-                                                              .dateJoined
-                                                              .isBefore(
-                                                                  oneMonthAgo)) {
-                                                             
-                                                            Modals.showToast('Subscription expired');
-                                                            checkUserExist.removeCurrentUserFromMembers(
-                                                              groupData.groupId,userId,context
-                                                            );
-                                                            List<MemberData>
+                                                    if (userItem[index]
+                                                        .dateJoined
+                                                        .isBefore(
+                                                            oneMonthAgo)) {
+                                                      Modals.showToast(
+                                                          'Subscription expired');
+                                                      checkUserExist
+                                                          .removeCurrentUserFromMembers(
+                                                              groupData.groupId,
+                                                              userId,
+                                                              context);
+                                                      List<MemberData>
                                                           userItem =
                                                           removeDuplicateUsers(
                                                               groupData
@@ -328,171 +312,150 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                         adminId:
                                                             userItem[0].userId,
                                                       );
-                                                    
-
-                                                          } else {
-                                                             
-                                                             if (context.mounted) {
-                                                          checkUserExist.addGroupInfo(
-                                                              groupNumber: userItem
-                                                                  .length
-                                                                  .toString(),
-                                                              groupAdminId:
-                                                                  userItem[0]
-                                                                      .userId,
-                                                              groupId: groupData
-                                                                  .groupId,
-                                                              groupLink:
-                                                                  groupData
-                                                                      .groupLink,
-                                                              isGroupLocked: groupData
-                                                                  .isGroupLocked,
-                                                              pinnedMessage:
-                                                                  groupData
-                                                                      .pinnedMessage,
-                                                              groupDesription:
-                                                                  groupData
-                                                                      .groupDescription,
-                                                              groupName:
-                                                                  groupData
-                                                                      .name,
-                                                              groupPics:
-                                                                  groupData
-                                                                      .groupPic);
-
-                                                          AppNavigator
-                                                              .pushAndStackPage(
-                                                                  context,
-                                                                  page:
-                                                                      MobileChatScreen(
-                                                                    groupData
-                                                                        .groupDescription,
-                                                                    userItem
-                                                                        .length
-                                                                        .toString(),
-                                                                    userItem,
-                                                                    name: groupData
-                                                                        .name,
-                                                                    uid: groupData
-                                                                        .groupId,
-                                                                    isGroupChat:
-                                                                        true,
-                                                                    profilePic:
-                                                                        groupData
-                                                                            .groupPic,
-                                                                  ));
-                                                        }
-                                                          }
-                                                        } else if (groupData
-                                                              .paymentType
-                                                              .toLowerCase() ==
-                                                          'One time payment'
-                                                              .toLowerCase()) {
-                                                                 if (context.mounted) {
-                                                          checkUserExist.addGroupInfo(
-                                                              groupNumber: userItem
-                                                                  .length
-                                                                  .toString(),
-                                                              groupAdminId:
-                                                                  userItem[0]
-                                                                      .userId,
-                                                              groupId: groupData
-                                                                  .groupId,
-                                                              groupLink:
-                                                                  groupData
-                                                                      .groupLink,
-                                                              isGroupLocked: groupData
-                                                                  .isGroupLocked,
-                                                              pinnedMessage:
-                                                                  groupData
-                                                                      .pinnedMessage,
-                                                              groupDesription:
-                                                                  groupData
-                                                                      .groupDescription,
-                                                              groupName:
-                                                                  groupData
-                                                                      .name,
-                                                              groupPics:
-                                                                  groupData
-                                                                      .groupPic);
-
-                                                          AppNavigator
-                                                              .pushAndStackPage(
-                                                                  context,
-                                                                  page:
-                                                                      MobileChatScreen(
-                                                                    groupData
-                                                                        .groupDescription,
-                                                                    userItem
-                                                                        .length
-                                                                        .toString(),
-                                                                    userItem,
-                                                                    name: groupData
-                                                                        .name,
-                                                                    uid: groupData
-                                                                        .groupId,
-                                                                    isGroupChat:
-                                                                        true,
-                                                                    profilePic:
-                                                                        groupData
-                                                                            .groupPic,
-                                                                  ));
-                                                        }
-                                                              }
-                                                      } 
-                                                      
                                                     } else {
-                                                      List<MemberData>
-                                                          userItem =
-                                                          removeDuplicateUsers(
-                                                              groupData
-                                                                  .membersUid);
+                                                      if (context.mounted) {
+                                                        checkUserExist.addGroupInfo(
+                                                            groupNumber:
+                                                                userItem.length
+                                                                    .toString(),
+                                                            groupAdminId:
+                                                                userItem[0]
+                                                                    .userId,
+                                                            groupId: groupData
+                                                                .groupId,
+                                                            groupLink: groupData
+                                                                .groupLink,
+                                                            isGroupLocked:
+                                                                groupData
+                                                                    .isGroupLocked,
+                                                            pinnedMessage:
+                                                                groupData
+                                                                    .pinnedMessage,
+                                                            groupDesription:
+                                                                groupData
+                                                                    .groupDescription,
+                                                            groupName:
+                                                                groupData.name,
+                                                            groupPics: groupData
+                                                                .groupPic);
 
-                                                      onTapCommunityPageComponent(
-                                                        context: context,
-                                                        groupImage:
-                                                            groupData.groupPic,
-                                                        groupName:
-                                                            groupData.name,
-                                                        groupNumber: userItem
-                                                            .length
-                                                            .toString(),
-                                                        groupDescription:
-                                                            groupData
-                                                                .groupDescription,
-                                                        groupId:
-                                                            groupData.groupId,
-                                                        userId: userId,
-                                                        adminFcm:
-                                                            groupData.fcmToken,
-                                                        isPaid: groupData
-                                                            .communityType,
-                                                        communityPrice:
-                                                            groupData
-                                                                .communityPrice,
-                                                        showCount: groupData
-                                                            .showMemberCount,
-                                                        userItem: userItem,
-                                                        isGroupLocked: groupData
-                                                            .isGroupLocked,
-                                                        communityLink:
-                                                            groupData.groupLink,
-                                                        pinnedMessage:
-                                                            groupData.groupLink,
-                                                        adminId:
-                                                            userItem[0].userId,  
-                                                      );
+                                                        AppNavigator
+                                                            .pushAndStackPage(
+                                                                context,
+                                                                page:
+                                                                    MobileChatScreen(
+                                                                  groupData
+                                                                      .groupDescription,
+                                                                  userItem
+                                                                      .length
+                                                                      .toString(),
+                                                                  userItem,
+                                                                  name:
+                                                                      groupData
+                                                                          .name,
+                                                                  uid: groupData
+                                                                      .groupId,
+                                                                  isGroupChat:
+                                                                      true,
+                                                                  profilePic:
+                                                                      groupData
+                                                                          .groupPic,
+                                                                ));
+                                                      }
                                                     }
-                                                  },
+                                                  } else if (groupData
+                                                          .paymentType
+                                                          .toLowerCase() ==
+                                                      'One time payment'
+                                                          .toLowerCase()) {
+                                                    if (context.mounted) {
+                                                      checkUserExist.addGroupInfo(
+                                                          groupNumber: userItem
+                                                              .length
+                                                              .toString(),
+                                                          groupAdminId:
+                                                              userItem[0]
+                                                                  .userId,
+                                                          groupId:
+                                                              groupData.groupId,
+                                                          groupLink: groupData
+                                                              .groupLink,
+                                                          isGroupLocked:
+                                                              groupData
+                                                                  .isGroupLocked,
+                                                          pinnedMessage:
+                                                              groupData
+                                                                  .pinnedMessage,
+                                                          groupDesription: groupData
+                                                              .groupDescription,
+                                                          groupName:
+                                                              groupData.name,
+                                                          groupPics: groupData
+                                                              .groupPic);
+
+                                                      AppNavigator
+                                                          .pushAndStackPage(
+                                                              context,
+                                                              page:
+                                                                  MobileChatScreen(
+                                                                groupData
+                                                                    .groupDescription,
+                                                                userItem.length
+                                                                    .toString(),
+                                                                userItem,
+                                                                name: groupData
+                                                                    .name,
+                                                                uid: groupData
+                                                                    .groupId,
+                                                                isGroupChat:
+                                                                    true,
+                                                                profilePic:
+                                                                    groupData
+                                                                        .groupPic,
+                                                              ));
+                                                    }
+                                                  }
+                                                }
+                                              } else {
+                                                List<MemberData> userItem =
+                                                    removeDuplicateUsers(
+                                                        groupData.membersUid);
+
+                                                onTapCommunityPageComponent(
+                                                  context: context,
+                                                  groupImage:
+                                                      groupData.groupPic,
                                                   groupName: groupData.name,
-                                                  lastMessage:
-                                                      groupData.lastMessage,
-                                                  groupPic: groupData.groupPic,
-                                                 
-                                                  isPaid: groupData
-                                                      .communityType
+                                                  groupNumber: userItem.length
                                                       .toString(),
+                                                  groupDescription: groupData
+                                                      .groupDescription,
+                                                  groupId: groupData.groupId,
+                                                  userId: userId,
+                                                  adminFcm: groupData.fcmToken,
+                                                  isPaid:
+                                                      groupData.communityType,
+                                                  communityPrice:
+                                                      groupData.communityPrice,
+                                                  showCount:
+                                                      groupData.showMemberCount,
+                                                  userItem: userItem,
+                                                  isGroupLocked:
+                                                      groupData.isGroupLocked,
+                                                  communityLink:
+                                                      groupData.groupLink,
+                                                  pinnedMessage:
+                                                      groupData.groupLink,
+                                                  adminId: userItem[0].userId,
                                                 );
+                                              }
+                                            },
+                                            groupName: groupData.name,
+                                            lastMessage: groupData.lastMessage,
+                                            groupPic: groupData.groupPic,
+                                            isPaid: groupData.communityType
+                                                .toString(),
+                                          );
                                         }))
                               ]))
                         ]);

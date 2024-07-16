@@ -1153,7 +1153,6 @@ class _MobileChatState extends ConsumerState<MobileChat> {
           ),
         Divider(),
 
-        // if (groupInfo.groupAdminId == userId)
         ListTile(
           leading: CustomImageView(
             imagePath: AppImages.reportIcon,
@@ -1258,7 +1257,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                 });
 
                 AppNavigator.pushAndStackPage(context, page: LandingPage());
-                provider.Provider.of<AccountViewModel>(context, listen: true)
+                provider.Provider.of<AccountViewModel>(context, listen: false)
                     .updateIndex(0);
               }
             });

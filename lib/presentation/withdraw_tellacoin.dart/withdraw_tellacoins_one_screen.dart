@@ -219,6 +219,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                             //     page: PricingPageScreen(
                             //       balance: widget.tellaCoinBalance,
                             //     ));
+                            
                           },
                           child: Align(
                             child: Text(
@@ -358,7 +359,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                 ),
               ),
             ),
-            ImageView.asset(AppImages.)
+         (widget.userSub.toLowerCase() == 'community leader') ?    ImageView.svg(AppImages.check, color: Colors.green.shade700,) : SizedBox.shrink()
           ],
         ),
         const SizedBox(
@@ -382,6 +383,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                 ),
               ),
             ),
+         isAnyLengthGreaterThanOrEqual  ?  ImageView.svg(AppImages.check) : SizedBox.shrink()
           ],
         ),
         const SizedBox(
@@ -405,6 +407,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                 ),
               ),
             ),
+            (int.tryParse(widget.tellaCoinBalance)! < 1000)   ? SizedBox.shrink() : ImageView.svg(AppImages.check)
           ],
         ),
       ],
@@ -488,7 +491,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
       AppNavigator.pushAndStackPage(context,
           page: FinishWithdrawalScreen(
             coinToWithdraw: amountController.text,
-            nairaRate: '20',
+            nairaRate: widget.tellaCoinBalance,
           ));
     }
   }

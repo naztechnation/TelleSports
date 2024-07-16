@@ -256,9 +256,9 @@ class AuthProviders extends ChangeNotifier {
   }
 
   updateSearchList(
-    List<Group>? searchList,
+    List<Group> searchList,
   ) {
-    _searchResult.addAll(searchList!);
+    _searchResult.addAll(searchList);
     _dummyData.addAll(searchList);
 
     notifyListeners();
@@ -1011,10 +1011,7 @@ class AuthProviders extends ChangeNotifier {
           List<dynamic> requestsMembers =
               List.from(groupData['requestsMembers']);
 
-          requestsMembers.removeWhere((member) {
-            final user = MemberData.fromMap(member);
-            return user.userId == currentUserId;
-          });
+          requestsMembers.remove(currentUserId);
 
           await groupDocRef.update({'requestsMembers': requestsMembers});
 
@@ -1058,10 +1055,7 @@ class AuthProviders extends ChangeNotifier {
             groupData['blockedMembers'] is List) {
           List<dynamic> blockedMembers = List.from(groupData['blockedMembers']);
 
-          blockedMembers.removeWhere((member) {
-            final user = MemberData.fromMap(member);
-            return user.userId == currentUserId;
-          });
+          blockedMembers.remove(currentUserId);
 
           await groupDocRef.update({'blockedMembers': blockedMembers});
 

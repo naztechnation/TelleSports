@@ -86,11 +86,11 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const LoadingPage();
-                        } else if (snapshot.data!.isEmpty) {
+                        } else if (snapshot.data?.isEmpty ?? false) {
                           return EmptyCommunityPage();
                         }
 
-                        if (!_dataAdded) {
+                        if (!_dataAdded && snapshot.hasData) {
                           checkUserExist.clearGroupInfo();
                           checkUserExist.clearSearchList();
                           checkUserExist.updateSearchList(

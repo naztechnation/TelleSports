@@ -113,11 +113,9 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                               }
 
                               if (!_dataAdded) {
-                                checkUserExist.clearGroupInfo();
-                                checkUserExist.clearSearchList();
-                                checkUserExist.updateSearchList(
-                                  snapshot.data,
-                                );
+                                 checkUserExist.clearGroupInfo();
+                                 
+                               
                                 _dataAdded = true;
                               }
 
@@ -510,15 +508,15 @@ class CommunityOnePageState extends ConsumerState<CommunityListPage>
                                                       );
                                                     }
                                                   },
-                                                  groupName: groupData.name,
+                                                  groupName: groupData?.name ?? '',
                                                   lastMessage:
-                                                      groupData.lastMessage,
-                                                  groupPic: groupData.groupPic,
-                                                  date: groupData.timeSent
+                                                      groupData?.lastMessage ?? '',
+                                                  groupPic: groupData?.groupPic ?? '',
+                                                  date: groupData?.timeSent
                                                       .toLocal(),
                                                   isPaid: groupData
-                                                      .communityType
-                                                      .toString(),
+                                                      ?.communityType
+                                                      .toString() ?? '',
                                                 );
                                               }))
                                     ]))

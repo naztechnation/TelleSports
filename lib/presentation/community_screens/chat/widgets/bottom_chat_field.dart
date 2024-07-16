@@ -207,7 +207,18 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                                       AsyncSnapshot<DocumentSnapshot>
                                           snapshot) {
                                     if (!snapshot.hasData) {
-                                      return CircularProgressIndicator();
+                                      return Container(
+                  height: 18.adaptSize,
+                  width: 18.adaptSize,
+                  margin: EdgeInsets.only(
+                    top: 5.v,
+                    bottom: 20.v,
+                    left: 10
+                  ),
+                  child: CircularProgressIndicator(
+                    color: Colors.blue,
+                  ),
+                );
                                     }
 
                                     final data = snapshot.data!.data()
