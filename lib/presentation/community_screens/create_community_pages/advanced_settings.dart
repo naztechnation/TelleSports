@@ -42,6 +42,7 @@ class _AdvancedSettingsScreenState extends ConsumerState<AdvancedSettingsScreen>
   String userId = '';
   String username= '';
   String fcmToken = '';
+  String coinRate = '';
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -51,6 +52,7 @@ class _AdvancedSettingsScreenState extends ConsumerState<AdvancedSettingsScreen>
     userId = await StorageHandler.getUserId() ?? '';
     username = await StorageHandler.getUserName() ?? '';
     fcmToken = await StorageHandler.getUserFCM() ?? '';
+    coinRate = await StorageHandler.getCoinRate() ?? '';
   }
 
   final List<String> _options = [
@@ -432,7 +434,7 @@ class _AdvancedSettingsScreenState extends ConsumerState<AdvancedSettingsScreen>
         Align(
           alignment: Alignment.topLeft,
           child: Text(
-            '1 Tellacoin = ₦100',
+            '1 Tellacoin = ₦${coinRate}',
             style: GoogleFonts.getFont(
               'DM Sans',
               fontWeight: FontWeight.w500,

@@ -2,7 +2,7 @@
 
 class RegisterUser {
     bool? success;
-    int? code;
+    var code;
     String? message;
     Errors? errors;
 

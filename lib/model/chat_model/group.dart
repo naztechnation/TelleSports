@@ -107,11 +107,13 @@ class Group {
 class MemberData {
   final String userId;
   final String username;
+  final bool recieveNotification;
   final DateTime dateJoined;
 
   MemberData({
     required this.userId,
     required this.username,
+    required this.recieveNotification,
     required this.dateJoined,
   });
 
@@ -119,6 +121,7 @@ class MemberData {
     return {
       'userId': userId,
       'username': username,
+      'recieveNotification': recieveNotification,
       'dateJoined': dateJoined.millisecondsSinceEpoch,
     };
   }
@@ -127,6 +130,7 @@ class MemberData {
     return MemberData(
       userId: map['userId'] ?? '',
       username: map['username'] ?? '',
+      recieveNotification: map['recieveNotification'] ?? '',
       dateJoined: DateTime.fromMillisecondsSinceEpoch(map['dateJoined']),
     );
   }

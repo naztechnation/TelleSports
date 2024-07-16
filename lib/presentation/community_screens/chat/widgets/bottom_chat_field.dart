@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
- 
 
 import '../../../../common/enums/message_enum.dart';
 import '../../../../common/providers/message_reply_provider.dart';
@@ -10,8 +10,10 @@ import '../../../../common/utils/utils.dart';
 
 import '../../../../core/app_export.dart';
 import '../../../../handlers/secure_handler.dart';
+import '../../../../model/chat_model/group.dart';
 import '../../../../notification.dart';
 import '../../../../widgets/custom_text_form_field.dart';
+import '../../../../widgets/modals.dart';
 import '../controller/chat_controller.dart';
 import '../repositories/chat_repository.dart';
 import 'message_reply_preview.dart';
@@ -22,7 +24,7 @@ class BottomChatField extends ConsumerStatefulWidget {
   final String groupName;
   final bool isGroupChat;
   final Function onTap;
-  const BottomChatField( {
+  const BottomChatField({
     Key? key,
     required this.onTap,
     required this.groupId,
@@ -36,9 +38,8 @@ class BottomChatField extends ConsumerStatefulWidget {
 }
 
 class _BottomChatFieldState extends ConsumerState<BottomChatField> {
- 
   final TextEditingController _messageController = TextEditingController();
- 
+
   FocusNode focusNode = FocusNode();
 
   String userId = '';
@@ -52,49 +53,37 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
 
     sendTextMessage1();
     getUserId();
-     
   }
 
   bool _isUpdating = false;
 
-  
-
   void sendTextMessage() async {
-   
-     
-      ref.read(chatControllerProvider).sendTextMessage(
-            context,
-            _messageController.text.trim(),
-            widget.recieverUserId,
-            userId,
-            widget.isGroupChat,
-          );
-      sendTopicNotification(widget.groupId,widget.groupName,_messageController.text);
-     
-     
-      setState(() {
-        _messageController.text = '';
-      });
-      widget.onTap();
+    ref.read(chatControllerProvider).sendTextMessage(
+          context,
+          _messageController.text.trim(),
+          widget.recieverUserId,
+          userId,
+          widget.isGroupChat,
+        );
 
-     
+    setState(() {
+      _messageController.text = '';
+    });
+    widget.onTap();
   }
 
-   void sendTextMessage1() async {
-   
-     
-      ref.read(chatControllerProvider).sendTextMessage1(
-            context,
-            _messageController.text.trim(),
-            widget.recieverUserId,
-            userId,
-            widget.isGroupChat,
-          );
-      setState(() {
-        _messageController.text = '';
-      });
-      widget.onTap();
-     
+  void sendTextMessage1() async {
+    ref.read(chatControllerProvider).sendTextMessage1(
+          context,
+          _messageController.text.trim(),
+          widget.recieverUserId,
+          userId,
+          widget.isGroupChat,
+        );
+    setState(() {
+      _messageController.text = '';
+    });
+    widget.onTap();
   }
 
   Future<void> sendFileMessage(
@@ -117,9 +106,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     image = await pickImageFromGallery(context);
     if (image != null) {
       startUpdatingState(Duration(minutes: 2));
-     await sendFileMessage(image!, MessageEnum.image);
+      await sendFileMessage(image!, MessageEnum.image);
 
-     widget.onTap();
+      widget.onTap();
     }
   }
 
@@ -130,22 +119,13 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     }
   }
 
-  
-
- 
-
- 
-
   void showKeyboard() => focusNode.requestFocus();
   void hideKeyboard() => focusNode.unfocus();
-
- 
 
   @override
   void dispose() {
     super.dispose();
     _messageController.dispose();
-   
   }
 
   @override
@@ -203,9 +183,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                   child: CustomTextFormField(
                     focusNode: focusNode,
                     controller: _messageController,
-                    onChanged: (val) {
-                      
-                    },
+                    onChanged: (val) {},
                     hintText: "Type a message...",
                     hintStyle: CustomTextStyles.titleSmallGray50001,
                     textInputAction: TextInputAction.done,
@@ -220,27 +198,57 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    
-                  });
-                  if (_messageController.text.isNotEmpty) {
-                    sendTextMessage();
-                    
-                  }
-                  ;
-                },
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgSend,
-                  height: 32.adaptSize,
-                  width: 32.adaptSize,
-                  margin: EdgeInsets.only(
-                    left: 12.h,
-                    top: 5.v,
-                    bottom: 20.v,
-                  ),
-                ),
+              StreamBuilder<DocumentSnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('groups')
+                                      .doc(widget.groupId)
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<DocumentSnapshot>
+                                          snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return CircularProgressIndicator();
+                                    }
+
+                                    final data = snapshot.data!.data()
+                                        as Map<String, dynamic>;
+                                    final group = Group.fromMap(data);
+                                    final currentUser =
+                                        group.membersUid.firstWhere(
+                                      (member) => member.userId == userId,
+                                    );
+                                    final isNotifyOn = currentUser != null
+                                        ? currentUser.recieveNotification
+                                        : false;
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {});
+                  
+                      if (_messageController.text.isNotEmpty) {
+                        if (isNotifyOn) {
+                           sendTopicNotification(widget.groupId, widget.groupName,
+                            _messageController.text);
+                             
+                        }
+                       
+                  
+                        sendTextMessage();
+                      }
+                      ;
+                    },
+                    child: CustomImageView(
+                      imagePath: ImageConstant.imgSend,
+                      height: 32.adaptSize,
+                      width: 32.adaptSize,
+                      margin: EdgeInsets.only(
+                        left: 12.h,
+                        top: 5.v,
+                        bottom: 20.v,
+                      ),
+                    ),
+                  );
+                }
               ),
             ],
           ),
@@ -253,8 +261,6 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     setState(() {
       _isUpdating = true;
     });
-
-     
 
     Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {});

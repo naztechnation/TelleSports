@@ -158,12 +158,7 @@ class UserInfoPageState extends State<UserInfo>
                                   context);
                               await groupData.addUserToBlockedMembers(
                                   groupData.groupId,
-                                  [
-                                        MemberData(
-                                            userId: widget.memberId,
-                                            username: widget.memberName,
-                                            dateJoined: DateTime.now())
-                                      ],
+                                   widget.memberId,
                                   context);
                               setState(() {
                                 isLoading = false;

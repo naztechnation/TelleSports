@@ -31,7 +31,7 @@ class AccountRepositoryImpl implements AccountRepository {
       "email": email,
       "password": password,
       "password_confirmation": confirmPassword,
-      "phone": int.tryParse(phone),
+      "phone": phone,
       "activated": activated
     });
     return RegisterUser.fromJson(map);

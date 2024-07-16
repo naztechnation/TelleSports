@@ -29,6 +29,7 @@ import '../manage_account/update_password_screen/update_password_screen.dart';
 import '../manage_account/submit_prediction.dart';
 import '../manage_account/update_bio.dart';
 import '../notification_settings_screen/notification_settings_screen.dart';
+import '../withdraw_tellacoin.dart/withdraw_tellacoins_one_screen.dart';
 import 'edit_profile_screen.dart';
 import 'upload_picture.dart';
 
@@ -46,6 +47,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String phone = '';
   String photo = '';
   String userId = '';
+  String userSub = '';
+  String tellaCoinBalance ='';
   bool showDelayedWidget = false;
 
   bool signInWithGoogle = true;
@@ -59,6 +62,8 @@ class _ProfilePageState extends State<ProfilePage> {
     userId = await StorageHandler.getUserId() ?? '';
     signIn = await StorageHandler.getShowSignIn() ?? '';
     password = await StorageHandler.getUserPassword() ?? '';
+    userSub = await StorageHandler.getUserPlan() ?? '';
+    tellaCoinBalance = await StorageHandler.getTransferedCoin() ?? '';
 
     setState(() {
       if (signIn != '') {
@@ -146,13 +151,20 @@ class _ProfilePageState extends State<ProfilePage> {
                             AppNavigator.pushAndStackPage(context,
                                 page: UpdatePasswordScreen());
                           }),
-                          // SizedBox(height: 24.v),
-                          // _buildShareFrame(context,
-                          //     text: "Update Account",
-                          //     image: ImageConstant.imgHelpCenter, onTap: () {
-                          //   AppNavigator.pushAndStackPage(context,
-                          //       page: UpdateAccountScreen());
-                          // }),
+                          SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Update Account",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: UpdateAccountScreen());
+                          }),
+                           SizedBox(height: 24.v),
+                          _buildShareFrame(context,
+                              text: "Withdraw Tellacoin",
+                              image: ImageConstant.imgHelpCenter, onTap: () {
+                            AppNavigator.pushAndStackPage(context,
+                                page: WithdrawTellaCoins(tellaCoinBalance: tellaCoinBalance, userSub: userSub,));
+                          }),
                           SizedBox(height: 24.v),
                           _buildShareFrame(context,
                               text: "Submit Prediction",

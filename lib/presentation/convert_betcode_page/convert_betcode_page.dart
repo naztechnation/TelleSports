@@ -93,17 +93,21 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
     balance = await StorageHandler.getUserBalance() ?? '';
 
     _accountCubit = context.read<AccountCubit>();
-    await _accountCubit.getConversionHistory();
-
-    await _accountCubit.getBookies();
-    await _accountCubit.getNotifications();
-
-    setState(() {
+     setState(() {
       if (password == '' || email == '') {
       } else {
         _accountCubit.loginUser(email: email, password: password);
       }
     });
+    await _accountCubit.getBookies();
+   
+    await _accountCubit.getConversionHistory();
+
+    
+     
+    await _accountCubit.getNotifications();
+
+   
   }
 
   @override

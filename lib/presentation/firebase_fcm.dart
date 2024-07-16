@@ -4,7 +4,7 @@ import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
 import 'package:tellesports/main.dart';
 
-import '../notification.dart';
+ 
 
 
 class PushNotifications {
@@ -24,6 +24,7 @@ class PushNotifications {
     final token = await _firebaseMessaging.getToken();
 
     StorageHandler.saveFcmToken(token);
+    print(token);
 
      // sendPushNotification(token ??'','TellaSport','Welcome on board');
     

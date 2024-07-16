@@ -109,10 +109,10 @@ class _CommunityInfoState extends State<CommunityInfo> {
     userId = await StorageHandler.getUserId() ?? '';
     sentTellacoinBalance = await StorageHandler.getTransferedCoin() ?? '';
     coinRate = await StorageHandler.getCoinRate() ?? '';
-    double sentTellacoinBalanceDouble = double.tryParse(sentTellacoinBalance) ?? 0;
-double coinRateDouble = double.tryParse(coinRate) ?? 0;
-  calRate = sentTellacoinBalanceDouble * coinRateDouble;
-
+    double sentTellacoinBalanceDouble =
+        double.tryParse(sentTellacoinBalance) ?? 0;
+    double coinRateDouble = double.tryParse(coinRate) ?? 0;
+    calRate = sentTellacoinBalanceDouble * coinRateDouble;
 
     _predictionCubit = context.read<PredictionCubit>();
 
@@ -132,7 +132,6 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
 
     requestItems = removeDuplicates(groupInfo.requestedMembers);
     blockedItems = removeDuplicates(groupInfo.blockedMembers);
-      
 
     moveItemToFirst(groupInfo.groupAdminId);
 
@@ -231,15 +230,17 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                                           'showMemberCount') ??
                                                   [];
 
-                                            var memcount = removeDuplicateUsers(groupMembersIds);
+                                              var memcount =
+                                                  removeDuplicateUsers(
+                                                      groupMembersIds);
 
                                               return Text(
                                                 (showMember)
                                                     ? (memcount.length
                                                                 .toString() ==
                                                             '1')
-                                                        ? "${memcount.length}   Member"
-                                                        : "${memcount.length}   Members"
+                                                        ? "${memcount.length} Member"
+                                                        : "${memcount.length} Members"
                                                     : '',
                                               );
                                             }),
@@ -251,62 +252,61 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                   height: 12,
                                 ),
                                 if (groupInfo.groupAdminId == userId)
-                                  Column(children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Color(0x66F3F2F3),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Color(0x0F000000),
-                                            offset: Offset(0, 0),
-                                            blurRadius: 1,
-                                          ),
-                                        ],
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Color(0x66F3F2F3),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color(0x0F000000),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.all(0),
+                                      leading: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: const Icon(
+                                          Icons.notifications,
+                                          color: Colors.blue,
+                                        ),
                                       ),
-                                      child: ListTile(
-                                        contentPadding: EdgeInsets.all(0),
-                                        leading: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: const Icon(
-                                            Icons.notifications,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                        title: const Text('Mute Community', style: TextStyle(fontSize: 13),),
-                                        trailing:
-                                            StreamBuilder<DocumentSnapshot>(
-                                          stream: FirebaseFirestore.instance
-                                              .collection('groups')
-                                              .doc(groupInfo.groupId)
-                                              .snapshots(),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<DocumentSnapshot>
-                                                  snapshot) {
-                                            final isGroupLocked = snapshot.data
-                                                    ?.get('isGroupLocked') ??
-                                                false;
+                                      title: const Text(
+                                        'Mute Community',
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                      trailing: StreamBuilder<DocumentSnapshot>(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('groups')
+                                            .doc(groupInfo.groupId)
+                                            .snapshots(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<DocumentSnapshot>
+                                                snapshot) {
+                                          final isGroupLocked = snapshot.data
+                                                  ?.get('isGroupLocked') ??
+                                              false;
 
-                                            return Transform.scale(
-                                              scale: 0.67,
-                                              child: CupertinoSwitch(
-                                                  value: isGroupLocked,
-                                                  activeColor: Colors.blue,
-                                                  onChanged: (newValue) =>
-                                                      setState(() {
-                                                        groupInfo
-                                                            .updateGroupLockStatus(
-                                                                groupInfo
-                                                                    .groupId,
-                                                                newValue);
-                                                      })),
-                                            );
-                                          },
-                                        ),
+                                          return Transform.scale(
+                                            scale: 0.67,
+                                            child: CupertinoSwitch(
+                                                value: isGroupLocked,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) =>
+                                                    setState(() {
+                                                      groupInfo
+                                                          .updateGroupLockStatus(
+                                                              groupInfo.groupId,
+                                                              newValue);
+                                                    })),
+                                          );
+                                        },
                                       ),
                                     ),
-                                  ]),
+                                  ),
                                 SizedBox(height: 24.v),
                                 _buildCommunityDescription(context,
                                     groupInfo.groupDescription, groupInfo),
@@ -321,7 +321,11 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                 SizedBox(height: 14.v),
                                 if (groupInfo.groupAdminId == userId)
                                   SizedBox(height: 12.v),
-                                if (groupInfo.groupAdminId == userId)
+                                if (groupInfo.groupAdminId == userId &&
+                                    groupInfo.groupData?.communityType
+                                            .toString()
+                                            .toLowerCase() ==
+                                        'Ask to join'.toLowerCase())
                                   StreamBuilder<DocumentSnapshot>(
                                       stream: FirebaseFirestore.instance
                                           .collection('groups')
@@ -480,8 +484,7 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                     ],
                                   ),
                                   child: Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(8, 12, 8.4, 12),
+                                    padding: EdgeInsets.all(8),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -501,7 +504,6 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                                 margin: EdgeInsets.fromLTRB(
                                                     0, 0, 9, 3),
                                                 child: SizedBox(
-                                                  width: 279,
                                                   child: Text(
                                                     'Tellacoins received',
                                                     style: GoogleFonts.getFont(
@@ -518,8 +520,8 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                                 sentTellacoinBalance,
                                                 style: GoogleFonts.getFont(
                                                   'DM Sans',
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
                                                   color: Color(0xFF1F1C21),
                                                 ),
                                               ),
@@ -536,9 +538,8 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                               margin: EdgeInsets.fromLTRB(
                                                   0, 0, 9, 3),
                                               child: SizedBox(
-                                                width: 279,
                                                 child: Text(
-                                                  'Naira',
+                                                  '₦',
                                                   style: GoogleFonts.getFont(
                                                     'DM Sans',
                                                     fontWeight: FontWeight.w500,
@@ -552,8 +553,8 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                               '${calRate}',
                                               style: GoogleFonts.getFont(
                                                 'DM Sans',
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 14,
                                                 color: Color(0xFF1F1C21),
                                               ),
                                             ),
@@ -562,6 +563,71 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                       ],
                                     ),
                                   ),
+                                ),
+                                SizedBox(height: 24.v),
+                                StreamBuilder<DocumentSnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('groups')
+                                      .doc(groupInfo.groupId)
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<DocumentSnapshot>
+                                          snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return CircularProgressIndicator();
+                                    }
+
+                                    final data = snapshot.data!.data()
+                                        as Map<String, dynamic>;
+                                    final group = Group.fromMap(data);
+                                    final currentUser =
+                                        group.membersUid.firstWhere(
+                                      (member) => member.userId == userId,
+                                    );
+                                    final isNotifyOn = currentUser != null
+                                        ? currentUser.recieveNotification
+                                        : false;
+
+                                    return 
+                                    
+                                    Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Color(0x66F3F2F3),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color(0x0F000000),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.all(0),
+                                      leading: const Text(
+                                        'Chat Notifications',
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                       
+                                      trailing:
+                                    
+                                    Transform.scale(
+                                      scale: 0.67,
+                                      child: CupertinoSwitch(
+                                        value: isNotifyOn,
+                                        activeColor: Colors.blue,
+                                        onChanged: (newValue) async {
+                                          await groupInfo
+                                              .updateRecieveNotification(
+                                                  groupInfo.groupId,
+                                                  userId,
+                                                  newValue);
+                                        },
+                                      ),
+                                    )
+                                    ),
+                                  );
+                                  },
                                 ),
                                 SizedBox(height: 24.v),
                                 Container(
@@ -607,36 +673,38 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
                                                 itemBuilder: (context, index) {
                                                   return GestureDetector(
                                                     onTap: () {
-                                                      if(groupMembers[index].uid == userId){
-
-                                                      }else{
-                                                        AppNavigator.pushAndStackPage(
-                                                          context,
-                                                          page:
-                                                              IndividualUserInfo(
-                                                            name: groupMembers[
-                                                                    index]
-                                                                .name,
-                                                            image: groupMembers[
-                                                                    index]
-                                                                .profilePic,
-                                                            bio: groupMembers[
-                                                                    index]
-                                                                .bio,
-                                                            username:
-                                                                groupMembers[
-                                                                        index]
-                                                                    .name,
-                                                            isGroupAdmin: groupInfo
-                                                                    .groupAdminId ==
-                                                                groupMembers[
-                                                                        index]
-                                                                    .uid,
-                                                            memberId:
-                                                                groupMembers[
-                                                                        index]
-                                                                    .uid,
-                                                          ));
+                                                      if (groupMembers[index]
+                                                              .uid ==
+                                                          userId) {
+                                                      } else {
+                                                        AppNavigator
+                                                            .pushAndStackPage(
+                                                                context,
+                                                                page:
+                                                                    IndividualUserInfo(
+                                                                  name: groupMembers[
+                                                                          index]
+                                                                      .name,
+                                                                  image: groupMembers[
+                                                                          index]
+                                                                      .profilePic,
+                                                                  bio: groupMembers[
+                                                                          index]
+                                                                      .bio,
+                                                                  username:
+                                                                      groupMembers[
+                                                                              index]
+                                                                          .name,
+                                                                  isGroupAdmin: groupInfo
+                                                                          .groupAdminId ==
+                                                                      groupMembers[
+                                                                              index]
+                                                                          .uid,
+                                                                  memberId:
+                                                                      groupMembers[
+                                                                              index]
+                                                                          .uid,
+                                                                ));
                                                       }
                                                     },
                                                     child:
@@ -938,8 +1006,7 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
 
     for (var item in items) {
       if (items.isNotEmpty || items != []) {
-         uniqueItems[int.tryParse(item['userId'])!] = item;
-          
+        uniqueItems[int.tryParse(item['userId'])!] = item;
       }
     }
 
@@ -1154,10 +1221,9 @@ double coinRateDouble = double.tryParse(coinRate) ?? 0;
   }
 
   getUsers(groupInfo, List<dynamic> membersUid) async {
-     groupMembers = await groupInfo.fetchUsers(membersUid);
+    groupMembers = await groupInfo.fetchUsers(membersUid);
 
-    setState(() {
-    });
+    setState(() {});
   }
 
   Widget _buildComplaintField(BuildContext context) {

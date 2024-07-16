@@ -176,7 +176,7 @@ class _CommunityInfoScreenState extends State<JoinCommunityInfoScreen> {
                                         MemberData(
                                             userId: userId,
                                             dateJoined: DateTime.now(),
-                                            username: username
+                                            username: username, recieveNotification: true
                                             )
                                       ],
                                       context);
@@ -276,7 +276,7 @@ class _CommunityInfoScreenState extends State<JoinCommunityInfoScreen> {
                                         MemberData(
                                             userId: userId,
                                             dateJoined: DateTime.now(),
-                                            username: username
+                                            username: username, recieveNotification: true
                                             ),
                                       ],
                                       context);
@@ -362,6 +362,8 @@ class _CommunityInfoScreenState extends State<JoinCommunityInfoScreen> {
                               processing: isLoading,
                               onPressed: () async {
                                 if (!isUserAlreadyRequested) {
+
+                                  
                                    
                                     AppNavigator.pushAndStackPage(context, page: TransferTellacoinsScreen(username: 
                                     widget.userItem.first.username, 

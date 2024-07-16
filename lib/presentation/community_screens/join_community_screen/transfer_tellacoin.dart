@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -28,9 +26,6 @@ import '../../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import '../chat/screens/mobile_chat_screen.dart';
 import '../provider/auth_provider.dart' as pro;
 
-
- 
-
 class TransferTellacoinsScreen extends StatelessWidget {
   final String username;
   final String transferAmount;
@@ -43,20 +38,28 @@ class TransferTellacoinsScreen extends StatelessWidget {
   final String adminId;
   final String groupDescription;
   final String adminFcm;
-   final String communityPrice;
+  final String communityPrice;
   final String communityLink;
   final String pinnedMessage;
   final List<MemberData> userItem;
 
-
-  const TransferTellacoinsScreen({Key? key, required this.username, 
-  required this.transferAmount, required this.groupName, 
-  required this.groupImage, required this.groupNumber, 
-  required this.groupId, required this.userId, required this.adminId,
-   required this.groupDescription, required this.adminFcm, 
-   required this.communityPrice, required this.communityLink, 
-   required this.pinnedMessage, required this.userItem, required this.isGroupLocked
-   })
+  const TransferTellacoinsScreen(
+      {Key? key,
+      required this.username,
+      required this.transferAmount,
+      required this.groupName,
+      required this.groupImage,
+      required this.groupNumber,
+      required this.groupId,
+      required this.userId,
+      required this.adminId,
+      required this.groupDescription,
+      required this.adminFcm,
+      required this.communityPrice,
+      required this.communityLink,
+      required this.pinnedMessage,
+      required this.userItem,
+      required this.isGroupLocked})
       : super(key: key);
 
   @override
@@ -66,9 +69,20 @@ class TransferTellacoinsScreen extends StatelessWidget {
           viewModel: Provider.of<UserViewModel>(context, listen: false)),
       child: GiftTellacoin(
         username: username,
-         transferAmount: transferAmount,
-         groupName: groupName, groupImage: groupImage, groupNumber: groupNumber, groupId: groupId, userId: userId, adminId: adminId, groupDescription: groupDescription, adminFcm: adminFcm, communityPrice: communityPrice, communityLink: communityLink, pinnedMessage: pinnedMessage, userItem: userItem, isGroupLocked: isGroupLocked,
-         
+        transferAmount: transferAmount,
+        groupName: groupName,
+        groupImage: groupImage,
+        groupNumber: groupNumber,
+        groupId: groupId,
+        userId: userId,
+        adminId: adminId,
+        groupDescription: groupDescription,
+        adminFcm: adminFcm,
+        communityPrice: communityPrice,
+        communityLink: communityLink,
+        pinnedMessage: pinnedMessage,
+        userItem: userItem,
+        isGroupLocked: isGroupLocked,
       ));
 }
 
@@ -84,12 +98,29 @@ class GiftTellacoin extends StatefulWidget {
   final String adminId;
   final String groupDescription;
   final String adminFcm;
-   final String communityPrice;
+  final String communityPrice;
   final String communityLink;
   final String pinnedMessage;
   final List<MemberData> userItem;
 
-  GiftTellacoin({Key? key, required this.username, required this.transferAmount, required this.groupName, required this.groupImage, required this.groupNumber, required this.groupId, required this.userId, required this.adminId, required this.groupDescription, required this.adminFcm, required this.communityPrice, required this.communityLink, required this.pinnedMessage, required this.userItem, required this.isGroupLocked}) : super(key: key);
+  GiftTellacoin(
+      {Key? key,
+      required this.username,
+      required this.transferAmount,
+      required this.groupName,
+      required this.groupImage,
+      required this.groupNumber,
+      required this.groupId,
+      required this.userId,
+      required this.adminId,
+      required this.groupDescription,
+      required this.adminFcm,
+      required this.communityPrice,
+      required this.communityLink,
+      required this.pinnedMessage,
+      required this.userItem,
+      required this.isGroupLocked})
+      : super(key: key);
 
   @override
   State<GiftTellacoin> createState() => _GiftTellacoinState();
@@ -171,7 +202,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                     StorageHandler.saveUserBalance(
                         state.tellacoin.data?.tellaCoins.toString());
 
-                   addUserToGroup(groupInfo) ;
+                    addUserToGroup(groupInfo);
                   } else {
                     Modals.showToast(state.tellacoin.message ?? '',
                         messageType: MessageType.error);
@@ -204,7 +235,6 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                         title: 'Transfering tellacoin...',
                         processing: state is TransferCoinLoading || isLoading,
                         isDisabled: isSufficient,
-                         
                         onPressed: () {
                           Modals.showDialogModal(context,
                               page: ModalContentScreen(
@@ -222,8 +252,8 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                                   ),
                                   btnText: 'Proceed',
                                   onPressed: () {
-                                    //  trasferTellaCoin();
-                                    Modals.showToast(widget.adminFcm);
+                                    trasferTellaCoin();
+                                    // Modals.showToast(widget.adminFcm);
                                     Navigator.pop(context);
                                   },
                                   headerColorOne:
@@ -393,50 +423,44 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
     }
   }
 
-  addUserToGroup(var groupInfo)async{
-     setState(() {
-                                    isLoading = true;
-                                  });
+  addUserToGroup(var groupInfo) async {
+    setState(() {
+      isLoading = true;
+    });
 
-                                  await groupInfo.addCurrentUserFromMembers(
-                                      widget.groupId,
-                                      [
-                                        MemberData(
-                                            userId: userId,
-                                            dateJoined: DateTime.now(),
-                                            username: username
-                                            )
-                                      ],
-                                      context);
+    await groupInfo.addCurrentUserFromMembers(
+        widget.groupId,
+        [
+          MemberData(
+              userId: userId, dateJoined: DateTime.now(), username: username, recieveNotification: true)
+        ],
+        context);
 
-                                  setState(() {
-                                    isLoading = false;
-                                  });
-                                  groupInfo.addGroupInfo(
-                                      groupNumber:
-                                          widget.userItem.length.toString(),
-                                      groupAdminId: widget.userItem[0].userId,
-                                      groupId: widget.groupId,
-                                      groupLink: widget.communityLink,
-                                      isGroupLocked: widget.isGroupLocked,
-                                      pinnedMessage: widget.pinnedMessage,
-                                      groupDesription: widget.groupDescription,
-                                      groupName: widget.groupName,
-                                      groupPics: widget.groupImage);
+    setState(() {
+      isLoading = false;
+    });
+    groupInfo.addGroupInfo(
+        groupNumber: widget.userItem.length.toString(),
+        groupAdminId: widget.userItem[0].userId,
+        groupId: widget.groupId,
+        groupLink: widget.communityLink,
+        isGroupLocked: widget.isGroupLocked,
+        pinnedMessage: widget.pinnedMessage,
+        groupDesription: widget.groupDescription,
+        groupName: widget.groupName,
+        groupPics: widget.groupImage);
 
-                                       sendPushNotification(
-                                      widget.adminFcm,
-                                      widget.groupName,
-                                      'Hello, you have a pending invite from ${widget.groupName}');
-                                  AppNavigator.pushAndStackPage(context,
-                                      page: MobileChatScreen(
-                                        widget.groupDescription,
-                                        widget.groupNumber.toString(),
-                                        widget.userItem,
-                                        name: widget.groupName,
-                                        uid: widget.groupId,
-                                        isGroupChat: true,
-                                        profilePic: widget.groupImage,
-                                      ));
+    sendPushNotification(widget.adminFcm, widget.groupName,
+        'Hello, you just recieved ${widget.transferAmount} Tellacoin from a new member on ${widget.groupName}');
+    AppNavigator.pushAndStackPage(context,
+        page: MobileChatScreen(
+          widget.groupDescription,
+          widget.groupNumber.toString(),
+          widget.userItem,
+          name: widget.groupName,
+          uid: widget.groupId,
+          isGroupChat: true,
+          profilePic: widget.groupImage,
+        ));
   }
 }

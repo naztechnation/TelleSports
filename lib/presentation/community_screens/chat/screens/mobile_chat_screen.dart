@@ -121,6 +121,8 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
   List<String> blockedUsers = [];
 
+  String token = '';
+
   @override
   void dispose() {
     super.dispose();
@@ -150,6 +152,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+    token = await StorageHandler.getUserFCM() ?? '';
 
     Future.delayed(Duration(seconds: 1), () {
       setState(() {});
@@ -187,6 +190,10 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     if (!methodCalled) {
       Future.delayed(Duration(seconds: 1), () {
         getMyBlockedUsers(groupInfo, userId);
+
+        if(groupInfo.groupAdminId == userId){
+          groupInfo.updateAdminFcm(groupInfo.groupId, token);
+        }
       });
 
       contex = context;
@@ -242,57 +249,59 @@ class _MobileChatState extends ConsumerState<MobileChat> {
           },
           builder: (context, state) => (state is ReportUserLoading)
               ? LoadingPage()
-              : SafeArea(
-                  child: Scaffold(
-                    backgroundColor: appTheme.lime50,
-                    resizeToAvoidBottomInset: false,
-                    floatingActionButton: Container(
-                      margin: const EdgeInsets.only(bottom: 80),
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.blue.withOpacity(0.5),
-                        mini: true,
-                        elevation: 0.0,
-                        onPressed: () {
-                          _scrollDown();
-                        },
-                        child: const Icon(
-                          Icons.arrow_downward,
-                          color: Colors.white,
-                        ),
+              : Scaffold(
+                  backgroundColor: appTheme.lime50,
+                  resizeToAvoidBottomInset: false,
+                  floatingActionButton: Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.blue.withOpacity(0.5),
+                      mini: true,
+                      elevation: 0.0,
+                      onPressed: () {
+                        _scrollDown();
+                      },
+                      child: const Icon(
+                        Icons.arrow_downward,
+                        color: Colors.white,
                       ),
                     ),
-                    appBar: CustomAppBar(
-                      leadingWidth: 44.h,
-                      leading: AppbarLeadingImage(
-                        imagePath: ImageConstant.imgArrowBackBlue800,
-                        onTap: () {
-                          groupInfo.isSelectedMessage(false);
-                          groupInfo.setSelectedMessage('');
-                          groupInfo.setTextIndex(-1);
-                          groupInfo.setMessageId('');
-                          groupInfo.setMessageType(MessageEnum.none);
-                          groupInfo.setSelectedSenderId('');
+                  ),
+                  appBar: CustomAppBar(
+                    leadingWidth: 44.h,
+                    leading: AppbarLeadingImage(
+                      imagePath: ImageConstant.imgArrowBackBlue800,
+                      onTap: () {
+                        groupInfo.isSelectedMessage(false);
+                        groupInfo.setSelectedMessage('');
+                        groupInfo.setTextIndex(-1);
+                        groupInfo.setMessageId('');
+                        groupInfo.setMessageType(MessageEnum.none);
+                        groupInfo.setSelectedSenderId('');
 
-                          AppNavigator.pushAndReplacePage(context,
-                              page: LandingPage());
-                        },
-                        margin: EdgeInsets.only(
-                          left: 20.h,
-                          top: 0.v,
-                          bottom: 10.v,
-                        ),
+                        AppNavigator.pushAndReplacePage(context,
+                            page: LandingPage());
+                      },
+                      margin: EdgeInsets.only(
+                        left: 20.h,
+                        top: 0.v,
+                        bottom: 10.v,
                       ),
-                      title: Padding(
-                        padding: EdgeInsets.only(
-                          left: 12.h,
-                          top: 0.v,
-                          bottom: 4.v,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            onTapGroup(context, widget.profilePic, widget.name,
-                                widget.membersUid);
-                          },
+                    ),
+                    title: Padding(
+                      padding: EdgeInsets.only(
+                        left: 12.h,
+                        top: 0.v,
+                        bottom: 4.v,
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          onTapGroup(context, widget.profilePic, widget.name,
+                              widget.membersUid);
+                        },
+                        child: Container(
+                              width: MediaQuery.sizeOf(context).width * 0.5,
+                              color: Colors.white,
                           child: Row(
                             children: [
                               AppbarTitleCircleimage(
@@ -324,20 +333,17 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                                 snapshot) {
                                           if (snapshot.connectionState ==
                                               ConnectionState.waiting) {}
-
+                              
                                           if (snapshot.hasError) {}
-
+                              
                                           if (!snapshot.hasData ||
                                               !snapshot.data!.exists) {}
-
+                              
                                           List<MemberData> groupMembers = [];
-                                          if (snapshot.data
-                                                  ?.get('membersUid') !=
+                                          if (snapshot.data?.get('membersUid') !=
                                               null) {
-                                            groupMembers =
-                                                List<MemberData>.from((snapshot
-                                                            .data
-                                                            ?.get('membersUid')
+                                            groupMembers = List<MemberData>.from(
+                                                (snapshot.data?.get('membersUid')
                                                         as List)
                                                     .map((item) =>
                                                         MemberData.fromMap(item
@@ -347,7 +353,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                           var showMember = snapshot.data
                                                   ?.get('showMemberCount') ??
                                               false;
-
+                              
                                           var memcount = removeDuplicateMembers(
                                               groupMembers);
                                           return AppbarSubtitleFour(
@@ -364,10 +370,10 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                                     ? "${memcount.length}   Member"
                                                     : "${memcount.length}   Members"
                                                 : '',
-                                            margin:
-                                                EdgeInsets.only(right: 28.h),
+                                            margin: EdgeInsets.only(right: 28.h),
                                           );
                                         }),
+                                  
                                   ],
                                 ),
                               ),
@@ -375,315 +381,324 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                           ),
                         ),
                       ),
-                      styleType: Style.bgOutline,
                     ),
-                    body: GestureDetector(
-                      onTap: () {
-                        groupInfo.isSelectedMessage(false);
-                        groupInfo.setSelectedMessage('');
-                        groupInfo.setTextIndex(-1);
-                        groupInfo.setMessageId('');
-                        groupInfo.setSelectedSenderId('');
+                    styleType: Style.bgOutline,
+                  ),
+                  body: GestureDetector(
+                    onTap: () {
+                      groupInfo.isSelectedMessage(false);
+                      groupInfo.setSelectedMessage('');
+                      groupInfo.setTextIndex(-1);
+                      groupInfo.setMessageId('');
+                      groupInfo.setSelectedSenderId('');
 
-                        groupInfo.setMessageType(MessageEnum.none);
-                      },
-                      child: Column(
-                        children: [
-                          if (groupInfo.groupAdminId == userId)
-                            Container(
-                              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF183A5C),
-                                        borderRadius: BorderRadius.circular(4),
+                      groupInfo.setMessageType(MessageEnum.none);
+                    },
+                    child: ListView(
+                      shrinkWrap: true,
+                      controller: _scrollController,
+                      children: [
+                        Column(
+                          children: [
+                            if (groupInfo.groupAdminId == userId) ...[
+                              Container(
+                                margin: EdgeInsets.fromLTRB(20, 20, 20, 15),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF183A5C),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(18.4, 2, 18.4, 2),
+                                    child: Text(
+                                      formatTimestamp(
+                                        groupInfo
+                                                .groupData
+                                                ?.membersUid
+                                                .first
+                                                .dateJoined
+                                                .millisecondsSinceEpoch
+                                                .toString() ??
+                                            DateTime.now()
+                                                .millisecondsSinceEpoch
+                                                .toString(),
                                       ),
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            18.4, 2, 18.4, 2),
-                                        child: Text(
-                                          formatTimestamp(groupInfo.groupData?.membersUid.first.dateJoined.millisecondsSinceEpoch.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),),
-                                          style: GoogleFonts.getFont(
-                                            'DM Sans',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 10,
-                                            color: Color(0xFFFFFFFF),
-                                          ),
-                                        ),
+                                      style: GoogleFonts.getFont(
+                                        'DM Sans',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 10,
+                                        color: Color(0xFFFFFFFF),
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF183A5C),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            18.5, 2, 18.5, 2),
-                                        child: Text(
-                                          'You created this community',
-                                          style: GoogleFonts.getFont(
-                                            'DM Sans',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 10,
-                                            color: Color(0xFFFFFFFF),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFECF4FC),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            11.3, 8, 11.3, 8),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 4),
-                                              child: Text(
-                                                'Share your community so other users can find you and interact with your content! ',
-                                                textAlign: TextAlign.center,
-                                                style: GoogleFonts.getFont(
-                                                  'DM Sans',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 10,
-                                                  color: Color(0xFF1F1C21),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                '${groupInfo.groupData?.groupLink}',
-                                                style: GoogleFonts.getFont(
-                                                  'DM Sans',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12,
-                                                  color: Color(0xFF3C91E5),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.sizeOf(context).width,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF3C91E5),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.fromLTRB(0, 12, 0.4, 12),
-                                      child: Center(
-                                        child: Text(
-                                          'Share community',
-                                          style: GoogleFonts.getFont(
-                                            'DM Sans',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            color: Color(0xFFFFFFFF),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
+                              Container(
+                                margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF183A5C),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(18.5, 2, 18.5, 2),
+                                    child: Text(
+                                      'You created this community',
+                                      style: GoogleFonts.getFont(
+                                        'DM Sans',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 10,
+                                        color: Color(0xFFFFFFFF),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFECF4FC),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(11.3, 8, 11.3, 8),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                          child: Text(
+                                            'Share your community so other users can find you and interact with your content! ',
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.getFont(
+                                              'DM Sans',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10,
+                                              color: Color(0xFF1F1C21),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Text(
+                                            '${groupInfo.groupData?.groupLink}',
+                                            style: GoogleFonts.getFont(
+                                              'DM Sans',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 12,
+                                              color: Color(0xFF3C91E5),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: MediaQuery.sizeOf(context).width,
+                                margin: EdgeInsets.fromLTRB(20, 0, 20, 8),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF3C91E5),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(0, 12, 0.4, 12),
+                                  child: Center(
+                                    child: Text(
+                                      'Share community',
+                                      style: GoogleFonts.getFont(
+                                        'DM Sans',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                        color: Color(0xFFFFFFFF),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            if (groupInfo.groupAdminId == userId) ...[
+                              StreamBuilder<DocumentSnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('groups')
+                                      .doc(groupInfo.groupId)
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<DocumentSnapshot>
+                                          snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {}
+
+                                    if (snapshot.hasError) {}
+
+                                    if (!snapshot.hasData) {}
+                                    final requests =
+                                        snapshot.data?.get('requestsMembers') ??
+                                            [];
+
+                                    groupInfo.requestedUsers(requests);
+
+                                    requestItems = removeDuplicates1(
+                                        groupInfo.requestedMembers);
+
+                                    return GestureDetector(
+                                      onTap: () {
+                                        AppNavigator.pushAndStackPage(context,
+                                            page: RequestedUsersPage(
+                                              item: requestItems,
+                                            ));
+                                      },
+                                      child: (requestItems.isNotEmpty)
+                                          ? Container(
+                                              padding: const EdgeInsets.all(12),
+                                              color: Colors.white,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      CustomImageView(
+                                                        imagePath:
+                                                            AppImages.delayChat,
+                                                        height: 24,
+                                                        width: 24,
+                                                        color: Colors.blue,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 20,
+                                                      ),
+                                                      Text('Pending Requests'),
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    width: 26.adaptSize,
+                                                    height: 26.adaptSize,
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.red),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      child: Center(
+                                                        child: Text(
+                                                          "${requestItems.length}",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox.shrink(),
+                                    );
+                                  }),
+                            ],
+                            SizedBox(
+                              height: 20,
                             ),
-                          if (groupInfo.groupAdminId == userId) ...[
                             StreamBuilder<DocumentSnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('groups')
-                                    .doc(groupInfo.groupId)
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              stream: FirebaseFirestore.instance
+                                  .collection('groups')
+                                  .doc(groupInfo.groupId)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {}
+
+                                if (snapshot.hasError) {}
+
+                                if (!snapshot.hasData ||
+                                    !snapshot.data!.exists) {}
+
+                                var pinnedMessage =
+                                    snapshot.data?.get('pinnedMessage') ?? '';
+
+                                return (pinnedMessage != '')
+                                    ? Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        color: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Row(
+                                            children: [
+                                              CustomImageView(
+                                                imagePath:
+                                                    AppImages.pinMessageIcon,
+                                                height: 24,
+                                                width: 24,
+                                                color: Colors.blue,
+                                              ),
+                                              SizedBox(
+                                                width: 20,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  pinnedMessage,
+                                                  textAlign: TextAlign.justify,
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      wordSpacing: -1),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              if (groupInfo.groupAdminId ==
+                                                  userId)
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      groupInfo
+                                                          .updateGroupPinnedMessage(
+                                                              groupInfo.groupId,
+                                                              '');
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.close,
+                                                      color: Colors.blue,
+                                                      size: 28,
+                                                    ))
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox.shrink();
+                              },
+                            ),
+                            StreamBuilder<List<dynamic>>(
+                                stream: widget.isGroupChat
+                                    ? ref
+                                        .read(chatControllerProvider)
+                                        .groupChatStream(widget.uid)
+                                    : ref
+                                        .read(chatControllerProvider)
+                                        .chatStream(widget.uid, userId),
+                                builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {}
 
                                   if (snapshot.hasError) {}
 
                                   if (!snapshot.hasData) {}
-                                  final requests =
-                                      snapshot.data?.get('requestsMembers') ??
-                                          [];
-
-                                  groupInfo.requestedUsers(requests);
-
-                                  requestItems = removeDuplicates1(
-                                      groupInfo.requestedMembers);
-
-                                  return GestureDetector(
-                                    onTap: () {
-                                      AppNavigator.pushAndStackPage(context,
-                                          page: RequestedUsersPage(
-                                            item: requestItems,
-                                          ));
-                                    },
-                                    child: (requestItems.isNotEmpty)
-                                        ? Container(
-                                            padding: const EdgeInsets.all(12),
-                                            color: Colors.white,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    CustomImageView(
-                                                      imagePath:
-                                                          AppImages.delayChat,
-                                                      height: 24,
-                                                      width: 24,
-                                                      color: Colors.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 20,
-                                                    ),
-                                                    Text('Pending Requests'),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  width: 26.adaptSize,
-                                                  height: 26.adaptSize,
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.red),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "${requestItems.length}",
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : SizedBox.shrink(),
-                                  );
-                                }),
-                          ],
-                          SizedBox(
-                            height: 20,
-                          ),
-                          StreamBuilder<DocumentSnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('groups')
-                                .doc(groupInfo.groupId)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {}
-
-                              if (snapshot.hasError) {}
-
-                              if (!snapshot.hasData ||
-                                  !snapshot.data!.exists) {}
-
-                              var pinnedMessage =
-                                  snapshot.data?.get('pinnedMessage') ?? '';
-
-                              return (pinnedMessage != '')
-                                  ? Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Row(
-                                          children: [
-                                            CustomImageView(
-                                              imagePath:
-                                                  AppImages.pinMessageIcon,
-                                              height: 24,
-                                              width: 24,
-                                              color: Colors.blue,
-                                            ),
-                                            SizedBox(
-                                              width: 20,
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                pinnedMessage,
-                                                textAlign: TextAlign.justify,
-                                                style: const TextStyle(
-                                                    color: Colors.black,
-                                                    wordSpacing: -1),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            if (groupInfo.groupAdminId ==
-                                                userId)
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    groupInfo
-                                                        .updateGroupPinnedMessage(
-                                                            groupInfo.groupId,
-                                                            '');
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.close,
-                                                    color: Colors.blue,
-                                                    size: 28,
-                                                  ))
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : SizedBox.shrink();
-                            },
-                          ),
-                          StreamBuilder<List<dynamic>>(
-                              stream: widget.isGroupChat
-                                  ? ref
-                                      .read(chatControllerProvider)
-                                      .groupChatStream(widget.uid)
-                                  : ref
-                                      .read(chatControllerProvider)
-                                      .chatStream(widget.uid, userId),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {}
-
-                                if (snapshot.hasError) {}
-
-                                if (!snapshot.hasData) {}
-                                groupInfo.clearGroupImageList();
-                                return Expanded(
-                                  child: ListView.builder(
-                                    controller: _scrollController,
+                                  groupInfo.clearGroupImageList();
+                                  return ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: snapshot.data?.length ?? 0,
                                     itemBuilder: (context, index) {
@@ -846,135 +861,126 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                         },
                                       );
                                     },
-                                  ),
-                                );
-                              }),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            child: StreamBuilder<DocumentSnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('groups')
-                                  .doc(groupInfo.groupId)
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {}
-
-                                if (snapshot.hasError) {}
-
-                                if (!snapshot.hasData) {}
-                                final isGroupLocked =
-                                    snapshot.data?.get('isGroupLocked') ??
-                                        false;
-
-                                var groupMembersIds =
-                                    snapshot.data?.get('membersUid') ?? [];
-
-                                if (groupMembersIds
-                                    .any((user) => user['userId'] == userId)) {
-                                  containsId = true;
-                                } else {
-                                  containsId = false;
-
-                                  _firebaseMessaging
-                                      .unsubscribeFromTopic(groupInfo.groupId);
-                                }
-
-                                if (isGroupLocked) {
-                                  return (groupInfo.groupAdminId == userId)
-                                      ? BottomChatField(
-                                          onTap: () {
-                                            _scrollDown();
-                                          },
-                                          recieverUserId: widget.uid,
-                                          isGroupChat: widget.isGroupChat,
-                                          groupName: widget.name,
-                                          groupId: groupInfo.groupId,
-                                        )
-                                      : Container(
-                                          height: 60,
-                                          color: Colors.grey.shade300,
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 0.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.lock,
-                                                  color: Colors.blue,
-                                                  size: 14,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  'only admins can send messages here',
-                                                  style: TextStyle(
-                                                      color: Colors.blue),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                } else if (!containsId) {
-                                  return (groupInfo.groupAdminId == userId)
-                                      ? BottomChatField(
-                                          onTap: () {
-                                            _scrollDown();
-                                          },
-                                          recieverUserId: widget.uid,
-                                          isGroupChat: widget.isGroupChat,
-                                          groupName: widget.name,
-                                          groupId: groupInfo.groupId)
-                                      : Container(
-                                          height: 60,
-                                          color: Colors.grey.shade300,
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 0.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.lock,
-                                                  color: Colors.blue,
-                                                  size: 14,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  'you are no longer a member of this group',
-                                                  style: TextStyle(
-                                                      color: Colors.blue),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                }
-
-                                return BottomChatField(
-                                  onTap: () {
-                                    _scrollDown();
-                                  },
-                                  recieverUserId: widget.uid,
-                                  isGroupChat: widget.isGroupChat,
-                                  groupName: widget.name,
-                                  groupId: groupInfo.groupId,
-                                );
-                              },
+                                  );
+                                }),
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
                     ),
+                  ),
+                  bottomNavigationBar: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('groups')
+                        .doc(groupInfo.groupId)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {}
+
+                      if (snapshot.hasError) {}
+
+                      if (!snapshot.hasData) {}
+                      final isGroupLocked =
+                          snapshot.data?.get('isGroupLocked') ?? false;
+
+                      var groupMembersIds =
+                          snapshot.data?.get('membersUid') ?? [];
+
+                      if (groupMembersIds
+                          .any((user) => user['userId'] == userId)) {
+                        containsId = true;
+                      } else {
+                        containsId = false;
+
+                        _firebaseMessaging
+                            .unsubscribeFromTopic(groupInfo.groupId);
+                      }
+
+                      if (isGroupLocked) {
+                        return (groupInfo.groupAdminId == userId)
+                            ? BottomChatField(
+                                onTap: () {
+                                  _scrollDown();
+                                },
+                                recieverUserId: widget.uid,
+                                isGroupChat: widget.isGroupChat,
+                                groupName: widget.name,
+                                groupId: groupInfo.groupId,
+                              )
+                            : Container(
+                                height: 60,
+                                color: Colors.grey.shade300,
+                                child: Padding(
+                                  padding: EdgeInsets.only(bottom: 0.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.lock,
+                                        color: Colors.blue,
+                                        size: 14,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'only admins can send messages here',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                      } else if (!containsId) {
+                        return (groupInfo.groupAdminId == userId)
+                            ? BottomChatField(
+                                onTap: () {
+                                  _scrollDown();
+                                },
+                                recieverUserId: widget.uid,
+                                isGroupChat: widget.isGroupChat,
+                                groupName: widget.name,
+                                groupId: groupInfo.groupId)
+                            : Container(
+                                height: 60,
+                                color: Colors.grey.shade300,
+                                child: Padding(
+                                  padding: EdgeInsets.only(bottom: 0.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.lock,
+                                        color: Colors.blue,
+                                        size: 14,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'you are no longer a member of this group',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                      }
+
+                      return BottomChatField(
+                        onTap: () {
+                          _scrollDown();
+                        },
+                        recieverUserId: widget.uid,
+                        isGroupChat: widget.isGroupChat,
+                        groupName: widget.name,
+                        groupId: groupInfo.groupId,
+                      );
+                    },
                   ),
                 ),
         ),
@@ -1346,31 +1352,24 @@ class _MobileChatState extends ConsumerState<MobileChat> {
     });
   }
 
-String formatTimestamp(String timestamp) {
-  int milliseconds = int.parse(timestamp);
- 
-  DateTime date = DateTime.fromMillisecondsSinceEpoch(milliseconds);
- 
-  DateTime now = DateTime.now();
+  String formatTimestamp(String timestamp) {
+    int milliseconds = int.parse(timestamp);
 
-   
-  int differenceInDays = DateTime(now.year, now.month, now.day)
-      .difference(DateTime(date.year, date.month, date.day))
-      .inDays;
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(milliseconds);
 
-  
-  if (differenceInDays == 0) {
-    return "Today";
+    DateTime now = DateTime.now();
+
+    int differenceInDays = DateTime(now.year, now.month, now.day)
+        .difference(DateTime(date.year, date.month, date.day))
+        .inDays;
+
+    if (differenceInDays == 0) {
+      return "Today";
+    } else if (differenceInDays == 1) {
+      return "Yesterday";
+    } else {
+      DateFormat formatter = DateFormat('MMM-dd-yyyy');
+      return formatter.format(date);
+    }
   }
-   
-  else if (differenceInDays == 1) {
-    return "Yesterday";
-  } 
-  else {
-    
-    DateFormat formatter = DateFormat('MMM-dd-yy');
-    return formatter.format(date);
-  }
-}
-
 }

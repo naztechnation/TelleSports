@@ -1,10 +1,15 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/handlers/secure_handler.dart';
 import 'package:tellesports/presentation/manage_account/update_account.dart';
+import 'package:tellesports/res/app_images.dart';
+import 'package:tellesports/widgets/image_view.dart';
+import 'package:tellesports/widgets/modals.dart';
 
 import '../../model/chat_model/group.dart';
 import '../../utils/navigator/page_navigator.dart';
@@ -13,7 +18,7 @@ import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
-import '../../widgets/custom_text_form_field.dart'; 
+import '../../widgets/custom_text_form_field.dart';
 import '../buy_tellacoins_screen/buy_tellacoins_screen.dart';
 import '../community_screens/provider/auth_provider.dart';
 import 'finish_withdrawal.dart';
@@ -38,10 +43,8 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
   String bank = "";
   String userId = "";
-  
 
   int numberOfMembers = 0;
 
@@ -57,17 +60,16 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
   bool isAnyLengthGreaterThanOrEqual = false;
 
   String balance = '';
+  String conversionRate = '';
 
   Color amountColor = Colors.black;
-
-   
 
   getBankDetails() async {
     bank = await StorageHandler.getUserBank() ?? "";
     userId = await StorageHandler.getUserId() ?? "";
-    
-    balance = widget.tellaCoinBalance;
+    conversionRate = await StorageHandler.getCoinRate() ?? "";
 
+    balance = widget.tellaCoinBalance;
 
     setState(() {});
   }
@@ -101,7 +103,6 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
   Widget build(BuildContext context) {
     checkEventStatus();
 
-    // amountController.text = '5';
 
     return SafeArea(
       child: Scaffold(
@@ -124,6 +125,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
               for (var group in userGroups) {
                 int length = group.membersUid.toSet().length;
                 membersUidLength.add(length);
+
               }
 
               isAnyLengthGreaterThanOrEqual =
@@ -131,36 +133,47 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
 
               return Form(
                 key: _formKey,
-
                 child: Container(
                   width: double.maxFinite,
-                  padding: EdgeInsets.all(10.h),
+                  padding: EdgeInsets.all(16.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomElevatedButton(
-                        textColor: isEligible ? Color(0xFF288763) : Colors.red,
-                        buttonStyle: ElevatedButton.styleFrom(
-                            backgroundColor: isEligible
-                                ? Color(0xFFEBF6F2)
-                                : Colors.red.shade50,
-                            foregroundColor: Color(0xFF288763)),
-                        decoration: BoxDecoration(
-                            color: Color(0xFFEBF6F2),
-                            borderRadius: BorderRadius.circular(20)),
-                        text: isEligible
-                            ? "You are eligible to  withdraw tellacoins"
-                            : "You are not eligible to  withdraw tellacoins",
-                        buttonTextStyle: TextStyle(color: Color(0xFF288763)),
-                        leftIcon: Container(
-                          margin: EdgeInsets.fromLTRB(10.h, 8.v, 8.h, 8.v),
-                          child: CustomImageView(
-                            color: isEligible ? Color(0xFF288763) : Colors.red,
-                            imagePath: ImageConstant.imgVideocameraGreen700,
-                            height: 24.adaptSize,
-                            width: 24.adaptSize,
-                          ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB( 0.h, 8.v, 0.h, 8.v),
+                        padding: EdgeInsets.all(6.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.fromLTRB(10.h, 0.v, 20.h, 0.v),
+                              child: CustomImageView(
+                                color:
+                                    isEligible ? Color(0xFF288763) : Colors.red,
+                                imagePath: ImageConstant.imgVideocameraGreen700,
+                                height: 24.adaptSize,
+                                width: 24.adaptSize,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                isEligible
+                                    ? "You are eligible to  withdraw tellacoins"
+                                    : "You are not eligible to  withdraw tellacoins",
+                                style: TextStyle(
+                                    color: isEligible
+                                        ? Color(0xFF288763)
+                                        : Colors.red,
+                                    fontSize: 14),
+                              ),
+                            ),
+                          ],
                         ),
+                        decoration: BoxDecoration(
+                            color: isEligible
+                                ? Color(0xFFEBF6F2)
+                                : Colors.red.shade100,
+                            borderRadius: BorderRadius.circular(8)),
                       ),
                       SizedBox(height: 16.v),
                       _buildTelacoinsBalance(context),
@@ -168,7 +181,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                       _buildTextField(context),
                       SizedBox(height: 23.v),
                       Text(
-                        "1 Tellacoin = N20",
+                        "1 Tellacoin = ₦$conversionRate",
                         style: TextStyle(
                           color: appTheme.gray900,
                           fontSize: 14.fSize,
@@ -198,19 +211,18 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                             ),
                           ),
                         ),
-                      ]
-                       else if (int.tryParse(widget.tellaCoinBalance)! <
+                      ] else if (int.tryParse(widget.tellaCoinBalance)! <
                           1000) ...[
                         GestureDetector(
                           onTap: () {
-                            AppNavigator.pushAndStackPage(context,
-                                page: PricingPageScreen(
-                                  balance: widget.tellaCoinBalance, 
-                                ));
+                            // AppNavigator.pushAndStackPage(context,
+                            //     page: PricingPageScreen(
+                            //       balance: widget.tellaCoinBalance,
+                            //     ));
                           },
                           child: Align(
                             child: Text(
-                              'You dont\'t have sufficient balance click to add more Tellacoin.'
+                              'You don\'t have sufficient Tellacoin balance.'
                                   .toUpperCase(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -239,9 +251,8 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                             ),
                           ),
                         ),
-                      ]
-                     else if(!isSufficient || amountController.text.isEmpty)...[]
-                     
+                      ] else if (!isSufficient || amountController.text.isEmpty)
+                        ...[]
                       else ...[
                         CustomElevatedButton(
                           text: "Continue",
@@ -258,11 +269,10 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
     );
   }
 
- List<MemberData> removeDuplicateUsers(List<MemberData> users) {
-  Set<MemberData> uniqueUsers = users.toSet();
-  return uniqueUsers.toList();
-}
-
+  List<MemberData> removeDuplicateUsers(List<MemberData> users) {
+    Set<MemberData> uniqueUsers = users.toSet();
+    return uniqueUsers.toList();
+  }
 
   checkEventStatus() {
     if (bank == "" || bank == "null" || bank == null) {
@@ -277,8 +287,8 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
       setState(() {
         isEligible = false;
       });
-    }else if(isSufficient && amountController.text.isNotEmpty){
-       setState(() {
+    } else if (isSufficient && amountController.text.isNotEmpty) {
+      setState(() {
         isEligible = false;
       });
     } else {
@@ -290,7 +300,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 86.v,
+      height: 70.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         onTap: () {
@@ -299,7 +309,6 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
-          top: 50.v,
           bottom: 12.v,
         ),
       ),
@@ -307,11 +316,10 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
       title: AppbarSubtitle(
         text: "Withdraw Tellacoins",
         margin: EdgeInsets.only(
-          top: 49.v,
           bottom: 9.v,
         ),
       ),
-      styleType: Style.bgOutline,
+      
     );
   }
 
@@ -350,6 +358,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                 ),
               ),
             ),
+            ImageView.asset(AppImages.)
           ],
         ),
         const SizedBox(
@@ -475,10 +484,12 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
   }
 
   onTapContinueBtn(BuildContext context) {
-
-    if( _formKey.currentState!.validate()){
-    AppNavigator.pushAndStackPage(context, page: FinishWithdrawalScreen(coinToWithdraw: amountController.text, nairaRate: '20',));
-
+    if (_formKey.currentState!.validate()) {
+      AppNavigator.pushAndStackPage(context,
+          page: FinishWithdrawalScreen(
+            coinToWithdraw: amountController.text,
+            nairaRate: '20',
+          ));
     }
   }
 
@@ -487,6 +498,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
       height: 33.v,
       width: (widget.userSub.toLowerCase() == 'community leader') ? 180.h : 150,
       text: widget.userSub.toUpperCase(),
+      textSize: 12,
       margin: EdgeInsets.only(right: 12.h),
       buttonStyle: CustomButtonStyles.fillTeal,
       buttonTextStyle: CustomTextStyles.labelLargeInter,
@@ -510,39 +522,41 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
         SizedBox(height: 3.v),
         CustomTextFormField(
           controller: amountController,
-          hintText: "Minimum 500",
+          hintText: "Minimum 1000",
           readOnly: isEligible ? false : true,
           textInputAction: TextInputAction.done,
           textInputType: TextInputType.number,
-          borderDecoration: isSufficient && amountController.text.isNotEmpty ? OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.h),
-          borderSide: BorderSide(
-            color: appTheme.red600,
-            width: 1,
-          ),
-        ): OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.h),
-              borderSide: BorderSide(
-                color: appTheme.blueGray100,
-                width: 1,
-              ),
-            ),
-           onChanged: (value) {
-          _formKey.currentState!.validate();
-        },
-         validator: (value) {
-          return Validator.validate(value, 'Amount');
-        },
+          borderDecoration: isSufficient && amountController.text.isNotEmpty
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.h),
+                  borderSide: BorderSide(
+                    color: appTheme.red600,
+                    width: 1,
+                  ),
+                )
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.h),
+                  borderSide: BorderSide(
+                    color: appTheme.blueGray100,
+                    width: 1,
+                  ),
+                ),
+          onChanged: (value) {
+            _formKey.currentState!.validate();
+          },
+          validator: (value) {
+            return Validator.validate(value, 'Amount');
+          },
         ),
         Visibility(
-          visible: isSufficient && amountController.text.isNotEmpty,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: Text(
-              'Insufficient funds',
-              style: TextStyle(color: Colors.red, fontSize: 13),
-            ),
-          )),
+            visible: isSufficient && amountController.text.isNotEmpty,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Text(
+                'Insufficient funds',
+                style: TextStyle(color: Colors.red, fontSize: 13),
+              ),
+            )),
       ],
     );
   }
