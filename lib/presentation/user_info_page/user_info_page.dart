@@ -145,7 +145,25 @@ class UserInfoPageState extends State<UserInfo>
                           processing: isLoading,
                           buttonStyle: CustomButtonStyles.fillRedTL8,
                           onPressed: () async {
-                            if (widget.isGroupAdmin) {
+                             Modals.showDialogModal(context,
+                              page: ModalContentScreen(
+                                  title: 'Log out!!!',
+                                  body: Text(
+                                    'Are you sure you want to block this user?',
+                                    maxLines: 8,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: appTheme.gray900,
+                                      fontSize: 14.fSize,
+                                      fontFamily: 'DM Sans',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  btnText: 'Proceed',
+                                  onPressed: () async{
+
+                                    Navigator.pop(context);
+                                    if (widget.isGroupAdmin) {
                               Modals.showToast(
                                   'Oppss you can\'t block yourself');
                             } else {
@@ -167,6 +185,14 @@ class UserInfoPageState extends State<UserInfo>
                               AppNavigator.pushAndStackPage(context,
                                   page: LandingPage());
                             }
+                                     
+                                  },
+                                  headerColorOne:
+                                      Color.fromARGB(255, 208, 151, 151),
+                                  headerColorTwo:
+                                      Color.fromARGB(255, 234, 132, 132)));
+                                  
+                            
                           },
                         ),
                       ],

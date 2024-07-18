@@ -37,7 +37,7 @@ class RequestedUsersPage extends StatelessWidget {
             top: 11.v,
             right: 28.h,
           ),
-          child: (item.isEmpty) ? Center(child: Text('You dont have any pendinng requests')): ListView.separated(
+          child: (item.isEmpty) ? Center(child: Text('You dont have any pending requests')): ListView.separated(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
             separatorBuilder: (

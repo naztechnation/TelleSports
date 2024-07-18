@@ -253,7 +253,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
                                   btnText: 'Proceed',
                                   onPressed: () {
                                     trasferTellaCoin();
-                                    // Modals.showToast(widget.adminFcm);
+                                   
                                     Navigator.pop(context);
                                   },
                                   headerColorOne:

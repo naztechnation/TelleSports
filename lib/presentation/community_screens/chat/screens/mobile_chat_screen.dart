@@ -300,7 +300,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                               widget.membersUid);
                         },
                         child: Container(
-                              width: MediaQuery.sizeOf(context).width * 0.5,
+                              width: MediaQuery.sizeOf(context).width * 0.8,
                               color: Colors.white,
                           child: Row(
                             children: [
@@ -518,6 +518,40 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                         'DM Sans',
                                         fontWeight: FontWeight.w500,
                                         fontSize: 14,
+                                        color: Color(0xFFFFFFFF),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ]else...[
+                               Container(
+                                margin: EdgeInsets.fromLTRB(20, 20, 20, 15),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF183A5C),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(18.4, 2, 18.4, 2),
+                                    child: Text(
+                                      formatTimestamp(
+                                        groupInfo
+                                                .groupData
+                                                ?.membersUid
+                                                .first
+                                                .dateJoined
+                                                .millisecondsSinceEpoch
+                                                .toString() ??
+                                            DateTime.now()
+                                                .millisecondsSinceEpoch
+                                                .toString(),
+                                      ),
+                                      style: GoogleFonts.getFont(
+                                        'DM Sans',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 10,
                                         color: Color(0xFFFFFFFF),
                                       ),
                                     ),
