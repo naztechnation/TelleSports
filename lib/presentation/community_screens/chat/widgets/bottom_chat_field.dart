@@ -199,68 +199,59 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 ),
               ),
               StreamBuilder<DocumentSnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('groups')
-                                      .doc(widget.groupId)
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<DocumentSnapshot>
-                                          snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return Container(
-                  height: 18.adaptSize,
-                  width: 18.adaptSize,
-                  margin: EdgeInsets.only(
-                    top: 5.v,
-                    bottom: 20.v,
-                    left: 10
-                  ),
-                  child: CircularProgressIndicator(
-                    color: Colors.blue,
-                  ),
-                );
-                                    }
+                  stream: FirebaseFirestore.instance
+                      .collection('groups')
+                      .doc(widget.groupId)
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Container(
+                        height: 18.adaptSize,
+                        width: 18.adaptSize,
+                        margin:
+                            EdgeInsets.only(top: 5.v, bottom: 20.v, left: 10),
+                        child: CircularProgressIndicator(
+                          color: Colors.blue,
+                        ),
+                      );
+                    }
 
-                                    final data = snapshot.data!.data()
-                                        as Map<String, dynamic>;
-                                    final group = Group.fromMap(data);
-                                    final currentUser =
-                                        group.membersUid.firstWhere(
-                                      (member) => member.userId == userId,
-                                    );
-                                    final isNotifyOn = currentUser != null
-                                        ? currentUser.recieveNotification
-                                        : false;
+                    final data = snapshot.data!.data() as Map<String, dynamic>;
+                    final group = Group.fromMap(data);
+                    final currentUser = group.membersUid.firstWhere(
+                      (member) => member.userId == userId,
+                    );
+                    final isNotifyOn = currentUser != null
+                        ? currentUser.recieveNotification
+                        : false;
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {});
-                  
-                      if (_messageController.text.isNotEmpty) {
-                        if (isNotifyOn) {
-                           sendTopicNotification(widget.groupId, widget.groupName,
-                            _messageController.text);
-                             
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {});
+
+                        if (_messageController.text.isNotEmpty) {
+                          if (isNotifyOn) {
+                            sendTopicNotification(widget.groupId,
+                                widget.groupName, _messageController.text);
+                          }
+
+                          sendTextMessage();
                         }
-                       
-                  
-                        sendTextMessage();
-                      }
-                      ;
-                    },
-                    child: CustomImageView(
-                      imagePath: ImageConstant.imgSend,
-                      height: 32.adaptSize,
-                      width: 32.adaptSize,
-                      margin: EdgeInsets.only(
-                        left: 12.h,
-                        top: 5.v,
-                        bottom: 20.v,
+                        ;
+                      },
+                      child: CustomImageView(
+                        imagePath: ImageConstant.imgSend,
+                        height: 32.adaptSize,
+                        width: 32.adaptSize,
+                        margin: EdgeInsets.only(
+                          left: 12.h,
+                          top: 5.v,
+                          bottom: 20.v,
+                        ),
                       ),
-                    ),
-                  );
-                }
-              ),
+                    );
+                  }),
             ],
           ),
         ),

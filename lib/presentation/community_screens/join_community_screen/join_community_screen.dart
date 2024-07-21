@@ -272,13 +272,7 @@ class _CommunityInfoScreenState extends State<JoinCommunityInfoScreen> {
 
                                   await groupInfo.addUserToRequestsMembers(
                                       widget.groupId,
-                                      [
-                                        MemberData(
-                                            userId: userId,
-                                            dateJoined: DateTime.now(),
-                                            username: username, recieveNotification: true
-                                            ),
-                                      ],
+                                      userId,
                                       context);
 
                                   sendPushNotification(

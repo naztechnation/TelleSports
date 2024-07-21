@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,6 +39,7 @@ import '../../../../widgets/modals.dart';
 
 import '../../../landing_page/landing_page.dart';
 import '../../community_one_page/community_info_page.dart';
+import '../../community_one_page/community_list_page.dart';
 import '../../widgets/requests_page.dart';
 import '../../provider/auth_provider.dart' as pro;
 import '../../provider/auth_provider.dart';
@@ -191,7 +194,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
       Future.delayed(Duration(seconds: 1), () {
         getMyBlockedUsers(groupInfo, userId);
 
-        if(groupInfo.groupAdminId == userId){
+        if (groupInfo.groupAdminId == userId) {
           groupInfo.updateAdminFcm(groupInfo.groupId, token);
         }
       });
@@ -300,8 +303,8 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                               widget.membersUid);
                         },
                         child: Container(
-                              width: MediaQuery.sizeOf(context).width * 0.8,
-                              color: Colors.white,
+                          width: MediaQuery.sizeOf(context).width * 0.8,
+                          color: Colors.white,
                           child: Row(
                             children: [
                               AppbarTitleCircleimage(
@@ -333,17 +336,20 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                                 snapshot) {
                                           if (snapshot.connectionState ==
                                               ConnectionState.waiting) {}
-                              
+
                                           if (snapshot.hasError) {}
-                              
+
                                           if (!snapshot.hasData ||
                                               !snapshot.data!.exists) {}
-                              
+
                                           List<MemberData> groupMembers = [];
-                                          if (snapshot.data?.get('membersUid') !=
+                                          if (snapshot.data
+                                                  ?.get('membersUid') !=
                                               null) {
-                                            groupMembers = List<MemberData>.from(
-                                                (snapshot.data?.get('membersUid')
+                                            groupMembers =
+                                                List<MemberData>.from((snapshot
+                                                            .data
+                                                            ?.get('membersUid')
                                                         as List)
                                                     .map((item) =>
                                                         MemberData.fromMap(item
@@ -353,7 +359,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                           var showMember = snapshot.data
                                                   ?.get('showMemberCount') ??
                                               false;
-                              
+
                                           var memcount = removeDuplicateMembers(
                                               groupMembers);
                                           return AppbarSubtitleFour(
@@ -370,10 +376,10 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                                     ? "${memcount.length}   Member"
                                                     : "${memcount.length}   Members"
                                                 : '',
-                                            margin: EdgeInsets.only(right: 28.h),
+                                            margin:
+                                                EdgeInsets.only(right: 28.h),
                                           );
                                         }),
-                                  
                                   ],
                                 ),
                               ),
@@ -394,258 +400,10 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
                       groupInfo.setMessageType(MessageEnum.none);
                     },
-                    child: ListView(
-                      shrinkWrap: true,
-                      controller: _scrollController,
+                    child: Column(
                       children: [
-                        Column(
-                          children: [
-                            if (groupInfo.groupAdminId == userId) ...[
-                              Container(
-                                margin: EdgeInsets.fromLTRB(20, 20, 20, 15),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF183A5C),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(18.4, 2, 18.4, 2),
-                                    child: Text(
-                                      formatTimestamp(
-                                        groupInfo
-                                                .groupData
-                                                ?.membersUid
-                                                .first
-                                                .dateJoined
-                                                .millisecondsSinceEpoch
-                                                .toString() ??
-                                            DateTime.now()
-                                                .millisecondsSinceEpoch
-                                                .toString(),
-                                      ),
-                                      style: GoogleFonts.getFont(
-                                        'DM Sans',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 10,
-                                        color: Color(0xFFFFFFFF),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF183A5C),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(18.5, 2, 18.5, 2),
-                                    child: Text(
-                                      'You created this community',
-                                      style: GoogleFonts.getFont(
-                                        'DM Sans',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 10,
-                                        color: Color(0xFFFFFFFF),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFECF4FC),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(11.3, 8, 11.3, 8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                          child: Text(
-                                            'Share your community so other users can find you and interact with your content! ',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.getFont(
-                                              'DM Sans',
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 10,
-                                              color: Color(0xFF1F1C21),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Text(
-                                            '${groupInfo.groupData?.groupLink}',
-                                            style: GoogleFonts.getFont(
-                                              'DM Sans',
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 12,
-                                              color: Color(0xFF3C91E5),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: MediaQuery.sizeOf(context).width,
-                                margin: EdgeInsets.fromLTRB(20, 0, 20, 8),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF3C91E5),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(0, 12, 0.4, 12),
-                                  child: Center(
-                                    child: Text(
-                                      'Share community',
-                                      style: GoogleFonts.getFont(
-                                        'DM Sans',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14,
-                                        color: Color(0xFFFFFFFF),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ]else...[
-                               Container(
-                                margin: EdgeInsets.fromLTRB(20, 20, 20, 15),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF183A5C),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(18.4, 2, 18.4, 2),
-                                    child: Text(
-                                      formatTimestamp(
-                                        groupInfo
-                                                .groupData
-                                                ?.membersUid
-                                                .first
-                                                .dateJoined
-                                                .millisecondsSinceEpoch
-                                                .toString() ??
-                                            DateTime.now()
-                                                .millisecondsSinceEpoch
-                                                .toString(),
-                                      ),
-                                      style: GoogleFonts.getFont(
-                                        'DM Sans',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 10,
-                                        color: Color(0xFFFFFFFF),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                            if (groupInfo.groupAdminId == userId) ...[
-                              StreamBuilder<DocumentSnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('groups')
-                                      .doc(groupInfo.groupId)
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<DocumentSnapshot>
-                                          snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {}
-
-                                    if (snapshot.hasError) {}
-
-                                    if (!snapshot.hasData) {}
-                                    final requests =
-                                        snapshot.data?.get('requestsMembers') ??
-                                            [];
-
-                                    groupInfo.requestedUsers(requests);
-
-                                    requestItems = removeDuplicates1(
-                                        groupInfo.requestedMembers);
-
-                                    return GestureDetector(
-                                      onTap: () {
-                                        AppNavigator.pushAndStackPage(context,
-                                            page: RequestedUsersPage(
-                                              item: requestItems,
-                                            ));
-                                      },
-                                      child: (requestItems.isNotEmpty)
-                                          ? Container(
-                                              padding: const EdgeInsets.all(12),
-                                              color: Colors.white,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      CustomImageView(
-                                                        imagePath:
-                                                            AppImages.delayChat,
-                                                        height: 24,
-                                                        width: 24,
-                                                        color: Colors.blue,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 20,
-                                                      ),
-                                                      Text('Pending Requests'),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    width: 26.adaptSize,
-                                                    height: 26.adaptSize,
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.red),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4.0),
-                                                      child: Center(
-                                                        child: Text(
-                                                          "${requestItems.length}",
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : SizedBox.shrink(),
-                                    );
-                                  }),
-                            ],
-                            SizedBox(
-                              height: 20,
-                            ),
-                            StreamBuilder<DocumentSnapshot>(
+                        if (groupInfo.groupAdminId == userId) ...[
+                          StreamBuilder<DocumentSnapshot>(
                               stream: FirebaseFirestore.instance
                                   .collection('groups')
                                   .doc(groupInfo.groupId)
@@ -657,250 +415,541 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
                                 if (snapshot.hasError) {}
 
-                                if (!snapshot.hasData ||
-                                    !snapshot.data!.exists) {}
+                                if (!snapshot.hasData) {}
+                                final requests =
+                                    snapshot.data?.get('requestsMembers') ?? [];
 
-                                var pinnedMessage =
-                                    snapshot.data?.get('pinnedMessage') ?? '';
+                                groupInfo.requestedUsers(requests);
 
-                                return (pinnedMessage != '')
-                                    ? Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        color: Colors.white,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
+                                requestItems = removeDuplicates1(
+                                    groupInfo.requestedMembers);
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    AppNavigator.pushAndStackPage(context,
+                                        page: RequestedUsersPage(
+                                          item: requestItems,
+                                        ));
+                                  },
+                                  child: (requestItems.isNotEmpty)
+                                      ? Container(
+                                          padding: const EdgeInsets.all(12),
+                                          color: Colors.white,
                                           child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              CustomImageView(
-                                                imagePath:
-                                                    AppImages.pinMessageIcon,
-                                                height: 24,
-                                                width: 24,
-                                                color: Colors.blue,
+                                              Row(
+                                                children: [
+                                                  CustomImageView(
+                                                    imagePath:
+                                                        AppImages.delayChat,
+                                                    height: 24,
+                                                    width: 24,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Text('Pending Requests'),
+                                                ],
                                               ),
-                                              SizedBox(
-                                                width: 20,
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  pinnedMessage,
-                                                  textAlign: TextAlign.justify,
-                                                  style: const TextStyle(
-                                                      color: Colors.black,
-                                                      wordSpacing: -1),
+                                              Container(
+                                                width: 26.adaptSize,
+                                                height: 26.adaptSize,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.red),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "${requestItems.length}",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              if (groupInfo.groupAdminId ==
-                                                  userId)
-                                                GestureDetector(
-                                                    onTap: () {
-                                                      groupInfo
-                                                          .updateGroupPinnedMessage(
-                                                              groupInfo.groupId,
-                                                              '');
-                                                    },
-                                                    child: const Icon(
-                                                      Icons.close,
-                                                      color: Colors.blue,
-                                                      size: 28,
-                                                    ))
                                             ],
                                           ),
-                                        ),
-                                      )
-                                    : SizedBox.shrink();
-                              },
-                            ),
-                            StreamBuilder<List<dynamic>>(
-                                stream: widget.isGroupChat
-                                    ? ref
-                                        .read(chatControllerProvider)
-                                        .groupChatStream(widget.uid)
-                                    : ref
-                                        .read(chatControllerProvider)
-                                        .chatStream(widget.uid, userId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {}
+                                        )
+                                      : SizedBox.shrink(),
+                                );
+                              }),
+                        ],
+                        SizedBox(
+                          height: 2,
+                        ),
+                        StreamBuilder<DocumentSnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('groups')
+                              .doc(groupInfo.groupId)
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {}
 
-                                  if (snapshot.hasError) {}
+                            if (snapshot.hasError) {}
 
-                                  if (!snapshot.hasData) {}
-                                  groupInfo.clearGroupImageList();
-                                  return ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.data?.length ?? 0,
-                                    itemBuilder: (context, index) {
-                                      final messageData = snapshot.data?[index];
+                            if (!snapshot.hasData || !snapshot.data!.exists) {}
 
-                                      if (blockedUsers
-                                          .contains(messageData.senderId)) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Modals.showAlertOptionDialog(
-                                                context,
-                                                call: false,
-                                                title: 'UnBlock this user'
-                                                    .toUpperCase(),
-                                                message:
-                                                    'Are you sure you want to unblock this user? Once this action is completed you would view this users contents in every community you share with them. Do you wish to continue?',
-                                                onTap: () async {
-                                              setState(() {
-                                                isLoading = true;
-                                              });
+                            var pinnedMessage =
+                                snapshot.data?.get('pinnedMessage') ?? '';
 
-                                              await groupInfo
-                                                  .removeUserFromBlockedList(
-                                                userId: userId,
-                                                memberId: messageData.senderId,
-                                              );
-
-                                              groupInfo
-                                                  .isSelectedMessage(false);
-                                              groupInfo.setSelectedMessage('');
-                                              groupInfo.setTextIndex(-1);
-                                              groupInfo.setMessageId('');
-                                              groupInfo.setSelectedSenderId('');
-
-                                              groupInfo.setMessageType(
-                                                  MessageEnum.none);
-                                              setState(() {
-                                                isLoading = false;
-                                              });
-
-                                              AppNavigator.pushAndStackPage(
-                                                  contex!,
-                                                  rootNavigator: true,
-                                                  page: LandingPage());
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.all(10),
-                                            margin: EdgeInsets.fromLTRB(
-                                                50, 12, 10, 5),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Colors.grey.shade300,
+                            return (pinnedMessage != '')
+                                ? Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Row(
+                                        children: [
+                                          CustomImageView(
+                                            imagePath: AppImages.pinMessageIcon,
+                                            height: 24,
+                                            width: 24,
+                                            color: Colors.blue,
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              pinnedMessage,
+                                              textAlign: TextAlign.justify,
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  wordSpacing: -1),
                                             ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          if (groupInfo.groupAdminId == userId)
+                                            GestureDetector(
+                                                onTap: () {
+                                                  groupInfo
+                                                      .updateGroupPinnedMessage(
+                                                          groupInfo.groupId,
+                                                          '');
+                                                },
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  color: Colors.blue,
+                                                  size: 28,
+                                                ))
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox.shrink();
+                          },
+                        ),
+                        Expanded(
+                          child: ListView(
+                            shrinkWrap: true,
+                            controller: _scrollController,
+                            children: [
+                              Column(
+                                children: [
+                                  if (groupInfo.groupAdminId == userId) ...[
+                                    Container(
+                                      margin:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 15),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF183A5C),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.fromLTRB(
+                                              18.4, 2, 18.4, 2),
+                                          child: Text(
+                                            formatTimestamp(
+                                              groupInfo
+                                                      .groupData
+                                                      ?.membersUid
+                                                      .first
+                                                      .dateJoined
+                                                      .millisecondsSinceEpoch
+                                                      .toString() ??
+                                                  DateTime.now()
+                                                      .millisecondsSinceEpoch
+                                                      .toString(),
+                                            ),
+                                            style: GoogleFonts.getFont(
+                                              'DM Sans',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10,
+                                              color: Color(0xFFFFFFFF),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.fromLTRB(20, 0, 20, 15),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF183A5C),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.fromLTRB(
+                                              18.5, 2, 18.5, 2),
+                                          child: Text(
+                                            'You created this community',
+                                            style: GoogleFonts.getFont(
+                                              'DM Sans',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10,
+                                              color: Color(0xFFFFFFFF),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        copyToClipboard1(
+                                            '${groupInfo.groupData?.groupLink}',
+                                            groupInfo,
+                                            context);
+                                      },
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(20, 0, 20, 15),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFFECF4FC),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                11.3, 8, 11.3, 8),
                                             child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
-                                                Center(
-                                                    child: Text(
-                                                  'User content blocked',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontStyle: FontStyle.italic,
-                                                    color: Colors.red,
+                                                Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0, 0, 0, 4),
+                                                  child: Text(
+                                                    'Share your community so other users can find you and interact with your content! ',
+                                                    textAlign: TextAlign.center,
+                                                    style: GoogleFonts.getFont(
+                                                      'DM Sans',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 10,
+                                                      color: Color(0xFF1F1C21),
+                                                    ),
                                                   ),
-                                                )),
-                                                const SizedBox(
-                                                  height: 5,
                                                 ),
-                                                Align(
-                                                    alignment:
-                                                        Alignment.bottomRight,
-                                                    child: Text(
-                                                      'tap to unblock this user',
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 10,
-                                                          fontStyle:
-                                                              FontStyle.italic),
-                                                    )),
+                                                Container(
+                                                  child: Text(
+                                                    '${groupInfo.groupData?.groupLink}',
+                                                    style: GoogleFonts.getFont(
+                                                      'DM Sans',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 12,
+                                                      color: Color(0xFF3C91E5),
+                                                    ),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
-                                        );
-                                      }
-
-                                      if (messageData.type ==
-                                          MessageEnum.image) {
-                                        groupInfo.updateGroupImageList(
-                                            messageData.text);
-                                      }
-                                      var timeSent = DateFormat('hh:mm a')
-                                          .format(
-                                              messageData.timeSent.toLocal());
-
-                                      if (!messageData.isSeen &&
-                                          messageData.recieverid == userId) {
-                                        ref
-                                            .read(chatControllerProvider)
-                                            .setChatMessageSeen(
-                                              context,
-                                              widget.uid,
-                                              userId,
-                                              messageData.messageId,
-                                            );
-                                      }
-                                      if (messageData.senderId == userId) {
-                                        return MyMessageCard(
-                                          message: messageData.text,
-                                          name: messageData.username,
-                                          index: index,
-                                          date: timeSent,
-                                          senderId: messageData.senderId,
-                                          type: messageData.type,
-                                          repliedText:
-                                              messageData.repliedMessage,
-                                          username: messageData.repliedTo,
-                                          repliedMessageType:
-                                              messageData.repliedMessageType,
-                                          onLeftSwipe: (value) =>
-                                              onMessageSwipe(
-                                            messageData.text,
-                                            true,
-                                            messageData.type,
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Modals.showBottomSheetModal(context,
+                                            page: CommunityListPage());
+                                      },
+                                      child: Container(
+                                        width: MediaQuery.sizeOf(context).width,
+                                        margin:
+                                            EdgeInsets.fromLTRB(20, 0, 20, 8),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF3C91E5),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.fromLTRB(
+                                              0, 12, 0.4, 12),
+                                          child: Center(
+                                            child: Text(
+                                              'Share community',
+                                              style: GoogleFonts.getFont(
+                                                'DM Sans',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 14,
+                                                color: Color(0xFFFFFFFF),
+                                              ),
+                                            ),
                                           ),
-                                          isSeen: messageData.isSeen,
-                                          messageId: messageData.messageId,
-                                          onLongPressAction: () {
-                                            if (Platform.isAndroid) {
-                                              Modals.showDialogModal(context,
-                                                  page: _buildChatMenu(
-                                                      groupInfo));
+                                        ),
+                                      ),
+                                    ),
+                                  ] else ...[
+                                    Container(
+                                      margin:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 15),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF183A5C),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.fromLTRB(
+                                              18.4, 2, 18.4, 2),
+                                          child: Text(
+                                            formatTimestamp(
+                                              groupInfo
+                                                      .groupData
+                                                      ?.membersUid
+                                                      .first
+                                                      .dateJoined
+                                                      .millisecondsSinceEpoch
+                                                      .toString() ??
+                                                  DateTime.now()
+                                                      .millisecondsSinceEpoch
+                                                      .toString(),
+                                            ),
+                                            style: GoogleFonts.getFont(
+                                              'DM Sans',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10,
+                                              color: Color(0xFFFFFFFF),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  StreamBuilder<List<dynamic>>(
+                                      stream: widget.isGroupChat
+                                          ? ref
+                                              .read(chatControllerProvider)
+                                              .groupChatStream(widget.uid)
+                                          : ref
+                                              .read(chatControllerProvider)
+                                              .chatStream(widget.uid, userId),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {}
+
+                                        if (snapshot.hasError) {}
+
+                                        if (!snapshot.hasData) {}
+                                        groupInfo.clearGroupImageList();
+                                        return ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: snapshot.data?.length ?? 0,
+                                          itemBuilder: (context, index) {
+                                            final messageData =
+                                                snapshot.data?[index];
+
+                                            if (blockedUsers.contains(
+                                                messageData.senderId)) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Modals.showAlertOptionDialog(
+                                                      context,
+                                                      call: false,
+                                                      title: 'UnBlock this user'
+                                                          .toUpperCase(),
+                                                      message:
+                                                          'Are you sure you want to unblock this user? Once this action is completed you would view this users contents in every community you share with them. Do you wish to continue?',
+                                                      onTap: () async {
+                                                    setState(() {
+                                                      isLoading = true;
+                                                    });
+
+                                                    await groupInfo
+                                                        .removeUserFromBlockedList(
+                                                      userId: userId,
+                                                      memberId:
+                                                          messageData.senderId,
+                                                    );
+
+                                                    groupInfo.isSelectedMessage(
+                                                        false);
+                                                    groupInfo
+                                                        .setSelectedMessage('');
+                                                    groupInfo.setTextIndex(-1);
+                                                    groupInfo.setMessageId('');
+                                                    groupInfo
+                                                        .setSelectedSenderId(
+                                                            '');
+
+                                                    groupInfo.setMessageType(
+                                                        MessageEnum.none);
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+
+                                                    AppNavigator
+                                                        .pushAndStackPage(
+                                                            contex!,
+                                                            rootNavigator: true,
+                                                            page:
+                                                                LandingPage());
+                                                  });
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      50, 12, 10, 5),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      Center(
+                                                          child: Text(
+                                                        'User content blocked',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontStyle:
+                                                              FontStyle.italic,
+                                                          color: Colors.red,
+                                                        ),
+                                                      )),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Align(
+                                                          alignment: Alignment
+                                                              .bottomRight,
+                                                          child: Text(
+                                                            'tap to unblock this user',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic),
+                                                          )),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
                                             }
+
+                                            if (messageData.type ==
+                                                MessageEnum.image) {
+                                              groupInfo.updateGroupImageList(
+                                                  messageData.text);
+                                            }
+                                            var timeSent = DateFormat('hh:mm a')
+                                                .format(messageData.timeSent
+                                                    .toLocal());
+
+                                            if (!messageData.isSeen &&
+                                                messageData.recieverid ==
+                                                    userId) {
+                                              ref
+                                                  .read(chatControllerProvider)
+                                                  .setChatMessageSeen(
+                                                    context,
+                                                    widget.uid,
+                                                    userId,
+                                                    messageData.messageId,
+                                                  );
+                                            }
+                                            if (messageData.senderId ==
+                                                userId) {
+                                              return MyMessageCard(
+                                                message: messageData.text,
+                                                name: messageData.username,
+                                                index: index,
+                                                date: timeSent,
+                                                senderId: messageData.senderId,
+                                                type: messageData.type,
+                                                repliedText:
+                                                    messageData.repliedMessage,
+                                                username: messageData.repliedTo,
+                                                repliedMessageType: messageData
+                                                    .repliedMessageType,
+                                                onLeftSwipe: (value) =>
+                                                    onMessageSwipe(
+                                                  messageData.text,
+                                                  true,
+                                                  messageData.type,
+                                                ),
+                                                isSeen: messageData.isSeen,
+                                                messageId:
+                                                    messageData.messageId,
+                                                onLongPressAction: () {
+                                                  if (Platform.isAndroid) {
+                                                    Modals.showDialogModal(
+                                                        context,
+                                                        page: _buildChatMenu(
+                                                            groupInfo));
+                                                  }
+                                                },
+                                              );
+                                            }
+                                            return SenderMessageCard(
+                                              index: index,
+                                              message: messageData.text,
+                                              name: messageData.username,
+                                              date: timeSent,
+                                              senderId: messageData.senderId,
+                                              type: messageData.type,
+                                              username: messageData.repliedTo,
+                                              repliedMessageType: messageData
+                                                  .repliedMessageType,
+                                              onRightSwipe: (value) =>
+                                                  onMessageSwipe(
+                                                messageData.text,
+                                                false,
+                                                messageData.type,
+                                              ),
+                                              repliedText:
+                                                  messageData.repliedMessage,
+                                              messageId: messageData.messageId,
+                                              onLongPressAction: () {
+                                                if (Platform.isAndroid) {
+                                                  Modals.showDialogModal(
+                                                      context,
+                                                      page: _buildChatMenu(
+                                                          groupInfo));
+                                                }
+                                              },
+                                            );
                                           },
                                         );
-                                      }
-                                      return SenderMessageCard(
-                                        index: index,
-                                        message: messageData.text,
-                                        name: messageData.username,
-                                        date: timeSent,
-                                        senderId: messageData.senderId,
-                                        type: messageData.type,
-                                        username: messageData.repliedTo,
-                                        repliedMessageType:
-                                            messageData.repliedMessageType,
-                                        onRightSwipe: (value) => onMessageSwipe(
-                                          messageData.text,
-                                          false,
-                                          messageData.type,
-                                        ),
-                                        repliedText: messageData.repliedMessage,
-                                        messageId: messageData.messageId,
-                                        onLongPressAction: () {
-                                          if (Platform.isAndroid) {
-                                            Modals.showDialogModal(context,
-                                                page:
-                                                    _buildChatMenu(groupInfo));
-                                          }
-                                        },
-                                      );
-                                    },
-                                  );
-                                }),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
+                                      }),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -1066,6 +1115,13 @@ class _MobileChatState extends ConsumerState<MobileChat> {
         });
   }
 
+  Future<void> copyToClipboard1(
+      String text, var groupInfo, BuildContext context) async {
+    await Clipboard.setData(ClipboardData(text: text)).then((value) => {
+          Modals.showToast('Link copied', messageType: MessageType.success),
+        });
+  }
+
   onTapGroup(
     BuildContext context,
     String image,
@@ -1165,7 +1221,6 @@ class _MobileChatState extends ConsumerState<MobileChat> {
             },
           ),
         Divider(),
-
         if (groupInfo.groupAdminId == userId)
           ListTile(
             leading: CustomImageView(
@@ -1186,7 +1241,6 @@ class _MobileChatState extends ConsumerState<MobileChat> {
             },
           ),
         Divider(),
-
         ListTile(
           leading: CustomImageView(
             imagePath: AppImages.reportIcon,

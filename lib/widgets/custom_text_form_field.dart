@@ -18,7 +18,7 @@ class CustomTextFormField extends StatelessWidget {
     this.textInputType = TextInputType.text,
     
     this.maxLines,
-    this.maxLength = 200,
+    this.maxLength = 100000,
     this.hintText,
     this.hintStyle,
     this.prefix,

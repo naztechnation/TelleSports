@@ -5,8 +5,11 @@ import 'package:provider/provider.dart' as provider;
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/utils/loader.dart';
 
+import '../../../model/view_models/account_view_model.dart';
+import '../../../utils/navigator/page_navigator.dart';
 import '../../../widgets/modal_content.dart';
 import '../../../widgets/modals.dart';
+import '../../landing_page/landing_page.dart';
 import '../provider/auth_provider.dart' as pro;
 
 // ignore: must_be_immutable
@@ -39,6 +42,9 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
   Widget build(BuildContext context) {
     final groupInfo =
         provider.Provider.of<pro.AuthProviders>(context, listen: true);
+
+    final user = provider.Provider.of<AccountViewModel>(context, listen: true);
+
 
     return (isLoading)
         ? Loader()
@@ -205,6 +211,10 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                                           setState(() {
                                             isLoading = false;
                                           });
+
+                                           user.updateIndex(1);
+                                  AppNavigator.pushAndStackPage(context,
+                                      page: LandingPage());
                                         }
                                       }
                                     },

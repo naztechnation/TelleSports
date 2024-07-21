@@ -67,29 +67,35 @@ class Group {
   }
 
   factory Group.fromMap(Map<String, dynamic> map) {
-    return Group(
-      senderId: map['senderId'] ?? '',
-      fcmToken: map['fcmToken'] ?? '',
-      name: map['name'] ?? '',
-      pinnedMessage: map['pinnedMessage'] ?? '',
-      groupId: map['groupId'] ?? '',
-      lastMessage: map['lastMessage'] ?? '',
-      isGroupLocked: map['isGroupLocked'] ?? false,
-      groupLink: map['groupLink'] ?? '',
-      groupPic: map['groupPic'] ?? '',
-      groupDescription: map['groupDesc'] ?? '',
-      membersUid: List<MemberData>.from(
-        map['membersUid']?.map((item) => MemberData.fromMap(item)) ?? [],
-      ),
-      blockedMembers: List<String>.from(map['blockedMembers']),
-      requestsMembers: List<String>.from(map['requestsMembers']),
-      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
-      communityType: map['communityType'] ?? '',
-      communityPrice: map['communityPrice'] ?? '',
-      paymentType: map['paymentType'] ?? '',
-      showMemberCount: map['showMemberCount'] ?? false,
-    );
+    try {
+      return Group(
+        senderId: map['senderId'] ?? '',
+        fcmToken: map['fcmToken'] ?? '',
+        name: map['name'] ?? '',
+        pinnedMessage: map['pinnedMessage'] ?? '',
+        groupId: map['groupId'] ?? '',
+        lastMessage: map['lastMessage'] ?? '',
+        isGroupLocked: map['isGroupLocked'] ?? false,
+        groupLink: map['groupLink'] ?? '',
+        groupPic: map['groupPic'] ?? '',
+        groupDescription: map['groupDesc'] ?? '',
+        membersUid: List<MemberData>.from(
+          map['membersUid']?.map((item) => MemberData.fromMap(item)) ?? [],
+        ),
+        blockedMembers: List<String>.from(map['blockedMembers'] ?? []),
+        requestsMembers: List<String>.from(map['requestsMembers'] ?? []),
+        timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
+        communityType: map['communityType'] ?? '',
+        communityPrice: map['communityPrice'] ?? '',
+        paymentType: map['paymentType'] ?? '',
+        showMemberCount: map['showMemberCount'] ?? false,
+      );
+    } catch (e) {
+      print('Error processing group map: $map, error: $e');
+      rethrow;
+    }
   }
+
 
   static List<MemberData> _removeDuplicateMembers(List<MemberData> members) {
     final memberIds = <String>{};

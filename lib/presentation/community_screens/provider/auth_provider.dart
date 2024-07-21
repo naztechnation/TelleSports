@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -364,6 +365,8 @@ class AuthProviders extends ChangeNotifier {
       _setStatus(AuthState.error);
       _updateMessage(error.toString());
     }
+    _setStatus(AuthState.success);
+
     return UserModel.fromMap(data);
   }
 
@@ -435,6 +438,8 @@ class AuthProviders extends ChangeNotifier {
       await _firebaseStorage.collection('users').doc(userId).update({
         'blockedId': updatedBlockedUsers,
       });
+    _setStatus(AuthState.success);
+
     } else {
       print('User $userId not found.');
     }
@@ -462,6 +467,8 @@ class AuthProviders extends ChangeNotifier {
             .update({
           'blockedId': currentBlockedUsers,
         });
+    _setStatus(AuthState.success);
+
       } else {
         print('User $userId not found.');
       }
@@ -579,67 +586,97 @@ class AuthProviders extends ChangeNotifier {
     print('Error updating recieveNotification: $error');
   }
 }
-  
-  Future<void> createGroup(
-    BuildContext context,
-    String name,
-    String username,
-    String groupDesc,
-    String fcmToken,
-    File profilePic,
-    var ref,
-    String communityType,
-    String communityPrice,
-    String paymentType,
-    bool showMemberCount,
-  ) async {
-    String userId = await StorageHandler.getUserId() ?? '';
-    try {
-      List<MemberData> members = [
-        MemberData(
-            userId: userId, dateJoined: DateTime.now(), username: username, recieveNotification: true),
-      ];
+ 
 
-      var groupId = const Uuid().v1();
-      var uuid = Uuid();
-      var groupLink = uuid.v4().substring(0, 15);
+Future<void> createGroup(
+  BuildContext context,
+  String name,
+  String username,
+  String groupDesc,
+  String fcmToken,
+  File profilePic,
+  var ref,
+  String communityType,
+  String communityPrice,
+  String paymentType,
+  bool showMemberCount,
+) async {
+  String userId = await StorageHandler.getUserId() ?? '';
+  try {
+    List<MemberData> members = [
+      MemberData(
+          userId: userId, dateJoined: DateTime.now(), username: username, recieveNotification: true),
+    ];
 
-      String profileUrl = await ref
-          .read(commonFirebaseStorageRepositoryProvider)
-          .storeFileToFirebase(
-            'group/$groupId',
-            profilePic,
-          );
+    String groupId = await generateUniqueGroupId();
+    var uuid = groupId;
+    var groupLink = uuid;
 
-      Group group = Group(
-        pinnedMessage: '',
-        fcmToken: fcmToken,
-        isGroupLocked: false,
-        groupLink: 'telesportcommunity.com/${groupLink}',
-        senderId: userId,
-        name: name,
-        groupId: groupId,
-        lastMessage: '',
-        groupPic: profileUrl,
-        membersUid: members,
-        timeSent: DateTime.now(),
-        groupDescription: groupDesc,
-        blockedMembers: [],
-        requestsMembers: [],
-        communityType: communityType,
-        communityPrice: communityPrice,
-        paymentType: paymentType,
-        showMemberCount: showMemberCount,
-      );
+    String profileUrl = await ref
+        .read(commonFirebaseStorageRepositoryProvider)
+        .storeFileToFirebase(
+          'group/$groupId',
+          profilePic,
+        );
 
-      await _firebaseStorage
-          .collection('groups')
-          .doc(groupId)
-          .set(group.toMap());
-    } catch (e) {
-      Modals.showToast(e.toString());
-    }
+    Group group = Group(
+      pinnedMessage: '',
+      fcmToken: fcmToken,
+      isGroupLocked: false,
+      groupLink: 'https://tellasportcommunity.com/${groupLink}',
+      senderId: userId,
+      name: name,
+      groupId: groupId,
+      lastMessage: '',
+      groupPic: profileUrl,
+      membersUid: members,
+      timeSent: DateTime.now(),
+      groupDescription: groupDesc,
+      blockedMembers: [],
+      requestsMembers: [],
+      communityType: communityType,
+      communityPrice: communityPrice,
+      paymentType: paymentType,
+      showMemberCount: showMemberCount,
+    );
+
+    await _firebaseStorage
+        .collection('groups')
+        .doc(groupId)
+        .set(group.toMap());
+  } catch (e) {
+    Modals.showToast(e.toString());
   }
+}
+
+Future<String> generateUniqueGroupId() async {
+  String groupId;
+  bool exists = true;
+
+  do {
+    groupId = _generateId();
+    exists = await _checkIfGroupIdExists(groupId);
+  } while (exists);
+
+  return groupId;
+}
+
+String _generateId() {
+  const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  Random random = Random.secure();
+  return List.generate(15, (index) => chars[random.nextInt(chars.length)]).join('');
+}
+
+Future<bool> _checkIfGroupIdExists(String groupId) async {
+  try {
+    var doc = await FirebaseFirestore.instance.collection('groups').doc(groupId).get();
+    return doc.exists;
+  } catch (e) {
+    print('Error checking group ID existence: $e');
+    return false;
+  }
+}
+
 
   Future<List<UserModel>> fetchUsers(List<MemberData> membersUid) async {
     try {
@@ -938,25 +975,30 @@ class AuthProviders extends ChangeNotifier {
   }
 
   Stream<List<Group>> getAllChatGroups(String userId) {
-    return _firebaseStorage.collection('groups').snapshots().map((event) {
-      List<Group> groups = [];
-      for (var document in event.docs) {
-        var group = Group.fromMap(document.data());
+  return _firebaseStorage.collection('groups').snapshots().map((event) {
+    List<Group> groups = [];
+    
+    for (var document in event.docs) {
+      try {
+        print('Document data: ${document.data()}');
+        var group = Group.fromMap(document.data() as Map<String, dynamic>);
         groups.add(group);
-
-        if (group.membersUid.contains(userId)) {
+        
+        if (group.membersUid.any((member) => member.userId == userId)) {
           _isUserExisting = true;
-
           fetchUsers(group.membersUid);
         } else {
           _isUserExisting = false;
         }
+      } catch (e) {
+        print('Error processing group: $e');
       }
+    }
 
-      _setStatus(AuthState.success);
-      return groups;
-    });
-  }
+    _setStatus(AuthState.success);
+    return groups;
+  });
+}
 
   Future<void> removeCurrentUserFromMembers(
       String groupId, String currentUserId, BuildContext context) async {
@@ -1028,7 +1070,7 @@ class AuthProviders extends ChangeNotifier {
           if (context.mounted) {
             final user =
                 pro.Provider.of<AccountViewModel>(context, listen: false);
-            user.updateIndex(0);
+            user.updateIndex(1);
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const LandingPage()));
           }
@@ -1114,7 +1156,7 @@ class AuthProviders extends ChangeNotifier {
   }
 
   Future<void> addUserToRequestsMembers(String groupId,
-      List<MemberData> membersData, BuildContext context) async {
+      String userId, BuildContext context) async {
     try {
       final DocumentReference groupDocRef =
           FirebaseFirestore.instance.collection('groups').doc(groupId);
@@ -1129,10 +1171,10 @@ class AuthProviders extends ChangeNotifier {
             groupData['requestsMembers'] is List) {
           final List<dynamic> requestsUid = groupData['requestsMembers'];
 
-          for (var member in membersData) {
-            if (!requestsUid.any((item) => item['userId'] == member.userId)) {
-              requestsUid.add(member.toMap());
-            }
+          
+            if (!requestsUid.contains(userId)) {
+              requestsUid.add(userId);
+            
           }
 
           await groupDocRef.update({'requestsMembers': requestsUid});

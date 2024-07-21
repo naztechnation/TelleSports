@@ -184,8 +184,13 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                   removeDuplicateUsers(
                                                       groupData.membersUid);
 
+                                                      MemberData? currentUser;
+
                                               if (userItem.any((user) =>
                                                   user.userId == userId)) {
+                                                     currentUser = userItem.firstWhere(
+                                        (user) => user.userId == userId);
+
                                                 if (userItem.first.userId ==
                                                         userId ||
                                                     groupData.communityType
@@ -261,8 +266,7 @@ class AllGroupsListPageState extends ConsumerState<AllGroupsListPage>
                                                       currentDate.microsecond,
                                                     );
 
-                                                    if (userItem[index]
-                                                        .dateJoined
+                                                    if (currentUser.dateJoined
                                                         .isBefore(
                                                             oneMonthAgo)) {
                                                       Modals.showToast(

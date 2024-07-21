@@ -189,9 +189,12 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                             groupData
                                                                 .membersUid);
 
-                                                    if (userItem.any((user) =>
-                                                        user.userId ==
-                                                        userId)) {
+                                                   MemberData? currentUser;
+
+                                              if (userItem.any((user) =>
+                                                  user.userId == userId)) {
+                                                     currentUser = userItem.firstWhere(
+                                        (user) => user.userId == userId);
                                                       if (userItem.first
                                                                   .userId ==
                                                               userId ||
@@ -283,8 +286,7 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                                                 .microsecond,
                                                           );
 
-                                                          if (userItem[index]
-                                                              .dateJoined
+                                                          if (currentUser.dateJoined
                                                               .isBefore(
                                                                   oneMonthAgo)) {
                                                              

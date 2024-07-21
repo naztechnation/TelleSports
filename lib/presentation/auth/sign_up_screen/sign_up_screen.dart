@@ -251,9 +251,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               SizedBox(height: 40.v),
                               CustomElevatedButton(
                                   text: "Register",
-                                  // processing: (state is AccountProcessing ||
-                                  //     authUser.status ||
-                                  //     state is AccountLoading),
+                                  processing: (state is AccountProcessing ||
+                                      authUser.status ||
+                                      state is AccountLoading),
                                   margin: EdgeInsets.symmetric(horizontal: 4.h),
                                   title: 'Creating Account...',
                                   onPressed: _isStrong

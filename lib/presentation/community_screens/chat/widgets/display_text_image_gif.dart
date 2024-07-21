@@ -1,10 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:read_more_text/read_more_text.dart';
+import 'package:tellesports/utils/navigator/page_navigator.dart';
+import 'package:url_launcher/url_launcher.dart';
  
 
 import '../../../../common/enums/message_enum.dart';
+import '../../../../widgets/modals.dart';
+import '../../community_one_page/verify_community_existence.dart';
 
 class DisplayTextImageGIF extends ConsumerStatefulWidget {
   final String message;
@@ -24,12 +29,17 @@ class DisplayTextImageGIF extends ConsumerStatefulWidget {
 }
 
 class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
- 
+ void _onOpen(LinkableElement link) async {
+    if (await canLaunch(link.url)) {
+      await launch(link.url);
+    } else {
+      throw 'Could not launch ${link.url}';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool isPlaying = false;
-    
+     
 
  
        
@@ -51,17 +61,30 @@ class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
                 const SizedBox(
                   height: 5,
                 ),
-                ReadMoreText(
-                  widget.message,
-                  numLines: 8,
-                  readMoreText: 'Read more',
-                  readLessText: 'Read less',
-                  readMoreAlign: AlignmentDirectional.bottomStart,
-                  style: TextStyle(
-                      wordSpacing: -1,
-                      fontSize: 16,
-                      color: widget.isMe ? Colors.black : Colors.black),
-                ),
+                Linkify(
+          onOpen: (i){
+            if(containsTelesportCommunity(i.url)){
+              AppNavigator.pushAndStackPage(context, page: VerifyCommunityExistence(extractPath(i.url)));
+            }else{
+              _onOpen(i);
+            }
+          },
+          text:widget.message,
+          
+          style: TextStyle(fontSize: 16.0),
+          linkStyle: TextStyle(color: Colors.blue, decorationColor: Colors.blue),
+        ),
+                // ReadMoreText(
+                //   widget.message,
+                //   numLines: 8,
+                //   readMoreText: 'Read more',
+                //   readLessText: 'Read less',
+                //   readMoreAlign: AlignmentDirectional.bottomStart,
+                //   style: TextStyle(
+                //       wordSpacing: -1,
+                //       fontSize: 16,
+                //       color: widget.isMe ? Colors.black : Colors.black),
+                // ),
               ],
             ),
           )
@@ -81,4 +104,24 @@ class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
                   )
                 : SizedBox.shrink();
   }
+
+  bool containsTelesportCommunity(String url) {
+  final Uri uri = Uri.parse(url);
+  return uri.host.contains('tellasportcommunity.com');
+}
+
+String extractPath(String url) {
+  try {
+    final Uri uri = Uri.parse(url);
+    String path = uri.path;
+    if (path.startsWith('/')) {
+      path = path.substring(1);  
+    }
+     
+    return path;
+  } catch (e) {
+    print('Error parsing URL: $e');
+    return '';
+  }
+}
 }
