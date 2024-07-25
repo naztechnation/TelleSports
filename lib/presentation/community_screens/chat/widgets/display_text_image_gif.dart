@@ -2,13 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:read_more_text/read_more_text.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:url_launcher/url_launcher.dart';
- 
 
 import '../../../../common/enums/message_enum.dart';
-import '../../../../widgets/modals.dart';
 import '../../community_one_page/verify_community_existence.dart';
 
 class DisplayTextImageGIF extends ConsumerStatefulWidget {
@@ -25,11 +22,12 @@ class DisplayTextImageGIF extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<DisplayTextImageGIF> createState() => _DisplayTextImageGIFState();
+  ConsumerState<DisplayTextImageGIF> createState() =>
+      _DisplayTextImageGIFState();
 }
 
 class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
- void _onOpen(LinkableElement link) async {
+  void _onOpen(LinkableElement link) async {
     if (await canLaunch(link.url)) {
       await launch(link.url);
     } else {
@@ -39,11 +37,6 @@ class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
 
   @override
   Widget build(BuildContext context) {
-     
-
- 
-       
-
     return widget.type == MessageEnum.text
         ? Align(
             alignment: Alignment.bottomLeft,
@@ -62,18 +55,19 @@ class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
                   height: 5,
                 ),
                 Linkify(
-          onOpen: (i){
-            if(containsTelesportCommunity(i.url)){
-              AppNavigator.pushAndStackPage(context, page: VerifyCommunityExistence(extractPath(i.url)));
-            }else{
-              _onOpen(i);
-            }
-          },
-          text:widget.message,
-          
-          style: TextStyle(fontSize: 16.0),
-          linkStyle: TextStyle(color: Colors.blue, decorationColor: Colors.blue),
-        ),
+                  onOpen: (i) {
+                    if (containsTelesportCommunity(i.url)) {
+                      AppNavigator.pushAndStackPage(context,
+                          page: VerifyCommunityExistence(extractPath(i.url)));
+                    } else {
+                      _onOpen(i);
+                    }
+                  },
+                  text: widget.message,
+                  style: TextStyle(fontSize: 16.0),
+                  linkStyle: TextStyle(
+                      color: Colors.blue, decorationColor: Colors.blue),
+                ),
                 // ReadMoreText(
                 //   widget.message,
                 //   numLines: 8,
@@ -89,39 +83,37 @@ class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
             ),
           )
         : widget.type == MessageEnum.image
-                ?  
-                  
-                   SizedBox(
-                    height: MediaQuery.sizeOf(context).width * 0.6,
-                    width: MediaQuery.sizeOf(context).width * 0.77,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: widget.message,
-                      ),
-                    ),
-                  )
-                : SizedBox.shrink();
+            ? SizedBox(
+                height: MediaQuery.sizeOf(context).width * 0.6,
+                width: MediaQuery.sizeOf(context).width * 0.77,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: widget.message,
+                  ),
+                ),
+              )
+            : SizedBox.shrink();
   }
 
   bool containsTelesportCommunity(String url) {
-  final Uri uri = Uri.parse(url);
-  return uri.host.contains('tellasportcommunity.com');
-}
-
-String extractPath(String url) {
-  try {
     final Uri uri = Uri.parse(url);
-    String path = uri.path;
-    if (path.startsWith('/')) {
-      path = path.substring(1);  
-    }
-     
-    return path;
-  } catch (e) {
-    print('Error parsing URL: $e');
-    return '';
+    return uri.host.contains('tellasport.com');
   }
-}
+
+  String extractPath(String url) {
+    try {
+      final Uri uri = Uri.parse(url);
+      String path = uri.path;
+      if (path.startsWith('/')) {
+        path = path.substring(1);
+      }
+
+      return path;
+    } catch (e) {
+      print('Error parsing URL: $e');
+      return '';
+    }
+  }
 }

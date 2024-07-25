@@ -10,7 +10,6 @@ import '../join_community_screen/join_community_screen.dart';
 import '../provider/auth_provider.dart' as pro;
 import 'empty_community_page.dart';
 
-import '../widgets/community_item_widget.dart';
 import 'package:provider/provider.dart' as provider;
 
 import 'package:flutter/material.dart';
@@ -100,77 +99,70 @@ class VerifyCommunityExistenceState
                           } else if (snapshot.data?.isEmpty ?? false) {
                             return EmptyCommunityPage();
                           }
-                    
+
                           if (!_dataAdded) {
                             checkUserExist.clearGroupInfo();
-                    
+
                             _dataAdded = true;
                           }
-                    
+
                           if (snapshot.hasData) {
                             for (Group group in snapshot.data!) {
-                              if (group.groupId.trim() ==
-                                  widget.link.trim()) {
+                              if (group.groupId.trim() == widget.link.trim()) {
                                 linkExists = true;
                                 groupData = group;
                                 break;
                               }
                             }
-                    
+
                             if (linkExists) {
                               checkUserExist.updateGroupData(groupData);
-                    
-                              checkUserExist.requestedUsers(
-                                  groupData.requestsMembers);
+
+                              checkUserExist
+                                  .requestedUsers(groupData.requestsMembers);
                               checkUserExist
                                   .blockedUsers(groupData.blockedMembers);
-                    
+
                               List<MemberData> userItem =
-                                  removeDuplicateUsers(
-                                      groupData.membersUid);
+                                  removeDuplicateUsers(groupData.membersUid);
                               MemberData? currentUser;
-                    
+
                               if (userItem
                                   .any((user) => user.userId == userId)) {
                                 currentUser = userItem.firstWhere(
                                     (user) => user.userId == userId);
-                    
+
                                 if (userItem.first.userId == userId ||
                                     groupData.communityType.toLowerCase() ==
                                         'Free to join'.toLowerCase() ||
                                     groupData.communityType.toLowerCase() ==
-                                        'Require permission'
-                                            .toLowerCase()) {
+                                        'Require permission'.toLowerCase()) {
                                   if (context.mounted) {
                                     checkUserExist.addGroupInfo(
-                                        groupNumber:
-                                            userItem.length.toString(),
+                                        groupNumber: userItem.length.toString(),
                                         groupAdminId: userItem[0].userId,
                                         groupId: groupData.groupId,
                                         groupLink: groupData.groupLink,
-                                        isGroupLocked:
-                                            groupData.isGroupLocked,
-                                        pinnedMessage:
-                                            groupData.pinnedMessage,
+                                        isGroupLocked: groupData.isGroupLocked,
+                                        pinnedMessage: groupData.pinnedMessage,
                                         groupDesription:
                                             groupData.groupDescription,
                                         groupName: groupData.name,
                                         groupPics: groupData.groupPic);
 
-                                        WidgetsBinding.instance.addPostFrameCallback((_) {
-   AppNavigator.pushAndReplacePage(context,
-                                        page: MobileChatScreen(
-                                          groupData.groupDescription,
-                                          userItem.length.toString(),
-                                          userItem,
-                                          name: groupData.name,
-                                          uid: groupData.groupId,
-                                          isGroupChat: true,
-                                          profilePic: groupData.groupPic,
-                                        ));
-});
-                    
-                                   
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      AppNavigator.pushAndReplacePage(context,
+                                          page: MobileChatScreen(
+                                            groupData.groupDescription,
+                                            userItem.length.toString(),
+                                            userItem,
+                                            name: groupData.name,
+                                            uid: groupData.groupId,
+                                            isGroupChat: true,
+                                            profilePic: groupData.groupPic,
+                                          ));
+                                    });
                                   }
                                 } else if (groupData.communityType
                                         .toLowerCase() ==
@@ -178,7 +170,7 @@ class VerifyCommunityExistenceState
                                   if (groupData.paymentType.toLowerCase() ==
                                       'Monthly'.toLowerCase()) {
                                     DateTime currentDate = DateTime.now();
-                    
+
                                     DateTime oneMonthAgo = DateTime(
                                       currentDate.year,
                                       currentDate.month - 1,
@@ -189,11 +181,10 @@ class VerifyCommunityExistenceState
                                       currentDate.millisecond,
                                       currentDate.microsecond,
                                     );
-                    
+
                                     if (currentUser.dateJoined
                                         .isBefore(oneMonthAgo)) {
-                                      Modals.showToast(
-                                          'Subscription expired');
+                                      Modals.showToast('Subscription expired');
                                       checkUserExist
                                           .removeCurrentUserFromMembers(
                                               groupData.groupId,
@@ -202,13 +193,12 @@ class VerifyCommunityExistenceState
                                       List<MemberData> userItem =
                                           removeDuplicateUsers(
                                               groupData.membersUid);
-                    
+
                                       onTapCommunityPageComponent(
                                         context: context,
                                         groupImage: groupData.groupPic,
                                         groupName: groupData.name,
-                                        groupNumber:
-                                            userItem.length.toString(),
+                                        groupNumber: userItem.length.toString(),
                                         groupDescription:
                                             groupData.groupDescription,
                                         groupId: groupData.groupId,
@@ -217,11 +207,9 @@ class VerifyCommunityExistenceState
                                         isPaid: groupData.communityType,
                                         communityPrice:
                                             groupData.communityPrice,
-                                        showCount:
-                                            groupData.showMemberCount,
+                                        showCount: groupData.showMemberCount,
                                         userItem: userItem,
-                                        isGroupLocked:
-                                            groupData.isGroupLocked,
+                                        isGroupLocked: groupData.isGroupLocked,
                                         communityLink: groupData.groupLink,
                                         pinnedMessage: groupData.groupLink,
                                         adminId: userItem[0].userId,
@@ -231,8 +219,7 @@ class VerifyCommunityExistenceState
                                         checkUserExist.addGroupInfo(
                                             groupNumber:
                                                 userItem.length.toString(),
-                                            groupAdminId:
-                                                userItem[0].userId,
+                                            groupAdminId: userItem[0].userId,
                                             groupId: groupData.groupId,
                                             groupLink: groupData.groupLink,
                                             isGroupLocked:
@@ -244,20 +231,20 @@ class VerifyCommunityExistenceState
                                             groupName: groupData.name,
                                             groupPics: groupData.groupPic);
 
-                                            WidgetsBinding.instance.addPostFrameCallback((_) {
-   AppNavigator.pushAndReplacePage(context,
-                                        page: MobileChatScreen(
-                                          groupData.groupDescription,
-                                          userItem.length.toString(),
-                                          userItem,
-                                          name: groupData.name,
-                                          uid: groupData.groupId,
-                                          isGroupChat: true,
-                                          profilePic: groupData.groupPic,
-                                        ));
-});
-                    
-                                         
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          AppNavigator.pushAndReplacePage(
+                                              context,
+                                              page: MobileChatScreen(
+                                                groupData.groupDescription,
+                                                userItem.length.toString(),
+                                                userItem,
+                                                name: groupData.name,
+                                                uid: groupData.groupId,
+                                                isGroupChat: true,
+                                                profilePic: groupData.groupPic,
+                                              ));
+                                        });
                                       }
                                     }
                                   } else if (groupData.paymentType
@@ -278,33 +265,32 @@ class VerifyCommunityExistenceState
                                               groupData.groupDescription,
                                           groupName: groupData.name,
                                           groupPics: groupData.groupPic);
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-   AppNavigator.pushAndReplacePage(context,
-                                        page: MobileChatScreen(
-                                          groupData.groupDescription,
-                                          userItem.length.toString(),
-                                          userItem,
-                                          name: groupData.name,
-                                          uid: groupData.groupId,
-                                          isGroupChat: true,
-                                          profilePic: groupData.groupPic,
-                                        ));
-});
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        AppNavigator.pushAndReplacePage(context,
+                                            page: MobileChatScreen(
+                                              groupData.groupDescription,
+                                              userItem.length.toString(),
+                                              userItem,
+                                              name: groupData.name,
+                                              uid: groupData.groupId,
+                                              isGroupChat: true,
+                                              profilePic: groupData.groupPic,
+                                            ));
+                                      });
                                     }
                                   }
                                 }
                               } else {
                                 List<MemberData> userItem =
-                                    removeDuplicateUsers(
-                                        groupData.membersUid);
-                    
+                                    removeDuplicateUsers(groupData.membersUid);
+
                                 onTapCommunityPageComponent(
                                   context: context,
                                   groupImage: groupData.groupPic,
                                   groupName: groupData.name,
                                   groupNumber: userItem.length.toString(),
-                                  groupDescription:
-                                      groupData.groupDescription,
+                                  groupDescription: groupData.groupDescription,
                                   groupId: groupData.groupId,
                                   userId: userId,
                                   adminFcm: groupData.fcmToken,
@@ -320,11 +306,11 @@ class VerifyCommunityExistenceState
                               }
                             } else {
                               Modals.showToast('invalid group link');
-                    
+
                               Navigator.pop(context);
                             }
                           }
-                    
+
                           return SizedBox.shrink();
                         }))),
           ));
@@ -348,28 +334,26 @@ class VerifyCommunityExistenceState
     required String pinnedMessage,
     required String adminId,
   }) {
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-  AppNavigator.pushAndReplacePage(context,
-        page: JoinCommunityInfoScreen(
-          groupImage: groupImage,
-          groupName: groupName,
-          groupNumber: groupNumber,
-          groupDescription: groupDescription,
-          groupId: groupId,
-          userId: userId,
-          adminFcm: adminFcm,
-          isPaid: isPaid,
-          communityPrice: communityPrice,
-          showCount: showCount,
-          userItem: userItem,
-          communityLink: communityLink,
-          isGroupLocked: isGroupLocked,
-          pinnedMessage: pinnedMessage,
-          adminId: adminId,
-        ));
-});
-    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppNavigator.pushAndReplacePage(context,
+          page: JoinCommunityInfoScreen(
+            groupImage: groupImage,
+            groupName: groupName,
+            groupNumber: groupNumber,
+            groupDescription: groupDescription,
+            groupId: groupId,
+            userId: userId,
+            adminFcm: adminFcm,
+            isPaid: isPaid,
+            communityPrice: communityPrice,
+            showCount: showCount,
+            userItem: userItem,
+            communityLink: communityLink,
+            isGroupLocked: isGroupLocked,
+            pinnedMessage: pinnedMessage,
+            adminId: adminId,
+          ));
+    });
   }
 
   List<MemberData> removeDuplicateUsers(List<MemberData> users) {

@@ -674,37 +674,37 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                         ),
                                       ),
                                     ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Modals.showBottomSheetModal(context,
-                                            page: CommunityListPage());
-                                      },
-                                      child: Container(
-                                        width: MediaQuery.sizeOf(context).width,
-                                        margin:
-                                            EdgeInsets.fromLTRB(20, 0, 20, 8),
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFF3C91E5),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Container(
-                                          padding: EdgeInsets.fromLTRB(
-                                              0, 12, 0.4, 12),
-                                          child: Center(
-                                            child: Text(
-                                              'Share community',
-                                              style: GoogleFonts.getFont(
-                                                'DM Sans',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                color: Color(0xFFFFFFFF),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //     Modals.showBottomSheetModal(context,
+                                    //         page: CommunityListPage());
+                                    //   },
+                                    //   child: Container(
+                                    //     width: MediaQuery.sizeOf(context).width,
+                                    //     margin:
+                                    //         EdgeInsets.fromLTRB(20, 0, 20, 8),
+                                    //     decoration: BoxDecoration(
+                                    //       color: Color(0xFF3C91E5),
+                                    //       borderRadius:
+                                    //           BorderRadius.circular(8),
+                                    //     ),
+                                    //     child: Container(
+                                    //       padding: EdgeInsets.fromLTRB(
+                                    //           0, 12, 0.4, 12),
+                                    //       child: Center(
+                                    //         child: Text(
+                                    //           'Share community',
+                                    //           style: GoogleFonts.getFont(
+                                    //             'DM Sans',
+                                    //             fontWeight: FontWeight.w500,
+                                    //             fontSize: 14,
+                                    //             color: Color(0xFFFFFFFF),
+                                    //           ),
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                   ] else ...[
                                     Container(
                                       margin:
