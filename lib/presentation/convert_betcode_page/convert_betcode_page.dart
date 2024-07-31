@@ -93,21 +93,17 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
     balance = await StorageHandler.getUserBalance() ?? '';
 
     _accountCubit = context.read<AccountCubit>();
-     setState(() {
+    setState(() {
       if (password == '' || email == '') {
       } else {
         _accountCubit.loginUser(email: email, password: password);
       }
     });
     await _accountCubit.getBookies();
-   
+
     await _accountCubit.getConversionHistory();
 
-    
-     
     await _accountCubit.getNotifications();
-
-   
   }
 
   @override
@@ -143,11 +139,12 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
             StorageHandler.saveUserEmail(state.user.user?.email);
             StorageHandler.saveUserPhone(state.user.user?.phone);
             StorageHandler.saveUserName(state.user.user?.username);
-             StorageHandler.saveCoinRate(
-                          state.user.tellaCoinRate.toString());
+            StorageHandler.saveCoinRate(state.user.tellaCoinRate.toString());
 
-                          StorageHandler.saveRecievedCoin(
-                          state.user.receivedTellacoin.toString());
+            StorageHandler.saveRecievedCoin(
+                state.user.receivedTellacoin.toString());
+            StorageHandler.saveMinimumWithdrawal(
+                state.user.minimumWithdrawal.toString());
 
             StorageHandler.saveUserPlan(state.user.plan?.name);
             StorageHandler.saveUserBalance(

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart'; 
 import 'package:provider/provider.dart';
-import 'package:tellesports/core/app_export.dart'; 
+import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/widgets/modals.dart'; 
 
 import '../handlers/secure_handler.dart';
 import '../model/view_models/account_view_model.dart';
+import 'app_bar/appbar_leading_circleimage.dart';
 
 class CustomBottomBar extends StatefulWidget {
   CustomBottomBar({this.onChanged, this.selectedIndex = 0});
@@ -48,7 +50,9 @@ class CustomBottomBarState extends State<CustomBottomBar> {
 
   getUserPhoto()async{
     image =   await  StorageHandler.getUserPhoto() ?? '';
-
+      setState(() {
+         
+      });
   }
 
   @override
@@ -237,14 +241,28 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.primary, width: 2, ), borderRadius: BorderRadius.circular(30)),
-                    child: CustomImageView(
-                      imagePath: (image == '' || image == 'null' || image == null) ? bottomMenuList[3].icon :  image,
-                      height: 40.adaptSize,
-                      width: 40.adaptSize,
+                  child: Hero(
+                    tag: 'profilePicture',
+                    child: Image.network(
+                      (image == '' || image == 'null' || image == null) ? bottomMenuList[3].icon :  image,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return AppbarLeadingCircleimage(
+                           
+                          imagePath: ImageConstant.imgNavIcons,
+                          
+                        );
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return AppbarLeadingCircleimage(
+                          
+                          imagePath: ImageConstant.imgNavIcons,
+                         
+                        );
+                      },
                     ),
-                  ),
+                  )
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),
