@@ -89,20 +89,20 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                       SizedBox(height: 15.v),
                       _buildFrameRow(context),
                       SizedBox(height: 24.v),
-                      CustomElevatedButton(
-                          text: "Gift Tellacoins",
-                          buttonStyle: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff3C91E5)),
-                          margin: EdgeInsets.symmetric(horizontal: 20.h),
-                          leftIcon: Container(
-                              margin: EdgeInsets.only(right: 10.h),
-                              child: CustomImageView(
-                                  imagePath: ImageConstant.imgCardgiftcard,
-                                  height: 24.adaptSize,
-                                  width: 24.adaptSize)),
-                          onPressed: () {
-                            onTapGiftTellacoins(context, widget.username);
-                          }),
+                      // CustomElevatedButton(
+                      //     text: "Gift Tellacoins",
+                      //     buttonStyle: ElevatedButton.styleFrom(
+                      //         backgroundColor: Color(0xff3C91E5)),
+                      //     margin: EdgeInsets.symmetric(horizontal: 20.h),
+                      //     leftIcon: Container(
+                      //         margin: EdgeInsets.only(right: 10.h),
+                      //         child: CustomImageView(
+                      //             imagePath: ImageConstant.imgCardgiftcard,
+                      //             height: 24.adaptSize,
+                      //             width: 24.adaptSize)),
+                      //     onPressed: () {
+                      //       onTapGiftTellacoins(context, widget.username);
+                      //     }),
                       SizedBox(height: 24.v),
                       Container(
                         margin: EdgeInsets.fromLTRB(15, 0, 15, 24),
@@ -138,7 +138,8 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                                   ),
                                 ),
                               ),
-                              Align(
+                             if(filteredCreatedGroups.isNotEmpty)...[
+Align(
                                   alignment: Alignment.center,
                                   child: ListView.builder(
                                       physics: BouncingScrollPhysics(),
@@ -162,6 +163,9 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                                               .toString(),
                                         );
                                       })),
+                             ] else...[
+                              Text('NONE')
+                             ]
                             ],
                           ),
                         ),

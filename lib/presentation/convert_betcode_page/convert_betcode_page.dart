@@ -465,7 +465,11 @@ This may have occurred due to one of the following reasons bellow.
                                 ]))),
                         SizedBox(height: 16.v),
                         if (state is ConverterHistoryLoading) ...[
-                          ProgressIndicators.circularProgressBar()
+                          CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.green),
+                              backgroundColor: (Colors.white24))
                         ] else ...[
                           if (convertionHistoties?.isNotEmpty ?? false) ...[
                             _buildSingleConversion(context)
@@ -475,7 +479,7 @@ This may have occurred due to one of the following reasons bellow.
                                 "Start converting betcodes from 200 available bookies!",
                                 style: CustomTextStyles.labelLargeBlack900),
                             SizedBox(height: 10.v),
-                            _buildBuyTellacoins(context),
+                         //   _buildBuyTellacoins(context),
                             SizedBox(height: 11.v),
                             Container(
                                 height: 198.v,
@@ -551,8 +555,8 @@ This may have occurred due to one of the following reasons bellow.
                                     Padding(
                                         padding: EdgeInsets.only(left: 6.h),
                                         child: Text(
-                                          // 'Free',
-                                          balance,
+                                          'Free',
+                                          //balance,
                                           style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.white,
@@ -562,18 +566,18 @@ This may have occurred due to one of the following reasons bellow.
                                         ))
                                   ])
                                 ]),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: CustomIconButton(
-                                  height: 30.adaptSize,
-                                  width: 30.adaptSize,
-                                  padding: EdgeInsets.all(6.h),
-                                  onTap: () {
-                                    onTapBtnPlus(context);
-                                  },
-                                  child: CustomImageView(
-                                      imagePath: ImageConstant.imgPlus)),
-                            )
+                            // Align(
+                            //   alignment: Alignment.centerRight,
+                            //   child: CustomIconButton(
+                            //       height: 30.adaptSize,
+                            //       width: 30.adaptSize,
+                            //       padding: EdgeInsets.all(6.h),
+                            //       onTap: () {
+                            //         onTapBtnPlus(context);
+                            //       },
+                            //       child: CustomImageView(
+                            //           imagePath: ImageConstant.imgPlus)),
+                            // )
                           ])))
             ])));
   }

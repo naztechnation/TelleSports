@@ -152,20 +152,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                 page: UpdatePasswordScreen());
                           }),
                           SizedBox(height: 24.v),
-                          _buildShareFrame(context,
-                              text: "Update Account",
-                              image: ImageConstant.imgHelpCenter, onTap: () {
-                            AppNavigator.pushAndStackPage(context,
-                                page: UpdateAccountScreen());
-                          }),
-                           SizedBox(height: 24.v),
-                          _buildShareFrame(context,
-                              text: "Withdraw Tellacoin",
-                              image: ImageConstant.imgHelpCenter, onTap: () {
-                            AppNavigator.pushAndStackPage(context,
-                                page: WithdrawTellaCoins(tellaCoinBalance: tellaCoinBalance, userSub: userSub,));
-                          }),
-                          SizedBox(height: 24.v),
+                          // _buildShareFrame(context,
+                          //     text: "Update Account",
+                          //     image: ImageConstant.imgHelpCenter, onTap: () {
+                          //   AppNavigator.pushAndStackPage(context,
+                          //       page: UpdateAccountScreen());
+                          // }),
+                          //  SizedBox(height: 24.v),
+                          // _buildShareFrame(context,
+                          //     text: "Withdraw Tellacoin",
+                          //     image: ImageConstant.imgHelpCenter, onTap: () {
+                          //   AppNavigator.pushAndStackPage(context,
+                          //       page: WithdrawTellaCoins(tellaCoinBalance: tellaCoinBalance, userSub: userSub,));
+                          // }),
+                          // SizedBox(height: 24.v),
                           _buildShareFrame(context,
                               text: "Submit Prediction",
                               image: ImageConstant.imgHelpCenter, onTap: () {

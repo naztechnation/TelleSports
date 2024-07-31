@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:flutter/services.dart';
 import 'package:tellesports/res/app_images.dart';
+import 'package:tellesports/widgets/image_view.dart';
 import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../../../blocs/prediction/prediction.dart';
@@ -656,17 +657,25 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                                     ),
                                                   ),
                                                 ),
-                                                Container(
-                                                  child: Text(
-                                                    '${groupInfo.groupData?.groupLink}',
-                                                    style: GoogleFonts.getFont(
-                                                      'DM Sans',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 12,
-                                                      color: Color(0xFF3C91E5),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '${groupInfo.groupData?.groupLink}',
+                                                      style: GoogleFonts.getFont(
+                                                        'DM Sans',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 12,
+                                                        color: Color(0xFF3C91E5),
+                                                      ),
                                                     ),
-                                                  ),
+                                                      const SizedBox(width: 5,),
+                                                      ImageView.asset(AppImages.copyIcon, 
+                                                      height: 16,
+                                                      width: 16,
+                                                      color: Colors.blue,)
+                                                  ],
                                                 ),
                                               ],
                                             ),

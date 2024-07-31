@@ -61,7 +61,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
   final List<String> _options = [
     'Free to join',
     'Require permission',
-    'Pay to join'
+    //'Pay to join'
   ];
 
   final List<String> _paymentOption = [

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart'; 
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/widgets/modals.dart'; 
 
 import '../handlers/secure_handler.dart';
 import '../model/view_models/account_view_model.dart';
@@ -41,7 +40,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
     BottomMenuModel(
       icon: ImageConstant.imgNavProfile,
       activeIcon: ImageConstant.imgNavProfile,
-      title: "Profile",
+      title: "Profile   ",
       type: BottomBarEnum.Profile,
     )
   ];
@@ -239,30 +238,34 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Hero(
-                    tag: 'profilePicture',
-                    child: Image.network(
-                      (image == '' || image == 'null' || image == null) ? bottomMenuList[3].icon :  image,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return AppbarLeadingCircleimage(
+                SizedBox(
+                   height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Hero(
+                      tag: 'profilePicture',
+                      child: Image.network(
+                        (image == '' || image == 'null' || image == null) ? bottomMenuList[3].icon :  image,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return AppbarLeadingCircleimage(
+                             
+                            imagePath: ImageConstant.imgNavIcons,
+                            
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return AppbarLeadingCircleimage(
+                            
+                            imagePath: ImageConstant.imgNavIcons,
                            
-                          imagePath: ImageConstant.imgNavIcons,
-                          
-                        );
-                      },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return AppbarLeadingCircleimage(
-                          
-                          imagePath: ImageConstant.imgNavIcons,
-                         
-                        );
-                      },
-                    ),
-                  )
+                          );
+                        },
+                      ),
+                    )
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),

@@ -531,100 +531,100 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 24),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Color(0x66F3F2F3),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color(0x0F000000),
-                                        offset: Offset(0, 0),
-                                        blurRadius: 3,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    padding: EdgeInsets.all(8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(0, 0, 0, 8),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0, 0, 9, 3),
-                                                child: SizedBox(
-                                                  child: Text(
-                                                    'Tellacoins received',
-                                                    style: GoogleFonts.getFont(
-                                                      'DM Sans',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 14,
-                                                      color: Color(0xFF1F1C21),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Text(
-                                                sentTellacoinBalance,
-                                                style: GoogleFonts.getFont(
-                                                  'DM Sans',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14,
-                                                  color: Color(0xFF1F1C21),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 0, 9, 3),
-                                              child: SizedBox(
-                                                child: Text(
-                                                  'NGN',
-                                                  style: GoogleFonts.getFont(
-                                                    'DM Sans',
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14,
-                                                    color: Color(0xFF1F1C21),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              '${calRate}',
-                                              style: GoogleFonts.getFont(
-                                                'DM Sans',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                color: Color(0xFF1F1C21),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                // Container(
+                                //   margin: EdgeInsets.fromLTRB(0, 0, 0, 24),
+                                //   decoration: BoxDecoration(
+                                //     borderRadius: BorderRadius.circular(8),
+                                //     color: Color(0x66F3F2F3),
+                                //     boxShadow: [
+                                //       BoxShadow(
+                                //         color: Color(0x0F000000),
+                                //         offset: Offset(0, 0),
+                                //         blurRadius: 3,
+                                //       ),
+                                //     ],
+                                //   ),
+                                //   child: Container(
+                                //     padding: EdgeInsets.all(8),
+                                //     child: Column(
+                                //       mainAxisAlignment:
+                                //           MainAxisAlignment.start,
+                                //       crossAxisAlignment:
+                                //           CrossAxisAlignment.start,
+                                //       children: [
+                                //         Container(
+                                //           margin:
+                                //               EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                //           child: Row(
+                                //             mainAxisAlignment:
+                                //                 MainAxisAlignment.spaceBetween,
+                                //             crossAxisAlignment:
+                                //                 CrossAxisAlignment.start,
+                                //             children: [
+                                //               Container(
+                                //                 margin: EdgeInsets.fromLTRB(
+                                //                     0, 0, 9, 3),
+                                //                 child: SizedBox(
+                                //                   child: Text(
+                                //                     'Tellacoins received',
+                                //                     style: GoogleFonts.getFont(
+                                //                       'DM Sans',
+                                //                       fontWeight:
+                                //                           FontWeight.w500,
+                                //                       fontSize: 14,
+                                //                       color: Color(0xFF1F1C21),
+                                //                     ),
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //               Text(
+                                //                 sentTellacoinBalance,
+                                //                 style: GoogleFonts.getFont(
+                                //                   'DM Sans',
+                                //                   fontWeight: FontWeight.w500,
+                                //                   fontSize: 14,
+                                //                   color: Color(0xFF1F1C21),
+                                //                 ),
+                                //               ),
+                                //             ],
+                                //           ),
+                                //         ),
+                                //         Row(
+                                //           mainAxisAlignment:
+                                //               MainAxisAlignment.spaceBetween,
+                                //           crossAxisAlignment:
+                                //               CrossAxisAlignment.start,
+                                //           children: [
+                                //             Container(
+                                //               margin: EdgeInsets.fromLTRB(
+                                //                   0, 0, 9, 3),
+                                //               child: SizedBox(
+                                //                 child: Text(
+                                //                   'NGN',
+                                //                   style: GoogleFonts.getFont(
+                                //                     'DM Sans',
+                                //                     fontWeight: FontWeight.w500,
+                                //                     fontSize: 14,
+                                //                     color: Color(0xFF1F1C21),
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //             Text(
+                                //               '${calRate}',
+                                //               style: GoogleFonts.getFont(
+                                //                 'DM Sans',
+                                //                 fontWeight: FontWeight.w500,
+                                //                 fontSize: 14,
+                                //                 color: Color(0xFF1F1C21),
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ),
                                 SizedBox(height: 24.v),
                                 StreamBuilder<DocumentSnapshot>(
                                   stream: FirebaseFirestore.instance
