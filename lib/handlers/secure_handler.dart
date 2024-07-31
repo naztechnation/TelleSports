@@ -138,6 +138,11 @@ static Future<void> saveBankCode([String? code]) async {
       await storage.write(key: 'RATE', value: coin);
     }
   }
+  static Future<void> saveMinimumWithdrawal([String? minimum]) async {
+    if (minimum != null) {
+      await storage.write(key: 'MINIMUM', value: minimum);
+    }
+  }
 
   static Future<void> saveUserId([String? id]) async {
     if (id != null) {
@@ -159,6 +164,16 @@ static Future<void> saveBankCode([String? code]) async {
     Map<String, String> value = await storage.readAll();
     String? user;
     String? data = value['EMAIL'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+  static Future<String?> getMinimumWithdrawal() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['MINIMUM'];
     if (data != null) {
       user = data;
     }

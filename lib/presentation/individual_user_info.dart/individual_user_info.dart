@@ -140,30 +140,28 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                               ),
                               Align(
                                   alignment: Alignment.center,
-                                  child: Expanded(
-                                    child: ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: filteredCreatedGroups.length,
-                                        itemBuilder: (context, index) {
-                                          final groupData =
-                                              filteredCreatedGroups[index];
-
-                                          return CommunityPageComponent(
-                                            onTapCommunityPageComponent:
-                                                () async {},
-                                            groupName: groupData.name,
-                                            lastMessage: (groupData
-                                                        .membersUid.length >
-                                                    1)
-                                                ? '${groupData.membersUid.length} Members'
-                                                : '${groupData.membersUid.length} Member',
-                                            groupPic: groupData.groupPic,
-                                            isPaid: groupData.communityType
-                                                .toString(),
-                                          );
-                                        }),
-                                  )),
+                                  child: ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: filteredCreatedGroups.length,
+                                      itemBuilder: (context, index) {
+                                        final groupData =
+                                            filteredCreatedGroups[index];
+                                  
+                                        return CommunityPageComponent(
+                                          onTapCommunityPageComponent:
+                                              () async {},
+                                          groupName: groupData.name,
+                                          lastMessage: (groupData
+                                                      .membersUid.length >
+                                                  1)
+                                              ? '${groupData.membersUid.length} Members'
+                                              : '${groupData.membersUid.length} Member',
+                                          groupPic: groupData.groupPic,
+                                          isPaid: groupData.communityType
+                                              .toString(),
+                                        );
+                                      })),
                             ],
                           ),
                         ),
@@ -205,30 +203,28 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                               ),
                               Align(
                                   alignment: Alignment.center,
-                                  child: Expanded(
-                                    child: ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: filteredGroups.length,
-                                        itemBuilder: (context, index) {
-                                          final groupData =
-                                              filteredGroups[index];
-
-                                          return CommunityPageComponent(
-                                            onTapCommunityPageComponent:
-                                                () async {},
-                                            groupName: groupData.name,
-                                            lastMessage: (groupData
-                                                        .membersUid.length >
-                                                    1)
-                                                ? '${groupData.membersUid.length} Members'
-                                                : '${groupData.membersUid.length} Member',
-                                            groupPic: groupData.groupPic,
-                                            isPaid: groupData.communityType
-                                                .toString(),
-                                          );
-                                        }),
-                                  )),
+                                  child: ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: filteredGroups.length,
+                                      itemBuilder: (context, index) {
+                                        final groupData =
+                                            filteredGroups[index];
+                                  
+                                        return CommunityPageComponent(
+                                          onTapCommunityPageComponent:
+                                              () async {},
+                                          groupName: groupData.name,
+                                          lastMessage: (groupData
+                                                      .membersUid.length >
+                                                  1)
+                                              ? '${groupData.membersUid.length} Members'
+                                              : '${groupData.membersUid.length} Member',
+                                          groupPic: groupData.groupPic,
+                                          isPaid: groupData.communityType
+                                              .toString(),
+                                        );
+                                      })),
                             ],
                           ),
                         ),

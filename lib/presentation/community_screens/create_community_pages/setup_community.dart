@@ -44,6 +44,8 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
   String userId = '';
   String username= '';
   String fcmToken = '';
+  String rate = '';
+
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -53,6 +55,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
     userId = await StorageHandler.getUserId() ?? '';
     username = await StorageHandler.getUserName() ?? '';
     fcmToken = await StorageHandler.getUserFCM() ?? '';
+    rate = await StorageHandler.getCoinRate() ?? '';
   }
 
   final List<String> _options = [
@@ -443,7 +446,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
         SizedBox(height: 2.v),
         CustomTextFormField(
           controller: priceController,
-          hintText: "₦",
+          hintText: "NGN",
           textInputAction: TextInputAction.done,
           validator: (value) {
             return Validator.validate(value, 'Price');
@@ -452,7 +455,7 @@ class _SetUpCommunityState extends ConsumerState<SetUpCommunity> {
         Align(
           alignment: Alignment.topLeft,
           child: Text(
-            '1 Tellacoin = ₦100',
+            '1 Tellacoin = NGN ${rate}',
             style: GoogleFonts.getFont(
               'DM Sans',
               fontWeight: FontWeight.w500,

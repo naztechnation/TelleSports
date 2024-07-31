@@ -8,16 +8,18 @@ class LoginUser {
   var tellacoinBalance;
   var receivedTellacoin;
   var tellaCoinRate;
+  String? minimumWithdrawal;
   UserWallet? userWallet;
   Plan? plan;
   String? profilePicture;
 
-  LoginUser({this.success, this.token, this.user, this.message,  this.error, this.tellacoinBalance, this.plan});
+  LoginUser({this.success, this.token, this.user, this.message,  this.error, this.tellacoinBalance, this.plan, this.minimumWithdrawal,});
 
   LoginUser.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
     error = json['error'];
+    minimumWithdrawal = json['minimum_withdrawal'];
     token = json['token'] != null ? new Token.fromJson(json['token']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     tellacoinBalance = json['tellacoin_balance'];
@@ -35,6 +37,7 @@ class LoginUser {
     data['success'] = this.success;
     data['message'] = this.message;
     data['error'] = this.error;
+     data['minimum_withdrawal'] = this.minimumWithdrawal;
     if (this.token != null) {
       data['token'] = this.token!.toJson();
     }

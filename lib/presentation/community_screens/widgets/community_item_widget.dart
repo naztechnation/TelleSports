@@ -108,7 +108,7 @@ class CommunityPageComponent extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(vertical:4.0, horizontal: 8),
                                 child: Center(
                                   child: Text(
-                                    "₦",
+                                    "NGN",
                                     style: TextStyle(fontSize: 14, color: Color(0xFF3C91E5)),
                                   ),
                                 ),

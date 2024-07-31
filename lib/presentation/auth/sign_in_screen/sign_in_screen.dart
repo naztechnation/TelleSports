@@ -113,6 +113,8 @@ String password = '';
 
                           StorageHandler.saveCoinRate(
                           state.user.tellaCoinRate.toString());
+                          StorageHandler.saveMinimumWithdrawal(
+                          state.user.minimumWithdrawal.toString());
 
                           StorageHandler.saveRecievedCoin(
                           state.user.receivedTellacoin.toString());

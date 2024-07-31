@@ -600,7 +600,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                   0, 0, 9, 3),
                                               child: SizedBox(
                                                 child: Text(
-                                                  '₦',
+                                                  'NGN',
                                                   style: GoogleFonts.getFont(
                                                     'DM Sans',
                                                     fontWeight: FontWeight.w500,

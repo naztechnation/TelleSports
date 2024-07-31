@@ -425,7 +425,7 @@ class _AdvancedSettingsScreenState extends ConsumerState<AdvancedSettingsScreen>
         SizedBox(height: 2.v),
         CustomTextFormField(
           controller: priceController,
-          hintText: "₦",
+          hintText: "NGN",
           textInputAction: TextInputAction.done,
           validator: (value) {
             return Validator.validate(value, 'Price');
@@ -434,7 +434,7 @@ class _AdvancedSettingsScreenState extends ConsumerState<AdvancedSettingsScreen>
         Align(
           alignment: Alignment.topLeft,
           child: Text(
-            '1 Tellacoin = ₦${coinRate}',
+            '1 Tellacoin = NGN${coinRate}',
             style: GoogleFonts.getFont(
               'DM Sans',
               fontWeight: FontWeight.w500,

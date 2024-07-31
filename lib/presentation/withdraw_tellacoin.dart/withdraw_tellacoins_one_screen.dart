@@ -181,7 +181,7 @@ class _WithdrawTellaCoinsState extends State<WithdrawTellaCoins> {
                       _buildTextField(context),
                       SizedBox(height: 23.v),
                       Text(
-                        "1 Tellacoin = ₦$conversionRate",
+                        "1 Tellacoin = NGN$conversionRate",
                         style: TextStyle(
                           color: appTheme.gray900,
                           fontSize: 14.fSize,

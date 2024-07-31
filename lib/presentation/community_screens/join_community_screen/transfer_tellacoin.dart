@@ -383,7 +383,7 @@ class _GiftTellacoinState extends State<GiftTellacoin> {
 
   Widget _buildTextField(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text("Transfer amount (₦)", style: CustomTextStyles.titleSmallBlack900),
+      Text("Transfer amount (NGN)", style: CustomTextStyles.titleSmallBlack900),
       SizedBox(height: 3.v),
       CustomTextFormField(
         controller: amountController,

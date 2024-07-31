@@ -623,7 +623,7 @@ Future<void> createGroup(
       pinnedMessage: '',
       fcmToken: fcmToken,
       isGroupLocked: false,
-      groupLink: 'https://tellasportcommunity.com/${groupLink}',
+      groupLink: 'https://tellasport.com/${groupLink}',
       senderId: userId,
       name: name,
       groupId: groupId,

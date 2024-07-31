@@ -77,7 +77,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         controller: tabviewController,
                         children: [
                           ConvertBetcodes(),
-                         // ViewLivescoresPage(),
+                          // ViewLivescoresPage(),
                         ],
                       ),
                     ),
@@ -105,23 +105,60 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             )
           : (showDelayedWidget)
-              ? AppbarLeadingCircleimage(
-                  onTap: () {
-                    user.updateIndex(3);
-                  },
-                  imagePath: photo,
+              ? GestureDetector(
+                 onTap: () {
+                user.updateIndex(3);
+              },
+                child: Container(
                   margin: EdgeInsets.only(
-                    left: 20.h,
-                    top: 5.v,
-                    bottom: 10.v,
-                  ),
-                )
+                              left: 20.h,
+                              top: 5.v,
+                              bottom: 10.v,
+                            ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Hero(
+                        tag: 'profilePicture',
+                        child: Image.network(
+                          photo,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return AppbarLeadingCircleimage(
+                              onTap: () {
+                                user.updateIndex(3);
+                              },
+                              imagePath: ImageConstant.imgNavIcons,
+                              margin: EdgeInsets.only(
+                                left: 20.h,
+                                top: 5.v,
+                                bottom: 10.v,
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return AppbarLeadingCircleimage(
+                              onTap: () {
+                                user.updateIndex(3);
+                              },
+                              imagePath: ImageConstant.imgNavIcons,
+                              margin: EdgeInsets.only(
+                                left: 20.h,
+                                top: 5.v,
+                                bottom: 10.v,
+                              ),
+                            );
+                          },
+                        ),
+                      )),
+                ),
+              )
               : Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(18.0),
                   child: CircularProgressIndicator(
-                      strokeWidth: 3,
+                      strokeWidth: 2,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      backgroundColor: (Colors.grey)),
+                      backgroundColor: (Colors.green)),
                 ),
       title: Padding(
         padding: EdgeInsets.only(
