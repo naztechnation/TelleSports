@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
@@ -15,6 +16,7 @@ import '../../../utils/validator.dart';
 import '../../../widgets/modals.dart';
 import '../../blocs/prediction/prediction.dart';
 import '../../model/view_models/user_view_model.dart';
+import '../../notification.dart';
 import '../../requests/repositories/prediction_repo/predict_repository_impl.dart';
 import '../../utils/navigator/page_navigator.dart';
 
@@ -87,7 +89,8 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
                 if (state.predict.success ?? false) {
                   Modals.showToast('Prediction submitted successfully',
                       messageType: MessageType.success);
-
+ sendTopicNotification('predict',
+                                'New Prediction', 'A new prediction has just been created');
                   Future.delayed(
                       Duration(
                         seconds: 1,
@@ -96,6 +99,8 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
                         page: LandingPage());
                     ;
                   });
+
+                 
                 } else {
                   Modals.showToast('Failed to submit prediction',
                       messageType: MessageType.error);
@@ -507,10 +512,12 @@ class _SubmitPredictionState extends State<SubmitPrediction> {
                                     const SizedBox(
                                       width: 13,
                                     ),
-                                    Text(options[index],
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 16)),
+                                    Expanded(
+                                      child: Text(options[index],
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 16)),
+                                    ),
                                   ],
                                 ),
                               ),

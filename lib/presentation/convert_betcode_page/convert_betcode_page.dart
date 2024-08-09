@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -83,6 +84,9 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
   List<ConverterHistoryData>? convertionHistoties = [];
 
+  final _firebaseMessaging = FirebaseMessaging.instance;
+
+
   getUserDetails() async {
     _addressSpinnerItems = ['Convert from'];
     _addressSpinnerItems1 = ['Convert to'];
@@ -162,6 +166,9 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                 state.user.userWallet?.countryCode.toString());
 
             StorageHandler.saveUserPassword(password);
+
+                          _firebaseMessaging.subscribeToTopic('predict');
+
 
             balance = state.user.tellacoinBalance.toString();
 

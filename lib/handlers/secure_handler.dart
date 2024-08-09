@@ -35,6 +35,12 @@ class StorageHandler {
     }
   }
 
+   static Future<void> saveCommunityChatSettings([String? userData]) async {
+    if (userData != null) {
+      await storage.write(key: 'CMCHAT', value: userData);
+    }
+  }
+
 
 static Future<void> showSignIns([String? userData]) async {
     if (userData != null) {
@@ -160,10 +166,36 @@ static Future<void> saveBankCode([String? code]) async {
       await storage.write(key: 'LOGGEDIN', value: isLoggedIn);
   }
 
+    static Future<void> saveIspredictionSubbed([String? isLoggedIn]) async {
+    if (isLoggedIn != null)
+      await storage.write(key: 'SUBBED', value: isLoggedIn);
+  }
+
+
+  static Future<String?> getIspredictionSubbed() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['SUBBED'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
   static Future<String?> getUserEmail() async {
     Map<String, String> value = await storage.readAll();
     String? user;
     String? data = value['EMAIL'];
+    if (data != null) {
+      user = data;
+    }
+    return user;
+  }
+
+  static Future<String?> getCommunityChatSettings() async {
+    Map<String, String> value = await storage.readAll();
+    String? user;
+    String? data = value['CMCHAT'];
     if (data != null) {
       user = data;
     }

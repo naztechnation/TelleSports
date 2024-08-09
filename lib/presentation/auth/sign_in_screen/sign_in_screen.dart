@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,6 +43,9 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  final _firebaseMessaging = FirebaseMessaging.instance;
+
+
   bool isShowPassword1 = false;
 
   bool isGoogle = false;
@@ -79,8 +83,7 @@ String password = '';
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-    final authUser =
-        pro.Provider.of<FirebaseAuthProvider>(context, listen: true);
+    
 
     final user = pro.Provider.of<AuthProviders>(context, listen: true);
 
@@ -110,6 +113,7 @@ String password = '';
                       StorageHandler.saveUserId(state.user.user?.id.toString());
                       StorageHandler.saveUserBalance(
                           state.user.tellacoinBalance.toString());
+                          _firebaseMessaging.subscribeToTopic('predict');
 
                           StorageHandler.saveCoinRate(
                           state.user.tellaCoinRate.toString());

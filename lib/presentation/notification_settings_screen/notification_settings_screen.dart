@@ -1,11 +1,17 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
+import 'package:tellesports/core/constants/enums.dart';
+import 'package:tellesports/handlers/secure_handler.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
-import 'package:tellesports/widgets/custom_elevated_button.dart';
+import 'package:tellesports/widgets/loading_page.dart';
 
 import '../../widgets/app_bar/appbar_subtitle_one.dart';
 import '../../widgets/custom_switch.dart';
+import '../../widgets/modals.dart';
+import '../community_screens/provider/auth_provider.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
   NotificationSettingsScreen({Key? key})
@@ -14,11 +20,17 @@ class NotificationSettingsScreen extends StatefulWidget {
         );
 
   @override
-  State<NotificationSettingsScreen> createState() => _NotificationSettingsScreenState();
+  State<NotificationSettingsScreen> createState() =>
+      _NotificationSettingsScreenState();
 }
 
-class _NotificationSettingsScreenState extends State<NotificationSettingsScreen> {
-  bool isSelectedSwitch = false;
+class _NotificationSettingsScreenState
+    extends State<NotificationSettingsScreen> {
+  bool isCommunityChat = true;
+  bool isPredictionSubed = true;
+  String communityChat = '1';
+  String predictionSubed = '1';
+  String userId = '1';
 
   bool isSelectedSwitch1 = false;
 
@@ -26,8 +38,31 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
 
   bool isSelectedSwitch3 = false;
 
+  bool isLoading = false;
+
+  final _firebaseMessaging = FirebaseMessaging.instance;
+
+  getCommunityChatSettings() async {
+    communityChat = await StorageHandler.getCommunityChatSettings() ?? '1';
+    predictionSubed = await StorageHandler.getIspredictionSubbed() ?? '1';
+    userId = await StorageHandler.getUserId() ?? '';
+
+    setState(() {
+      isCommunityChat = (communityChat == '1') ? true : false;
+      isPredictionSubed = (predictionSubed == '1') ? true : false;
+    });
+  }
+
+  @override
+  void initState() {
+    getCommunityChatSettings();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final groupInfo = Provider.of<AuthProviders>(context, listen: false);
+
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
@@ -37,22 +72,70 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
             horizontal: 20.h,
             vertical: 24.v,
           ),
-          child: Column(
-            children: [
-              _buildCommunityChatFrame(context),
-              SizedBox(height: 16.v),
-              _buildDirectMessageFrame(context),
-              SizedBox(height: 16.v),
-              _buildPredictionFrame(context),
-              SizedBox(height: 16.v),
-              _buildPromotionsFrame(context),
-              SizedBox(height: 30.v),
-              CustomElevatedButton(
-                text: "Save changes",
-              ),
-              SizedBox(height: 5.v),
-            ],
-          ),
+          child: (isLoading)
+              ? LoadingPage()
+              : Column(
+                  children: [
+                    _buildCommunityChatFrame(context, ((value) async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      await groupInfo.updateRecieveNotificationForUser(
+                          userId, value);
+                      if (value) {
+                        StorageHandler.saveCommunityChatSettings('1');
+                        isCommunityChat = true;
+                      } else {
+                        StorageHandler.saveCommunityChatSettings('0');
+                        isCommunityChat = false;
+                      }
+
+                      setState(() {
+                        isLoading = false;
+                      });
+
+                      Modals.showToast('updated successfully',
+                          messageType: MessageType.success);
+                    })),
+                    SizedBox(height: 12.v),
+                    _buildPredictionFrame(context, ((value) async {
+                      setState(() {
+                        isLoading = true;
+                      });
+
+                      if (value) {
+                        await _firebaseMessaging.subscribeToTopic('predict');
+
+                        StorageHandler.saveIspredictionSubbed('1');
+                        isPredictionSubed = true;
+                      } else {
+                        await _firebaseMessaging
+                            .unsubscribeFromTopic('predict');
+
+                        StorageHandler.saveIspredictionSubbed('0');
+                        isPredictionSubed = false;
+                      }
+
+                      setState(() {
+                        isLoading = false;
+                      });
+
+                      Modals.showToast('updated successfully',
+                          messageType: MessageType.success);
+                    })),
+                    SizedBox(height: 12.v),
+
+                    _buildDirectMessageFrame(context),
+                    SizedBox(height: 12.v),
+
+                    _buildPromotionsFrame(context),
+                    // SizedBox(height: 30.v),
+                    // CustomElevatedButton(
+                    //   text: "Save changes",
+                    // ),
+                    // SizedBox(height: 5.v),
+                  ],
+                ),
         ),
       ),
     );
@@ -60,16 +143,15 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 93.v,
+      height: 75.v,
       leadingWidth: 44.h,
       leading: AppbarLeadingImage(
         imagePath: ImageConstant.imgArrowBack,
         margin: EdgeInsets.only(
           left: 20.h,
-          top: 59.v,
           bottom: 10.v,
         ),
-        onTap: (){
+        onTap: () {
           Navigator.pop(context);
         },
       ),
@@ -77,181 +159,203 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
       title: AppbarSubtitleOne(
         text: "Notifications",
         margin: EdgeInsets.only(
-          top: 60.v,
           bottom: 8.v,
         ),
       ),
-      styleType: Style.bgOutline_4,
     );
   }
 
-  Widget _buildCommunityChatFrame(BuildContext context) {
-    return Card(
-      elevation: 0.4,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 8.h,
-          vertical: 12.v,
-        ),
-        // decoration: AppDecoration.outlineBlackF.copyWith(
-        //   borderRadius: BorderRadiusStyle.roundedBorder8,
-        // ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 3.v,
-                bottom: 1.v,
-              ),
-              child: Text(
-                "Community chat",
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
+  Widget _buildCommunityChatFrame(
+      BuildContext context, Function(bool value) onCheck) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 8.h,
+        vertical: 12.v,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Color(0x66F3F2F3),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x0F000000),
+            offset: Offset(0, 0),
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 3.v,
+              bottom: 1.v,
+            ),
+            child: Text(
+              "Community chat",
+              style: TextStyle(
+                color: appTheme.gray900,
+                fontSize: 14.fSize,
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w500,
               ),
             ),
-            CustomSwitch(
-              value: isSelectedSwitch,
-              onChange: (value) {
-                setState(() {
-                  isSelectedSwitch = value;
-                });
-              },
-            ),
-          ],
-        ),
+          ),
+          Transform.scale(
+            scale: 0.8,
+            child: CustomSwitch(value: isCommunityChat, onChange: onCheck),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildDirectMessageFrame(BuildContext context) {
-    return Card(
-      elevation: 0.4,
-
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 8.h,
-          vertical: 12.v,
-        ),
-        // decoration: AppDecoration.outlineBlackF.copyWith(
-        //   borderRadius: BorderRadiusStyle.roundedBorder8,
-        // ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 4.v),
-              child: Text(
-                "Direct Message ",
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 8.h,
+        vertical: 12.v,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Color(0x66F3F2F3),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x0F000000),
+            offset: Offset(0, 0),
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 4.v),
+            child: Text(
+              "Direct Message ",
+              style: TextStyle(
+                color: appTheme.gray900,
+                fontSize: 14.fSize,
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w500,
               ),
             ),
-            CustomSwitch(
+          ),
+          Transform.scale(
+            scale: 0.8,
+            child: CustomSwitch(
               value: isSelectedSwitch1,
               onChange: (value) {
-                setState(() {
-                  isSelectedSwitch1 = value;
-                });
+                Modals.showToast('Feature coming soon',
+                    messageType: MessageType.success);
+
+                // setState(() {
+                //   isSelectedSwitch1 = value;
+                // });
               },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildPredictionFrame(BuildContext context) {
-    return Card(
-      elevation: 0.4,
-
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 8.h,
-          vertical: 12.v,
-        ),
-        // decoration: AppDecoration.outlineBlackF.copyWith(
-        //   borderRadius: BorderRadiusStyle.roundedBorder8,
-        // ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 3.v,
-                bottom: 1.v,
-              ),
-              child: Text(
-                "Prediction of the day",
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
+  Widget _buildPredictionFrame(
+      BuildContext context, Function(bool value) onCheck) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 8.h,
+        vertical: 12.v,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Color(0x66F3F2F3),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x0F000000),
+            offset: Offset(0, 0),
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 3.v,
+              bottom: 1.v,
+            ),
+            child: Text(
+              "Prediction of the day",
+              style: TextStyle(
+                color: appTheme.gray900,
+                fontSize: 14.fSize,
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w500,
               ),
             ),
-            CustomSwitch(
-              value: isSelectedSwitch2,
-              onChange: (value) {
-                setState(() {
-                isSelectedSwitch2 = value;
-                  
-                });
-              },
+          ),
+          Transform.scale(
+            scale: 0.8,
+            child: CustomSwitch(
+              value: isPredictionSubed,
+              onChange: onCheck,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildPromotionsFrame(BuildContext context) {
-    return Card(
-      elevation: 0.4,
-
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 8.h,
-          vertical: 12.v,
-        ),
-        // decoration: AppDecoration.outlineBlackF.copyWith(
-        //   borderRadius: BorderRadiusStyle.roundedBorder8,
-        // ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.v),
-              child: Text(
-                "Promotions",
-                style: TextStyle(
-                  color: appTheme.gray900,
-                  fontSize: 14.fSize,
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w500,
-                ),
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 8.h,
+        vertical: 12.v,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Color(0x66F3F2F3),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x0F000000),
+            offset: Offset(0, 0),
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 2.v),
+            child: Text(
+              "Promotions",
+              style: TextStyle(
+                color: appTheme.gray900,
+                fontSize: 14.fSize,
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w500,
               ),
             ),
-            CustomSwitch(
+          ),
+          Transform.scale(
+            scale: 0.8,
+            child: CustomSwitch(
               value: isSelectedSwitch3,
               onChange: (value) {
-                setState(() {
-                isSelectedSwitch3 = value;
-                  
-                });
+                Modals.showToast('Feature coming soon',
+                    messageType: MessageType.success);
+
+                // setState(() {
+                //   isSelectedSwitch3 = value;
+                // });
               },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -973,7 +973,9 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                       if (snapshot.connectionState ==
                           ConnectionState.waiting) {}
 
-                      if (snapshot.hasError) {}
+                      if (snapshot.hasError) {
+                        
+                      }
 
                       if (!snapshot.hasData) {}
                       final isGroupLocked =

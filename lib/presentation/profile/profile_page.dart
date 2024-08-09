@@ -132,8 +132,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: SingleChildScrollView(
                         child: Column(children: [
                           _buildAvatarFrame(context),
-                          // SizedBox(height: 24.v),
-                          // _buildSettingsFrame(context),
+                          SizedBox(height: 24.v),
+                          _buildSettingsFrame(context),
                           SizedBox(height: 24.v),
                           _buildShareFrame(context,
                               text: "Contact Support",
@@ -406,22 +406,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildSettingsFrame(BuildContext context) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 16.v),
+        padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 12.v),
         decoration: AppDecoration.outlineBlack9001
-            .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8),
+            .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8, color: Colors.white),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           _buildChatSettingsFrame(context, text: "Notifications settings",
               onPressed: () {
             AppNavigator.pushAndStackPage(context,
                 page: NotificationSettingsScreen());
           }),
-          SizedBox(height: 12.v),
-          Divider(color: appTheme.gray50001),
-          SizedBox(height: 11.v),
-          _buildChatSettingsFrame(context, text: "Chat settings",
-              onPressed: () {
-            AppNavigator.pushAndStackPage(context, page: ChatsSettingsScreen());
-          })
+         // SizedBox(height: 12.v),
+          // Divider(color: appTheme.gray50001),
+          // SizedBox(height: 11.v),
+          // _buildChatSettingsFrame(context, text: "Chat settings",
+          //     onPressed: () {
+          //   AppNavigator.pushAndStackPage(context, page: ChatsSettingsScreen());
+          // })
         ]));
   }
 
@@ -434,17 +434,20 @@ class _ProfilePageState extends State<ProfilePage> {
       onTap: (() {
         onPressed();
       }),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Padding(
-            padding: EdgeInsets.only(top: 4.v),
-            child: Text(text,
-                style: theme.textTheme.titleSmall!
-                    .copyWith(color: theme.colorScheme.onPrimary))),
-        CustomImageView(
-            imagePath: ImageConstant.imgArrowRightGray700,
-            height: 24.adaptSize,
-            width: 24.adaptSize)
-      ]),
+      child: Container(
+        color: Colors.white,
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Padding(
+              padding: EdgeInsets.only(top: 4.v),
+              child: Text(text,
+                  style: theme.textTheme.titleSmall!
+                      .copyWith(color: theme.colorScheme.onPrimary))),
+          CustomImageView(
+              imagePath: ImageConstant.imgArrowRightGray700,
+              height: 24.adaptSize,
+              width: 24.adaptSize)
+        ]),
+      ),
     );
   }
 
@@ -469,7 +472,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Text(text,
                     style: TextStyle(fontSize: 14, color: Colors.black))),
             CustomImageView(
-                imagePath: image, height: 24.adaptSize, width: 24.adaptSize)
+            imagePath: ImageConstant.imgArrowRightGray700,
+            height: 24.adaptSize,
+            width: 24.adaptSize)
           ])),
     );
   }

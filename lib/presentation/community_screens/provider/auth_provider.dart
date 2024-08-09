@@ -677,6 +677,49 @@ Future<bool> _checkIfGroupIdExists(String groupId) async {
   }
 }
 
+Future<void> updateRecieveNotificationForUser(
+  String userId,
+  bool recieveNotification,
+) async {
+  try {
+     
+    final groupsSnapshot = await FirebaseFirestore.instance.collection('groups').get();
+
+    for (var groupDoc in groupsSnapshot.docs) {
+     
+      final groupData = groupDoc.data();
+
+   
+      Group group = Group.fromMap(groupData);
+
+      
+      List<MemberData> updatedMembers = group.membersUid.map((member) {
+        if (member.userId == userId) {
+          return MemberData(
+            userId: member.userId,
+            username: member.username,
+            recieveNotification: recieveNotification,
+            dateJoined: member.dateJoined,
+          );
+        }
+        return member;
+      }).toList();
+
+     
+      if (updatedMembers != group.membersUid) {
+        group.membersUid = updatedMembers;
+
+         
+        await FirebaseFirestore.instance.collection('groups').doc(group.groupId).update({
+          'membersUid': updatedMembers.map((member) => member.toMap()).toList(),
+        });
+      }
+    }
+  } catch (e) {
+    print('Error updating recieveNotification: $e');
+    Modals.showToast(e.toString());
+  }
+}
 
   Future<List<UserModel>> fetchUsers(List<MemberData> membersUid) async {
     try {
