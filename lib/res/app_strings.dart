@@ -59,6 +59,12 @@ static String teamInfoUrl({required String teamId}) =>
   static String registerUserUrl = '${_baseUrl}register';
 
   static String loginUrl = '${_baseUrl}login';
+  static const int appVersion = 1;
+
+  static const String updateInfo =
+      "Tellasport recommends that you update to the latest version. The update is very important so as to enjoy all of our new features so we could serve you better!!!";
+  
+
 
   static String verifyCodeUrl = '${_baseUrl}email_verification';
 

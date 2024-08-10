@@ -1,14 +1,18 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/app_export.dart';
 import '../../handlers/secure_handler.dart';
+import '../../res/app_strings.dart';
 import '../../utils/navigator/page_navigator.dart';
 import '../../widgets/custom_icon_button.dart';
+import '../../widgets/modals.dart';
 import '../auth/sign_in_screen/sign_in_screen.dart';
 import '../landing_page/landing_page.dart';
 import '../onboarding_screen/widget/fading_sliding_in.dart';
+import 'update_page.dart';
 import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -39,7 +43,23 @@ class _LoadingScreenState extends State<SplashScreen> with SingleTickerProviderS
   }
 
   Future<void> changeScreen() async {
-    if (isonBoarding == '') {
+    Map<String, dynamic>? data;
+try {
+      final firestoreRef = FirebaseFirestore.instance
+          .collection('app_version')
+          .doc('version_number');
+
+      DocumentSnapshot snapshot = await firestoreRef.get();
+
+      if (snapshot.exists) {
+        setState(() {
+          data = snapshot.data() as Map<String, dynamic>;
+         
+          if (data!['current_version'] as int > AppStrings.appVersion) {
+            AppNavigator.pushAndReplacePage(context,
+                page: const UpdateScreen());
+          } else {
+              if (isonBoarding == '') {
       AppNavigator.pushAndReplacePage(context,
           page: SplashScreenOnboardingScreen());
     } else if (userLoggedIn == '') {
@@ -48,6 +68,19 @@ class _LoadingScreenState extends State<SplashScreen> with SingleTickerProviderS
     } else {
       AppNavigator.pushAndReplacePage(context, page: LandingPage());
     }
+          }
+        });
+      } else {
+      }
+    } catch (error) {
+      if (error is FirebaseException) {
+        if (error.code == 'unavailable') {
+          Modals.showToast(
+              'Network Error Please. ensure you are connected to a network');
+        }
+      }
+    }
+  
   }
 
   @override

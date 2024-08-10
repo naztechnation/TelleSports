@@ -23,5 +23,7 @@ class AppImages {
   static const football = '${_baseUrl}football_logo.jpeg';
   static const delayChat = '${_baseUrl}delay_chat.png';
   static const check = '${_baseUrl}good.svg';
+   static const playStoreLogo = '${_baseUrl}playstore.png';
+  static const appleStoreLogo = '${_baseUrl}apple_store.png';
   
 }
