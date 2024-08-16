@@ -50,7 +50,7 @@ abstract class AccountRepository {
     required String confirmPassword,
   });
 
-    Future<BookiesList> getBookies();
+    Future<List<BookiesList>> getBookies();
 
     Future<BookiesDetails> convertBetCode({
     required String from,

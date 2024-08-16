@@ -9,6 +9,8 @@ class AppStrings {
     'x-rapidapi-key': "104a201b57msh6b3ffdcac137f1ap129daejsnc0051ba3b1a0",
   };
 
+  static const String convertMyBetcode = 'https://api.convertmybetcode.com/api/v1/conversions';
+  static const String bookmakersUrl = 'https://api.convertmybetcode.com/api/v1/bookmakers';
   static const String bookieBaseUrl = 'https://convertbetcodes.com/api/';
   static const String rapidApiBaseUrl =
       'https://api-football-v1.p.rapidapi.com/v3/';
@@ -82,7 +84,7 @@ static String teamInfoUrl({required String teamId}) =>
   static String getNotificationsUrl = '${_baseUrl}notification';
   static String getNotificationsDetailsUrl(String notifyId) => '${_baseUrl}notification/$notifyId';
   static String userWalletUrl = '${_baseUrl}user_wallet';
-  static String converterUrl = '${_baseUrl}convert';
+  static String converterUrl = 'https://api.convertmybetcode.com/api/v1/conversions';
   static String updateUserProfileUrl = '${_baseUrl}profile';
   static String uploadUserImageUrl = '${_baseUrl}upload_profile_image';
   static String deleteUserUrl(String userId) => '${_baseUrl}delete-account/$userId';

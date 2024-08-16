@@ -85,7 +85,7 @@ class OTPResent extends AccountStates {
 }
 
 class BookieListLoaded extends AccountStates {
-  final BookiesList bookiesList;
+  final List<BookiesList> bookiesList;
   const BookieListLoaded(this.bookiesList);
   @override
   List<Object> get props => [bookiesList];

@@ -1,7 +1,3 @@
-
-
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -17,27 +13,29 @@ import '../../widgets/custom_outlined_button.dart';
 import '../../widgets/image_view.dart';
 
 class UpdateScreen extends StatelessWidget {
-  const UpdateScreen({Key? key, }) : super(key: key);
+  const UpdateScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true,
-          elevation: 1,
-          title: Text(
-            'Update available',
-            style: TextStyle(
-                  fontWeight: FontWeight.w400,
+        centerTitle: true,
+        elevation: 1,
+        title: Text(
+          'Update available',
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
 
-              // color: Theme.of(context).primaryColor,
-            ),
+            // color: Theme.of(context).primaryColor,
           ),
-          ),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-             const SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Align(
@@ -53,9 +51,8 @@ class UpdateScreen extends StatelessWidget {
                         )),
             ),
           ),
-       
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:20.0, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
             child: Text(
               'App Update Info!!!',
               style: TextStyle(
@@ -65,19 +62,18 @@ class UpdateScreen extends StatelessWidget {
             ),
           ),
           Padding(
-                       padding: const EdgeInsets.symmetric(horizontal:20.0, vertical: 12),
-
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
             child: Text(
               AppStrings.updateInfo,
               style: TextStyle(
                 color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
                 height: 1.5,
               ),
             ),
           ),
-           const SizedBox(
+          const SizedBox(
             height: 30,
           ),
           const Padding(
@@ -88,59 +84,49 @@ class UpdateScreen extends StatelessWidget {
             height: 10,
           ),
           Padding(
-                       padding: const EdgeInsets.symmetric(horizontal:20.0, vertical: 25),
-
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(
-                  child:
-
-                  CustomOutlinedButton(
+                  child: CustomOutlinedButton(
                     height: 42,
-                                  text: "No, Close",
-                                   onPressed: () {
-                             SystemNavigator.pop();
-                          },
-                  
-                                ),
-                  
-                  
-                  
+                    text: "No, Close",
+                    onPressed: () {
+                      SystemNavigator.pop();
+                    },
+                  ),
                 ),
-                const SizedBox(width: 8,),
+                const SizedBox(
+                  width: 8,
+                ),
                 Expanded(
-                  child: 
-                  CustomElevatedButton(
-                    
-                           onPressed: () async {
-
-                      if ( (Platform.isAndroid)) {
-                        if (await canLaunch('https://play.google.com/store/apps/details?id=com.tellasport.tellasport')) {
-                          await launch('https://play.google.com/store/apps/details?id=com.tellasport.tellasport');
+                  child: CustomElevatedButton(
+                    onPressed: () async {
+                      if ((Platform.isAndroid)) {
+                        if (await canLaunch(
+                            'https://play.google.com/store/apps/details?id=com.tellasport.tellasport')) {
+                          await launch(
+                              'https://play.google.com/store/apps/details?id=com.tellasport.tellasport');
                         } else {
                           throw 'Could not launch url';
                         }
                       } else {
-                         if (await canLaunch('https://apps.apple.com/us/app/tellasport/id6480112645')) {
-                          await launch('https://apps.apple.com/us/app/tellasport/id6480112645');
+                        if (await canLaunch(
+                            'https://apps.apple.com/us/app/tellasport/id6480112645')) {
+                          await launch(
+                              'https://apps.apple.com/us/app/tellasport/id6480112645');
                         } else {
                           throw 'Could not launch url';
                         }
                       }
                     },
-                     
-                    text:  'Update',
-                  
-                  
-                ),
-                  
+                    text: 'Update',
+                  ),
                 )
               ],
             ),
           ),
-          
-          
         ],
       ),
     );

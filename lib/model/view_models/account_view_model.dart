@@ -11,8 +11,6 @@ class AccountViewModel extends BaseViewModel {
   BookiesDetails? _bookiesDetails;
   ConverterHistory? _converterHistory;
 
-
-
   int _unreadMessageLength = 0;
 
   int _currentIndex = 0;
@@ -24,7 +22,7 @@ class AccountViewModel extends BaseViewModel {
   }
 
   String _token = "";
-  BookiesList? _bookiesList;
+  List<BookiesList> _bookiesList = [];
   ConfirmSubscription? _confirmSubscription;
 
   filterUnreadNotifications(NotificationsList notificationsList) {
@@ -38,7 +36,7 @@ class AccountViewModel extends BaseViewModel {
     setViewState(ViewState.success);
   }
 
-  Future<void> getBookie(BookiesList bookie) async {
+  Future<void> getBookie(List<BookiesList> bookie) async {
     _bookiesList = bookie;
 
     setViewState(ViewState.success);
@@ -51,7 +49,7 @@ class AccountViewModel extends BaseViewModel {
     setViewState(ViewState.success);
   }
 
-   updateIndex(int index) async {
+  updateIndex(int index) async {
     _currentIndex = index;
 
     setViewState(ViewState.success);
@@ -84,39 +82,28 @@ class AccountViewModel extends BaseViewModel {
     setViewState(ViewState.success);
   }
 
-  
-
   String get token => _token;
 
-  List<BookiesData> get from =>
-      _bookiesList?.data?.where((p) => p.from == '1').toList() ?? [];
-
-  List<BookiesData> get to =>
-      _bookiesList?.data?.where((p) => p.to == '1').toList() ?? [];
-
-  List<String?> get bookiesFrom => from.map((bookie) => bookie.name).toList();
-
-  List<String?> get bookiesTo => to.map((bookie) => bookie.name).toList();
+  List<BookiesList> get bookies => _bookiesList;
 
   List<String?> get bookiesBookieFrom =>
-      from.map((bookie) => bookie.bookie).toList();
+      bookies.map((bookie) => bookie.slug).toList();
 
   List<String?> get bookiesBookieTo =>
-      to.map((bookie) => bookie.bookie).toList();
-
-  List<String?> get bookiesId =>
-      _bookiesList?.data?.map((bookie) => bookie.bookie).toList() ?? [];
+      bookies.map((bookie) => bookie.slug).toList();
 
   ConverterHistory? get converterHistory => _converterHistory;
 
   BookiesDetails? get bookiesDetails => _bookiesDetails;
-  List<ListElement>? get getUniformLists =>
-      _bookiesDetails?.data?.data?.conversion?.dump?.lists ?? [];
+
+  List<EventDetails>? get getUniformLists =>
+      _bookiesDetails?.data?.destinationDetails?.eventDetails ?? [];
+
+  List<EventDetails> get notConvertedBookies =>
+      _bookiesDetails?.data?.failedGames?.eventDetails ?? [];
+
   List<ConverterHistoryData>? get convertionHistoties =>
       _converterHistory?.data ?? [];
-
-  List<ListElement> get notConvertedBookies =>
-      getUniformLists?.where((p) => !(p.isConverted ?? false)).toList() ?? [];
 
   bool get paymentStatus => _confirmSubscription?.success ?? false;
 

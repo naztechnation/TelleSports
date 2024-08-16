@@ -1,59 +1,28 @@
 
 class BookiesList {
-  bool? success;
-  String? message;
-  List<BookiesData>? data;
+  String? id;
+  String? name;
+  String? slug;
+  String? createdAt;
+  String? updatedAt;
 
-  BookiesList({this.success, this.message, this.data});
-
-
+  BookiesList({this.id, this.name, this.slug, this.createdAt, this.updatedAt});
 
   BookiesList.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    message = json['message'];
-    if (json['data'] != null) {
-      data = <BookiesData>[];
-      json['data'].forEach((v) {
-        data!.add(BookiesData.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['success'] = success;
-    data['message'] = message;
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class BookiesData {
-  String? bookie;
-  String? from;
-  String? to;
-  String? name;
-  String? img;
-
-  BookiesData({this.bookie, this.from, this.to, this.name, this.img});
-
-  BookiesData.fromJson(Map<String, dynamic> json) {
-    bookie = json['bookie'];
-    from = json['from'];
-    to = json['to'];
+    id = json['id'];
     name = json['name'];
-    img = json['img'];
+    slug = json['slug'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =   <String, dynamic>{};
-    data['bookie'] = bookie;
-    data['from'] =  from;
-    data['to'] =  to;
-    data['name'] =  name;
-    data['img'] =  img;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['slug'] = this.slug;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }

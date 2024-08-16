@@ -5,8 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/view_models/account_view_model.dart';
 import '../../requests/repositories/account_repo/account_repository.dart';
-import '../../utils/exceptions.dart';
-import '../../widgets/modals.dart';
+import '../../utils/exceptions.dart'; 
 import 'account_states.dart';
 
 class AccountCubit extends Cubit<AccountStates> {
@@ -257,7 +256,7 @@ class AccountCubit extends Cubit<AccountStates> {
         apiKey: apiKey,
       );
 
-      if (bookings.data?.data?.conversion?.destinationCode == null) {
+      if (bookings.data?.destinationCode == null) {
 
        
          emit(const BookingsError(''));

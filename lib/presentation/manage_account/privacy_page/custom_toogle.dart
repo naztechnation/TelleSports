@@ -61,7 +61,7 @@ class _CustomToggleState extends State<CustomToggle> {
             color: selected
                 ? (widget.selectedColor ??
                 Theme.of(context).colorScheme.secondary)
-                : (widget.color ?? Theme.of(context).backgroundColor),
+                : (widget.color ?? Theme.of(context).primaryColor),
             borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tellesports/core/app_export.dart';
 import 'package:tellesports/extentions/custom_string_extension.dart';
-import 'package:tellesports/presentation/notifications/notifications.dart'; 
+import 'package:tellesports/presentation/notifications/notifications.dart';
 import 'package:tellesports/utils/navigator/page_navigator.dart';
 import 'package:tellesports/widgets/app_bar/appbar_leading_circleimage.dart';
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_five.dart';
@@ -105,53 +105,53 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             )
           : (showDelayedWidget)
               ? GestureDetector(
-                 onTap: () {
-                user.updateIndex(3);
-              },
-                child: Container(
-                  margin: EdgeInsets.only(
-                              left: 20.h,
-                              top: 5.v,
-                              bottom: 10.v,
-                            ),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Hero(
-                        tag: 'profilePicture',
-                        child: Image.network(
-                          photo,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return AppbarLeadingCircleimage(
-                              onTap: () {
-                                user.updateIndex(3);
-                              },
-                              imagePath: ImageConstant.imgNavIcons,
-                              margin: EdgeInsets.only(
-                                left: 20.h,
-                                top: 5.v,
-                                bottom: 10.v,
-                              ),
-                            );
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return AppbarLeadingCircleimage(
-                              onTap: () {
-                                user.updateIndex(3);
-                              },
-                              imagePath: ImageConstant.imgNavIcons,
-                              margin: EdgeInsets.only(
-                                left: 20.h,
-                                top: 5.v,
-                                bottom: 10.v,
-                              ),
-                            );
-                          },
-                        ),
-                      )),
-                ),
-              )
+                  onTap: () {
+                    user.updateIndex(3);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      left: 20.h,
+                      top: 5.v,
+                      bottom: 10.v,
+                    ),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Hero(
+                          tag: 'profilePicture',
+                          child: Image.network(
+                            photo,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return AppbarLeadingCircleimage(
+                                onTap: () {
+                                  user.updateIndex(3);
+                                },
+                                imagePath: ImageConstant.imgNavIcons,
+                                margin: EdgeInsets.only(
+                                  left: 20.h,
+                                  top: 5.v,
+                                  bottom: 10.v,
+                                ),
+                              );
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return AppbarLeadingCircleimage(
+                                onTap: () {
+                                  user.updateIndex(3);
+                                },
+                                imagePath: ImageConstant.imgNavIcons,
+                                margin: EdgeInsets.only(
+                                  left: 20.h,
+                                  top: 5.v,
+                                  bottom: 10.v,
+                                ),
+                              );
+                            },
+                          ),
+                        )),
+                  ),
+                )
               : Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: CircularProgressIndicator(
@@ -173,8 +173,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               text: "welcome,".toUpperCase(),
               margin: EdgeInsets.only(right: 59.h),
             ),
-            AppbarTitle(
-              text: "$username".capitalizeFirstOfEach,
+            Text(
+              username.length > 8
+                  ? "${username.substring(0, 8)}..."
+                  : username,
+              maxLines: 1,
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -226,15 +230,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           16.h,
         ),
         boxShadow: [
-          BoxShadow(
-            color: appTheme.black900.withOpacity(0.06),
-            spreadRadius: 2.h,
-            blurRadius: 2.h,
-            offset: Offset(
-              0,
-              0,
-            ),
-          ),
+          // BoxShadow(
+          //   color: appTheme.black900.withOpacity(0.06),
+          //   spreadRadius: 2.h,
+          //   blurRadius: 2.h,
+          //   offset: Offset(
+          //     0,
+          //     0,
+          //   ),
+          // ),
         ],
       ),
       child: TabBar(

@@ -8,6 +8,7 @@ import '../../blocs/accounts/account.dart';
 import '../../core/constants/enums.dart';
 import '../../handlers/secure_handler.dart';
 import '../../model/auth_model/bookies_details.dart';
+import '../../model/auth_model/bookies_list.dart';
 import '../../model/auth_model/converter_history.dart';
 import '../../model/view_models/account_view_model.dart';
 import '../../requests/repositories/account_repo/account_repository_impl.dart';
@@ -78,14 +79,15 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
   BookiesDetails? bookie;
 
-  List<ListElement>? bookingEventLists = [];
+  List<BookiesList> bookies = [];
 
-  List<ListElement>? notConvertedBookies = [];
+  List<EventDetails>? bookingEventLists = [];
+
+  List<EventDetails>? notConvertedBookies = [];
 
   List<ConverterHistoryData>? convertionHistoties = [];
 
   final _firebaseMessaging = FirebaseMessaging.instance;
-
 
   getUserDetails() async {
     _addressSpinnerItems = ['Convert from'];
@@ -130,8 +132,10 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         child: BlocConsumer<AccountCubit, AccountStates>(
       listener: (context, state) {
         if (state is BookieListLoaded) {
-          _addressSpinnerItems.addAll(_accountCubit.viewModel.bookiesFrom);
-          _addressSpinnerItems1.addAll(_accountCubit.viewModel.bookiesTo);
+          for (var bookies in _accountCubit.viewModel.bookies) {
+            _addressSpinnerItems.add(bookies.name);
+            _addressSpinnerItems1.add(bookies.name);
+          }
         }
         if (state is AccountProcessing) {
         } else if (state is AccountUpdated) {
@@ -167,8 +171,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
 
             StorageHandler.saveUserPassword(password);
 
-                          _firebaseMessaging.subscribeToTopic('predict');
-
+            _firebaseMessaging.subscribeToTopic('predict');
 
             balance = state.user.tellacoinBalance.toString();
 
@@ -195,7 +198,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
           bookie = _accountCubit.viewModel.bookiesDetails;
 
           destinationCode =
-              bookie?.data?.data?.conversion?.destinationCode ?? '';
+              bookie?.data?.destinationCode ?? '';
 
           jJhEightyTwoController.text = destinationCode;
 
@@ -213,19 +216,19 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
                   title: 'Conversion Error',
                   body: Text(
                     """
-This may have occurred due to one of the following reasons bellow.
+This may have occurred due to one of the following reasons below.
           
 1. We convert only football/soccer games. Please ensure your code only has football games.
           
 2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
-                    
-3. Make sure you have a good network connection.
-          
-4. Check our FAQ section for more details. 
-          
-5. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
 
-6. Make sure you have units, if you do not, check any of our available subscription packages.
+3. Ensure that all your games are from our list of supported leagues. Check supported leagues for the list of leagues we support.                  
+
+4. Make sure you have a good network connection.
+          
+5. Check our FAQ section for more details. 
+          
+6. Contact us via (Live chat on the web or mobile app, or email officialtellasport@gmail.com).
 
           """,
                     maxLines: 30,
@@ -246,17 +249,20 @@ This may have occurred due to one of the following reasons bellow.
                   title: 'Conversion Error',
                   body: Text(
                     """
-This may have occurred due to one of the following reasons bellow.
+This may have occurred due to one of the following reasons below.
           
 1. We convert only football/soccer games. Please ensure your code only has football games.
           
 2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
-                
-3. Make sure you have a good network connection.
+
+3. Ensure that all your games are from our list of supported leagues. Check supported leagues for the list of leagues we support.                  
+
+4. Make sure you have a good network connection.
           
-4. Check our FAQ section for more details. 
+5. Check our FAQ section for more details. 
           
-5. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+6. Contact us via (Live chat on the web or mobile app, or email officialtellasport@gmail.com).
+
           """,
                     maxLines: 30,
                     overflow: TextOverflow.ellipsis,
@@ -276,17 +282,20 @@ This may have occurred due to one of the following reasons bellow.
                   title: 'Conversion Error',
                   body: Text(
                     """
-This may have occurred due to one of the following reasons bellow.
+This may have occurred due to one of the following reasons below.
           
 1. We convert only football/soccer games. Please ensure your code only has football games.
           
 2. At least one or more active games must be included in your ticket in order for the conversion to pull through.
+
+3. Ensure that all your games are from our list of supported leagues. Check supported leagues for the list of leagues we support.                  
+
+4. Make sure you have a good network connection.
           
-3. Make sure you have a good network connection.
+5. Check our FAQ section for more details. 
           
-4.  Check our FAQ section for more details. 
-          
-5. Contact us via (Live chat on the web, or email officialtellasport@gmail.com).
+6. Contact us via (Live chat on the web or mobile app, or email officialtellasport@gmail.com).
+
           """,
                     maxLines: 30,
                     overflow: TextOverflow.ellipsis,
@@ -365,6 +374,7 @@ This may have occurred due to one of the following reasons bellow.
                                           bookingEventLists: bookingEventLists,
                                           notConvertedEvents:
                                               notConvertedEvents,
+                                              notConvertedBookies: notConvertedBookies,
                                         ));
                                   }),
                                   child: Text('view details',
@@ -440,6 +450,8 @@ This may have occurred due to one of the following reasons bellow.
                                   Modals.showToast(
                                       'Please select destination bookie');
                                 } else {
+
+                                    
                                   _accountCubit.convertBetCode(
                                       from: fromId ?? '',
                                       to: toId ?? '',
@@ -486,7 +498,7 @@ This may have occurred due to one of the following reasons bellow.
                                 "Start converting betcodes from 200 available bookies!",
                                 style: CustomTextStyles.labelLargeBlack900),
                             SizedBox(height: 10.v),
-                         //   _buildBuyTellacoins(context),
+                            //   _buildBuyTellacoins(context),
                             SizedBox(height: 11.v),
                             Container(
                                 height: 198.v,

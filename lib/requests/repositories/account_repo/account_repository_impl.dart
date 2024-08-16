@@ -105,13 +105,15 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<BookiesList> getBookies() async {
-    final map = await Requests().post(
-      AppStrings.getBookiesUrl,
-    );
-
-    return BookiesList.fromJson(map);
+  Future<List<BookiesList>> getBookies() async {
+  final map = await Requests().get(AppStrings.bookmakersUrl);
+ 
+  if (map is List) {
+    return map.map((json) => BookiesList.fromJson(json)).toList();
+  } else {
+    throw Exception('Unexpected data format');
   }
+}
 
   @override
   Future<BookiesDetails> convertBetCode(
@@ -124,9 +126,9 @@ class AccountRepositoryImpl implements AccountRepository {
       
       AppStrings.converterUrl,
       body: {
-      "from": from,
-      "to": to,
-      "betting_token": bookingCode,
+      "convert_from": from,
+      "convert_to": to,
+      "code": bookingCode,
      
     },
     );

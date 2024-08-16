@@ -1,5 +1,5 @@
 import 'dart:io';
- 
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -14,21 +14,14 @@ class UserViewModel extends BaseViewModel {
 
   File? imageURl;
 
- 
   int _activeTab = 0;
 
-   
-
-  
   Future<void> clearImage() async {
     imageURl = null;
     setViewState(ViewState.success);
   }
 
-
-  getUnreadMessages(){
-
-  }
+  getUnreadMessages() {}
 
   Future<File> fileFromImageUrl(
     String imageUrl,
@@ -59,18 +52,18 @@ class UserViewModel extends BaseViewModel {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 15),
-               Padding(
+              Padding(
                 padding: EdgeInsets.only(
                     left: 30.0, right: 8.0, top: 8.0, bottom: 8.0),
                 child: Text('Select the images source',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 16,
-                         color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w400)),
               ),
               ListTile(
-                leading:   Icon(
+                leading: Icon(
                   Icons.photo_camera,
                   size: 25.0,
                   color: Theme.of(context).colorScheme.primary,
@@ -93,7 +86,7 @@ class UserViewModel extends BaseViewModel {
                 },
               ),
               ListTile(
-                leading:   Icon(
+                leading: Icon(
                   Icons.photo,
                   size: 25.0,
                   color: Theme.of(context).colorScheme.primary,
@@ -119,8 +112,6 @@ class UserViewModel extends BaseViewModel {
         });
   }
 
-
-  
   String getCurrentTime(int timestampInSeconds) {
     if (timestampInSeconds == '0') {
       return '';
@@ -165,16 +156,14 @@ class UserViewModel extends BaseViewModel {
   }
 
   List<Map<String, String>> flutterWaveSupportedCurrency = [
-  {'countryCode': 'NG', 'currency': 'NGN'}, // Nigeria
-  {'countryCode': 'US', 'currency': 'USD'}, // United States
-  {'countryCode': 'ZA', 'currency': 'ZAR'}, // South Africa
-  {'countryCode': 'KE', 'currency': 'KES'}, // Kenya
-  {'countryCode': 'GH', 'currency': 'GHS'}, // Ghana
-  {'countryCode': 'UG', 'currency': 'UGX'}, // Uganda
-  {'countryCode': 'TZ', 'currency': 'TZS'}, // Tanzania
-  {'countryCode': 'RW', 'currency': 'RWF'}, // Rwanda
-];
+    {'countryCode': 'NG', 'currency': 'NGN'}, // Nigeria
+    {'countryCode': 'US', 'currency': 'USD'}, // United States
+    {'countryCode': 'ZA', 'currency': 'ZAR'}, // South Africa
+    {'countryCode': 'KE', 'currency': 'KES'}, // Kenya
+    {'countryCode': 'GH', 'currency': 'GHS'}, // Ghana
+    {'countryCode': 'UG', 'currency': 'UGX'}, // Uganda
+    {'countryCode': 'TZ', 'currency': 'TZS'}, // Tanzania
+    {'countryCode': 'RW', 'currency': 'RWF'}, // Rwanda
+  ];
   File? get imgURl => imageURl;
-
-    
 }
