@@ -205,7 +205,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
       contex = context;
     }
 
-    _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
+     _firebaseMessaging.subscribeToTopic(groupInfo.groupId);
 
     requestItems = removeDuplicates1(groupInfo.requestedMembers);
 
@@ -273,7 +273,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                       ),
                     ),
                   ),
-                  appBar: CustomAppBar(
+                  appBar: AppBar(
                     leadingWidth: 44.h,
                     leading: AppbarLeadingImage(
                       imagePath: ImageConstant.imgArrowBackBlue800,
@@ -391,7 +391,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                         ),
                       ),
                     ),
-                    styleType: Style.bgOutline,
+                     
                   ),
                   body: GestureDetector(
                     onTap: () {
@@ -914,12 +914,12 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                                 messageId:
                                                     messageData.messageId,
                                                 onLongPressAction: () {
-                                                  if (Platform.isAndroid) {
+                                                  
                                                     Modals.showDialogModal(
                                                         context,
                                                         page: _buildChatMenu(
                                                             groupInfo));
-                                                  }
+                                               
                                                 },
                                               );
                                             }
@@ -943,12 +943,12 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                                   messageData.repliedMessage,
                                               messageId: messageData.messageId,
                                               onLongPressAction: () {
-                                                if (Platform.isAndroid) {
+                                               
                                                   Modals.showDialogModal(
                                                       context,
                                                       page: _buildChatMenu(
                                                           groupInfo));
-                                                }
+                                                 
                                               },
                                             );
                                           },

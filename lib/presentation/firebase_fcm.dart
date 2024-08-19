@@ -24,10 +24,7 @@ class PushNotifications {
     final token = await _firebaseMessaging.getToken();
 
     StorageHandler.saveFcmToken(token);
-    // print(token);
-
-     // sendPushNotification(token ??'','TellaSport','Welcome on board');
-    
+    _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true,sound: true, badge: true);
   }
 
   static Future localNotiInit() async {

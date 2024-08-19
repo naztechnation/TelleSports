@@ -1124,6 +1124,34 @@ Future<void> updateRecieveNotificationForUser(
     }
   }
 
+ Future<void> deleteUserRequest(String groupId,
+      String currentUserId, String username, BuildContext context) async {
+    try {
+      final DocumentReference groupDocRef =
+          FirebaseFirestore.instance.collection('groups').doc(groupId);
+
+      final DocumentSnapshot groupSnapshot = await groupDocRef.get();
+
+      if (groupSnapshot.exists) {
+        final Map<String, dynamic> groupData =
+            groupSnapshot.data() as Map<String, dynamic>;
+
+        if (groupData.containsKey('requestsMembers') &&
+            groupData['requestsMembers'] is List) {
+          List<dynamic> requestsMembers =
+              List.from(groupData['requestsMembers']);
+
+          requestsMembers.remove(currentUserId);
+
+          await groupDocRef.update({'requestsMembers': requestsMembers});
+
+          
+        }
+      }
+    } catch (error) {
+      print('Error removing user from request members: $error');
+    }
+  }
   Future<void> removeCurrentUserFromBlockedMembers(String groupId,
       String currentUserId, String username, BuildContext context) async {
     try {

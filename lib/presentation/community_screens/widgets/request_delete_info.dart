@@ -170,69 +170,126 @@ class _RequestDeleteInfoState extends State<RequestDeleteInfo> {
                           ),
                         )
                       ] else ...[
-                        GestureDetector(
-                          onTap: () {
-                            Modals.showDialogModal(context,
-                                page: ModalContentScreen(
-                                    title: 'Accept Request',
-                                    body: Text(
-                                      'N.B: Are you sure you want to Accept this users request',
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: appTheme.gray900,
-                                        fontSize: 14.fSize,
-                                        fontFamily: 'DM Sans',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    btnText: 'Proceed',
-                                    onPressed: () async {
-                                      Navigator.pop(context);
-
-                                      for (var userIds
-                                          in groupInfo.requestedMembers) {
-                                        if (userIds == widget.userId) {
-                                          Modals.showToast(
-                                              'User is already in your commiunity.');
-                                          break;
-                                        } else {
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-                                          await groupInfo
-                                              .removeCurrentUserFromRequestsMembers(
-                                                  groupInfo.groupId,
-                                                  widget.userId,
-                                              widget.name,
-
-                                                  context);
-
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-
-                                           user.updateIndex(1);
-                                  AppNavigator.pushAndStackPage(context,
-                                      page: LandingPage());
-                                        }
-                                      }
-                                    },
-                                    headerColorOne: Colors.blue.shade300,
-                                    headerColorTwo: Colors.blue));
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(20)),
-                            height: 40,
-                            child: Align(
-                                child: Text(
-                              'Accept',
-                              style: TextStyle(color: Colors.white),
-                            )),
-                          ),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Modals.showDialogModal(context,
+                                    page: ModalContentScreen(
+                                        title: 'Accept Request',
+                                        body: Text(
+                                          'N.B: Are you sure you want to Accept this users request',
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: appTheme.gray900,
+                                            fontSize: 14.fSize,
+                                            fontFamily: 'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        btnText: 'Proceed',
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                            
+                                          for (var userIds
+                                              in groupInfo.requestedMembers) {
+                                            if (userIds == widget.userId) {
+                                              Modals.showToast(
+                                                  'User is already in your commiunity.');
+                                              break;
+                                            } else {
+                                              setState(() {
+                                                isLoading = true;
+                                              });
+                                              await groupInfo
+                                                  .removeCurrentUserFromRequestsMembers(
+                                                      groupInfo.groupId,
+                                                      widget.userId,
+                                                  widget.name,
+                            
+                                                      context);
+                            
+                                              setState(() {
+                                                isLoading = false;
+                                              });
+                            
+                                               user.updateIndex(1);
+                                      AppNavigator.pushAndStackPage(context,
+                                          page: LandingPage());
+                                            }
+                                          }
+                                        },
+                                        headerColorOne: Colors.blue.shade300,
+                                        headerColorTwo: Colors.blue));
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(20)),
+                                height: 40,
+                                child: Align(
+                                    child: Text(
+                                  'Accept',
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                              ),
+                            ),
+                            const SizedBox(width: 10,),
+                            GestureDetector(
+                              onTap: () {
+                                Modals.showDialogModal(context,
+                                    page: ModalContentScreen(
+                                        title: 'Reject Request',
+                                        body: Text(
+                                          'N.B: Are you sure you want to Reject this users request',
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: appTheme.gray900,
+                                            fontSize: 14.fSize,
+                                            fontFamily: 'DM Sans',
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        btnText: 'Reject',
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                            
+                                          for (var userIds
+                                              in groupInfo.requestedMembers) {
+                                            if (userIds == widget.userId) {
+                                              Modals.showToast(
+                                                  'User is already in your commiunity.');
+                                              break;
+                                            } else {
+                                              setState(() {
+                                                isLoading = true;
+                                              });
+                                              await groupInfo
+                                                  .deleteUserRequest(
+                                                      groupInfo.groupId,
+                                                      widget.userId,
+                                                  widget.name,
+                            
+                                                      context);
+                            
+                                              setState(() {
+                                                isLoading = false;
+                                              });
+                            
+                                               user.updateIndex(1);
+                                      AppNavigator.pushAndStackPage(context,
+                                          page: LandingPage());
+                                            }
+                                          }
+                                        },
+                                        headerColorOne: Colors.red.shade300,
+                                        headerColorTwo: Colors.red));
+                              },
+                              child: Icon(Icons.delete_outline, color: Colors.red, size: 30,))
+                          ],
                         )
                       ]
                     ],
