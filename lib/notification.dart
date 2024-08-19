@@ -28,12 +28,12 @@ Future<void> sendPushNotification(
     );
 
     if (response.statusCode == 200) {
-      print('Push notification sent successfully');
+      // print('Push notification sent successfully');
     } else {
-      print('Failed to send push notification: ${response.statusCode}');
+      // print('Failed to send push notification: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error sending push notification: $e');
+    // print('Error sending push notification: $e');
   }
 }
 
@@ -63,13 +63,13 @@ Future<void> sendTopicNotification(
     );
 
     if (response.statusCode == 200) {
-      print('Push notification sent to topic "$topic" successfully');
+      // print('Push notification sent to topic "$topic" successfully');
     } else {
-      print(
-          'Failed to send push notification to topic "$topic": ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print(
+      //     'Failed to send push notification to topic "$topic": ${response.statusCode}');
+      // print('Response body: ${response.body}');
     }
   } catch (e) {
-    print('Error sending push notification: $e');
+    // print('Error sending push notification: $e');
   }
 }

@@ -605,7 +605,8 @@ Future<void> createGroup(
   try {
     List<MemberData> members = [
       MemberData(
-          userId: userId, dateJoined: DateTime.now(), username: username, recieveNotification: true),
+          userId: userId, dateJoined: DateTime.now(),
+           username: username, recieveNotification: true),
     ];
 
     String groupId = await generateUniqueGroupId();
@@ -1023,8 +1024,7 @@ Future<void> updateRecieveNotificationForUser(
     
     for (var document in event.docs) {
       try {
-        print('Document data: ${document.data()}');
-        var group = Group.fromMap(document.data() as Map<String, dynamic>);
+        var group = Group.fromMap(document.data());
         groups.add(group);
         
         if (group.membersUid.any((member) => member.userId == userId)) {

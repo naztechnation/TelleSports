@@ -53,6 +53,7 @@ class ChatController {
     BuildContext context,
     String text,
     String recieverUserId,
+    String senderName,
     String userId,
     bool isGroupChat,
   ) {
@@ -62,7 +63,7 @@ class ChatController {
             context: context,
             text: text,
             recieverUserId: recieverUserId,
-            senderUser: value!,
+            senderUser: senderName,
             messageReply: messageReply,
             isGroupChat: isGroupChat, userId: userId,
           ),
@@ -110,7 +111,7 @@ class ChatController {
             messageEnum: messageEnum,
             ref: ref,
             messageReply: messageReply,
-            isGroupChat: isGroupChat, userId: userId,
+            isGroupChat: true, userId: userId,
           ),
         );
 

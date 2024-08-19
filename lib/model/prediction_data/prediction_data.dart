@@ -49,6 +49,7 @@ Map<String, List<Map<String, String>>> leaguesWithClubs = {
     {'name': 'West Bromwich Albion', 'url': 'https://1000logos.net/wp-content/uploads/2018/07/West-Bromwich-Albion-Logo.png'},
     {'name': 'Sheffield United', 'url': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtbGP9JPh_rRf80u1z422BiMbiJBLjkzdTr1pDLbQ4wfviKHw2zNwYB_Rr8RrDfcgeIs4&usqp=CAU'},
     {'name': 'Brentford', 'url': 'https://assets.londonist.com/uploads/2022/05/i730/brentford_fc_crest.jpg'},
+    {'name': 'Ipswich Town', 'url': 'https://e00-marca.uecdn.es/assets/sports/logos/football/png/72x72/40.png'},
   ],
   'La Liga': [
     {'name': 'Real Madrid', 'url': 'https://banner2.cleanpng.com/20180602/psw/kisspng-real-madrid-c-f-uefa-champions-league-la-liga-juv-5b1351b072b362.2456057615279927524698.jpg'},

@@ -48,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String photo = '';
   String userId = '';
   String userSub = '';
-  String tellaCoinBalance ='';
+  String tellaCoinBalance = '';
   bool showDelayedWidget = false;
 
   bool signInWithGoogle = true;
@@ -261,41 +261,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                 text: "Log out",
                                 buttonStyle: CustomButtonStyles.fillRedTL8,
                                 onPressed: () async {
-
                                   Modals.showDialogModal(context,
-                              page: ModalContentScreen(
-                                  title: 'Log out!!!',
-                                  body: Text(
-                                    'Are you sure you want to logout your account?',
-                                    maxLines: 8,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: appTheme.gray900,
-                                      fontSize: 14.fSize,
-                                      fontFamily: 'DM Sans',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  btnText: 'Proceed',
-                                  onPressed: () async{
-                                    
-                                    Navigator.pop(context);
-
-                                    await user.signOut(context);
-                                  if (signInWithGoogle) {
-                                    StorageHandler.showSignIns('true');
-                                  } else {
-                                    StorageHandler.showSignIns('');
-                                  }
-                                  user1.updateIndex(0);
-                                  StorageHandler.saveUserEmail(email);
-                                  StorageHandler.saveUserPassword(password);
-                                  },
-                                  headerColorOne:
-                                      Color.fromARGB(255, 208, 151, 151),
-                                  headerColorTwo:
-                                      Color.fromARGB(255, 234, 132, 132)));
-                                  
+                                      page: ModalContentScreen(
+                                          title: 'Log out!!!',
+                                          body: Text(
+                                            'Are you sure you want to logout your account?',
+                                            maxLines: 8,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: appTheme.gray900,
+                                              fontSize: 14.fSize,
+                                              fontFamily: 'DM Sans',
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          btnText: 'Proceed',
+                                          onPressed: () async {
+                                            Navigator.pop(context);
+                                            StorageHandler.saveUserId('');
+                                            await user.signOut(context);
+                                            if (signInWithGoogle) {
+                                              StorageHandler.showSignIns(
+                                                  'true');
+                                            } else {
+                                              StorageHandler.showSignIns('');
+                                            }
+                                            user1.updateIndex(0);
+                                            StorageHandler.saveUserEmail(email);
+                                            StorageHandler.saveUserPassword(
+                                                password);
+                                          },
+                                          headerColorOne: Color.fromARGB(
+                                              255, 208, 151, 151),
+                                          headerColorTwo: Color.fromARGB(
+                                              255, 234, 132, 132)));
                                 }),
                           ],
                           SizedBox(height: 24.v),
@@ -407,15 +406,16 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildSettingsFrame(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 12.v),
-        decoration: AppDecoration.outlineBlack9001
-            .copyWith(borderRadius: BorderRadiusStyle.roundedBorder8, color: Colors.white),
+        decoration: AppDecoration.outlineBlack9001.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder8,
+            color: Colors.white),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           _buildChatSettingsFrame(context, text: "Notifications settings",
               onPressed: () {
             AppNavigator.pushAndStackPage(context,
                 page: NotificationSettingsScreen());
           }),
-         // SizedBox(height: 12.v),
+          // SizedBox(height: 12.v),
           // Divider(color: appTheme.gray50001),
           // SizedBox(height: 11.v),
           // _buildChatSettingsFrame(context, text: "Chat settings",
@@ -436,7 +436,8 @@ class _ProfilePageState extends State<ProfilePage> {
       }),
       child: Container(
         color: Colors.white,
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Padding(
               padding: EdgeInsets.only(top: 4.v),
               child: Text(text,
@@ -472,9 +473,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Text(text,
                     style: TextStyle(fontSize: 14, color: Colors.black))),
             CustomImageView(
-            imagePath: ImageConstant.imgArrowRightGray700,
-            height: 24.adaptSize,
-            width: 24.adaptSize)
+                imagePath: ImageConstant.imgArrowRightGray700,
+                height: 24.adaptSize,
+                width: 24.adaptSize)
           ])),
     );
   }

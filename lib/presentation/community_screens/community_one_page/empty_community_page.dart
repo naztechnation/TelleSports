@@ -29,35 +29,9 @@ class CommunityTwoPageState extends State<EmptyCommunityPage>
       padding: EdgeInsets.symmetric(horizontal: 20.h),
       child: Column(
         children: [
-          SizedBox(height: 12.v),
-          CustomTextFormField(
-            controller: searchController,
-            hintText: "Search for communities",
-            hintStyle: CustomTextStyles.titleSmallGray400,
-            textInputAction: TextInputAction.done,
-            prefix: Container(
-              margin: EdgeInsets.fromLTRB(20.h, 5.v, 9.h, 5.v),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgSearchGray400,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-              ),
-            ),
-            prefixConstraints: BoxConstraints(
-              maxHeight: 34.v,
-            ),
-            contentPadding: EdgeInsets.only(
-              top: 7.v,
-              right: 30.h,
-              bottom: 7.v,
-            ),
-            borderDecoration: TextFormFieldStyleHelper.fillGray,
-            filled: true,
-            fillColor: appTheme.gray100,
-          ),
-          SizedBox(height: 20.v),
-    
-          Divider(),
+          
+          
+          
           SizedBox(height: 106.v),
           CustomImageView(
             imagePath: ImageConstant.imgCommunicationBusiness,
@@ -70,7 +44,8 @@ class CommunityTwoPageState extends State<EmptyCommunityPage>
             style:  TextStyle(fontSize: 15),
           ),
           SizedBox(height: 20.v),
-    
+          
+
           // buildBuyTellacoins(context),
           // SizedBox(height: 10.v),
           // CustomOutlinedButton(

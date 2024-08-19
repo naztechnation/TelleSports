@@ -166,9 +166,7 @@ String password = '';
                                 messageType: MessageType.error);
                           }
 
-                          FirebaseAuth.instance.signOut();
-                          final GoogleSignIn googleSignIn = GoogleSignIn();
-                          googleSignIn.signOut();
+                          
                         } else {
                           if (state.user.message?.isNotEmpty ?? false) {
                             Modals.showToast(state.user.message ?? '',

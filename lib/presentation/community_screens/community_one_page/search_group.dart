@@ -111,7 +111,7 @@ class SearchGroupPageState extends ConsumerState<SearchGroupPage>
                                       checkUserExist.filterSearchResults(value);
 
                                       if (searchController.text.isEmpty) {
-                                        setState(() {});
+                                        // setState(() {});
                                       }
                                     },
                                     hintText: "Search for communities",

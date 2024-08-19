@@ -236,7 +236,7 @@ class ChatRepository extends ChangeNotifier{
     required String text,
     required String recieverUserId,
     required String userId,
-    required UserModel senderUser,
+    required String senderUser,
     required MessageReply? messageReply,
     required bool isGroupChat,
   }) async {
@@ -244,34 +244,21 @@ class ChatRepository extends ChangeNotifier{
       var timeSent = DateTime.now();
       UserModel? recieverUserData;
 
-      if (!isGroupChat) {
-        var userDataMap =
-            await firestore.collection('users').doc(recieverUserId).get();
-        recieverUserData = UserModel.fromMap(userDataMap.data()!);
-      }
+      
 
       var messageId = const Uuid().v1();
 
-      _saveDataToContactsSubcollection(
-        senderUser,
-        recieverUserData,
-        text,
-        timeSent,
-        recieverUserId,
-        userId,
-        isGroupChat,
-      );
-
+     
       _saveMessageToMessageSubcollection(
         recieverUserId: recieverUserId,
         text: text,
         timeSent: timeSent,
         messageType: MessageEnum.text,
         messageId: messageId,
-        username: senderUser.name,
+        username: senderUser,
         messageReply: messageReply,
-        recieverUserName: recieverUserData?.name,
-        senderUsername: senderUser.name,
+        recieverUserName: recieverUserData?.name ?? '',
+        senderUsername: senderUser,
         isGroupChat: isGroupChat, userId: userId,
       );
     } catch (e) {

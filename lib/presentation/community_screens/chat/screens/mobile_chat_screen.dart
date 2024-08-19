@@ -126,6 +126,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
   List<String> blockedUsers = [];
 
   String token = '';
+  String username = '';
 
   @override
   void dispose() {
@@ -156,6 +157,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
 
   getUserId() async {
     userId = await StorageHandler.getUserId() ?? '';
+    username = await StorageHandler.getUserName() ?? '';
     token = await StorageHandler.getUserFCM() ?? '';
 
     Future.delayed(Duration(seconds: 1), () {
@@ -1003,7 +1005,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                 recieverUserId: widget.uid,
                                 isGroupChat: widget.isGroupChat,
                                 groupName: widget.name,
-                                groupId: groupInfo.groupId,
+                                groupId: groupInfo.groupId, senderName: username,
                               )
                             : Container(
                                 height: 60,
@@ -1038,6 +1040,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                                 recieverUserId: widget.uid,
                                 isGroupChat: widget.isGroupChat,
                                 groupName: widget.name,
+                                senderName: username,
                                 groupId: groupInfo.groupId)
                             : Container(
                                 height: 60,
@@ -1072,6 +1075,7 @@ class _MobileChatState extends ConsumerState<MobileChat> {
                         recieverUserId: widget.uid,
                         isGroupChat: widget.isGroupChat,
                         groupName: widget.name,
+                        senderName: username,
                         groupId: groupInfo.groupId,
                       );
                     },

@@ -222,24 +222,14 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _buildTabview(BuildContext context) {
     return Container(
-      height: 32.v,
-      width: 350.h,
+      height: 38.v,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: appTheme.whiteA700,
         borderRadius: BorderRadius.circular(
           16.h,
         ),
-        boxShadow: [
-          // BoxShadow(
-          //   color: appTheme.black900.withOpacity(0.06),
-          //   spreadRadius: 2.h,
-          //   blurRadius: 2.h,
-          //   offset: Offset(
-          //     0,
-          //     0,
-          //   ),
-          // ),
-        ],
+        
       ),
       child: TabBar(
         controller: tabviewController,
@@ -256,6 +246,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           fontFamily: 'DM Sans',
           fontWeight: FontWeight.w500,
         ),
+        dividerColor: Colors.white,
         indicatorSize: TabBarIndicatorSize.tab,
         indicator: BoxDecoration(
           color: Color(0XFF288763),

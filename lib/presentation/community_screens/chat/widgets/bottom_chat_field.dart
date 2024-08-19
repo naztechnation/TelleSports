@@ -21,6 +21,7 @@ class BottomChatField extends ConsumerStatefulWidget {
   final String recieverUserId;
   final String groupId;
   final String groupName;
+  final String senderName;
   final bool isGroupChat;
   final Function onTap;
   const BottomChatField({
@@ -28,6 +29,7 @@ class BottomChatField extends ConsumerStatefulWidget {
     required this.onTap,
     required this.groupId,
     required this.groupName,
+    required this.senderName,
     required this.recieverUserId,
     required this.isGroupChat,
   }) : super(key: key);
@@ -61,6 +63,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           context,
           _messageController.text.trim(),
           widget.recieverUserId,
+          widget.senderName,
           userId,
           widget.isGroupChat,
         );

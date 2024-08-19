@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tellesports/core/app_export.dart';
-import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart';
-import 'package:tellesports/widgets/app_bar/appbar_subtitle_one.dart';
+import 'package:tellesports/widgets/app_bar/appbar_leading_image.dart'; 
 import 'package:tellesports/widgets/app_bar/appbar_subtitle_two.dart';
 import 'package:tellesports/widgets/app_bar/custom_app_bar.dart';
 
@@ -10,7 +9,7 @@ import '../../../utils/navigator/page_navigator.dart';
 import '../../individual_user_info.dart/individual_user_info.dart';
 import '../widgets/userprofile_item_widget.dart';
 
-class AllUsersPage extends StatelessWidget {
+class AllUsersPage extends StatefulWidget {
   final String adminId;
   final List<UserModel> users;
   const AllUsersPage({Key? key, required this.users, required this.adminId})
@@ -19,12 +18,21 @@ class AllUsersPage extends StatelessWidget {
         );
 
   @override
+  State<AllUsersPage> createState() => _AllUsersPageState();
+}
+
+class _AllUsersPageState extends State<AllUsersPage> {
+
+
+
+ 
+  @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
 
     return SafeArea(
-      child: Scaffold(
-        appBar: _buildAppBar(context, users.length.toString()),
+      child:  Scaffold(
+        appBar: _buildAppBar(context, widget.users.length.toString()),
         body: Padding(
           padding: EdgeInsets.only(
             left: 13.h,
@@ -42,25 +50,25 @@ class AllUsersPage extends StatelessWidget {
                 height: 1.v,
               );
             },
-            itemCount: users.length,
+            itemCount: widget.users.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                   onTap: () {
                     AppNavigator.pushAndStackPage(context,
                         page: IndividualUserInfo(
-                          name: users[index].name,
-                          image: users[index].profilePic,
-                          bio: users[index].bio,
-                          username: users[index].name,
+                          name: widget.users[index].name,
+                          image: widget.users[index].profilePic,
+                          bio: widget.users[index].bio,
+                          username: widget.users[index].name,
                           isGroupAdmin: index == 0,
-                          memberId: users[index].uid,
+                          memberId: widget.users[index].uid,
                         ));
                   },
                   child: UserprofileItemWidget(
-                    name: users[index].name,
-                    bio: users[index].bio,
-                    index: adminId == users[index].uid,
-                    image: users[index].profilePic,
+                    name: widget.users[index].name,
+                    bio: widget.users[index].bio,
+                    index: widget.adminId == widget.users[index].uid,
+                    image: widget.users[index].profilePic,
                   ));
             },
           ),

@@ -138,34 +138,34 @@ class IndividualUserInfoState extends State<IndividualUserInfo>
                                   ),
                                 ),
                               ),
-                             if(filteredCreatedGroups.isNotEmpty)...[
-Align(
-                                  alignment: Alignment.center,
-                                  child: ListView.builder(
-                                      physics: BouncingScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: filteredCreatedGroups.length,
-                                      itemBuilder: (context, index) {
-                                        final groupData =
-                                            filteredCreatedGroups[index];
-                                  
-                                        return CommunityPageComponent(
-                                          onTapCommunityPageComponent:
-                                              () async {},
-                                          groupName: groupData.name,
-                                          lastMessage: (groupData
-                                                      .membersUid.length >
-                                                  1)
-                                              ? '${groupData.membersUid.length} Members'
-                                              : '${groupData.membersUid.length} Member',
-                                          groupPic: groupData.groupPic,
-                                          isPaid: groupData.communityType
-                                              .toString(),
-                                        );
-                                      })),
-                             ] else...[
-                              Text('NONE')
-                             ]
+                              if (filteredCreatedGroups.isNotEmpty) ...[
+                                Align(
+                                    alignment: Alignment.center,
+                                    child: ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: filteredCreatedGroups.length,
+                                        itemBuilder: (context, index) {
+                                          final groupData =
+                                              filteredCreatedGroups[index];
+
+                                          return CommunityPageComponent(
+                                            onTapCommunityPageComponent:
+                                                () async {},
+                                            groupName: groupData.name,
+                                            lastMessage: (groupData
+                                                        .membersUid.length >
+                                                    1)
+                                                ? '${groupData.membersUid.length} Members'
+                                                : '${groupData.membersUid.length} Member',
+                                            groupPic: groupData.groupPic,
+                                            isPaid: groupData.communityType
+                                                .toString(),
+                                          );
+                                        })),
+                              ] else ...[
+                                Center(child: Text('NONE'))
+                              ]
                             ],
                           ),
                         ),
@@ -212,9 +212,8 @@ Align(
                                       shrinkWrap: true,
                                       itemCount: filteredGroups.length,
                                       itemBuilder: (context, index) {
-                                        final groupData =
-                                            filteredGroups[index];
-                                  
+                                        final groupData = filteredGroups[index];
+
                                         return CommunityPageComponent(
                                           onTapCommunityPageComponent:
                                               () async {},
