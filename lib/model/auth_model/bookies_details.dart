@@ -72,7 +72,7 @@ class BookiesDetailsData {
 class BookingDetails {
   String? name;
   String? code;
-  int? eventCount;
+  dynamic eventCount;
   List<EventDetails>? eventDetails;
 
   BookingDetails({this.name, this.code, this.eventCount, this.eventDetails});
@@ -106,7 +106,7 @@ class EventDetails {
   String? eventName;
   String? marketName;
   String? selection;
-  String? handicap;
+  dynamic handicap;
 
   EventDetails(
       {this.eventName, this.marketName, this.selection, this.handicap});

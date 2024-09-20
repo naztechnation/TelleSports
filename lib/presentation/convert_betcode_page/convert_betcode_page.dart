@@ -197,8 +197,7 @@ class ConvertBetcodesPageState extends State<ConvertBetcodesPage>
         } else if (state is BookingsLoaded) {
           bookie = _accountCubit.viewModel.bookiesDetails;
 
-          destinationCode =
-              bookie?.data?.destinationCode ?? '';
+          destinationCode = bookie?.data?.destinationCode ?? '';
 
           jJhEightyTwoController.text = destinationCode;
 
@@ -374,7 +373,8 @@ This may have occurred due to one of the following reasons below.
                                           bookingEventLists: bookingEventLists,
                                           notConvertedEvents:
                                               notConvertedEvents,
-                                              notConvertedBookies: notConvertedBookies,
+                                          notConvertedBookies:
+                                              notConvertedBookies,
                                         ));
                                   }),
                                   child: Text('view details',
@@ -450,8 +450,6 @@ This may have occurred due to one of the following reasons below.
                                   Modals.showToast(
                                       'Please select destination bookie');
                                 } else {
-
-                                    
                                   _accountCubit.convertBetCode(
                                       from: fromId ?? '',
                                       to: toId ?? '',
